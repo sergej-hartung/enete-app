@@ -1,0 +1,24 @@
+# Используем за основу образ Node.js
+FROM node:latest
+
+# Установка директории внутри контейнера
+WORKDIR /usr/src/app/enete-front
+
+# Копирование зависимостей
+#COPY ./enete-front-app/package*.json /usr/src/app/enete-front/package*.json
+COPY ./enete-front-app /usr/src/app/enete-front 
+
+# Установка зависимостей
+RUN npm install
+
+# Копирование всего остального приложения
+#COPY ./enete-front-app /usr/src/app/enete-front 
+
+# Сборка приложения
+RUN npm run build
+
+# Открываем порт, который будет использоваться для доступа к приложению
+EXPOSE 4200
+
+# Команда для запуска Angular приложения
+CMD ["npm", "start"]

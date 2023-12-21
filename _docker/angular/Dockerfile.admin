@@ -1,0 +1,20 @@
+# Используем за основу образ Node.js
+FROM node:latest
+
+# Установка директории внутри контейнера
+WORKDIR /usr/src/app/enete-admin
+
+# Копирование зависимостей
+COPY ./enete-admin-app /usr/src/app/enete-admin 
+
+# Установка зависимостей
+RUN npm install
+
+# Сборка приложения
+RUN npm run build
+
+# Открываем порт, который будет использоваться для доступа к приложению
+EXPOSE 4300
+
+# Команда для запуска Angular приложения
+CMD ["npm", "start"]

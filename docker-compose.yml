@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./enete-app:/var/www
+      - ./_docker/nginx/conf.d/:/etc/nginx/conf.d/
+    ports:
+      - 8876:80
+    depends_on:
+      - app 
+    container_name: enete_nginx
+      
+  app:
+    build:
+      context: .
+      dockerfile: _docker/app/Dockerfile
+    volumes:
+      - ./enete-app:/var/www
+    depends_on:
+      - db
+    container_name: enete_app
+
+  db:
+    image: mysql:8.2
+    restart: always
+    volumes:
+      - ./enete-app/tmp/db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: enete_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 8101:3306
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_unicode_ci
+    container_name: enete_db
+  
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8181:80
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root
+    container_name: enete_phpmyadmin
+    depends_on:
+      - db
+
+  admin:
+    build:
+      context: .
+      dockerfile: _docker/angular/Dockerfile.admin
+    ports:
+      - "4300:4200"
+    volumes:
+      - ./enete-admin-app:/usr/src/app/enete-admin
+    container_name: enete_admin
+
+  front:
+    build:
+      context: .
+      dockerfile: _docker/angular/Dockerfile.front
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./enete-front-app:/usr/src/app/enete-front
+    container_name: enete_front
