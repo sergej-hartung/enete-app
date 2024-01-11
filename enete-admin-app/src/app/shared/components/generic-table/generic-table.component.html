@@ -1,0 +1,90 @@
+<div class="filter" *ngIf="filters && filters.length">
+    <div class="row no-gutters" [class.expandable_table]="isExpandable" [class.pe-1]="!isExpandable">
+        <ng-container *ngFor="let filter of filters">
+            <div class="col-5 pe-1" *ngIf="filter?.key === 'search' && filter?.type === 'text'">
+                <div class="input-group input-group-sm mb-1 mt-1">
+                            
+                    <input 
+                        type="text" 
+                        class="form-control form-control-sm"
+                        (input)="onFilterChange(filter, $event)"
+                    >
+                    <span class="input-group-text custom-input-group-text" id="inputGroup-sizing-sm">
+                        <i class="bi bi-search"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="col pe-1 ps-1" *ngIf="filter.type === 'select'">
+                <div class="input-group input-group-sm mb-1 mt-1">
+                    <select 
+                        class="form-select form-select-sm custom-form-select-sm" 
+                        id="{{filter.key}}"
+                        (change)="onFilterChange(filter, $event)"
+                    >
+                        <option *ngFor="let option of filter.options" [selected]="option.selected" [value]="option.value">{{option.label}}</option>
+                    </select>
+                    <label class="input-group-text custom-input-group-text" for="{{filter.key}}">{{filter.label}}</label>
+                </div> 
+                    
+            </div>
+        </ng-container>
+        <div 
+            class="expandable_table-btn"
+            *ngIf="isExpandable"
+        >
+            <button 
+                type="button" 
+                class="btn  btn-sm-custom btn-sm mb-1 mt-1"
+                (click)="toggleExpand()"
+            >
+                <i class="fa-solid" [class.fa-angles-right]="!isExpanded" [class.fa-angles-left]="isExpanded"></i>
+            </button>
+        </div>
+    </div>
+    
+</div>
+<table class="table table-sm table-hover" [class.table_without_filter] = "!filters">
+    <thead>
+        <tr>
+            <ng-container *ngFor="let column of columns">
+                <ng-container *ngIf="column?.sortable; else notSortable">
+                    <th class="sortable" (click)="sort(column.key)">
+                        {{column.title}}
+                        <span class="sort-arrow">
+                            <ng-container *ngIf="currentSortColumn === column.key">
+                                <i *ngIf="currentSortOrder === 'asc'" class="bi bi-arrow-up"></i>
+                                <i *ngIf="currentSortOrder === 'desc'" class="bi bi-arrow-down"></i>
+                            </ng-container>
+                        </span>                   
+                    </th>
+                </ng-container>
+                <ng-template #notSortable>
+                    <th >
+                        {{column.title}}
+                        <span class="sort-arrow">
+                            
+                        </span>                   
+                    </th>
+                </ng-template>
+            </ng-container>                      
+        </tr>
+        <tr class="loader-row" ><th colspan="6"><span *ngIf="!isLoded" class="loader"></span></th></tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of data" 
+            (click)="selectRow(row)"
+            [class.selected-custom]="row.selected"
+        >
+            <td *ngFor="let column of columns">
+                <ng-container *ngIf="column.isIcon; else textContent">
+                    <i [class]="row[column.key]"></i>
+                </ng-container>
+                <ng-template #textContent>{{ column.isIcon ? '' : row[column.key] }}</ng-template>
+            </td>
+        </tr>
+       
+    </tbody>
+</table>
+<div class="table-foot" *ngIf="data">
+    total: {{data.length}}
+</div>

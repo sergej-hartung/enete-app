@@ -14,6 +14,29 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/test', function(Request $request){
+    dd($request);
+    dd($request->all());
 });
+
+
+//Route::post('/user-profiles', 'App\Http\Controllers\User\Profile\StoreController');
+Route::group(['namespace' => 'App\Http\Controllers\User\Profile'], function($router){
+    Route::get('/user-profiles', 'IndexController');
+    Route::post('/user-profiles', 'StoreController');
+    Route::get('/user-profiles/{profileId}', 'ShowController');
+});
+
+Route::group(['namespace' => 'App\Http\Controllers\User\User'], function($router){
+    Route::post('/user', 'StoreController');
+});
+
+
+Route::group(['middleware' => 'api', 'prefix' => 'auth', 'namespace' => 'App\Http\Controllers\Auth'], function ($router) {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
+});
+
+Route::post('/email/verify/{hash}', 'App\Http\Controllers\User\VerificationController');

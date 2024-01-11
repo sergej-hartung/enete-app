@@ -1,0 +1,15 @@
+<!-- Верхнее меню -->
+<div class="d-flex flex-column"> 
+    <header>
+        <app-main-navbar></app-main-navbar>
+        <app-secondary-navbar></app-secondary-navbar>      
+    </header>
+    <router-outlet></router-outlet>
+
+
+    <app-notification *ngIf="notificationOpen"></app-notification>
+    <footer></footer>
+</div>
+
+
+

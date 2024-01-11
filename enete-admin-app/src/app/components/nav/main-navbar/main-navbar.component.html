@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light main-navbar">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <div class="nav-flex-container">
+              <ul class="navbar-nav left-nav col-4">
+                <!-- Сохранить -->
+                <li class="nav-item" *ngIf="iconsState['save']?.active">
+                    <button 
+                        class="btn nav-link"
+                        [disabled]="iconsState['save']?.disabled"
+                        (click)="handleIconClick('save')"
+                    >
+                        <i class="bi bi-floppy"></i> Speichern
+                    </button>
+    
+                </li>
+                <!-- Новый -->
+                <li class="nav-item" *ngIf="iconsState['new']?.active">
+                    <button 
+                        class="btn nav-link"
+                        [disabled]="iconsState['new']?.disabled"
+                        (click)="handleIconClick('new')"
+                    >
+                        <i class="bi bi-file-earmark-plus"></i> Neu
+                    </button>
+                    <!-- <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Link 1</a></li>
+                    <li><a class="dropdown-item" href="#">Link 2</a></li>
+                    </ul> -->
+                </li>
+                <!-- Назад -->
+                <li class="nav-item" *ngIf="iconsState['back']?.active">
+                    <button 
+                        class="btn nav-link"
+                        [disabled]="iconsState['back']?.disabled"
+                        (click)="handleIconClick('back')"
+                    >
+                    <i class="bi bi-arrow-left-circle"></i> Zurück
+                    </button>
+                </li>
+              </ul>
+  
+              <ul class="navbar-nav center-nav col-4" > 
+                  <li class="nav-item">
+                  <button class="btn nav-link">
+                      <i class="bi bi-plus-circle"></i> Add New
+                  </button>
+                  </li>
+                  <li class="nav-item">
+                  <button class="btn nav-link">
+                      <i class="bi bi-question-circle"></i> Help
+                  </button>
+                  </li>
+              </ul>
+  
+              <ul class="navbar-nav right-nav col-4"></ul> 
+          </div>
+        </div>
+      </div>
+</nav>

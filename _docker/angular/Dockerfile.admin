@@ -1,5 +1,5 @@
 # Используем за основу образ Node.js
-FROM node:latest
+FROM node:20.10.0
 
 # Установка директории внутри контейнера
 WORKDIR /usr/src/app/enete-admin
@@ -9,6 +9,9 @@ COPY ./enete-admin-app /usr/src/app/enete-admin
 
 # Установка зависимостей
 RUN npm install
+
+# Устанавливаем Angular CLI глобально
+RUN npm install -g @angular/cli
 
 # Сборка приложения
 RUN npm run build

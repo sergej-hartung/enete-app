@@ -1,0 +1,38 @@
+<div
+     [ngClass]="{ 'fadeIn': isVisible, 'fadeOut': !isVisible }"
+     class="divMessageBox animated  fast"
+     id="MsgBoxBack" #notification>
+  <div class="MessageBoxContainer animated fadeIn fast" id="Msg1">
+    <div class="MessageBoxMiddle">
+      <!-- <span class="MsgTitle" #title>
+        <i class="fas fa-sign-out-alt txt-color-orangeDark"></i> Logout 
+        <span class="txt-color-orangeDark">
+          <strong>john.doe</strong>
+        </span> ?
+      </span> -->
+      <!-- <span class="MsgTitle">
+        <i class="fas fa-times" style="color: rgb(237, 28, 36); margin-right: 10px;"></i>
+        Attributwert:
+        <span style="margin-right: 8px; margin-left: 8px; font-weight: 700; color: rgb(237, 28, 36);">
+          <strong >PDF-Formular</strong>
+        </span> löschen
+      </span>
+      <p class="pText">Warnung: Dieser Vorgang kann nicht mehr rückgängig gemacht werden!</p>
+      <p class="pText">You can improve your security further after logging out by closing this opened browser</p>      -->
+      <span *ngIf="title" class="MsgTitle" [innerHTML]="title"></span>
+      <p *ngIf="message" class="pText" [innerHTML]="message"></p>
+      
+      <span class="MsgTitle" *ngIf="titleTemplate">
+        <ng-container *ngTemplateOutlet="titleTemplate"></ng-container>
+      </span>
+      
+      <p class="pText" *ngIf="messageTemplate">
+        <ng-container *ngTemplateOutlet="messageTemplate"></ng-container>
+      </p>
+      <div class="MessageBoxButtonSection">      
+        <button id="bot2-Msg1" class="btn btn-default btn-sm botTempo" (click)="handleDecline()">{{declineBtnTitle}}</button>
+        <button id="bot1-Msg1" class="btn btn-default btn-sm botTempo" (click)="handleAccept()">{{acceptBtnTitle}}</button>
+      </div>
+    </div>
+  </div>
+</div>
