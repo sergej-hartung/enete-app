@@ -77,7 +77,7 @@
         >
             <td *ngFor="let column of columns">
                 <ng-container *ngIf="column.isIcon; else textContent">
-                    <i [class]="row[column.key]"></i>
+                    <i [class]="row[column.key]['icon']" [style.color]="row[column.key]['color']" ></i> 
                 </ng-container>
                 <ng-template #textContent>{{ column.isIcon ? '' : row[column.key] }}</ng-template>
             </td>

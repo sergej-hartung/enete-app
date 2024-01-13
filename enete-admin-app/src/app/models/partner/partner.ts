@@ -1,5 +1,5 @@
-import {UserLogin} from './user-login'
-import {UserProfilStatus} from './user-profil-status'
+import {UserLogin} from '../user-login'
+import {UserProfilStatus} from '../user-profil-status'
 
 export interface PartnerData {
     data: Partner[];
@@ -7,10 +7,10 @@ export interface PartnerData {
 
 export interface Partner {
     id: number;
-    gpNr: string;
+    vp_nr: string;
     last_name: string;
     first_name: string;
-    accesses: UserLogin[]|string;
+    users: UserLogin[]|string;
     status: UserProfilStatus|string;
     selected?: boolean;
 }

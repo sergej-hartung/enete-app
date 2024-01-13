@@ -5,7 +5,7 @@ namespace App\Http\Resources\User\Profile;
 use Illuminate\Http\Request;
 use App\Http\Resources\User\User\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\User\Profile\Status\StatusResource;
+use App\Http\Resources\User\Profile\Status\IndexStatusResource;
 
 class IndexProfileResource extends JsonResource
 {
@@ -22,7 +22,7 @@ class IndexProfileResource extends JsonResource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'accesses' => UserResource::collection($this->users),
-            'status' => new StatusResource($this->status)
+            'status' => new IndexStatusResource($this->status)
         ];
     }
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MainNavbarService } from '../../../services/main-navbar.service'
 import { Subject, takeUntil } from 'rxjs';
-import { PartnerService } from '../../../services/partner.service';
+import { PartnerService } from '../../../services/partner/partner.service';
 
 @Component({
   selector: 'app-main-navbar',

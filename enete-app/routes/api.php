@@ -19,12 +19,26 @@ Route::get('/test', function(Request $request){
     dd($request->all());
 });
 
-
-//Route::post('/user-profiles', 'App\Http\Controllers\User\Profile\StoreController');
+// user-profiele
 Route::group(['namespace' => 'App\Http\Controllers\User\Profile'], function($router){
     Route::get('/user-profiles', 'IndexController');
     Route::post('/user-profiles', 'StoreController');
     Route::get('/user-profiles/{profileId}', 'ShowController');
+    Route::patch('/user-profiles/{profileId}', 'UpdateController');
+});
+
+// user-profiele-statuses
+Route::group(['namespace' => 'App\Http\Controllers\User\Profile\Status'], function($router){
+    Route::get('/user-profile/statuses', 'IndexController');
+});
+
+// user-profiele-careers
+Route::group(['namespace' => 'App\Http\Controllers\User\Profile\Career'], function($router){
+    Route::get('/user-profile/careers', 'IndexController');
+});
+
+Route::group(['namespace' => 'App\Http\Controllers\User\Profile\Categorie'], function($router){
+    Route::get('/user-profile/categories', 'IndexController');
 });
 
 Route::group(['namespace' => 'App\Http\Controllers\User\User'], function($router){

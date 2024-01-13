@@ -10,7 +10,7 @@ import { MainNavbarComponent } from './components/nav/main-navbar/main-navbar.co
 import { SecondaryNavbarComponent } from './components/nav/secondary-navbar/secondary-navbar.component';
 import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 
 
 
@@ -31,7 +31,8 @@ import { HttpClientModule } from '@angular/common/http';
     HttpClientModule,
   ],
   providers: [
-    provideClientHydration()
+    provideClientHydration(),
+    provideHttpClient(withFetch())
   ],
   bootstrap: [AppComponent]
 })

@@ -58,37 +58,49 @@ export class GenericTableComponent<T> {
     if(this.dataService){
       this.dataService.data$
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(data => {       
-          this.setData(data) 
+        .subscribe(data => {  
+          if(data){
+            this.setData(data["data"]) 
+          }            
           //this.isLoded = true 
           console.log(data)       
         });
     }
 
-    this.checkFilters()
+    //this.checkFilters()
   }
 
-  checkFilters(){
-    if(this.dataService && !this.isObjectEmpty(this.dataService.filters)){
-      let dataServiceFilters = this.dataService.filters
-      
-      Object.keys(dataServiceFilters).forEach(filterKey => {
-        let filter = this.filters?.find(f => f.type === 'select' && f.key == filterKey)
-        if(filter && 'options' in filter){
-          let selectedFilter = filter.options?.find(o => o.value === dataServiceFilters[filterKey])
-          if(selectedFilter) selectedFilter['selected'] = true
-        }
-      })
-    }
-  }
+  // checkFilters(){
+  //   if(this.dataService && this.dataService?.filters && !this.isObjectEmpty(this.dataService.filters)){
+  //     let dataServiceFilters = this.dataService.filters
+  //     Object.keys(dataServiceFilters).forEach(filterKey => {
+  //       console.log(this.filters)
+  //       let filter = this.filters?.find(f => {
+  //         //console.log(f.type === 'select')
+  //         //console.log(f.key == filterKey)
+  //         console.log(f.key)
+  //         //console.log(filterKey)
+  //         // f.type === 'select' && 
+  //       })
+  //       console.log(filter)
+  //       console.log(this.filters)
+  //       console.log(filterKey)
+  //       if(filter && 'options' in filter){
+  //         let selectedFilter = filter.options?.find(o => o.value === dataServiceFilters[filterKey])
+  //         console.log(selectedFilter)
+  //         if(selectedFilter) selectedFilter['selected'] = true
+  //       }
+  //     })
+  //   }
+  // }
 
-  isObjectEmpty(objectName: Object){
-    return (
-      objectName &&
-      Object.keys(objectName).length === 0 &&
-      objectName.constructor === Object
-    );
-  }
+  // isObjectEmpty(objectName: Object){
+  //   return (
+  //     objectName &&
+  //     Object.keys(objectName).length === 0 &&
+  //     objectName.constructor === Object
+  //   );
+  // }
 
   setData(data: T[]){
     this.data = data.map(d => {
@@ -97,39 +109,39 @@ export class GenericTableComponent<T> {
       return {
         ...item,
         accesses: this.getAccessIcon(item.accesses),
-        status_id: this.getStatusIcon(item.status)
+        //status_id: this.getStatusIcon(item.status)
       };
     });
   }
 
-  getStatusIcon(status: any) {
-    if(status && 'name' in status){
-      switch (status.name) {
-        case 'Aktiv':
-          return 'fa-solid fa-circle-check text-success-custom';
-        case 'Inaktiv':
-          return 'fa-solid fa-circle-exclamation text-warning'; 
-        case 'Interessent':
-          return 'fa-solid fa-circle-info text-info'; // Пример другого класса иконки
-        case 'Gesperrt':
-          return 'fa-solid fa-circle-xmark text-danger'; // Пример другого класса иконки
-        case 'Gekündigt':
-          return 'fa-solid fa-circle-xmark text-danger'; // Пример другого класса иконки
-        default:
-          return '';
-      }
-    }else{
-      return '';
-    }
+  // getStatusIcon(status: any) {
+  //   if(status && 'name' in status){
+  //     switch (status.name) {
+  //       case 'Aktiv':
+  //         return 'fa-solid fa-circle-check text-success-custom';
+  //       case 'Inaktiv':
+  //         return 'fa-solid fa-circle-exclamation text-warning'; 
+  //       case 'Interessent':
+  //         return 'fa-solid fa-circle-info text-info'; // Пример другого класса иконки
+  //       case 'Gesperrt':
+  //         return 'fa-solid fa-circle-xmark text-danger'; // Пример другого класса иконки
+  //       case 'Gekündigt':
+  //         return 'fa-solid fa-circle-xmark text-danger'; // Пример другого класса иконки
+  //       default:
+  //         return '';
+  //     }
+  //   }else{
+  //     return '';
+  //   }
     
-  }
+  // }
   
   getAccessIcon(accesses: Accessible['accesses']) {
     let access 
     if(accesses){
       access = accesses.find(a => a.status && a.status.name === 'active');
     }  
-    return access ? 'fa-solid fa-key text-success-custom' : 'fa-solid fa-key text-light-custom'; // Пример классов для состояния доступа
+    return access ? {'icon': 'fa-solid fa-key', 'color': '#69b548'} : {'icon': 'fa-solid fa-key', 'color': '#ccc'}; // Пример классов для состояния доступа
   }
 
   selectRow(row: any) {
@@ -137,6 +149,7 @@ export class GenericTableComponent<T> {
       if (row.selected) {
         return;
       }
+      console.log(this.data)
       this.data?.forEach(d => d.selected = false);
       row.selected = true;
   
@@ -198,7 +211,7 @@ export class GenericTableComponent<T> {
   applyFilter(filter: { key: string; value: any }) {
     this.dataService?.confirmAction('filter', () => {
       if(this.dataService){
-        this.dataService.fetchData({
+        this.dataService.fetchData({         
           [filter.key]: filter.value
         });
         this.dataService.resetDetailedData();

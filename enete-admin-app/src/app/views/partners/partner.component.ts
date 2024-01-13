@@ -1,9 +1,12 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { PartnerService } from '../../services/partner.service';
+import { PartnerService } from '../../services/partner/partner.service';
+import { StatusService } from '../../services/partner/status/status.service';
 import { take, takeUntil } from 'rxjs/operators';
 import { MainNavbarService } from '../../services/main-navbar.service';
 import { NotificationService } from '../../services/notification.service';
+import { CategorieService } from '../../services/partner/categorie/categorie.service';
+import { CareerService } from '../../services/partner/career/career.service';
 
 @Component({
   selector: 'app-partner',
@@ -17,7 +20,10 @@ export class PartnerComponent {
   @ViewChild('customMessageTemplate') customMessageTemplate!: TemplateRef<any>;
   
   constructor(
-    private partnerService: PartnerService, 
+    private partnerService: PartnerService,
+    private statusService: StatusService, 
+    private categorieService: CategorieService,
+    private careerService: CareerService,
     private mainNavbarService: MainNavbarService,
     private notificationService: NotificationService
   ) {}
@@ -29,9 +35,14 @@ export class PartnerComponent {
     this.mainNavbarService.setIconState('save', true, true);
     this.mainNavbarService.setIconState('new', true, false);
 
+    this.statusService.fetchData()   
+    this.careerService.fetchData()   
+    this.categorieService.fetchData()   
     this.partnerService.fetchData({
-      'status_id': '1',
+      'status_id': '1'
     })
+
+    
 
     this.mainNavbarService.iconClicks$
       .pipe(takeUntil(this.unsubscribe$))
@@ -81,9 +92,7 @@ export class PartnerComponent {
       // null,
       'Weiter',  // acceptBtnTitle
       'Abbrechen',  // declineBtnTitle
-      () => proceedCallback(
-              
-            ),
+      () => proceedCallback(),
       () => console.log('Declined!')
     );
 

@@ -16,7 +16,7 @@ class IndexController extends Controller
         $data = $request->validated();
 
         $filter = app()->make(UserProfileFilter::class, ['queryParams' => array_filter($data)]);
-        $profile = UserProfile::filter($filter)->sort($data)->get();
+        $profile = UserProfile::with(['users', 'status'])->filter($filter)->sort($data)->get();
 
         return IndexProfileResource::collection($profile);
     }

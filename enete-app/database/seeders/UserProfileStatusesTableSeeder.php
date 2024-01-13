@@ -13,12 +13,23 @@ class UserProfileStatusesTableSeeder extends Seeder
      */
     public function run(): void
     {
-        $statuses = ['Aktiv', 'Inaktiv', 'Gesperrt', 'Gekündigt', 'Interessent']; // Add more as needed
+        $statuses = [
+            ['name' => 'Aktiv', 'icon' => 'fa-circle-check fa-solid', 'color' => '#69b548'],
+            ['name' => 'Inaktiv', 'icon' => 'fa-circle-exclamation fa-solid', 'color' => '#ffc107'],
+            ['name' => 'Gesperrt', 'icon' => 'fa-circle-xmark fa-solid', 'color' => '#c41425'],
+            ['name' => 'Gekündigt', 'icon' => 'fa-circle-xmark fa-solid', 'color' => '#940110'],
+            ['name' => 'Interessent', 'icon' => 'fa-circle-info fa-solid', 'color' => '#0dcaf0'],
+            // Добавьте дополнительные статусы по мере необходимости
+        ];
+
         foreach ($statuses as $status) {
             DB::table('user_profile_statuses')->insert([
-                'name' => $status,
+                'name' => $status['name'],
+                'icon' => $status['icon'],
+                'color' => $status['color'],
                 'created_at' => now(),
             ]);
         }
+       
     }
 }

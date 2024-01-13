@@ -43,7 +43,7 @@ return new class extends Migration
             $table->text('external_note')->nullable();
             $table->unsignedBigInteger('status_id');
             $table->unsignedBigInteger('career_id')->nullable();
-            $table->unsignedBigInteger('user_profile_categorie_id');
+            $table->unsignedBigInteger('user_profile_categorie_id')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();            
             $table->timestamp('last_visit')->nullable();            
             $table->foreign('parent_id')->references('id')->on('user_profiles')->onDelete('set null');

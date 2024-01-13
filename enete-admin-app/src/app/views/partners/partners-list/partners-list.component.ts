@@ -1,12 +1,16 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {Tablecolumn } from '../../../models/tablecolumn';
-import {Partner} from '../../../models/partner';
+import {Partner} from '../../../models/partner/partner';
 import { Subject} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { PartnerService } from '../../../services/partner.service'
+import { PartnerService } from '../../../services/partner/partner.service'
 import { UserLogin } from '../../../models/user-login';
 import { FilterOption, GenericTableComponent } from '../../../shared/components/generic-table/generic-table.component';
 import { MainNavbarService } from '../../../services/main-navbar.service';
+import { StatusService } from '../../../services/partner/status/status.service';
+import { CategorieService } from '../../../services/partner/categorie/categorie.service';
+import { Status } from '../../../models/partner/status/status';
+import { Categorie } from '../../../models/partner/categorie/categorie';
 
 
 
@@ -27,9 +31,10 @@ export class PartnersListComponent implements OnInit, OnDestroy {
   
   constructor(
     public partnerService: PartnerService,
-    private mainNavbarService: MainNavbarService,
-    
-    ) {
+    private statusService: StatusService,
+    private categorieService: CategorieService,
+    private mainNavbarService: MainNavbarService
+  ) {
 
     this.parnerColumns = [
       {key: 'id', title: '#', sortable: true},
@@ -37,7 +42,7 @@ export class PartnersListComponent implements OnInit, OnDestroy {
       {key: 'last_name', title: 'Nachname', sortable: true},
       {key: 'first_name', title: 'Vorname', sortable: true},
       {key: 'accesses', title: 'Zugang', isIcon: true},
-      {key: 'status_id', title: 'Status', sortable: true, isIcon: true},
+      {key: 'status', title: 'Status', sortable: true, isIcon: true},
     ]
 
     this.filters = [
@@ -46,24 +51,13 @@ export class PartnersListComponent implements OnInit, OnDestroy {
         type: 'select',
         key: 'status_id',
         label: 'Status',
-        options: [
-          { label: 'Alle', value: ''},
-          { label: 'Aktiv', value: '1' },
-          { label: 'Inaktiv', value: '2' },
-          { label: 'Gesperrt', value: '3' },
-          { label: 'Gekündigt', value: '4' },
-          { label: 'Interessent', value: '5' }
-        ],
+        options: [],
       },
       {
         type: 'select',
         key: 'user_profile_categorie_id',
         label: 'Kategorie',
-        options: [
-          { label: 'Alle', value: '' },
-          { label: 'Vertrieb', value: '1'},
-          { label: 'Shop', value: '2' }
-        ],
+        options: [],
       }
     ]
 
@@ -78,6 +72,82 @@ export class PartnersListComponent implements OnInit, OnDestroy {
           this.genericTableComponent.resetSelectedRow()
         }
     });
+
+    this.statusService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {
+        if(data){                       
+          if(data.requestType == "get" && data.entityType == 'statuses'){
+            this.setStatuses(data.data)
+            this.checkFilters()
+          }
+        }
+      })
+
+    this.categorieService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {
+        console.log(data)
+        if(data){                       
+          if(data.requestType == "get" && data.entityType == 'categories'){
+            
+            this.setCategories(data.data)
+            this.checkFilters()
+          }
+        }
+      })
+  }
+
+  setCategories(data: Categorie[]){
+    let options = <{label: string, value: string}[]>[{label: 'Alle', value: ''}]
+
+    data.forEach(d => {
+      let option = {
+        label: d.name,
+        value: d.id.toString()
+      }
+      options.push(option)
+    })
+
+    let filter = this.filters?.find(f => f.type === "select" && f.key === 'user_profile_categorie_id' && f.label === 'Kategorie')
+    if(filter) filter.options = options
+  }
+
+  setStatuses(data: Status[]){
+    let options = <{label: string, value: string}[]>[{label: 'Alle', value: ''}]
+
+    data.forEach(d => {
+      let option = {
+        label: d.name,
+        value: d.id.toString()
+      }
+      options.push(option)
+    })
+
+    let filter = this.filters?.find(f => f.type === "select" && f.key === 'status_id' && f.label === 'Status')
+    if(filter) filter.options = options
+  }
+
+  checkFilters(){
+    if(this.partnerService.filters && !this.isObjectEmpty(this.partnerService.filters)){
+      let dataServiceFilters = this.partnerService.filters
+      Object.keys(dataServiceFilters).forEach(filterKey => {
+        let filter = this.filters?.find(f => f.type === 'select' && f.key == filterKey)
+        if(filter && 'options' in filter){
+          let selectedFilter = filter.options?.find(o => o.value === dataServiceFilters[filterKey])
+          console.log(selectedFilter)
+          if(selectedFilter) selectedFilter['selected'] = true
+        }
+      })
+    }
+  }
+
+  isObjectEmpty(objectName: Object){
+    return (
+      objectName &&
+      Object.keys(objectName).length === 0 &&
+      objectName.constructor === Object
+    );
   }
 
   ngOnDestroy() {

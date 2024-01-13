@@ -18,7 +18,7 @@
                                                     <label 
                                                         for="vp_nr" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="isFieldRequired('vp_nr')"
+                                                        [class.required]="requiredStatus['vp_nr']"
                                                     >GP-Nr</label>
                                                     <input 
                                                         type="text" 
@@ -44,14 +44,14 @@
                                                         class="invalid-feedback custom-invalid-feedback"
                                                         *ngIf="userProfilesForm.get('vp_nr')?.errors?.['vpNrExists']"
                                                     >
-                                                        Die VP-Nr. ist bereits vergeben
+                                                        Die GP-Nr. ist bereits vergeben
                                                     </div>
                                                 </div>
                                                 <div class="col-3 pe-1 ps-1">
                                                     <label 
                                                         for="anrede" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="isFieldRequired('salutation')"
+                                                        [class.required]="requiredStatus['salutation']"
                                                     >Anrede</label>
                                                     <select 
                                                         id="anrede" 
@@ -69,7 +69,7 @@
                                                     <label 
                                                         for="title" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="isFieldRequired('title')"
+                                                        [class.required]="requiredStatus['title']"
                                                     >Titel</label>
                                                     <select 
                                                         id="title" 
@@ -92,7 +92,7 @@
                                                     <label 
                                                         for="last_name" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="isFieldRequired('last_name')"
+                                                        [class.required]="requiredStatus['last_name']"
                                                     >Name</label>
                                                     <input 
                                                         type="text" 
@@ -119,7 +119,7 @@
                                                     <label 
                                                         for="first_name" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="isFieldRequired('first_name')"
+                                                        [class.required]="requiredStatus['first_name']"
                                                     >Vorname</label>
                                                     <input 
                                                         type="text" 
@@ -150,7 +150,7 @@
                                                     <label 
                                                         for="date_of_birth" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="isFieldRequired('birthdate')"
+                                                        [class.required]="requiredStatus['birthdate']"
                                                     >Geburtsdatum</label>
                                                     <input 
                                                         type="date" 
@@ -177,7 +177,7 @@
                                                     <label 
                                                         for="company" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="isFieldRequired('company')"
+                                                        [class.required]="requiredStatus['company']"
                                                     >Firma</label>
                                                     <input 
                                                         type="text" 
@@ -205,7 +205,7 @@
                                                             <label 
                                                                 for="street" 
                                                                 class="form-label custom-label-sm"
-                                                                [class.required]="isFieldRequired('street')"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].street']"
                                                             >Straße</label>
                                                             <input 
                                                                 type="text" 
@@ -226,7 +226,7 @@
                                                             <label 
                                                                 for="house_nr" 
                                                                 class="form-label custom-label-sm"
-                                                                [class.required]="isFieldRequired('house_number')"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].house_number']"
                                                             >Haus-Nr.</label>
                                                             <input 
                                                                 type="text" 
@@ -248,7 +248,11 @@
                                                     <!-- Row 5: PLZ and Ort -->
                                                     <div class="row">
                                                         <div class="col-4 pe-1">
-                                                            <label for="plz" class="form-label custom-label-sm">PLZ</label>
+                                                            <label 
+                                                                for="plz" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].zip']"
+                                                            >PLZ</label>
                                                             <input 
                                                                 type="text" 
                                                                 class="form-control form-control-sm" 
@@ -265,7 +269,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-8 ps-1">
-                                                            <label for="city" class="form-label custom-label-sm">Ort</label>
+                                                            <label 
+                                                                for="city" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].city']"
+                                                            >Ort</label>
                                                             <input 
                                                                 type="text" 
                                                                 class="form-control form-control-sm" 
@@ -297,7 +305,11 @@
                                             <ng-container formArrayName="contacts">                                       
                                                 <div  class="row" *ngFor="let contact of contacts.controls; let i = index" [formGroupName]="i" >
                                                     <div class="col-4 pe-1">                                        
-                                                        <label for='prefix_phone-{{i}}' class="form-label custom-label-sm">Vorwahl</label>
+                                                        <label 
+                                                            for='prefix_phone-{{i}}' 
+                                                            class="form-label custom-label-sm"
+                                                            [class.required]="requiredStatus['contacts[' + i + '].prefix']"
+                                                        >Vorwahl</label>
                                                         <input 
                                                             type="text" 
                                                             id='prefix_phone-{{i}}'
@@ -315,7 +327,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-8 ps-1" *ngIf="contact.get('user_profile_contact_type_id')?.value == 1">
-                                                        <label for='tel_number-{{i}}' class="form-label custom-label-sm">Tel. Nummer</label>
+                                                        <label 
+                                                            for='tel_number-{{i}}' 
+                                                            class="form-label custom-label-sm"
+                                                            [class.required]="requiredStatus['contacts[' + i + '].number']"
+                                                        >Tel. Nummer</label>
                                                         <div class="input-group">
                                                             <input 
                                                                 type="text" 
@@ -335,7 +351,11 @@
                                                         </div>
                                                     </div>
                                                     <div class="col-8 ps-1" *ngIf="contact.get('user_profile_contact_type_id')?.value == 2">
-                                                        <label for='mobil_number-{{i}}' class="form-label custom-label-sm">Mobil. Nr</label>
+                                                        <label 
+                                                            for='mobil_number-{{i}}' 
+                                                            class="form-label custom-label-sm"
+                                                            [class.required]="requiredStatus['contacts[' + i + '].number']"
+                                                        >Mobil. Nr</label>
                                                         <div class="input-group">
                                                             <input 
                                                                 type="text" 
@@ -360,7 +380,11 @@
                                         <form [formGroup]="userProfilesForm">                                
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <label for="email" class="form-label custom-label-sm">E-Mail</label>
+                                                    <label 
+                                                        for="email" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['email']"
+                                                    >E-Mail</label>
                                                     <div class="input-group">                     
                                                         <input 
                                                             type="email" 
@@ -405,7 +429,11 @@
                                                 <ng-container *ngFor="let bank of banks.controls; let i = index" [formGroupName]="i" >
                                                     <div class="row">
                                                         <div class="col-3 pe-1">
-                                                            <label for="anrede-bank" class="form-label custom-label-sm">Anrede</label>
+                                                            <label 
+                                                                for="anrede-bank" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['banks[' + i + '].salutation']"
+                                                            >Anrede</label>
                                                             <select 
                                                                 id="anrede-bank" 
                                                                 class="form-select form-select-sm"
@@ -418,7 +446,11 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-5 pe-1 ps-1">
-                                                            <label for="last_name" class="form-label custom-label-sm">Name</label>
+                                                            <label 
+                                                                for="last_name" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['banks[' + i + '].last_name']"
+                                                            >Name</label>
                                                             <input 
                                                                 type="text" 
                                                                 class="form-control form-control-sm" 
@@ -435,7 +467,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-4 ps-1">
-                                                            <label for="first_name" class="form-label custom-label-sm">Vorname</label>
+                                                            <label 
+                                                                for="first_name" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['banks[' + i + '].first_name']"
+                                                            >Vorname</label>
                                                             <input 
                                                                 type="text" 
                                                                 class="form-control form-control-sm" 
@@ -454,7 +490,11 @@
                                                     </div>
                                                     <div class="row ">
                                                         <div class="col-8 pe-1">
-                                                            <label for="iban" class="form-label custom-label-sm">IBAN</label>
+                                                            <label 
+                                                                for="iban" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['banks[' + i + '].iban']"
+                                                            >IBAN</label>
                                                             <input 
                                                                 autocomplete="off" 
                                                                 class="form-control  form-control-sm" 
@@ -472,7 +512,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-4 ps-1">
-                                                            <label for="bic" class="form-label custom-label-sm">BIC</label>
+                                                            <label 
+                                                                for="bic" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['banks[' + i + '].bic']"
+                                                            >BIC</label>
                                                             <input 
                                                                 autocomplete="off" 
                                                                 class="form-control  form-control-sm" 
@@ -486,7 +530,11 @@
                                                     </div>
                                                     <div class="row">
                                                         <div class="col-8 pe-1">
-                                                            <label for="bank" class="form-label custom-label-sm">Bank</label>
+                                                            <label 
+                                                                for="bank" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['banks[' + i + '].bank_name']"
+                                                            >Bank</label>
                                                             <input 
                                                                 autocomplete="off" 
                                                                 class="form-control  form-control-sm" 
@@ -504,7 +552,11 @@
                                                             </div>
                                                         </div>
                                                         <div class="col-4 ps-1">
-                                                            <label for="country" class="form-label custom-label-sm">Land</label>
+                                                            <label 
+                                                                for="country" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['banks[' + i + '].country']"
+                                                            >Land</label>
                                                             <select 
                                                                 class="form-select form-select-sm" 
                                                                 id="country"
@@ -528,7 +580,11 @@
                                         <form [formGroup]="userProfilesForm">
                                             <div class="row ">
                                                 <div class="col pe-1">
-                                                    <label for="status" class="form-label custom-label-sm">Status</label>
+                                                    <label 
+                                                        for="status" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['status_id']"
+                                                    >Status</label>
                                                     <select 
                                                         class="form-select form-select-sm" 
                                                         id="status"
@@ -536,15 +592,15 @@
                                                         [class.is-invalid]="userProfilesForm.get('status_id')?.errors && userProfilesForm.get('status_id')?.touched"
                                                         [class.is-valid]="!userProfilesForm.get('status_id')?.errors && userProfilesForm.get('status_id')?.touched"
                                                     >
-                                                        <option value="1">Aktiv</option>
-                                                        <option value="2">Inaktiv</option>
-                                                        <option value="3">Gesperrt</option>
-                                                        <option value="4">Gekündigt</option>
-                                                        <option value="5">Interessent</option>
+                                                        <option *ngFor="let status of statuses" [value]="status.id">{{status.name}}</option> 
                                                     </select>
                                                 </div>
                                                 <div class="col-3 pe-1 ps-1">
-                                                    <label for="stufe" class="form-label custom-label-sm">Stufe</label>
+                                                    <label 
+                                                        for="stufe" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['career_id']"
+                                                    >Stufe</label>
                                                     <select 
                                                         class="form-select form-select-sm" 
                                                         id="stufe"
@@ -552,22 +608,15 @@
                                                         [class.is-invalid]="userProfilesForm.get('career_id')?.errors && userProfilesForm.get('career_id')?.touched"
                                                         [class.is-valid]="!userProfilesForm.get('career_id')?.errors && userProfilesForm.get('career_id')?.touched"
                                                     >
-                                                        <option value="1" >KB</option>
-                                                        <option value="2" >VL</option>
-                                                        <option value="3" >TL</option>
-                                                        <option value="4" >OL</option>
-                                                        <option value="5" >OL*</option>
-                                                        <option value="6" >OL**</option>
-                                                        <option value="7" >TM</option>
-                                                        <option value="8" >TM*</option>
-                                                        <option value="9" >TM**</option>
-                                                        <option value="10" >OM</option>
-                                                        <option value="11" >OM*</option>
-                                                        <option value="12" >NM</option>
+                                                        <option *ngFor="let career of careers" [value]="career.id" >{{career.stages_description}}</option>
                                                     </select>
                                                 </div>
                                                 <div class="col ps-1">
-                                                    <label for="categorie" class="form-label custom-label-sm">Kategorie</label>
+                                                    <label 
+                                                        for="categorie" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['user_profile_categorie_id']"
+                                                    >Kategorie</label>
                                                     <select 
                                                         class="form-select form-select-sm" 
                                                         id="categorie"
@@ -575,15 +624,18 @@
                                                         [class.is-invalid]="userProfilesForm.get('user_profile_categorie_id')?.errors && userProfilesForm.get('user_profile_categorie_id')?.touched"
                                                         [class.is-valid]="!userProfilesForm.get('user_profile_categorie_id')?.errors && userProfilesForm.get('user_profile_categorie_id')?.touched"
                                                     >
-                                                        <option value="1">Vertrieb</option>
-                                                        <option value="2">Shop</option>
+                                                        <option *ngFor="let categorie of categories" [value]="categorie.id">{{categorie.name}}</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             
                                             <div class="row">
                                                 <div class="col-8 pe-1">
-                                                    <label for="leadership" class="form-label custom-label-sm">Führung</label>
+                                                    <label 
+                                                        for="leadership" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['parent']"
+                                                    >Führung</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control  form-control-sm" 
@@ -617,7 +669,11 @@
                                         <form [formGroup]="userProfilesForm">
                                             <div class="row ">
                                                 <div class="col-6 pe-1">
-                                                    <label for="partner_input" class="form-label custom-label-sm">Eingang</label>
+                                                    <label 
+                                                        for="partner_input" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['entrance']"
+                                                    >Eingang</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control form-control-sm" 
@@ -648,7 +704,11 @@
                                             </div>   
                                             <div class="row ">
                                                 <div class="col-6 pe-1">
-                                                    <label for="partner_entry" class="form-label custom-label-sm">Eintritt</label>
+                                                    <label 
+                                                        for="partner_entry" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['entry']"
+                                                    >Eintritt</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control form-control-sm" 
@@ -679,7 +739,11 @@
                                             </div> 
                                             <div class="row ">
                                                 <div class="col-6 pe-1">
-                                                    <label for="partner_exit" class="form-label custom-label-sm">Austritt</label>
+                                                    <label 
+                                                        for="partner_exit" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['exit']"
+                                                    >Austritt</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control form-control-sm" 
@@ -716,7 +780,11 @@
                                         <form [formGroup]="userProfilesForm">
                                             <div class="row ">
                                                 <div class="col-6 pe-1">
-                                                    <label for="tax_office" class="form-label custom-label-sm">Finanzamt</label>
+                                                    <label 
+                                                        for="tax_office" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['tax_office']"
+                                                    >Finanzamt</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control  form-control-sm" 
@@ -745,7 +813,11 @@
                                             
                                             <div class="row">
                                                 <div class="col-6 pe-1">
-                                                    <label for="steuer_nr" class="form-label custom-label-sm">Steuer-Nr</label>
+                                                    <label 
+                                                        for="steuer_nr" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['tax_number']"
+                                                    >Steuer-Nr</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control  form-control-sm" 
@@ -763,7 +835,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-6 ps-1">
-                                                    <label for="steuer_id" class="form-label custom-label-sm">Steuer-ID</label>
+                                                    <label 
+                                                        for="steuer_id" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['tax_id']"
+                                                    >Steuer-ID</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control  form-control-sm" 
@@ -783,7 +859,11 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-12">
-                                                    <label for="datev_nr" class="form-label custom-label-sm">DATEV-Nr</label>
+                                                    <label 
+                                                        for="datev_nr" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['datev_no']"
+                                                    >DATEV-Nr</label>
                                                     <input 
                                                         autocomplete="off" 
                                                         class="form-control  form-control-sm" 
@@ -860,20 +940,25 @@
                       
                 </ng-template>
             </li>
-            <li [ngbNavItem]="2">
+            <!-- <li [ngbNavItem]="2">
                 <button ngbNavLink>Bankdaten</button>
                 <ng-template ngbNavContent>
                     <p>
                         Zuganf
                     </p>
                 </ng-template>
-            </li>
-            <li [ngbNavItem]="3">
+            </li> -->
+            <li [ngbNavItem]="2">
                 <button ngbNavLink>Zugang</button>
                 <ng-template ngbNavContent>
-                    <p>
-                        Zuganf
-                    </p>
+                    <div class="row no-gutters">
+                        <div class="col ps-2 pe-2">
+                            <p>
+                                Zuganf
+                            </p>
+                        </div>
+                        
+                    </div>                    
                 </ng-template>
             </li>
         </ul>
