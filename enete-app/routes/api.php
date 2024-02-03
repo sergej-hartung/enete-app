@@ -37,6 +37,7 @@ Route::group(['namespace' => 'App\Http\Controllers\User\Profile\Career'], functi
     Route::get('/user-profile/careers', 'IndexController');
 });
 
+// user-profiele-categories
 Route::group(['namespace' => 'App\Http\Controllers\User\Profile\Categorie'], function($router){
     Route::get('/user-profile/categories', 'IndexController');
 });

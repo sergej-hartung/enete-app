@@ -1,0 +1,231 @@
+<div class="row no-gutters">
+    <div class="col-12 ps-2 pe-2 pt-2" *ngIf="users">
+        <div *ngFor="let user of users.controls; index as i"  class="d-flex user-info-bar "> <!--selected -->
+            <div class="user-avatar-wrap">
+                <img  class="user-avater" src="assets/img/avatar-muster.jpg">
+            </div>
+            <div class="user-name-login">
+                <div class="user-info-label">name</div>
+                <div class="user-name">
+                    {{userProfilesForm.get('first_name')?.value + ' ' +  userProfilesForm.get('last_name')?.value}}
+                </div>
+
+                <div class="user-info-label">login</div>
+                <div class="user_login">
+                    {{user.get('login_name')?.value}}
+                </div>
+            </div>                               
+            <div class="user-info-wrap">
+                <div class="user-info-label">zuletzt online</div>
+                <div class="user-info">14.01.2024 15:31</div>
+            </div>
+            <div class="user-status active">
+                <i class="fa-key fa-solid"></i>
+            </div>
+        </div>
+        <!-- <div  class="d-flex user-info-bar">
+            <div class="user-avatar-wrap">
+                <img  class="user-avater" src="assets/img/avatar-muster.jpg">
+            </div>
+            <div class="user-name-login">
+                <div class="user-info-label">name</div>
+                <div class="user-name">
+                    Sergej Hartung
+                </div>
+
+                <div class="user-info-label">login</div>
+                <div class="user_login">49000100</div>
+            </div>                               
+            <div class="user-info-wrap">
+                <div class="user-info-label">zuletzt online</div>
+                <div class="user-info">14.01.2024 15:31</div>
+            </div>
+            <div class="user-status active">
+                <i class="fa-key fa-solid"></i>
+            </div>
+        </div> -->
+        <!-- <button  class="btn btn-outline-secondary"><i class="fa-solid fa-plus"></i></button> -->
+    </div>
+    <div class="col-12 d-flex ps-2 pe-2 pb-1 pt-2">
+        <button type="button" class="btn btn-dark-custom me-2" (click)="setNewAccess()">
+            <!-- <i class="fa-solid fa-plus"></i> -->
+            <i class="fa-solid fa-key"></i>
+            Neuer Zugang
+        </button>
+        <button type="button" class="btn btn-dark-custom ">
+            <!-- <i class="fa-solid fa-plus"></i> -->
+            <i class="fa-solid fa-user-gear"></i>
+            Zugang generieren 
+        </button>
+    </div>
+    <div class="col-12 ps-2 pe-2 pt-2" *ngIf="selectedUser">
+        <app-card>
+            <div card-header>Zugangsdaten</div>
+            <div card-body>
+                <form  [formGroup]="selectedUser">
+                    <div class="row">
+                        <div class="col pe-1">
+                            <label 
+                                for="user-login" 
+                                class="form-label custom-label-sm"
+                                [class.required]="requiredStatus['users[' + selectedUserIndex + '].login_name']"
+                            >Login</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm is-invalid" 
+                                [class.is-invalid]="selectedUser.get('login_name')?.errors && selectedUser.get('login_name')?.touched"
+                                [class.is-valid]="!selectedUser.get('login_name')?.errors && selectedUser.get('login_name')?.touched"
+                                id="user-login" 
+                                formControlName="login_name"
+                            >
+                            <div 
+                                class="invalid-feedback custom-invalid-feedback"
+                                *ngIf="selectedUser.get('login_name')?.errors?.['required']"
+                            >
+                                Login ist erforderlich.
+                            </div>
+                        </div>
+                        <div class="col ps-1 pe-1">
+                            <label 
+                                for="user-role" 
+                                class="form-label custom-label-sm"
+                                [class.required]="requiredStatus['users[' + selectedUserIndex + '].role_id']"
+                            >Rolle</label>
+                            <select 
+                                id="user-role" 
+                                class="form-select form-select-sm"
+                                formControlName="role_id"
+                                [class.is-invalid]="selectedUser.get('role_id')?.errors && selectedUser.get('role_id')?.touched"
+                                [class.is-valid]="!selectedUser.get('role_id')?.errors && selectedUser.get('role_id')?.touched"
+                            >
+                                <option value="1">admin</option>
+                                <option value="2">vp</option>
+                                <option value="3">vision_vp</option>
+                                <option value="4">shop</option>
+                            </select>
+                        </div>
+                        <div class="col ps-1">
+                            <label 
+                                for="user-status" 
+                                class="form-label custom-label-sm"
+                                [class.required]="requiredStatus['users[' + selectedUserIndex + '].status_id']"
+                            >Status</label>
+                            <select 
+                                id="user-status" 
+                                class="form-select form-select-sm"
+                                formControlName="status_id"
+                                [class.is-invalid]="selectedUser.get('status_id')?.errors && selectedUser.get('status_id')?.touched"
+                                [class.is-valid]="!selectedUser.get('status_id')?.errors && selectedUser.get('status_id')?.touched"
+                            >
+                                <option value="1">Activ</option>
+                                <option value="2">Inaktiv</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    <div class="row">
+                        <div class="col pe-1">
+                            <label 
+                                for="user-password" 
+                                class="form-label custom-label-sm"
+                                [class.required]="requiredStatus['users[' + selectedUserIndex + '].password']"
+                            >Passwort</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm " 
+                                [class.is-invalid]="selectedUser.get('password')?.errors && selectedUser.get('password')?.touched"
+                                [class.is-valid]="!selectedUser.get('password')?.errors && selectedUser.get('password')?.touched"
+                                id="user-password" 
+                                formControlName="password"
+                            >
+                            <div 
+                                class="invalid-feedback custom-invalid-feedback"
+                                *ngIf="selectedUser.get('password')?.errors?.['required']"
+                            >
+                                Login ist erforderlich.
+                            </div>
+                        </div>  
+                        <div class="col ps-1">
+                            <label 
+                                for="user-password_confirmation" 
+                                class="form-label custom-label-sm"
+                                [class.required]="requiredStatus['users[' + selectedUserIndex + '].password_confirmation']"
+                            >Passwort bestätigen</label>
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm" 
+                                [class.is-invalid]="selectedUser.get('password_confirmation')?.errors && selectedUser.get('password_confirmation')?.touched"
+                                [class.is-valid]="!selectedUser.get('password_confirmation')?.errors && selectedUser.get('password_confirmation')?.touched"
+                                id="user-password_confirmation" 
+                                formControlName="password_confirmation"
+                            >
+                            <div 
+                                class="invalid-feedback custom-invalid-feedback"
+                                *ngIf="selectedUser.get('password_confirmation')?.errors?.['required']"
+                            >
+                                Login ist erforderlich.
+                            </div>
+                        </div>                                                
+                    </div>
+                </form>
+            </div>
+        </app-card>       
+    </div>
+    <div class="col-12 ps-2 pe-2">
+        <div class="custom-dropzone-wrap">
+            <div class="custom-dropzone" ngx-dropzone 
+                [multiple]="false" 
+                [accept]="'image/*'"
+                (change)="fileChangeEvent($event)"
+            >
+                <ngx-dropzone-label>Avatar</ngx-dropzone-label>
+                <ngx-dropzone-preview *ngIf="file" [removable]="true" (removed)="onRemove(file)">
+                    <ngx-dropzone-label>{{ file.name }} ({{ file.type }})</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+            </div>
+        </div>     
+    </div>
+    <div class="col-12" *ngIf="file">
+        <nav class="navbar avatar-cropper-nav ps-2 pe-2">
+            <div class="container-fluid justify-content-start pe-0 ps-0">
+                <button class="btn btn-sm btn-outline-secondary" (click)="rotateLeft()">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" (click)="rotateRight()">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>   
+                <div>
+                    <input class="form-control form-control-sm" [(ngModel)]="rotation" placeholder="Drehung" type="number" (ngModelChange)="updateRotation()" />
+                </div>    
+                <button class="btn btn-sm btn-outline-secondary" (click)="imgConfirmed()">
+                    <!-- <i class="fa-solid fa-check text-success"></i> -->
+                    <!-- <i class="fa-solid fa-floppy-disk"></i> -->
+                    <i class="fa-regular fa-floppy-disk"></i>
+                </button>             
+            </div>  
+          </nav>      
+    </div>
+    <div class="col-12 ps-2 pe-2 pb-2" *ngIf="file">
+        <div class="row no-gutters">
+            <div class="col-6">
+                <image-cropper 
+                    [imageChangedEvent]="imageChangedEvent"
+                    [imageFile]="file"
+                    [maintainAspectRatio]="true"
+                    [canvasRotation]="canvasRotation"
+                    [(transform)]="transform"
+                    [aspectRatio]="1/1"
+                    format="png"
+                    (imageCropped)="imageCropped($event)"
+                    (imageLoaded)="imageLoaded($event)"
+                    (cropperReady)="cropperReady($event)"
+                    (loadImageFailed)="loadImageFailed()"
+                ></image-cropper>
+            </div>
+            <div class="col-6">
+                <img class="img-preview" [src]="croppedImage" />
+            </div> 
+        </div>
+    </div>
+    
+</div>

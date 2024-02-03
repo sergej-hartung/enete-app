@@ -18,6 +18,8 @@ class StoreController extends Controller
     public function __invoke(StoreProfileRequest $request)
     {
         try {
+            // dd($request->file());
+            // dd($request->validated());
             DB::beginTransaction();
 
             $addresses = false;

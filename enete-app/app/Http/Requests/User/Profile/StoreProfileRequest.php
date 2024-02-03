@@ -24,6 +24,7 @@ class StoreProfileRequest extends FormRequest
         return [
             
             'vp_nr'                                        => 'sometimes|string|unique:user_profiles,vp_nr|max:255',
+            'egon_nr'                                      => 'sometimes|string|unique:user_profiles,egon_nr|max:255',
             'company'                                      => 'nullable|sometimes|string|max:255',
             'salutation'                                   => 'nullable|sometimes|string|max:255',
             'title'                                        => 'nullable|sometimes|string|max:255',

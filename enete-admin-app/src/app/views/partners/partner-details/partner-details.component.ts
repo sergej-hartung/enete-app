@@ -11,6 +11,7 @@ import { Status } from '../../../models/partner/status/status';
 import { Categorie } from '../../../models/partner/categorie/categorie';
 import { CareerService } from '../../../services/partner/career/career.service';
 import { Career } from '../../../models/partner/career/career';
+import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
 
 class RequiredStatus {
   [key: string]: boolean;
@@ -25,6 +26,7 @@ export class PartnerDetailsComponent {
   active = 1;
 
   dataLoadedOrNew = false
+  userLoadOrNew = false
   private unsubscribe$ = new Subject<void>();
   //@Input() userProfileAddressesForm!: FormGroup;
 
@@ -34,6 +36,17 @@ export class PartnerDetailsComponent {
   categories: Categorie[] = []
   careers: Career[] = []
 
+  
+
+  // user = [
+  //   {
+  //     login_name: "49000100",
+  //     password: '',
+  //     role_id: '1',
+  //     avatar: 'assets/img/avatar-muster.jpg',
+  //     status_id: '1'
+  //   }
+  // ]
 
   constructor(
     public partnerService: PartnerService,
@@ -106,6 +119,10 @@ export class PartnerDetailsComponent {
       if (errors?.vp_nr?.includes("The vp nr has already been taken.")) {
         this.userProfilesForm.controls['vp_nr'].setErrors({ vpNrExists: true });
       }
+      if (errors?.egon_nr?.includes("The egon nr has already been taken.")) {
+        this.userProfilesForm.controls['egon_nr'].setErrors({ egonNrExists: true });
+        console.log(this.userProfilesForm)
+      }
 
       if (errors?.email?.includes("The email has already been taken.")) {
         this.userProfilesForm.controls['email'].setErrors({ emailExists: true });
@@ -126,6 +143,7 @@ export class PartnerDetailsComponent {
               this.partnerService.setFormDirty(false), 
               this.mainNavbarService.setIconState('save', true, true)
               this.userProfilesForm.patchValue(data.data)
+              //this.checkFormAfterPatchValue(data.data)
               this.dataLoadedOrNew = true
             }
             if(data.requestType == "post" && data.entityType == 'partner'){
@@ -183,6 +201,8 @@ export class PartnerDetailsComponent {
           this.partnerService.setFormDirty(this.userProfilesForm.dirty);
           if(this.userProfilesForm.valid){
             this.mainNavbarService.setIconState('save', true, false);
+          }else{
+            this.mainNavbarService.setIconState('save', true, true);
           }                   
         }
       })
@@ -191,27 +211,138 @@ export class PartnerDetailsComponent {
     this.mainNavbarService.iconClicks$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(iconName => {
-        if (iconName === 'new' && this.active === 1) {
-            this.setDataNewUserProfile()
+        if (iconName === 'new') {
+            this.active = 1
+            this.setDataNewUserProfile()           
             this.dataLoadedOrNew = true          
             console.log('new')
           // Обработка нажатия на иконку new
         }
+        // if(iconName === 'new' && this.active === 2){
+        //   this.userLoadOrNew = true  
+        // }
 
         if (iconName === 'save' && this.active === 1) {
-          let value = this.getDirtyValues(this.userProfilesForm)
-          if(this.userProfilesForm.get('id')?.value != null){
-            value['id'] = this.userProfilesForm.get('id')?.value
-            console.log(value)
-            this.partnerService.updateItem(value)
-          }else{
-            this.partnerService.addItem(value)
-            //this.partnerService.addItem(this.userProfilesForm.getRawValue())
-          }
-          console.log(this.userProfilesForm.valid)
+          this.submitForm()
         }
       });
+
+      //console.log(this.users)
   }
+
+  // checkFormAfterPatchValue(data: any){
+  //   console.log(data['contacts'])
+  //   if(data['contacts']){
+      
+  //     if(data['contacts'].length === 0){
+  //       this.userProfilesForm.patchValue({
+  //         'contacts': [
+  //           {
+  //             'user_profile_contact_type_id': '1',
+  //             'user_profile_contact_category_id': '1'
+  //           },
+  //           {
+  //             'user_profile_contact_type_id': '2',
+  //             'user_profile_contact_category_id': '1'
+  //           }
+  //         ],
+  //       })
+
+  //     }else if(data['contacts'].length > 0){
+
+  //     }
+
+  //   }
+  //   let contacts = this.contacts
+  //   console.log(data)
+  //   // contacts.controls.forEach(contact => {
+  //   //   if(contact.get('user_profile_contact_type_id') === null){
+  //   //     contacts.get('user_profile_contact_type_id')?.patchValue('')
+  //   //   }
+  //   // })
+  // }
+
+  addNewAccess(){
+    console.log('test')
+    if(!this.users){
+      this.userProfilesForm.addControl("users", new FormArray([this.createUserFormGroup()]))
+    }else{
+      if(this.users){
+        this.users.push(this.createUserFormGroup())
+      }
+      console.log(this.userProfilesForm)
+    }
+    this.setRequiredStatus();
+    //this.selectedUser = this.getLastUser()
+  }
+
+  submitForm() {
+    const formData = new FormData();
+  
+    // Обработка обычных полей формы
+    Object.keys(this.getDirtyValues(this.userProfilesForm)).forEach(key => {
+      if (key !== 'users' && key !== 'contacts' && key !== 'addresses' && key !== 'banks') {
+        formData.append(key, this.userProfilesForm.value[key]);
+      }
+    });
+  
+    // Обработка массива users
+    this.getDirtyValues(this.userProfilesForm)['users']?.forEach((user:any, index:any) => {
+      Object.keys(user).forEach(field => {
+        const value = user[field];
+        if (value instanceof File) {
+          formData.append(`users[${index}][${field}]`, value, value.name);
+        } else {
+
+          formData.append(`users[${index}][${field}]`, value);
+        }
+      });
+    });
+    // this.userProfilesForm.get('users')?.value.forEach((user:any, index:any) => {
+    //   Object.keys(user).forEach(field => {
+    //     const value = user[field];
+    //     if (value instanceof File) {
+    //       formData.append(`users[${index}][${field}]`, value, value.name);
+    //     } else {
+
+    //       formData.append(`users[${index}][${field}]`, value);
+    //     }
+    //   });
+    // });
+  
+    // По аналогии обработка массивов contacts, addresses, banks
+    ['contacts', 'addresses', 'banks'].forEach(arrayName => {
+      this.getDirtyValues(this.userProfilesForm)[arrayName]?.forEach((item: any, index:any) => {
+        Object.keys(item).forEach(field => {
+
+          formData.append(`${arrayName}[${index}][${field}]`, item[field]);
+        });
+      });
+      // this.userProfilesForm.get(arrayName)?.value.forEach((item: any, index:any) => {
+      //   Object.keys(item).forEach(field => {
+
+      //     formData.append(`${arrayName}[${index}][${field}]`, item[field]);
+      //   });
+      // });
+    });
+    
+    console.log(formData)
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+  }
+
+  // submitForm(){
+  //   let value = this.getDirtyValues(this.userProfilesForm)
+  //   if(this.userProfilesForm.get('id')?.value != null){
+  //     value['id'] = this.userProfilesForm.get('id')?.value
+  //     console.log(value)
+  //     this.partnerService.updateItem(value)
+  //   }else{
+  //     this.partnerService.addItem(value)
+  //     //this.partnerService.addItem(this.userProfilesForm.getRawValue())
+  //   }
+  // }
 
   setDataNewUserProfile(){
     this.partnerService.resetDetailedData()
@@ -255,40 +386,103 @@ export class PartnerDetailsComponent {
     
   }
 
-  get contacts() {
-    return this.userProfilesForm.get('contacts') as FormArray;
+  get users(){
+    return this.userProfilesForm.get('users') as FormArray;
   }
 
-  get addresses() {
-    return this.userProfilesForm.get('addresses') as FormArray;
-  }
 
-  get banks(){
-    return this.userProfilesForm.get('banks') as FormArray;
-  }
+  // getDirtyValues(form: any) {
+  //   let dirtyValues: any = form instanceof FormGroup ? {} : [];
+  //   Object.keys(form.controls).forEach(key => {
+  //       let currentControl = form.controls[key];
 
+  //       if (currentControl.dirty) {
+  //           if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
+  //               const nestedDirtyValues = this.getDirtyValues(currentControl);
+  //               if (Object.keys(nestedDirtyValues).length > 0 && currentControl.get('id')?.value != null) {
+  //                   nestedDirtyValues['id'] = currentControl.get('id')?.value;
+  //               }
+  //               dirtyValues[key] = nestedDirtyValues;
+  //           } else {
+  //               dirtyValues[key] = currentControl.value;
+  //           }
+  //       }
+  //   });
+
+  //   return dirtyValues;
+  // }
+
+  // getDirtyValues(form: any) {
+  //   let dirtyValues: any = form instanceof FormGroup ? {} : [];
+  //   let isFormWithoutId = form.get('id')?.value == null; // Проверяем наличие id
+  
+  //   Object.keys(form.controls).forEach(key => {
+  //     let currentControl = form.controls[key];
+  
+  //     if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
+  //       // Рекурсивный вызов для вложенных FormGroup/FormArray
+  //       const nestedDirtyValues = this.getDirtyValues(currentControl);
+  //       if (nestedDirtyValues !== null) {
+  //         dirtyValues[key] = nestedDirtyValues;
+  //       }
+  //     } else {
+  //       // Для форм без id включаем все заполненные поля
+  //       if (isFormWithoutId && currentControl.value != null) {
+  //         dirtyValues[key] = currentControl.value;
+  //       }
+  //       // Для форм с id включаем только измененные поля
+  //       else if (!isFormWithoutId && currentControl.dirty) {
+  //         dirtyValues[key] = currentControl.value;
+  //       }
+  //     }
+  //   });
+  
+  //   // Добавляем id, если он существует и были изменения
+  //   if (!isFormWithoutId && form instanceof FormGroup && form.get('id')?.value != null) {
+  //     dirtyValues['id'] = form.get('id')?.value;
+  //   }
+  
+  //   return Object.keys(dirtyValues).length > 0 ? dirtyValues : null;
+  // }
 
   getDirtyValues(form: any) {
     let dirtyValues: any = form instanceof FormGroup ? {} : [];
+    let isFormWithoutId = form.get('id')?.value == null; // Проверяем наличие id
+    let hasChanges = false; // Флаг для отслеживания изменений
+  
     Object.keys(form.controls).forEach(key => {
-        let currentControl = form.controls[key];
-
-        if (currentControl.dirty) {
-            if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
-                const nestedDirtyValues = this.getDirtyValues(currentControl);
-                if (Object.keys(nestedDirtyValues).length > 0 && currentControl.get('id')?.value != null) {
-                    nestedDirtyValues['id'] = currentControl.get('id')?.value;
-                }
-                dirtyValues[key] = nestedDirtyValues;
-            } else {
-                dirtyValues[key] = currentControl.value;
-            }
+      let currentControl = form.controls[key];
+  
+      if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
+        // Рекурсивный вызов для вложенных FormGroup/FormArray
+        const nestedDirtyValues = this.getDirtyValues(currentControl);
+        if (nestedDirtyValues !== null) {
+          dirtyValues[key] = nestedDirtyValues;
+          hasChanges = true; // Устанавливаем флаг, если есть изменения во вложенных элементах
         }
+      } else {
+        // Для форм без id включаем все заполненные поля
+        if (isFormWithoutId && currentControl.value != null) {
+          dirtyValues[key] = currentControl.value;
+        }
+        // Для форм с id включаем только измененные поля
+        else if (!isFormWithoutId && currentControl.dirty) {
+          dirtyValues[key] = currentControl.value;
+          hasChanges = true; // Устанавливаем флаг, если поле было изменено
+        }
+      }
     });
-
-    return dirtyValues;
+  
+    // Добавляем id, если он существует и были изменения
+    if (!isFormWithoutId && form instanceof FormGroup && form.get('id')?.value != null && hasChanges) {
+      dirtyValues['id'] = form.get('id')?.value;
+    }
+  
+    return Object.keys(dirtyValues).length > 0 ? dirtyValues : null;
   }
+  
 
+  
 
   private createContactFormGroup(): FormGroup {
     return new FormGroup({
@@ -333,6 +527,7 @@ export class PartnerDetailsComponent {
     return new FormGroup({
       id: new FormControl(),
       vp_nr: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]), 
+      egon_nr: new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]+$')]), 
       company: new FormControl('', [Validators.minLength(2)]),                           
       salutation: new FormControl('', [Validators.required]),                            
       title: new FormControl(''),                                                        
@@ -364,16 +559,28 @@ export class PartnerDetailsComponent {
       contacts: new FormArray([this.createContactFormGroup(), this.createContactFormGroup()]),
       addresses: new FormArray([this.createAddressFormGroup()]),
       banks: new FormArray([this.createBankFormGroup()]),
+      
 
     });
   }
 
+  private createUserFormGroup(): FormGroup {
+    return new FormGroup({
+      id: new FormControl(),
+      login_name: new FormControl('', [Validators.required, Validators.minLength(2)]),
+      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      password_confirmation: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      role_id: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+      avatar: new FormControl(null),
+      status_id: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
+    });
+  }
 
   private setRequiredStatus() {
     this.setControlRequiredStatus(this.userProfilesForm);
   
     // Для FormArray
-    ['contacts', 'addresses', 'banks'].forEach(arrayName => {
+    ['contacts', 'addresses', 'banks', 'users'].forEach(arrayName => {
       const formArray = this.userProfilesForm.get(arrayName);
       if (formArray instanceof FormArray) {
         formArray.controls.forEach((group, index) => {

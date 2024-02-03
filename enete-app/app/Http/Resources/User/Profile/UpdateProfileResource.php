@@ -23,6 +23,7 @@ class UpdateProfileResource extends JsonResource
         return [
             "id"                        => $this->id,
             "vp_nr"                     => $this->vp_nr,
+            "egon_nr"                     => $this->egon_nr,
             "company"                   =>  $this->company,
             "salutation"                => $this->salutation,
             "title"                     =>  $this->title,

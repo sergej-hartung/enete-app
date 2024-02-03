@@ -22,20 +22,56 @@ body{
 
 $max-height-main-nav: 62px;
 $max-height-second-nav: 40px;
-$max-height-status-bar: 32px;
+$max-height-status-bar: 0px; //32px
 $max-height-footer: 20px;
 
 /* Основные стили навигационной панели */
 .main-navbar{
     max-height: $max-height-main-nav;
     height: $max-height-main-nav;
-}
-
-.navbar {
     padding: 0;
     border-bottom: 1px solid #222;
     border-top: 1px solid #333;
     background: linear-gradient(to right, #3a3633 93%, #2a2725 100%);
+}
+
+.avatar-cropper-nav{
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #222;
+    border-top: 1px solid #333;
+    background: linear-gradient(to right, #3a3633 93%, #2a2725 100%);
+
+    input{
+        min-height: 0;
+        padding: 0.1rem 0.5rem;
+        font-size: 0.7rem;
+        max-width: 6rem;
+        margin-right: 5px;
+    }
+
+    button {
+        color: #c0bbb7;
+        border: none;
+        margin-right: 5px;
+        font-size: 0.8rem;
+
+        &:hover{
+            background-color: #484543;
+            color: #dcdcdc;
+        }
+    }
+}
+
+.btn-dark-custom{
+    background-color: #3a3633;
+    color: #c0bbb7;
+    width: 100%;
+
+    &:hover{
+        background-color: #484543;
+        color: #dcdcdc;
+    }
 }
 
 .nav-flex-container {
@@ -588,10 +624,133 @@ footer{
         color: #6c757d63; 
     }
 }
-//   top: 65px;
 
-//   position: sticky;
-//   padding: 0;
-//   font-size: 0;
-//   background: #fff;
-//   height: 4px;
+.user-info-bar{
+    
+    padding: 0.5rem 0.8rem;
+    border: 1px solid rgba(0, 0, 0, 0.175);
+    border-radius: 5px;
+    margin-top: 5px;
+    color: #545b62;
+
+    .user-avatar-wrap{        
+        border: 3px solid rgba(0, 0, 0, .175);
+    }
+
+    .user-name-login{       
+        color: rgba(0, 0, 0, .8);
+    }
+
+    .user_login{
+        color: rgba(0, 0, 0, .8);
+    }
+
+    .user-info-wrap{
+        color: rgba(0, 0, 0, .8);;
+    }
+
+    &.selected{
+        background-color: #3a3633;
+        border: 1px solid #3a3633;
+
+        .user-avatar-wrap{
+            border: 3px solid rgba(255, 255, 255, .3);
+        }
+
+        .user-name-login{
+            color: #c0bbb7;
+        }
+
+        .user_login{
+            color: rgba(192, 187, 183, 1);
+        }
+
+        .user-info-wrap{
+            color: rgba(192, 187, 183, 1);
+        }
+    }
+}
+
+.user-avatar-wrap{
+    border-radius: 50%;
+    padding: 3px;
+    height: 62px;
+    width: 62px;
+
+    .user-avater{
+        border-radius: 50%;
+        height: 50px;
+        width: 50px;
+
+        object-fit: cover;
+        object-position: center;
+    }
+}
+
+.user-name-login{
+    padding: 0.3rem 1rem;
+     flex: 1 0 0%;    
+    .user_login{
+        font-size: 0.8rem;
+    }
+}
+
+
+.user-info-wrap{
+    
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    justify-content: center;
+    flex: 1 0 0%;
+    //display: flex;
+}
+
+.user-status{
+    // flex: 1 0 0%;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    display: flex;
+    // justify-content: flex-end;
+    // flex: 1 0 0%;
+
+    i{
+        margin-top: 5px;
+    }
+
+    &.active{
+        color: rgb(105, 181, 72);
+    }
+
+    &.in-active{
+        color: rgb(196, 20, 37);
+    }
+}
+
+.selected{
+    .user-info-label{
+        color: rgba(192, 187, 183, 0.4);
+    }
+}
+
+.user-info-label{
+    font-size: 0.7rem;
+    
+    color:rgba(0, 0, 0, 0.5);
+    line-height: 0.7rem;
+}
+
+.user-name{
+    line-height: 1rem;
+    padding-top: 0.1rem;
+    padding-bottom: 0.3rem;
+}
+
+.user_login{
+    line-height: 0.8rem;
+    padding-top: 0.2rem;
+}
+
+.user-info{
+    line-height: 0.8rem;
+    padding-top: 0.2rem;
+}

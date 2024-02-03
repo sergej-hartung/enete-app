@@ -1,0 +1,19 @@
+.custom-dropzone{
+    height: 100px;
+    ngx-dropzone-preview{
+        min-height: 70px !important;
+        height: 70px !important;
+        max-width: 100% !important;
+        min-width: none !important;
+        padding: 0px 30px !important;
+    }
+}
+
+.custom-dropzone-wrap{
+    margin-bottom: 0.7rem;
+}
+
+.img-preview{
+    padding: 5px;
+    max-width: 100%;
+}

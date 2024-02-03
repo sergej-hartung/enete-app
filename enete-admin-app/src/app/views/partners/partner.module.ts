@@ -7,7 +7,11 @@ import { PartnersListComponent } from './partners-list/partners-list.component';
 import { PartnerDetailsComponent } from './partner-details/partner-details.component';
 import { SharedModule } from '../../shared/shared.module';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxDropzoneModule } from 'ngx-dropzone';
+import { PartnerDetailsGenerallyComponent } from './partner-details/partner-details-generally/partner-details-generally.component';
+import { PartnerDetailsAccessComponent } from './partner-details/partner-details-access/partner-details-access.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
 
 
 
@@ -16,13 +20,18 @@ import { ReactiveFormsModule } from '@angular/forms';
     PartnerComponent,
     PartnersListComponent,
     PartnerDetailsComponent,
+    PartnerDetailsGenerallyComponent,
+    PartnerDetailsAccessComponent,
   ],
   imports: [
     CommonModule,
     PartnerRoutingModule,
     SharedModule,
     NgbNavModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxDropzoneModule,
+    ImageCropperModule,
+    FormsModule
   ]
 })
 export class PartnerModule { }

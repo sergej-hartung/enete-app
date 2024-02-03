@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             
             $table->string('vp_nr');
+            $table->string('egon_nr');
             $table->string('company')->nullable();
             $table->string('salutation');
             $table->string('title')->nullable();
