@@ -1,13 +1,17 @@
 <div class="row no-gutters">
     <div class="col-12 ps-2 pe-2 pt-2" *ngIf="users">
-        <div *ngFor="let user of users.controls; index as i"  class="d-flex user-info-bar "> <!--selected -->
+        <div *ngFor="let user of users.controls; index as i"  
+                class="d-flex user-info-bar "
+                [class.selected]="selectedUserIndex == i"
+                (click)="onSelectUser(i)"
+        > <!--selected -->
             <div class="user-avatar-wrap">
-                <img  class="user-avater" src="assets/img/avatar-muster.jpg">
+                <img *ngIf="user.get('avatar')?.value !== null"  class="user-avater" [src]="getObjectUrl(i)">
             </div>
             <div class="user-name-login">
                 <div class="user-info-label">name</div>
-                <div class="user-name">
-                    {{userProfilesForm.get('first_name')?.value + ' ' +  userProfilesForm.get('last_name')?.value}}
+                <div class="user-name" >
+                    {{(userProfilesForm.get('first_name')?.value ?? '') + ' ' + (userProfilesForm.get('last_name')?.value ?? '')}}
                 </div>
 
                 <div class="user-info-label">login</div>
@@ -19,7 +23,10 @@
                 <div class="user-info-label">zuletzt online</div>
                 <div class="user-info">14.01.2024 15:31</div>
             </div>
-            <div class="user-status active">
+            <div class="user-status active"
+                [class.active]="user.get('status_id')?.value == '1'"
+                [class.in-activ]="user.get('status_id')?.value == '1'"
+            >
                 <i class="fa-key fa-solid"></i>
             </div>
         </div>
@@ -52,10 +59,10 @@
             <i class="fa-solid fa-key"></i>
             Neuer Zugang
         </button>
-        <button type="button" class="btn btn-dark-custom ">
+        <button type="button" class="btn btn-dark-custom " [disabled]="!users" (click)="generateUserData()">
             <!-- <i class="fa-solid fa-plus"></i> -->
             <i class="fa-solid fa-user-gear"></i>
-            Zugang generieren 
+            Zugangsdaten generieren 
         </button>
     </div>
     <div class="col-12 ps-2 pe-2 pt-2" *ngIf="selectedUser">
@@ -171,7 +178,7 @@
             </div>
         </app-card>       
     </div>
-    <div class="col-12 ps-2 pe-2">
+    <div class="col-12 ps-2 pe-2" *ngIf="selectedUser">
         <div class="custom-dropzone-wrap">
             <div class="custom-dropzone" ngx-dropzone 
                 [multiple]="false" 
@@ -179,7 +186,7 @@
                 (change)="fileChangeEvent($event)"
             >
                 <ngx-dropzone-label>Avatar</ngx-dropzone-label>
-                <ngx-dropzone-preview *ngIf="file" [removable]="true" (removed)="onRemove(file)">
+                <ngx-dropzone-preview *ngIf="file" [removable]="true" (removed)="onRemove()">
                     <ngx-dropzone-label>{{ file.name }} ({{ file.type }})</ngx-dropzone-label>
                 </ngx-dropzone-preview>
             </div>

@@ -116,7 +116,7 @@ export class PartnerService extends DataService<Partner> {
       });
   }
 
-  addItem(item: Partner | any): any {
+  addItem(item: FormData | any): any {
     console.log(item);
     this.http.post<Partner>(`${this.apiUrl}/user-profiles`, item)
         .pipe(

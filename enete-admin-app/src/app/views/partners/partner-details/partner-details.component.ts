@@ -5,6 +5,7 @@ import { Subject, debounceTime, takeUntil } from 'rxjs';
 import { MainNavbarService } from '../../../services/main-navbar.service';
 import {dateValidator } from '../../../shared/validators/date-validator'
 import {booleanValidator } from '../../../shared/validators/boolean-validator'
+import {matchPasswordValidator } from '../../../shared/validators/password-validator' 
 import { StatusService } from '../../../services/partner/status/status.service';
 import { CategorieService } from '../../../services/partner/categorie/categorie.service';
 import { Status } from '../../../models/partner/status/status';
@@ -139,9 +140,10 @@ export class PartnerDetailsComponent {
             if(data.requestType == "get" && data.entityType == 'partner'){
               console.log('get')
               console.log(data)
-              this.userProfilesForm.reset()
-              this.partnerService.setFormDirty(false), 
-              this.mainNavbarService.setIconState('save', true, true)
+              // this.userProfilesForm.reset()
+              // this.partnerService.setFormDirty(false), 
+              // this.mainNavbarService.setIconState('save', true, true)
+              this.resetUserProfilesForm()
               this.userProfilesForm.patchValue(data.data)
               //this.checkFormAfterPatchValue(data.data)
               this.dataLoadedOrNew = true
@@ -149,9 +151,10 @@ export class PartnerDetailsComponent {
             if(data.requestType == "post" && data.entityType == 'partner'){
               console.log('post')
               console.log(data)
-              this.partnerService.setFormDirty(false)
-              this.mainNavbarService.setIconState('save', true, true)
-              this.userProfilesForm.reset()
+              // this.partnerService.setFormDirty(false)
+              // this.mainNavbarService.setIconState('save', true, true)
+              // this.userProfilesForm.reset()
+              this.resetUserProfilesForm()
               this.dataLoadedOrNew = false
               this.active = 1
               this.partnerService.fetchData()
@@ -159,9 +162,10 @@ export class PartnerDetailsComponent {
             if(data.requestType == "patch" && data.entityType == 'partner'){
               console.log('patch')
               console.log(data)     
-              this.userProfilesForm.reset()
-              this.partnerService.setFormDirty(false)        
-              this.mainNavbarService.setIconState('save', true, true)
+              // this.userProfilesForm.reset()
+              // this.partnerService.setFormDirty(false)        
+              // this.mainNavbarService.setIconState('save', true, true)
+              this.resetUserProfilesForm()
               this.userProfilesForm.patchValue(data.data)
               this.dataLoadedOrNew = true
               //
@@ -222,7 +226,7 @@ export class PartnerDetailsComponent {
         //   this.userLoadOrNew = true  
         // }
 
-        if (iconName === 'save' && this.active === 1) {
+        if (iconName === 'save') {
           this.submitForm()
         }
       });
@@ -265,10 +269,10 @@ export class PartnerDetailsComponent {
   addNewAccess(){
     console.log('test')
     if(!this.users){
-      this.userProfilesForm.addControl("users", new FormArray([this.createUserFormGroup()]))
+      this.userProfilesForm.addControl("users", new FormArray([this.createUserFormGroup(true)]))
     }else{
       if(this.users){
-        this.users.push(this.createUserFormGroup())
+        this.users.push(this.createUserFormGroup(true))
       }
       console.log(this.userProfilesForm)
     }
@@ -325,7 +329,7 @@ export class PartnerDetailsComponent {
       //   });
       // });
     });
-    
+    this.partnerService.addItem(formData)
     console.log(formData)
     formData.forEach((value, key) => {
       console.log(key, value);
@@ -346,9 +350,10 @@ export class PartnerDetailsComponent {
 
   setDataNewUserProfile(){
     this.partnerService.resetDetailedData()
-    this.userProfilesForm.reset()
-    this.partnerService.setFormDirty(false)
-    this.mainNavbarService.setIconState('save', true, true)
+    this.resetUserProfilesForm()
+    // this.userProfilesForm.reset()
+    // this.partnerService.setFormDirty(false)
+    // this.mainNavbarService.setIconState('save', true, true)
     this.userProfilesForm.patchValue({
       'salutation': '',
       'title': 'kein Titel',
@@ -564,16 +569,16 @@ export class PartnerDetailsComponent {
     });
   }
 
-  private createUserFormGroup(): FormGroup {
+  private createUserFormGroup(newUser: boolean = false): FormGroup {
     return new FormGroup({
       id: new FormControl(),
       login_name: new FormControl('', [Validators.required, Validators.minLength(2)]),
-      password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-      password_confirmation: new FormControl('', [Validators.required, Validators.minLength(6)]),
+      password: new FormControl('', newUser ? [Validators.required, Validators.minLength(6)] : [Validators.minLength(6)]),
+      password_confirmation: new FormControl('', newUser ? [Validators.required, Validators.minLength(6)] : [Validators.minLength(6)]),
       role_id: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
       avatar: new FormControl(null),
       status_id: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
-    });
+    }, { validators: matchPasswordValidator });
   }
 
   private setRequiredStatus() {
@@ -604,6 +609,13 @@ export class PartnerDetailsComponent {
     if (!control) return false;
     const validator = control.validator ? control.validator({} as AbstractControl) : null;
     return validator && validator["required"];
+  }
+
+  private resetUserProfilesForm(){
+    this.userProfilesForm.reset()
+    this.partnerService.setFormDirty(false)
+    this.mainNavbarService.setIconState('save', true, true)
+    this.userProfilesForm.removeControl('users')
   }
   
   ngOnDestroy() {
