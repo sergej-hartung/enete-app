@@ -22,7 +22,7 @@ Route::get('/test', function(Request $request){
 // user-profiele
 Route::group(['namespace' => 'App\Http\Controllers\User\Profile'], function($router){
     Route::get('/user-profiles', 'IndexController');
-    Route::post('/user-profiles', 'StoreController');
+    Route::post('/user-profiles', 'StoreController')->middleware('transform.boolean');
     Route::get('/user-profiles/{profileId}', 'ShowController');
     Route::patch('/user-profiles/{profileId}', 'UpdateController');
 });

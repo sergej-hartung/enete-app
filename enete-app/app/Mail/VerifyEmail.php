@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\User\User;
+use App\Models\User\UserProfile;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -14,7 +14,7 @@ class VerifyEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
+    public $profile;
 
     /**
      * Создание нового экземпляра сообщения.
@@ -22,9 +22,9 @@ class VerifyEmail extends Mailable
      * @param User $user
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(UserProfile $profile)
     {
-        $this->user = $user;
+        $this->profile = $profile;
     }
 
     /**
@@ -34,12 +34,12 @@ class VerifyEmail extends Mailable
      */
     public function build()
     {
-        $verificationUrl = url('/email/verify/'.$this->user->email_verification_hash); // URL для подтверждения
+        $verificationUrl = url('/email/verify/'.$this->profile->email_verification_hash); // URL для подтверждения
 
         return $this->view('emails.verify') // используйте шаблон emails.verify
                     ->with([
                         'verificationUrl' => $verificationUrl,
-                        'userName' => $this->user->name, // или login_name, в зависимости от вашей модели
+                        'userName' => $this->profile->first_name .' '. $this->profile->last_name, // или login_name, в зависимости от вашей модели
                     ]);
     }
 

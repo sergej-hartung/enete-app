@@ -82,9 +82,14 @@ class StoreProfileRequest extends FormRequest
             'contacts.*.user_profile_contact_category_id'  => 'nullable|sometimes|integer|exists:user_profile_contact_categories,id',
             'contacts.*.user_profile_contact_type_id'      => 'nullable|sometimes|integer|exists:user_profile_contact_types,id',
             'contacts.*.prefix'                            => 'nullable|sometimes|string|max:10',  // Customize based on expected prefix length
-            'contacts.*.number'                            => 'nullable|sometimes|string|max:20'  // Adjust the max value based on the expected number length
+            'contacts.*.number'                            => 'nullable|sometimes|string|max:20',  // Adjust the max value based on the expected number length
 
-            //'documents'            => 'array',
+            'users'                                        => 'nullable|sometimes|array',
+            'users.*.login_name'                           => 'required|string|unique:users|max:255',
+            'users.*.password'                             => 'required|confirmed|min:6',
+            'users.*.role_id'                              => 'required|integer|exists:user_roles,id',
+            'users.*.status_id'                            => 'required|integer|exists:user_statuses,id',
+            'avatar'                                       => 'file',
 
         ];
     }

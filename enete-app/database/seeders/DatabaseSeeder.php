@@ -15,12 +15,14 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserProfileAddressCategoriesTableSeeder::class,
             UserProfileBankCategoriesTableSeeder::class,
+            UserProfileCareerTableSeeder::class,
             UserProfileCategoriesTableSeeder::class,
             UserProfileContactCategoriesTableSeeder::class,
             UserProfileContactTypesTableSeeder::class,
             UserProfileStatusesTableSeeder::class,
+            UserRoleTableSeeder::class,
             UserStatusesTableSeeder::class,
-            UserProfileCareerTableSeeder::class,
+            
         ]);
     }
 }

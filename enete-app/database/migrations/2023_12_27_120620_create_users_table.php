@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');  
             $table->integer('role_id');
             $table->string('avatar')->nullable();
+            $table->timestamp('access_data_sent')->nullable();
             $table->unsignedBigInteger('status_id');
             $table->foreign('user_profile_id')->references('id')->on('user_profiles')->onDelete('cascade');
             $table->integer('created_by')->nullable();

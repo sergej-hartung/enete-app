@@ -330,10 +330,10 @@ export class PartnerDetailsComponent {
       // });
     });
     this.partnerService.addItem(formData)
-    console.log(formData)
-    formData.forEach((value, key) => {
-      console.log(key, value);
-    });
+    // console.log(formData)
+    // formData.forEach((value, key) => {
+    //   console.log(key, value);
+    // });
   }
 
   // submitForm(){

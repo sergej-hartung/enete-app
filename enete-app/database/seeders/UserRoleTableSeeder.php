@@ -20,7 +20,7 @@ class UserRoleTableSeeder extends Seeder
             ['shop','Shop'],
         ];
         foreach ($careers as $career) {
-            DB::table('user_profile_careers')->insert([
+            DB::table('user_roles')->insert([
                 'name' => $career[0],
                 'description' => $career[1],
                 'created_at' => now(),
