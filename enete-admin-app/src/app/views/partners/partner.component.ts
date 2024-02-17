@@ -39,7 +39,7 @@ export class PartnerComponent {
     this.careerService.fetchData()   
     this.categorieService.fetchData()   
     this.partnerService.fetchData({
-      'status_id': '1'
+      'status_id': '0'
     })
 
     
@@ -93,7 +93,7 @@ export class PartnerComponent {
       'Weiter',  // acceptBtnTitle
       'Abbrechen',  // declineBtnTitle
       () => proceedCallback(),
-      () => console.log('Declined!')
+      () => ''
     );
 
     this.notificationService.showNotification();

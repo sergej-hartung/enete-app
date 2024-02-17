@@ -76,7 +76,7 @@ export class PartnerDetailsComponent {
     this.categorieService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {
-        console.log(data)
+        // console.log(data)
         if(data){                       
           if(data.requestType == "get" && data.entityType == 'categories'){
             this.categories = data.data
@@ -87,7 +87,7 @@ export class PartnerDetailsComponent {
       this.careerService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {
-        console.log(data)
+        // console.log(data)
         if(data){                       
           if(data.requestType == "get" && data.entityType == 'careers'){
             this.careers = data.data
@@ -135,25 +135,21 @@ export class PartnerDetailsComponent {
       this.partnerService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(data => { 
-          console.log(data)
+          // console.log(data)
           if(data){                       
             if(data.requestType == "get" && data.entityType == 'partner'){
               console.log('get')
               console.log(data)
-              // this.userProfilesForm.reset()
-              // this.partnerService.setFormDirty(false), 
-              // this.mainNavbarService.setIconState('save', true, true)
               this.resetUserProfilesForm()
-              this.userProfilesForm.patchValue(data.data)
-              //this.checkFormAfterPatchValue(data.data)
+              this.patchValueProfilesForm(data, false)
+              //this.addNewAccess()
+              //this.userProfilesForm.patchValue(data.data)
               this.dataLoadedOrNew = true
             }
             if(data.requestType == "post" && data.entityType == 'partner'){
               console.log('post')
               console.log(data)
-              // this.partnerService.setFormDirty(false)
-              // this.mainNavbarService.setIconState('save', true, true)
-              // this.userProfilesForm.reset()
+
               this.resetUserProfilesForm()
               this.dataLoadedOrNew = false
               this.active = 1
@@ -162,17 +158,12 @@ export class PartnerDetailsComponent {
             if(data.requestType == "patch" && data.entityType == 'partner'){
               console.log('patch')
               console.log(data)     
-              // this.userProfilesForm.reset()
-              // this.partnerService.setFormDirty(false)        
-              // this.mainNavbarService.setIconState('save', true, true)
+
               this.resetUserProfilesForm()
-              this.userProfilesForm.patchValue(data.data)
+              this.patchValueProfilesForm(data, false)
+              //this.userProfilesForm.patchValue(data.data)
               this.dataLoadedOrNew = true
-              //
-              // this.userProfilesForm.reset()
-              // this.dataLoadedOrNew = false
-              // this.active = 1
-              // this.partnerService.fetchData()
+
             }
           } else if(data == null ){
             this.partnerService.setFormDirty(false)
@@ -180,16 +171,7 @@ export class PartnerDetailsComponent {
             this.userProfilesForm.reset()
             this.dataLoadedOrNew = false
           }      
-          // console.log(data)
-          // if(data && data["data"] && data.entityType == "get"){
-            
-          // }else if(data && data["data"] == null ){
-          //   console.log(data)
-          //   this.partnerService.setFormDirty(false)
-          //   this.mainNavbarService.setIconState('save', true, true)
-          //   this.userProfilesForm.reset()
-          //   this.dataLoadedOrNew = false
-          // }     
+ 
         });
     }
 
@@ -227,6 +209,7 @@ export class PartnerDetailsComponent {
         // }
 
         if (iconName === 'save') {
+          console.log('submit Save')
           this.submitForm()
         }
       });
@@ -234,45 +217,14 @@ export class PartnerDetailsComponent {
       //console.log(this.users)
   }
 
-  // checkFormAfterPatchValue(data: any){
-  //   console.log(data['contacts'])
-  //   if(data['contacts']){
-      
-  //     if(data['contacts'].length === 0){
-  //       this.userProfilesForm.patchValue({
-  //         'contacts': [
-  //           {
-  //             'user_profile_contact_type_id': '1',
-  //             'user_profile_contact_category_id': '1'
-  //           },
-  //           {
-  //             'user_profile_contact_type_id': '2',
-  //             'user_profile_contact_category_id': '1'
-  //           }
-  //         ],
-  //       })
 
-  //     }else if(data['contacts'].length > 0){
-
-  //     }
-
-  //   }
-  //   let contacts = this.contacts
-  //   console.log(data)
-  //   // contacts.controls.forEach(contact => {
-  //   //   if(contact.get('user_profile_contact_type_id') === null){
-  //   //     contacts.get('user_profile_contact_type_id')?.patchValue('')
-  //   //   }
-  //   // })
-  // }
-
-  addNewAccess(){
-    console.log('test')
+  addNewAccess(newUser: boolean = false){
+    console.log(newUser)
     if(!this.users){
-      this.userProfilesForm.addControl("users", new FormArray([this.createUserFormGroup(true)]))
+      this.userProfilesForm.addControl("users", new FormArray([this.createUserFormGroup(newUser)]))
     }else{
       if(this.users){
-        this.users.push(this.createUserFormGroup(true))
+        this.users.push(this.createUserFormGroup(newUser))
       }
       console.log(this.userProfilesForm)
     }
@@ -282,7 +234,7 @@ export class PartnerDetailsComponent {
 
   submitForm() {
     const formData = new FormData();
-  
+
     // Обработка обычных полей формы
     Object.keys(this.getDirtyValues(this.userProfilesForm)).forEach(key => {
       if (key !== 'users' && key !== 'contacts' && key !== 'addresses' && key !== 'banks') {
@@ -292,6 +244,9 @@ export class PartnerDetailsComponent {
   
     // Обработка массива users
     this.getDirtyValues(this.userProfilesForm)['users']?.forEach((user:any, index:any) => {
+      // console.log(this.getDirtyValues(this.userProfilesForm))
+      // console.log(index)
+      // console.log(user)
       Object.keys(user).forEach(field => {
         const value = user[field];
         if (value instanceof File) {
@@ -300,60 +255,35 @@ export class PartnerDetailsComponent {
 
           formData.append(`users[${index}][${field}]`, value);
         }
+        // console.log(value)
       });
     });
-    // this.userProfilesForm.get('users')?.value.forEach((user:any, index:any) => {
-    //   Object.keys(user).forEach(field => {
-    //     const value = user[field];
-    //     if (value instanceof File) {
-    //       formData.append(`users[${index}][${field}]`, value, value.name);
-    //     } else {
 
-    //       formData.append(`users[${index}][${field}]`, value);
-    //     }
-    //   });
-    // });
-  
+    
     // По аналогии обработка массивов contacts, addresses, banks
     ['contacts', 'addresses', 'banks'].forEach(arrayName => {
       this.getDirtyValues(this.userProfilesForm)[arrayName]?.forEach((item: any, index:any) => {
         Object.keys(item).forEach(field => {
-
           formData.append(`${arrayName}[${index}][${field}]`, item[field]);
         });
       });
-      // this.userProfilesForm.get(arrayName)?.value.forEach((item: any, index:any) => {
-      //   Object.keys(item).forEach(field => {
 
-      //     formData.append(`${arrayName}[${index}][${field}]`, item[field]);
-      //   });
-      // });
     });
-    this.partnerService.addItem(formData)
-    // console.log(formData)
-    // formData.forEach((value, key) => {
-    //   console.log(key, value);
-    // });
+    console.log(this.userProfilesForm.get('id')?.value)
+
+    if(this.userProfilesForm.get('id')?.value){
+      this.partnerService.updateItem(this.userProfilesForm.get('id')?.value, formData)
+    }else{
+      this.partnerService.addItem(formData)
+    }
   }
 
-  // submitForm(){
-  //   let value = this.getDirtyValues(this.userProfilesForm)
-  //   if(this.userProfilesForm.get('id')?.value != null){
-  //     value['id'] = this.userProfilesForm.get('id')?.value
-  //     console.log(value)
-  //     this.partnerService.updateItem(value)
-  //   }else{
-  //     this.partnerService.addItem(value)
-  //     //this.partnerService.addItem(this.userProfilesForm.getRawValue())
-  //   }
-  // }
+
 
   setDataNewUserProfile(){
     this.partnerService.resetDetailedData()
     this.resetUserProfilesForm()
-    // this.userProfilesForm.reset()
-    // this.partnerService.setFormDirty(false)
-    // this.mainNavbarService.setIconState('save', true, true)
+
     this.userProfilesForm.patchValue({
       'salutation': '',
       'title': 'kein Titel',
@@ -395,61 +325,6 @@ export class PartnerDetailsComponent {
     return this.userProfilesForm.get('users') as FormArray;
   }
 
-
-  // getDirtyValues(form: any) {
-  //   let dirtyValues: any = form instanceof FormGroup ? {} : [];
-  //   Object.keys(form.controls).forEach(key => {
-  //       let currentControl = form.controls[key];
-
-  //       if (currentControl.dirty) {
-  //           if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
-  //               const nestedDirtyValues = this.getDirtyValues(currentControl);
-  //               if (Object.keys(nestedDirtyValues).length > 0 && currentControl.get('id')?.value != null) {
-  //                   nestedDirtyValues['id'] = currentControl.get('id')?.value;
-  //               }
-  //               dirtyValues[key] = nestedDirtyValues;
-  //           } else {
-  //               dirtyValues[key] = currentControl.value;
-  //           }
-  //       }
-  //   });
-
-  //   return dirtyValues;
-  // }
-
-  // getDirtyValues(form: any) {
-  //   let dirtyValues: any = form instanceof FormGroup ? {} : [];
-  //   let isFormWithoutId = form.get('id')?.value == null; // Проверяем наличие id
-  
-  //   Object.keys(form.controls).forEach(key => {
-  //     let currentControl = form.controls[key];
-  
-  //     if (currentControl instanceof FormGroup || currentControl instanceof FormArray) {
-  //       // Рекурсивный вызов для вложенных FormGroup/FormArray
-  //       const nestedDirtyValues = this.getDirtyValues(currentControl);
-  //       if (nestedDirtyValues !== null) {
-  //         dirtyValues[key] = nestedDirtyValues;
-  //       }
-  //     } else {
-  //       // Для форм без id включаем все заполненные поля
-  //       if (isFormWithoutId && currentControl.value != null) {
-  //         dirtyValues[key] = currentControl.value;
-  //       }
-  //       // Для форм с id включаем только измененные поля
-  //       else if (!isFormWithoutId && currentControl.dirty) {
-  //         dirtyValues[key] = currentControl.value;
-  //       }
-  //     }
-  //   });
-  
-  //   // Добавляем id, если он существует и были изменения
-  //   if (!isFormWithoutId && form instanceof FormGroup && form.get('id')?.value != null) {
-  //     dirtyValues['id'] = form.get('id')?.value;
-  //   }
-  
-  //   return Object.keys(dirtyValues).length > 0 ? dirtyValues : null;
-  // }
-
   getDirtyValues(form: any) {
     let dirtyValues: any = form instanceof FormGroup ? {} : [];
     let isFormWithoutId = form.get('id')?.value == null; // Проверяем наличие id
@@ -483,7 +358,7 @@ export class PartnerDetailsComponent {
       dirtyValues['id'] = form.get('id')?.value;
     }
   
-    return Object.keys(dirtyValues).length > 0 ? dirtyValues : null;
+    return Object.keys(dirtyValues).length > 0 ? dirtyValues : [];
   }
   
 
@@ -609,6 +484,48 @@ export class PartnerDetailsComponent {
     if (!control) return false;
     const validator = control.validator ? control.validator({} as AbstractControl) : null;
     return validator && validator["required"];
+  }
+
+  private patchValueProfilesForm(data: any, newUser: boolean = false){    
+    if(data['data']['users']){
+      if(Array.isArray(data['data']['users']) && data['data']['users'].length > 0){
+        data['data']['users'].forEach(user => {
+          this.addNewAccess(newUser)
+        })
+      }
+    } 
+    this.userProfilesForm.patchValue(data.data)
+    this.checkBlockedStatusUserProfiles()
+  }
+
+  private checkBlockedStatusUserProfiles(){
+    const users = this.users
+    const statuses = this.statuses
+    let status
+
+    if(statuses.find(value => value.name === 'Gesperrt')){
+      status = statuses.find(value => value.name === 'Gesperrt')
+    }else if(statuses.find(value => value.name === 'Gekündigt')){
+      status = statuses.find(value => value.name === 'Gekündigt')
+    }
+
+    if(users && status){
+      users.controls.forEach(control => {
+        let status = statuses.find(value => value.id == this.userProfilesForm.get('status_id')?.value)
+        if(status && (status.name === 'Gesperrt' || status.name === 'Gekündigt')){
+          control.get('status_id')?.disable()
+        }else{
+          control.get('status_id')?.enable()
+        }
+      })
+    }
+
+    console.log(statuses)
+    if(this.userProfilesForm.get('status_id')?.value == 3 || this.userProfilesForm.get('status_id')?.value == 4){
+      return true
+    }else{
+      return false
+    }
   }
 
   private resetUserProfilesForm(){

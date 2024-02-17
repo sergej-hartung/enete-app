@@ -61,7 +61,7 @@ export class CategorieService extends DataService<Categorie> {
    
   }
 
-  updateItem(item: Categorie): void {
+  updateItem(id:number, item: Categorie): void {
     
   }
 

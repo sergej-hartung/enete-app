@@ -16,7 +16,7 @@ export interface IDataService<T> {
     fetchData(params?: any): void;
     fetchDetailedDataById(id: number): void;
     addItem(item: T): void;
-    updateItem(item: T): void;
+    updateItem(id: number, item: T): void;
     deleteItem(id: number): void;
     resetDetailedData(): void;
     confirmAction(action: string, proceedCallback: () => void): void

@@ -139,8 +139,9 @@ export class PartnerService extends DataService<Partner> {
       });
   }
 
-  updateItem(item: Partner): void {
-    this.http.patch<{'data': Partner}>(`${this.apiUrl}/user-profiles/${item.id}`, item)
+  updateItem(id: number, item: FormData | any): any {
+    item.append('_method', 'PATCH')
+    this.http.post<{'data': Partner}>(`${this.apiUrl}/user-profiles/${id}`, item)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: updatedPartner => {

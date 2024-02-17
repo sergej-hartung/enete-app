@@ -76,11 +76,11 @@ class StoreController extends Controller
                         //dd($user);
                         if(isset($request->file()['users'][$key]['avatar'])){
                             $avatar = $request->file()['users'][$key]['avatar'];
-                            $path = Storage::disk('local')->put('avatars', $avatar);
+                            $path = Storage::disk('public')->put('avatars', $avatar);
                             if ($path === false) {
                                 throw new \Exception("Error saving avatar file.");
                             }
-                            $user['avatar'] = $path;
+                            $user['avatar'] = url(Storage::url($path));
                             $avatarPaths[] = $path;
                         }
                         $password = $user['password'];
@@ -95,8 +95,11 @@ class StoreController extends Controller
                         DB::rollBack();
                         // Удаляем все файлы, которые уже могли быть сохранены
                         foreach ($avatarPaths as $path) {
-                            Storage::disk('local')->delete($path);
+                            if (Storage::disk('public')->exists($path)) {
+                                Storage::disk('public')->delete($path);
+                            }
                         }
+
                         return response()->json(['error' => $e->getMessage()], 500);
                     }
                      
@@ -112,8 +115,8 @@ class StoreController extends Controller
             DB::rollBack();
 
             foreach ($avatarPaths as $path) {
-                if (Storage::disk('local')->exists($path)) {
-                    Storage::disk('local')->delete($path);
+                if (Storage::disk('public')->exists($path)) {
+                    Storage::disk('public')->delete($path);
                 }
             }
             return $exception->getMessage();

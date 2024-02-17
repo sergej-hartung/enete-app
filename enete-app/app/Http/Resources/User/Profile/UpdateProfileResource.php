@@ -4,7 +4,7 @@ namespace App\Http\Resources\User\Profile;
 
 use Illuminate\Http\Request;
 
-use App\Http\Resources\User\User\UserResource;
+use App\Http\Resources\User\User\UserResourceExpanded;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\User\Profile\Banks\BankResource;
 use App\Http\Resources\User\Profile\Address\AddressResource;
@@ -55,7 +55,7 @@ class UpdateProfileResource extends JsonResource
             "user_profile_categorie_id" => $this->user_profile_categorie_id,
             "parent_id"                 => $this->parent_id,
             "status"                    => new IndexStatusResource($this->status),
-            'users'                     => UserResource::collection($this->users),
+            'users'                     => UserResourceExpanded::collection($this->users),
             "addresses"                 => AddressResource::collection($this->addresses),
             "contacts"                  => ContactsResource::collection($this->contacts),
             "banks"                     => BankResource::collection($this->banks),

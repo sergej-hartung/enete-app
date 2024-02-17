@@ -5,6 +5,7 @@ namespace App\Http\Resources\User\Profile;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\User\User\UserResourceExpanded;
 use App\Http\Resources\User\Profile\Banks\BankResource;
 use App\Http\Resources\User\Profile\Address\AddressResource;
 use App\Http\Resources\User\Profile\Contacts\ContactsResource;
@@ -55,6 +56,7 @@ class ShowProfileResource extends JsonResource
             "addresses"                 => AddressResource::collection($this->addresses),
             "contacts"                  => ContactsResource::collection($this->contacts),
             "banks"                     => BankResource::collection($this->banks),
+            "users"                     => UserResourceExpanded::collection($this->users),
             "parent"                    => $this->whenLoaded('parent', function() {
                 return $this->parent->vp_nr . ' ' . $this->parent->first_name . ' ' . $this->parent->last_name;
             }),

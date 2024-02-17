@@ -63,7 +63,7 @@ export class GenericTableComponent<T> {
             this.setData(data["data"]) 
           }            
           //this.isLoded = true 
-          console.log(data)       
+          // console.log(data)       
         });
     }
 
@@ -140,8 +140,17 @@ export class GenericTableComponent<T> {
     let access 
     if(accesses){
       access = accesses.find(a => a.status && a.status.name === 'active');
+      if(access){
+        return {'icon': 'fa-solid fa-key', 'color': '#69b548'}
+      }else{
+        access = accesses.find(a => a.status && a.status.name === 'inactive');
+        if(access) return {'icon': 'fa-solid fa-key', 'color': '#C41425'}
+      }
+
+      console.log(accesses)
     }  
-    return access ? {'icon': 'fa-solid fa-key', 'color': '#69b548'} : {'icon': 'fa-solid fa-key', 'color': '#ccc'}; // Пример классов для состояния доступа
+    return {'icon': 'fa-solid fa-key', 'color': '#ccc'}
+    //return access ? {'icon': 'fa-solid fa-key', 'color': '#69b548'} : {'icon': 'fa-solid fa-key', 'color': '#C41425'}; // Пример классов для состояния доступа
   }
 
   selectRow(row: any) {

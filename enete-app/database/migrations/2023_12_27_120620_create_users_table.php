@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamp('access_data_sent')->nullable();
             $table->unsignedBigInteger('status_id');
             $table->foreign('user_profile_id')->references('id')->on('user_profiles')->onDelete('cascade');
+            $table->timestamp('last_visit')->nullable();
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

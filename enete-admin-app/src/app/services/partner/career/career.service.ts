@@ -61,7 +61,7 @@ export class CareerService extends DataService<Career> {
    
   }
 
-  updateItem(item: Career): void {
+  updateItem(id: number, item: Career): void {
     
   }
 

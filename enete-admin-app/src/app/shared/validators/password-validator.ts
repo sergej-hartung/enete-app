@@ -9,8 +9,8 @@ export const matchPasswordValidator: ValidatorFn = (control: AbstractControl): V
   const password = control.get('password')?.value;
   const passwordConfirmation = control.get('password_confirmation')?.value;
 
-  console.log(password)
-  console.log(passwordConfirmation)
+  // console.log(password)
+  // console.log(passwordConfirmation)
   // Проверяем, не пусты ли поля. Если оба пусты, возвращаем null (нет ошибки)
   if (!password && !passwordConfirmation) {
     return null;

@@ -62,7 +62,7 @@ export class StatusService extends DataService<Status> {
    
   }
 
-  updateItem(item: Status): void {
+  updateItem(id:number, item: Status): void {
     
   }
 

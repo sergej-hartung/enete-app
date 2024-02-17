@@ -25,7 +25,7 @@
             </div>
             <div class="user-status active"
                 [class.active]="user.get('status_id')?.value == '1'"
-                [class.in-activ]="user.get('status_id')?.value == '1'"
+                [class.in-active]="user.get('status_id')?.value == '2'"
             >
                 <i class="fa-key fa-solid"></i>
             </div>
@@ -59,7 +59,7 @@
             <i class="fa-solid fa-key"></i>
             Neuer Zugang
         </button>
-        <button type="button" class="btn btn-dark-custom " [disabled]="!users" (click)="generateUserData()">
+        <button type="button" class="btn btn-dark-custom " [disabled]="!users || !selectedUser || selectedUser.get('id')?.value" (click)="generateUserData()">
             <!-- <i class="fa-solid fa-plus"></i> -->
             <i class="fa-solid fa-user-gear"></i>
             Zugangsdaten generieren 

@@ -32,7 +32,7 @@ class StoreProfileRequest extends FormRequest
             'last_name'                                    => 'required|string|max:255',
             'marital_status'                               => 'nullable|sometimes|string|max:255',
             'birthdate'                                    => 'nullable|sometimes|date',
-            'email'                                        => 'sometimes|string|email|max:255|unique:user_profiles,email',
+            'email'                                        => 'sometimes|string|email|max:255',
             'email_sent'                                   => 'nullable|date',  
             'email_verification_hash'                      => 'nullable|string|max:255',
             'email_verified_at'                            => 'nullable|date',

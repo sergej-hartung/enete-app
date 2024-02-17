@@ -23,7 +23,7 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             
-            'id'                                           => 'required|integer|exists:user_profiles,id',
+            'id'                                           => 'nullable|integer|exists:user_profiles,id',
             'vp_nr'                                        => 'sometimes|string|unique:user_profiles,vp_nr|max:255',
             'egon_nr'                                      => 'sometimes|string|unique:user_profiles,egon_nr|max:255',
             'company'                                      => 'nullable|sometimes|string|max:255',
@@ -33,7 +33,7 @@ class UpdateProfileRequest extends FormRequest
             'last_name'                                    => 'nullable|string|max:255',
             'marital_status'                               => 'nullable|sometimes|string|max:255',
             'birthdate'                                    => 'nullable|sometimes|date',
-            'email'                                        => 'sometimes|string|email|max:255|unique:user_profiles,email',
+            'email'                                        => 'sometimes|string|email|max:255',
             'email_sent'                                   => 'nullable|date',  
             'email_verification_hash'                      => 'nullable|string|max:255',
             'email_verified_at'                            => 'nullable|date',
@@ -86,8 +86,15 @@ class UpdateProfileRequest extends FormRequest
             'contacts.*.user_profile_contact_category_id'  => 'nullable|sometimes|integer|exists:user_profile_contact_categories,id',
             'contacts.*.user_profile_contact_type_id'      => 'nullable|sometimes|integer|exists:user_profile_contact_types,id',
             'contacts.*.prefix'                            => 'nullable|sometimes|string|max:10',  // Customize based on expected prefix length
-            'contacts.*.number'                            => 'nullable|sometimes|string|max:20'  // Adjust the max value based on the expected number length
+            'contacts.*.number'                            => 'nullable|sometimes|string|max:20',  // Adjust the max value based on the expected number length
 
+            'users'                                        => 'nullable|array',
+            'users.*.id'                                   => 'nullable|sometimes|integer|exists:users,id',
+            'users.*.login_name'                           => 'sometimes|string|unique:users|max:255',
+            'users.*.password'                             => 'sometimes|confirmed|min:6',
+            'users.*.role_id'                              => 'sometimes|integer|exists:user_roles,id',
+            'users.*.status_id'                            => 'sometimes|integer|exists:user_statuses,id',
+            'avatar'                                       => 'sometimes|file',
             //'documents'            => 'array',
 
         ];

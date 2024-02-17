@@ -32,7 +32,7 @@ export abstract class DataService<T> implements IDataService<T> {
     // abstract getItemById(id: number): void;
     abstract fetchDetailedDataById(id: number): void;
     abstract addItem(item: T): void;
-    abstract updateItem(item: T): void;
+    abstract updateItem(id: number, item: T): void;
     abstract deleteItem(id: number): void;
     abstract resetDetailedData(): void;
     abstract confirmAction(action: string, proceedCallback: () => void): void;

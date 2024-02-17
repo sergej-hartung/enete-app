@@ -14,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/test', function(Request $request){
-    dd($request);
+Route::patch('/test', function(Request $request){
+    //dd($request);
     dd($request->all());
 });
 
@@ -24,7 +24,7 @@ Route::group(['namespace' => 'App\Http\Controllers\User\Profile'], function($rou
     Route::get('/user-profiles', 'IndexController');
     Route::post('/user-profiles', 'StoreController')->middleware('transform.boolean');
     Route::get('/user-profiles/{profileId}', 'ShowController');
-    Route::patch('/user-profiles/{profileId}', 'UpdateController');
+    Route::patch('/user-profiles/{profileId}', 'UpdateController')->middleware('transform.boolean');
 });
 
 // user-profiele-statuses

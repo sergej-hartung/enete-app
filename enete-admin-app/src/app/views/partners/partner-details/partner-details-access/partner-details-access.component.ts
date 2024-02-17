@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AbstractControl, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Dimensions, ImageCroppedEvent, ImageTransform, LoadedImage } from 'ngx-image-cropper';
+import { Subject, takeUntil } from 'rxjs';
+import { PartnerService } from '../../../../services/partner/partner.service';
 
 class RequiredStatus {
   [key: string]: boolean;
@@ -17,6 +19,8 @@ export class PartnerDetailsAccessComponent {
   @Input() requiredStatus!: RequiredStatus; 
   @Output() newAccess = new EventEmitter<any>();
 
+  private unsubscribe$ = new Subject<void>();
+  
   file?: File
 
   imageChangedEvent: any;
@@ -38,7 +42,8 @@ export class PartnerDetailsAccessComponent {
   private urlCache = new Map<Blob, string>();
 
   constructor(
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private partnerService: PartnerService,
   ) {
     // if(this.userProfilesForm.controls['users']){
     //   console.log(this.userProfilesForm.get('users'))
@@ -48,20 +53,53 @@ export class PartnerDetailsAccessComponent {
   }
 
   ngOnInit() {
-    this.selectedUser = this.getLastUser() ? this.getLastUser() : false
-    this.selectedUserIndex = this.getLastUserIndex()
+    // this.selectedUser = this.getLastUser() ? this.getLastUser() : false
+    // this.selectedUserIndex = this.getLastUserIndex()
     console.log(this.selectedUser)
 
     // if(this.userProfilesForm){
     //   this.selectedUser = this.getLastUser()
     // }
+
+    this.partnerService.confirmAction$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(({action, proceedCallback}) => {
+        if(action == 'selectRow'){
+          this.restSelectedUser()
+          console.log('resetSelected')
+        }     
+    });
+
+    if(this.partnerService){
+      this.partnerService.detailedData$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(data => { 
+          console.log(data)
+          if(data){                       
+            if(data.requestType == "get" && data.entityType == 'partner'){
+
+            }
+            if(data.requestType == "post" && data.entityType == 'partner'){
+
+            }
+            if(data.requestType == "patch" && data.entityType == 'partner'){
+              this.restSelectedUser()
+            }
+          } else if(data == null ){
+
+          }      
+ 
+        });
+    }
   }
 
   getObjectUrl(userIndex: number): string | null {
     const usersArray = this.users;
     if (usersArray) {
       const avatar: Blob | null = usersArray.at(userIndex)?.get('avatar')?.value ?? null;
-      if (avatar) {
+      //console.log(avatar)
+      if (avatar instanceof Blob) {
+        //console.log(avatar)
         if (this.urlCache.has(avatar)) {
           // Возвращаем кэшированный URL, если он уже был создан для этого blob
           return this.urlCache.get(avatar) || null;
@@ -71,6 +109,8 @@ export class PartnerDetailsAccessComponent {
           this.urlCache.set(avatar, objectUrl);
           return objectUrl;
         }
+      }else if(typeof avatar === 'string'){
+        return avatar
       }
     }
     return null;
@@ -79,8 +119,7 @@ export class PartnerDetailsAccessComponent {
   onSelectUser(i: number){
     console.log(i)
     if(this.selectedUserIndex == i){
-      this.selectedUserIndex = undefined
-      this.selectedUser = null
+      this.restSelectedUser()
     }else{
       const usersArray = this.users
       if(usersArray){
@@ -93,7 +132,12 @@ export class PartnerDetailsAccessComponent {
   }
 
   generateUserData(){
-    const login = this.userProfilesForm.get('vp_nr')?.value ?? ''
+    let login = ''
+    if(this.users && this.users.length > 1){
+      login = this.userProfilesForm.get('vp_nr')?.value + '-'+ (this.selectedUserIndex ? this.selectedUserIndex + 1 : '') ?? ''
+    }else{
+      login = this.userProfilesForm.get('vp_nr')?.value ?? ''
+    }
     const role_id = "2"
     const status = "1"
     const password = this.generatePassword(10)
@@ -201,7 +245,7 @@ export class PartnerDetailsAccessComponent {
   }
 
   setNewAccess(){
-    this.newAccess.emit()
+    this.newAccess.emit(true)
     this.selectedUser = this.getLastUser()
     this.selectedUserIndex = this.getLastUserIndex()
     console.log(this.requiredStatus)
@@ -232,7 +276,7 @@ export class PartnerDetailsAccessComponent {
     this.selectedUser.patchValue({
       avatar: this.croppedImageBlob
     })
-    this.selectedUser.markAsDirty()
+    this.selectedUser['controls']['avatar']?.markAsDirty()
     this.onRemove()
   }
 
@@ -263,6 +307,10 @@ export class PartnerDetailsAccessComponent {
     return password;
   }
 
+  private restSelectedUser(){
+    this.selectedUserIndex = undefined
+    this.selectedUser = null
+  }
 
   ngOnDestroy() {
     // Перебираем все кэшированные URL и освобождаем их
@@ -271,5 +319,8 @@ export class PartnerDetailsAccessComponent {
       URL.revokeObjectURL(value); // Здесь value - это строка URL, а не Blob
     });
     this.urlCache.clear(); // Очищаем кэш после освобождения URL
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
+
 }
