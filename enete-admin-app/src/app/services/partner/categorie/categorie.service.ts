@@ -35,7 +35,7 @@ export class CategorieService extends DataService<Categorie> {
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
-          this.handleError(error.error.errors);
+          this.handleError(error);
           return of(null); // Возвращаем Observable<null> в случае ошибки
         })
       )
@@ -70,7 +70,8 @@ export class CategorieService extends DataService<Categorie> {
   }
 
 
-  private handleError(errors: any) {
+  private handleError(errorResponse: any) {
+    const errors = errorResponse?.error?.errors ?? ['An unknown error occurred'];
     this.errorSubject.next(errors);
   }
 

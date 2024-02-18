@@ -56,11 +56,16 @@ class User extends Authenticatable implements JWTSubject
      */
     public function getJWTCustomClaims()
     {
-        return [];
+        return ['role' => $this->role->name];
     }
 
     public function status()
     {
         return $this->belongsTo(UserStatus::class, 'status_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(UserRole::class, 'role_id');
     }
 }

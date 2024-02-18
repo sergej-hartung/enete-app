@@ -4,8 +4,24 @@
             <div class="admin" [class.up]="adminUp">
                 <div class="rota">
                     <h1 class="titl-admin">ADMIN</h1>
-                    <input class="inp-username" id="username" type="text" name="name" placeholder="Username"><br>
-                    <input class="inp-password" id="password" type="password" name="pass" placeholder="Password">
+                    <input 
+                        class="inp-username" 
+                        id="username" 
+                        type="text" 
+                        name="username" 
+                        placeholder="Username"
+                        [(ngModel)]="username"
+                        autocomplete="username"
+                    ><br>
+                    <input 
+                        class="inp-password" 
+                        id="password" 
+                        type="password" 
+                        name="password" 
+                        placeholder="Password"
+                        [(ngModel)]="password"
+                        autocomplete="current-password"
+                    >
                 </div>
             </div>
             <div class="cms" [class.down]="cmsDown">

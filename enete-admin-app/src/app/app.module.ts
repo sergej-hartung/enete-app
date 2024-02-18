@@ -10,7 +10,8 @@ import { MainNavbarComponent } from './components/nav/main-navbar/main-navbar.co
 import { SecondaryNavbarComponent } from './components/nav/secondary-navbar/secondary-navbar.component';
 import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
+import {AuthInterceptor} from './interceptors/auth.interceptor'
 
 
 
@@ -32,7 +33,12 @@ import { HttpClientModule, provideHttpClient, withFetch } from '@angular/common/
   ],
   providers: [
     provideClientHydration(),
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent]
 })

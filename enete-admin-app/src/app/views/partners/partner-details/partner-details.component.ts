@@ -452,6 +452,7 @@ export class PartnerDetailsComponent {
       password_confirmation: new FormControl('', newUser ? [Validators.required, Validators.minLength(6)] : [Validators.minLength(6)]),
       role_id: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
       avatar: new FormControl(null),
+      last_visit: new FormControl(''),
       status_id: new FormControl('', [Validators.required, Validators.pattern('^[0-9]+$')]),
     }, { validators: matchPasswordValidator });
   }

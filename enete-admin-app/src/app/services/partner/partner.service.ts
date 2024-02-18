@@ -77,7 +77,7 @@ export class PartnerService extends DataService<Partner> {
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
-          this.handleError(error.error.errors);
+          this.handleError(error);
           return of(null); // Возвращаем Observable<null> в случае ошибки
         })
       )
@@ -111,7 +111,7 @@ export class PartnerService extends DataService<Partner> {
           });
         },
         error: (error) => {
-          this.handleError(error.error.errors)
+          this.handleError(error)
         }
       });
   }
@@ -134,7 +134,7 @@ export class PartnerService extends DataService<Partner> {
           },
           error: (error) => {
             console.log(error)
-            this.handleError(error.error.errors)
+            this.handleError(error)
           }
       });
   }
@@ -168,7 +168,7 @@ export class PartnerService extends DataService<Partner> {
         },
         error: (error) => {
           console.log(error)
-          this.handleError(error.error.errors)
+          this.handleError(error)
         }
     });
   }
@@ -198,7 +198,8 @@ export class PartnerService extends DataService<Partner> {
   }
 
 
-  private handleError(errors: any) {
+  private handleError(errorResponse: any) {
+    const errors = errorResponse?.error?.errors ?? ['An unknown error occurred'];
     this.errorSubject.next(errors);
   }
 

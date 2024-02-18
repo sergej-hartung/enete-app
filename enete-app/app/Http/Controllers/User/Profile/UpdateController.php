@@ -52,6 +52,7 @@ class UpdateController extends Controller
             }
             if(isset($data['email'])){
                 $data['email_verification_hash'] = md5(Str::random(40));
+                $modifyEmail = true;
             }
             
             if(count($data) !== 0){
@@ -164,5 +165,14 @@ class UpdateController extends Controller
         }
 
         
+    }
+
+
+    private function SentEmailVerificationHash ($profile ){
+        if($profile){
+            Mail::to($profile->email)->send(new VerifyEmail($profile));
+            $profile->email_sent = now();
+            $profile->save();
+        }       
     }
 }

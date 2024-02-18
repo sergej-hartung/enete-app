@@ -21,7 +21,7 @@
             </div>                               
             <div class="user-info-wrap">
                 <div class="user-info-label">zuletzt online</div>
-                <div class="user-info">14.01.2024 15:31</div>
+                <div class="user-info">{{user.get('last_visit')?.value | date:'dd.MM.yyyy HH:mm:ss'}}</div>
             </div>
             <div class="user-status active"
                 [class.active]="user.get('status_id')?.value == '1'"
