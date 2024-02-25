@@ -1,33 +1,32 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { PartnerService } from '../../services/partner/partner.service';
-import { StatusService } from '../../services/partner/status/status.service';
-import { take, takeUntil } from 'rxjs/operators';
-import { MainNavbarService } from '../../services/main-navbar.service';
-import { NotificationService } from '../../services/notification.service';
-import { CategorieService } from '../../services/partner/categorie/categorie.service';
-import { CareerService } from '../../services/partner/career/career.service';
+import { Subject, take, takeUntil } from 'rxjs';
+import { AdminService } from '../../../services/admin/admin.service';
+import { MainNavbarService } from '../../../services/main-navbar.service';
+import { NotificationService } from '../../../services/notification.service';
+
 
 @Component({
-  selector: 'app-partner',
-  templateUrl: './partner.component.html',
-  styleUrl: './partner.component.scss'
+  selector: 'app-admin-management',
+  templateUrl: './admin-management.component.html',
+  styleUrl: './admin-management.component.scss'
 })
-export class PartnerComponent {
+export class AdminManagementComponent {
 
   private unsubscribe$ = new Subject<void>();
   @ViewChild('customTitleTemplate') customTitleTemplate!: TemplateRef<any>;
   @ViewChild('customMessageTemplate') customMessageTemplate!: TemplateRef<any>;
   
   constructor(
-    private partnerService: PartnerService,
-    private statusService: StatusService, 
-    private categorieService: CategorieService,
-    private careerService: CareerService,
+    public adminService: AdminService,
+    // private statusService: StatusService, 
+    // private categorieService: CategorieService,
+    // private careerService: CareerService,
     private mainNavbarService: MainNavbarService,
     private notificationService: NotificationService
   ) {}
   
+
+
   
 
   
@@ -35,15 +34,10 @@ export class PartnerComponent {
     this.mainNavbarService.setIconState('save', true, true);
     this.mainNavbarService.setIconState('new', true, false);
 
-    this.statusService.fetchData()   
-    this.careerService.fetchData()   
-    this.categorieService.fetchData()   
-    this.partnerService.fetchData({
-      'status_id': '0',
-      'is_admin': 'false'
+    this.adminService.fetchData({
+      'is_admin': 'true'
     })
 
-    
 
     // this.mainNavbarService.iconClicks$
     //   .pipe(takeUntil(this.unsubscribe$))
@@ -64,12 +58,12 @@ export class PartnerComponent {
       .subscribe(({action, proceedCallback}) => {
         console.log(action)
         if(action == 'new'){
-          this.partnerService.getFormDirty()
+          this.adminService.getFormDirty()
           .pipe(take(1))
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(isDitry => {
             if(isDitry){
-              //this.partnerService.setFormDirty(false)
+              //this.adminService.setFormDirty(false)
               this.showNotification(proceedCallback)
               //proceedCallback()
             }else{
@@ -81,17 +75,17 @@ export class PartnerComponent {
         }       
     });
 
-    this.partnerService.confirmAction$
+    this.adminService.confirmAction$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({action, proceedCallback}) => {
         console.log(action)
         if(action == 'selectRow' || action == 'sort' || action == 'filter'){
-          this.partnerService.getFormDirty()
+          this.adminService.getFormDirty()
           .pipe(take(1))
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(isDitry => {
             if(isDitry){
-              //this.partnerService.setFormDirty(false)
+              //this.adminService.setFormDirty(false)
               this.showNotification(proceedCallback)
               //proceedCallback()
             }else{
@@ -103,8 +97,6 @@ export class PartnerComponent {
         }       
     });
   }
-
-  
 
   showNotification(proceedCallback: any) {
     this.notificationService.configureNotification(
@@ -123,10 +115,10 @@ export class PartnerComponent {
     this.notificationService.showNotification();
   }
 
+
   
 
   ngOnDestroy() {
-    this.partnerService.resetDetailedData()
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

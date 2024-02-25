@@ -28,7 +28,7 @@ export class MainNavbarComponent {
 
   // Обработка нажатия на иконку
   handleIconClick(iconName: string) {   
-    this.partnerService?.confirmAction(iconName, () => { 
+    this.mainNavbarService?.confirmAction(iconName, () => { 
       this.mainNavbarService.onIconClick(iconName);
     })
     

@@ -27,6 +27,7 @@ class IndexProfileRequest extends FormRequest
             'search' => 'sometimes|string',
             'sortField' => 'sometimes|string',
             'sortOrder' => 'sometimes|string',
+            'is_admin' => 'sometimes|boolean',
         ];
     }
 }

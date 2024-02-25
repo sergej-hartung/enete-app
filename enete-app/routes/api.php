@@ -20,8 +20,8 @@ Route::patch('/test', function(Request $request){
 });
 
 // user-profiele
-Route::group(['middleware'=>['jwt.auth'],'namespace' => 'App\Http\Controllers\User\Profile'], function($router){
-    Route::get('/user-profiles', 'IndexController');
+Route::group(['namespace' => 'App\Http\Controllers\User\Profile'], function($router){
+    Route::get('/user-profiles', 'IndexController')->middleware('transform.boolean');
     Route::post('/user-profiles', 'StoreController')->middleware('transform.boolean');
     Route::get('/user-profiles/{profileId}', 'ShowController');
     Route::patch('/user-profiles/{profileId}', 'UpdateController')->middleware('transform.boolean');

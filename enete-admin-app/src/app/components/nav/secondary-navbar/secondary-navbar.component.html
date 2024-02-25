@@ -30,6 +30,19 @@
                   <i class="bi bi-file-earmark-text"></i> Produkte
               </a>
             </li>
+            <li ngbDropdown class="nav-item" role="presentation" routerLinkActive="active">
+              <button type="button" class="nav-link" ngbDropdownToggle>Verwaltung</button>
+              <div ngbDropdownMenu>
+                <li>
+                  <a class="dropdown-item" routerLink="/admin-management">Admin-Verwaltung</a>
+                </li>
+                <!-- <button ngbDropdownItem routerLink="/partner" >Action</button> -->
+                <button ngbDropdownItem>Another action</button>
+                <button ngbDropdownItem>Something else here</button>
+                <div class="dropdown-divider"></div>
+                <button ngbDropdownItem>Separated link</button>
+              </div>
+            </li>
             <!-- Дополнительные пункты меню и выпадающие списки -->
           </ul>
           <!-- Центральные или правые элементы навигации -->

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
             
-            $table->string('vp_nr');
-            $table->string('egon_nr');
+            $table->string('vp_nr')->nullable();
+            $table->string('egon_nr')->unique()->nullable();
             $table->string('company')->nullable();
             $table->string('salutation');
             $table->string('title')->nullable();
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('marital_status')->nullable();           
             $table->date('birthdate')->nullable();
-            $table->string('email')->unique();
+            $table->string('email');
             $table->timestamp('email_sent')->nullable();
             $table->string('email_verification_hash')->nullable();
             $table->timestamp('email_verified_at')->nullable();

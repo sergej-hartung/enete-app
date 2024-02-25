@@ -5,6 +5,10 @@ import { BehaviorSubject, Subject } from 'rxjs';
   providedIn: 'root'
 })
 export class MainNavbarService {
+
+  protected confirmActionSource = new Subject<{action: string, proceedCallback: () => void}>();
+  public confirmAction$ = this.confirmActionSource.asObservable();
+  
   // Состояние иконок
   private iconsState = new BehaviorSubject<{ [iconName: string]: { active: boolean, disabled: boolean } }>({});
 
@@ -29,5 +33,10 @@ export class MainNavbarService {
   // Метод для отслеживания нажатия на иконку
   onIconClick(iconName: string) {
     this.iconClicks.next(iconName);
+  }
+
+
+  confirmAction(action: string, proceedCallback: () => void) {
+    this.confirmActionSource.next({action, proceedCallback});
   }
 }

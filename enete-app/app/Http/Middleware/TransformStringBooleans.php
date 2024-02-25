@@ -15,7 +15,7 @@ class TransformStringBooleans
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $booleanFields = ['business_registration','billing_blocked', 'id_card', 'payout_blocked', 'sales_tax_liability', 'vat_liability_proven'];
+        $booleanFields = ['business_registration','billing_blocked', 'id_card', 'payout_blocked', 'sales_tax_liability', 'vat_liability_proven', 'is_admin'];
     
         foreach ($booleanFields as $field) {
             if ($request->has($field)) {
