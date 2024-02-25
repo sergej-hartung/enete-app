@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('user_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('icon');
+            $table->string('color');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

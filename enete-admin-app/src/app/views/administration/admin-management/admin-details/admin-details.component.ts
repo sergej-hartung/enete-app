@@ -124,7 +124,7 @@ export class AdminDetailsComponent {
       this.adminService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(data => { 
-          // console.log(data)
+           console.log(data)
           if(data){                       
             if(data.requestType == "get" && data.entityType == 'admin'){
               console.log('get')
@@ -158,6 +158,7 @@ export class AdminDetailsComponent {
           } else if(data == null ){
             this.adminService.setFormDirty(false)
             this.mainNavbarService.setIconState('save', true, true)
+            console.log(this.userProfilesForm)
             this.userProfilesForm.reset()
             this.dataLoadedOrNew = false
           }      
@@ -188,7 +189,8 @@ export class AdminDetailsComponent {
       .subscribe(iconName => {
         if (iconName === 'new') {
             this.active = 1
-            this.setDataNewUserProfile()           
+            this.setDataNewUserProfile()  
+            console.log(this.userProfilesForm)         
             this.dataLoadedOrNew = true          
             console.log('new')
           // Обработка нажатия на иконку new
@@ -272,16 +274,16 @@ export class AdminDetailsComponent {
   setDataNewUserProfile(){
     this.adminService.resetDetailedData()
     this.resetUserProfilesForm()
-
+    this.addNewAccess(true)
     this.userProfilesForm.patchValue({
       'salutation': '',
       'title': 'kein Titel',
-      'id_card':  false,        
-      'business_registration': false,
-      'sales_tax_liability': false,
-      'vat_liability_proven': false,
-      'billing_blocked': false,
-      'payout_blocked': false,
+      //'id_card':  false,        
+      //'business_registration': false,
+      //'sales_tax_liability': false,
+      //'vat_liability_proven': false,
+      //'billing_blocked': false,
+      //'payout_blocked': false,
       'contacts': [
         {
           'user_profile_contact_type_id': '1',
@@ -292,13 +294,13 @@ export class AdminDetailsComponent {
           'user_profile_contact_category_id': '1'
         }
       ],
-      'banks': [
-        {
-          'salutation': 'Herr',
-          'country': 'Germany',
-          'user_profile_bank_categorie_id': '1'
-        }
-      ],
+      // 'banks': [
+      //   {
+      //     'salutation': 'Herr',
+      //     'country': 'Germany',
+      //     'user_profile_bank_categorie_id': '1'
+      //   }
+      // ],
       'addresses': [
         {
           'user_profile_address_category_id': '1',
@@ -649,13 +651,18 @@ export class AdminDetailsComponent {
   }
   
   ngOnDestroy() {
-    console.log('destroy Partners')
+    console.log('destroy Admin')
     this.resetUserProfilesForm()
     this.dataLoadedOrNew = false
     this.userLoadOrNew = false
+    console.log(this.userProfilesForm)
+    console.log(this.dataLoadedOrNew)
+    console.log(this.userLoadOrNew)
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     
   }
+
+  
 
 }

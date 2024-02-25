@@ -387,7 +387,7 @@
                             </div>
                         </app-card>
                         <!--END Kommunikation -->
-                        <app-card>
+                        <app-card *ngIf="user">
                             <div card-header>Zugangsdaten</div>
                             <div card-body>
                                 <form  [formGroup]="user">

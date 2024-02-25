@@ -119,6 +119,7 @@ export class AdminManagementComponent {
   
 
   ngOnDestroy() {
+    this.adminService.resetDetailedData()
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

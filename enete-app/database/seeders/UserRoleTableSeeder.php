@@ -16,7 +16,7 @@ class UserRoleTableSeeder extends Seeder
         $careers = [
             ['admin','Administrator'], 
             ['vp','Vertriebspartner'],
-            ['vision_vp','vision_vp'],
+            ['vision_vp','Vision Vp'],
             ['shop','Shop'],
         ];
         foreach ($careers as $career) {

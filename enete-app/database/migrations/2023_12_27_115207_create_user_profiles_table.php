@@ -42,7 +42,7 @@ return new class extends Migration
             $table->boolean('payout_blocked')->nullable();
             $table->text('internal_note')->nullable();
             $table->text('external_note')->nullable();
-            $table->unsignedBigInteger('status_id');
+            $table->unsignedBigInteger('status_id')->nullable();
             $table->unsignedBigInteger('career_id')->nullable();
             $table->unsignedBigInteger('user_profile_categorie_id')->nullable();
             $table->unsignedBigInteger('parent_id')->nullable();            
