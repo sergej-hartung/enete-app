@@ -15,14 +15,41 @@ class TransformStringBooleans
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $booleanFields = ['business_registration','billing_blocked', 'id_card', 'payout_blocked', 'sales_tax_liability', 'vat_liability_proven', 'is_admin'];
-    
-        foreach ($booleanFields as $field) {
-            if ($request->has($field)) {
-                $request->merge([$field => filter_var($request->get($field), FILTER_VALIDATE_BOOLEAN)]);
+        $booleanFields = [
+            'business_registration',
+            'billing_blocked',
+            'id_card',
+            'payout_blocked',
+            'sales_tax_liability',
+            'vat_liability_proven',
+        ];
+
+        $requestData = $request->all();
+
+        $transformedData = $this->transformBooleans($requestData, $booleanFields);
+
+        $request->replace($transformedData);
+
+        return $next($request);
+    }
+
+    /**
+     * Recursively transform string booleans to boolean values.
+     *
+     * @param array $data
+     * @param array $booleanFields
+     * @return array
+     */
+    protected function transformBooleans(array $data, array $booleanFields): array
+    {
+        foreach ($data as $key => &$value) {
+            if (is_array($value)) {
+                $value = $this->transformBooleans($value, $booleanFields);
+            } elseif (in_array($key, $booleanFields, true) && is_string($value)) {
+                $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
             }
         }
 
-        return $next($request);
+        return $data;
     }
 }

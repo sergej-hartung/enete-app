@@ -7,7 +7,7 @@ use App\Http\Resources\User\User\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\User\Profile\Employees\EmployeeDetails\Status\IndexStatusResource;
 
-class IndexProfileResource extends JsonResource
+class IndexEmployeeProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

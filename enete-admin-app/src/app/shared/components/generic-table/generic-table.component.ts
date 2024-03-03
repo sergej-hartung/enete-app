@@ -36,7 +36,7 @@ export class GenericTableComponent<T> {
   private textFilterSubject = new Subject<{ key: string; value: any }>();
   private selectFilterSubject = new Subject<{ key: string; value: any }>();
 
-  isLoded = true;
+  isLoded = false;
   isExpanded: boolean = false;
   data?: any[];
   currentSortColumn: string | null = null;
@@ -61,6 +61,7 @@ export class GenericTableComponent<T> {
         .subscribe(data => {  
           if(data){
             this.setData(data["data"]) 
+            this.isLoded = true
           }            
           //this.isLoded = true 
           // console.log(data)       

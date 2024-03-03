@@ -237,9 +237,16 @@ export class PartnerDetailsComponent {
 
     // Обработка обычных полей формы
     Object.keys(this.getDirtyValues(this.userProfilesForm)).forEach(key => {
-      if (key !== 'users' && key !== 'contacts' && key !== 'addresses' && key !== 'banks') {
+      if (!['users', 'contacts', 'addresses', 'banks', 'employee_details'].includes(key)) {
         formData.append(key, this.userProfilesForm.value[key]);
       }
+    });
+
+    // Обработка employee_details как вложенного FormGroup
+    const employeeDetails = this.getDirtyValues(this.userProfilesForm.get('employee_details'));
+    Object.keys(employeeDetails).forEach(key => {
+      const value = employeeDetails[key];
+      formData.append(`employee_details[${key}]`, value);
     });
   
     // Обработка массива users
@@ -463,6 +470,11 @@ export class PartnerDetailsComponent {
 
   private setRequiredStatus() {
     this.setControlRequiredStatus(this.userProfilesForm);
+
+    const employeeDetails = this.userProfilesForm.get('employee_details');
+    if (employeeDetails instanceof FormGroup) {
+        this.setControlRequiredStatus(employeeDetails, 'employee_details');
+    }
   
     // Для FormArray
     ['contacts', 'addresses', 'banks', 'users'].forEach(arrayName => {

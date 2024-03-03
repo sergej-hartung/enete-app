@@ -32,9 +32,9 @@ return new class extends Migration
             // $table->timestamp('last_visit')->nullable();            
             $table->foreign('parent_id')->references('id')->on('user_profiles')->onDelete('set null');
             $table->enum('user_type',['is_admin', 'is_employee', 'is_customer'])->default('is_customer');
-            $table->boolean('is_admin')->default(false);
-            $table->boolean('is_employee')->default(false);
-            $table->boolean('is_customer')->default(false);
+            // $table->boolean('is_admin')->default(false);
+            // $table->boolean('is_employee')->default(false);
+            // $table->boolean('is_customer')->default(false);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

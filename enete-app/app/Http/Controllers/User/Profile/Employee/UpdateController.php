@@ -12,17 +12,18 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\User\Profile\UpdateProfileRequest;
-use App\Http\Resources\User\Profile\UpdateProfileResource;
+use App\Http\Requests\User\Profile\Employee\UpdateEmployeeProfileRequest;
+use App\Http\Resources\User\Profile\Employees\UpdateEmployeeProfileResource;
 use Illuminate\Support\Facades\Storage;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateProfileRequest $request, $id)
+    public function __invoke(UpdateEmployeeProfileRequest $request, $id)
     {
         try {
             DB::beginTransaction();
             //dd($request->validated());
+            $employee_details = false;
             $addresses = false;
             $banks = false;
             $contacts = false;
@@ -33,7 +34,11 @@ class UpdateController extends Controller
 
             $data = $request->validated();
             $userProfile = UserProfile::findOrFail($request->id);
-            
+            //dd($data);
+            if (isset($data['employee_details'])) {
+                $employee_details = $data['employee_details'];
+                unset($data['employee_details']);
+            }
             if (isset($data['addresses'])) {
                 $addresses = $data['addresses'];
                 unset($data['addresses']);
@@ -63,6 +68,10 @@ class UpdateController extends Controller
                 $userProfile->fresh();
                 $this->SentEmailVerificationHash($userProfile);
             } 
+
+            if ($employee_details && is_array($employee_details)) {
+                $userProfile->employee()->updateOrCreate(['id' => $employee_details['id'] ?? null], $employee_details);
+            }
 
             if ($addresses && is_array($addresses)) {
                 foreach ($addresses as $addressData) {
@@ -136,7 +145,7 @@ class UpdateController extends Controller
 
             $userProfile->fresh();
 
-            if ($userProfile->status_id == 3 || $userProfile->status_id == 4) {
+            if ($userProfile->employee->status_id == 3 || $userProfile->employee->status_id == 4) {
                 $users = $userProfile->users;
                 if ($users) {
                     foreach ($users as $user) {
@@ -151,7 +160,7 @@ class UpdateController extends Controller
 
             DB::commit();
             //return response($userProfile);
-            return new UpdateProfileResource($userProfile);
+            return new UpdateEmployeeProfileResource($userProfile);
             
         } catch (\Exception $exception) {
             DB::rollBack();

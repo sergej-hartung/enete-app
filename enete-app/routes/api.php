@@ -22,16 +22,16 @@ Route::patch('/test', function(Request $request){
 // user-profiele-employee
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-profile', 'namespace' => 'App\Http\Controllers\User\Profile\Employee'], function($router){
     Route::get('/employees', 'IndexController')->middleware('transform.boolean');
-    // Route::post('/employees', 'StoreController')->middleware('transform.boolean');
+    Route::post('/employees', 'StoreController')->middleware('transform.boolean');
     Route::get('/employees/{profileId}', 'ShowController');
-    // Route::patch('/employees/{profileId}', 'UpdateController')->middleware('transform.boolean');
+    Route::patch('/employees/{profileId}', 'UpdateController')->middleware('transform.boolean');
 });
 
 // user-profiele-admin
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-profile', 'namespace' => 'App\Http\Controllers\User\Profile\Admin'], function($router){
     Route::get('/admins', 'IndexController')->middleware('transform.boolean');
     // Route::post('/admin', 'StoreController')->middleware('transform.boolean');
-    // Route::get('/admin/{profileId}', 'ShowController');
+    Route::get('/admins/{profileId}', 'ShowController');
     // Route::patch('/admin/{profileId}', 'UpdateController')->middleware('transform.boolean');
 });
 

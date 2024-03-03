@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class UserEmployeeDetails extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $guarded = false;
 
 
     public function status()

@@ -40,7 +40,6 @@ export class PartnerComponent {
     this.categorieService.fetchData()   
     this.partnerService.fetchData({
       'status_id': '0',
-      'is_admin': 'false'
     })
 
     

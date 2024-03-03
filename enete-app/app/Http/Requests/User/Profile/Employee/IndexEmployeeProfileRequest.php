@@ -4,7 +4,7 @@ namespace App\Http\Requests\User\Profile\Employee;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexProfileRequest extends FormRequest
+class IndexEmployeeProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

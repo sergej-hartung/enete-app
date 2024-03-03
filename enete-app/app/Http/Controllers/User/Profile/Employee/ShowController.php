@@ -6,7 +6,7 @@ namespace App\Http\Controllers\User\Profile\Employee;
 use App\Models\User\UserProfile;
 use App\Http\Controllers\Controller;
 use Symfony\Component\HttpFoundation\Response;
-use App\Http\Resources\User\Profile\Employees\ShowProfileResource;
+use App\Http\Resources\User\Profile\Employees\ShowEmployeeProfileResource;
 use Illuminate\Support\Facades\Storage;
 
 class ShowController extends Controller
@@ -23,7 +23,7 @@ class ShowController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
         
-        return new ShowProfileResource($profile);
+        return new ShowEmployeeProfileResource($profile);
     }
 }
 

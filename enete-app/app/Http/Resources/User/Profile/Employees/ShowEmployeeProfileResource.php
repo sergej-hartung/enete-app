@@ -11,7 +11,7 @@ use App\Http\Resources\User\Profile\Address\AddressResource;
 use App\Http\Resources\User\Profile\Contacts\ContactsResource;
 use App\Http\Resources\User\Profile\Employees\EmployeeDetails\EmployeeDetailsResource;
 
-class ShowProfileResource extends JsonResource
+class ShowEmployeeProfileResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -32,7 +32,7 @@ class ShowProfileResource extends JsonResource
             "internal_note"             => $this->internal_note,
             "external_note"             => $this->external_note,
             "parent_id"                 => $this->parent_id,
-            "employees"                  => new EmployeeDetailsResource($this->employee),
+            "employee_details"          => new EmployeeDetailsResource($this->employee),
             "addresses"                 => AddressResource::collection($this->addresses),
             "contacts"                  => ContactsResource::collection($this->contacts),
             "banks"                     => BankResource::collection($this->banks),

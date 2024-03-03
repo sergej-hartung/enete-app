@@ -12,12 +12,12 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\User\Profile\StoreProfileRequest;
+use App\Http\Requests\User\Profile\Employee\StoreAdminProfileRequest;
 use Illuminate\Support\Facades\Storage;
 
 class StoreController extends Controller
 {
-    public function __invoke(StoreProfileRequest $request)
+    public function __invoke(StoreAdminProfileRequest $request)
     {
         try {
               //dd($request->file());
@@ -28,9 +28,12 @@ class StoreController extends Controller
             $banks = false;
             $contacts = false;
             $users = false;
-            $avatarPaths = [];
+            $avatarPaths = [];         
 
             $data = $request->validated();
+
+            dd($data);
+
             if (isset($data['addresses'])) {
                 $addresses = $data['addresses'];
                 unset($data['addresses']);

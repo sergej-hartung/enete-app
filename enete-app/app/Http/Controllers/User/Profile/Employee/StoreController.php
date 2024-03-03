@@ -12,18 +12,19 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\User\Profile\StoreProfileRequest;
+use App\Http\Requests\User\Profile\Employee\StoreEmployeeProfileRequest;
 use Illuminate\Support\Facades\Storage;
 
 class StoreController extends Controller
 {
-    public function __invoke(StoreProfileRequest $request)
+    public function __invoke(StoreEmployeeProfileRequest $request)
     {
         try {
               //dd($request->file());
               //dd($request->validated());
             DB::beginTransaction();
 
+            $employee_details = false;
             $addresses = false;
             $banks = false;
             $contacts = false;
@@ -31,6 +32,13 @@ class StoreController extends Controller
             $avatarPaths = [];
 
             $data = $request->validated();
+
+            //dd($data);
+
+            if (isset($data['employee_details'])) {
+                $employee_details = $data['employee_details'];
+                unset($data['employee_details']);
+            }
             if (isset($data['addresses'])) {
                 $addresses = $data['addresses'];
                 unset($data['addresses']);
@@ -47,11 +55,16 @@ class StoreController extends Controller
                 $users = $data['users'];
                 unset($data['users']);
             }
+            
             $data['email_verification_hash'] = md5(Str::random(40));
+            $data['user_type'] = 'is_employee';
 
             $profile = UserProfile::create($data);
             $this->SentEmailVerificationHash($profile);
 
+            if ($employee_details && is_array($employee_details)) {               
+                $profile->employee()->create($employee_details);
+            }
             if ($addresses && is_array($addresses)) {
                 foreach ($addresses as $address) {
                     $profile->addresses()->create($address);
@@ -84,7 +97,7 @@ class StoreController extends Controller
                             $avatarPaths[] = $path;
                         }
                         $password = $user['password'];
-                        $user['password'] = Hash::make($user['password']);
+                        $user['password'] = Hash::make($user['password']);                        
                         $user = $profile->users()->create($user);
                         //dd($user);
                         Mail::to($profile->email)->send(new SendLoginDetails($user, $password));

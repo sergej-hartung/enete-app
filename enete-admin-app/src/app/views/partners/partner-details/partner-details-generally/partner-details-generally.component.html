@@ -8,68 +8,68 @@
                     <form [formGroup]="userProfilesForm">
                         <!-- Row 1: GP-Nr and Anrede -->
                         <div class="row ">
-                            <div class="col-6 pe-1">
+                            <div class="col-6 pe-1" formGroupName="employee_details">
                                 <label 
                                     for="vp_nr" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['vp_nr']"
+                                    [class.required]="requiredStatus['employee_details.vp_nr']"
                                 >GP-Nr</label>
                                 <input 
                                     type="text" 
                                     class="form-control form-control-sm is-invalid" 
-                                    [class.is-invalid]="userProfilesForm.get('vp_nr')?.errors && userProfilesForm.get('vp_nr')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('vp_nr')?.errors && userProfilesForm.get('vp_nr')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.vp_nr')?.errors && userProfilesForm.get('employee_details.vp_nr')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.vp_nr')?.errors && userProfilesForm.get('employee_details.vp_nr')?.touched"
                                     id="vp_nr" 
                                     formControlName="vp_nr"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('vp_nr')?.errors?.['required']"
+                                    *ngIf="userProfilesForm.get('employee_details.vp_nr')?.errors?.['required']"
                                 >
                                     GP-Nr ist erforderlich.
                                 </div>
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('vp_nr')?.errors?.['pattern']"
+                                    *ngIf="userProfilesForm.get('employee_details.vp_nr')?.errors?.['pattern']"
                                 >
                                     Nur Zahlen sind erlaubt.
                                 </div>
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('vp_nr')?.errors?.['vpNrExists']"
+                                    *ngIf="userProfilesForm.get('employee_details.vp_nr')?.errors?.['vpNrExists']"
                                 >
                                     Die GP-Nr. ist bereits vergeben
                                 </div>
                             </div>
-                            <div class="col-6 ps-1">
+                            <div class="col-6 ps-1" formGroupName="employee_details">
                                 <label 
                                     for="egon_nr" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['egon_nr']"
+                                    [class.required]="requiredStatus['employee_details.egon_nr']"
                                 >Egon-Nr</label>
                                 <input 
                                     type="text" 
                                     class="form-control form-control-sm is-invalid" 
-                                    [class.is-invalid]="userProfilesForm.get('egon_nr')?.errors && userProfilesForm.get('egon_nr')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('egon_nr')?.errors && userProfilesForm.get('egon_nr')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.egon_nr')?.errors && userProfilesForm.get('employee_details.egon_nr')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.egon_nr')?.errors && userProfilesForm.get('employee_details.egon_nr')?.touched"
                                     id="egon_nr" 
                                     formControlName="egon_nr"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('egon_nr')?.errors?.['required']"
+                                    *ngIf="userProfilesForm.get('employee_details.egon_nr')?.errors?.['required']"
                                 >
                                     Egon-Nr ist erforderlich.
                                 </div>
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('egon_nr')?.errors?.['pattern']"
+                                    *ngIf="userProfilesForm.get('employee_details.egon_nr')?.errors?.['pattern']"
                                 >
                                     Nur Zahlen sind erlaubt.
                                 </div>
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('egon_nr')?.errors?.['egonNrExists']"
+                                    *ngIf="userProfilesForm.get('employee_details.egon_nr')?.errors?.['egonNrExists']"
                                 >
                                     Die Egon-Nr. ist bereits vergeben
                                 </div>
@@ -201,23 +201,23 @@
                                     Ungültiges Datumsformat. Verwenden Sie das Format JJJJ-MM-TT.
                                 </div>
                             </div>
-                            <div class="col-8 ps-1">
+                            <div class="col-8 ps-1" formGroupName="employee_details">
                                 <label 
                                     for="company" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['company']"
+                                    [class.required]="requiredStatus['employee_details.company']"
                                 >Firma</label>
                                 <input 
                                     type="text" 
                                     class="form-control form-control-sm" 
                                     id="company" 
                                     formControlName="company"
-                                    [class.is-invalid]="userProfilesForm.get('company')?.errors && userProfilesForm.get('company')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('company')?.errors && userProfilesForm.get('company')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.company')?.errors && userProfilesForm.get('employee_details.company')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.company')?.errors && userProfilesForm.get('employee_details.company')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('company')?.errors?.['minlength']"
+                                    *ngIf="userProfilesForm.get('employee_details.company')?.errors?.['minlength']"
                                 >
                                     Der Name der Firma muss mindestens 2 Zeichen lang sein.
                                 </div>
@@ -607,50 +607,50 @@
                 <div card-body>
                     <form [formGroup]="userProfilesForm">
                         <div class="row ">
-                            <div class="col pe-1">
+                            <div class="col pe-1" formGroupName="employee_details">
                                 <label 
                                     for="status" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['status_id']"
+                                    [class.required]="requiredStatus['employee_details.status_id']"
                                 >Status</label>
                                 <select 
                                     class="form-select form-select-sm" 
                                     id="status"
                                     formControlName="status_id"
-                                    [class.is-invalid]="userProfilesForm.get('status_id')?.errors && userProfilesForm.get('status_id')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('status_id')?.errors && userProfilesForm.get('status_id')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.status_id')?.errors && userProfilesForm.get('employee_details.status_id')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.status_id')?.errors && userProfilesForm.get('employee_details.status_id')?.touched"
                                 >
                                     <option *ngFor="let status of statuses" [value]="status.id">{{status.name}}</option> 
                                 </select>
                             </div>
-                            <div class="col-3 pe-1 ps-1">
+                            <div class="col-3 pe-1 ps-1" formGroupName="employee_details">
                                 <label 
                                     for="stufe" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['career_id']"
+                                    [class.required]="requiredStatus['employee_details.career_id']"
                                 >Stufe</label>
                                 <select 
                                     class="form-select form-select-sm" 
                                     id="stufe"
                                     formControlName="career_id"
-                                    [class.is-invalid]="userProfilesForm.get('career_id')?.errors && userProfilesForm.get('career_id')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('career_id')?.errors && userProfilesForm.get('career_id')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.career_id')?.errors && userProfilesForm.get('employee_details.career_id')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.career_id')?.errors && userProfilesForm.get('employee_details.career_id')?.touched"
                                 >
                                     <option *ngFor="let career of careers" [value]="career.id" >{{career.stages_description}}</option>
                                 </select>
                             </div>
-                            <div class="col ps-1">
+                            <div class="col ps-1" formGroupName="employee_details">
                                 <label 
                                     for="categorie" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['user_profile_categorie_id']"
+                                    [class.required]="requiredStatus['employee_details.categorie_id']"
                                 >Kategorie</label>
                                 <select 
                                     class="form-select form-select-sm" 
                                     id="categorie"
-                                    formControlName="user_profile_categorie_id"
-                                    [class.is-invalid]="userProfilesForm.get('user_profile_categorie_id')?.errors && userProfilesForm.get('user_profile_categorie_id')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('user_profile_categorie_id')?.errors && userProfilesForm.get('user_profile_categorie_id')?.touched"
+                                    formControlName="categorie_id"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.categorie_id')?.errors && userProfilesForm.get('employee_details.categorie_id')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.categorie_id')?.errors && userProfilesForm.get('employee_details.categorie_id')?.touched"
                                 >
                                     <option *ngFor="let categorie of categories" [value]="categorie.id">{{categorie.name}}</option>
                                 </select>
@@ -696,11 +696,11 @@
                 <div card-body>
                     <form [formGroup]="userProfilesForm">
                         <div class="row ">
-                            <div class="col-6 pe-1">
+                            <div class="col-6 pe-1" formGroupName="employee_details">
                                 <label 
                                     for="partner_input" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['entrance']"
+                                    [class.required]="requiredStatus['employee_details.entrance']"
                                 >Eingang</label>
                                 <input 
                                     autocomplete="off" 
@@ -708,34 +708,34 @@
                                     id="partner_input" 
                                     type="date"
                                     formControlName="entrance"
-                                    [class.is-invalid]="userProfilesForm.get('entrance')?.errors && userProfilesForm.get('entrance')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('entrance')?.errors && userProfilesForm.get('entrance')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.entrance')?.errors && userProfilesForm.get('employee_details.entrance')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.entrance')?.errors && userProfilesForm.get('employee_details.entrance')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('entrance')?.errors?.['dateInvalid']"
+                                    *ngIf="userProfilesForm.get('employee_details.entrance')?.errors?.['dateInvalid']"
                                 >
                                     Ungültiges Eingangsdatum.
                                 </div>
                                 
                             </div>
-                            <div class="form_check pt-4 col-6 ps-1">
+                            <div class="form_check pt-4 col-6 ps-1" formGroupName="employee_details">
                                 <input 
                                     id="pass" 
                                     type="checkbox"
                                     formControlName="id_card"
-                                    [class.is-invalid]="userProfilesForm.get('id_card')?.errors && userProfilesForm.get('id_card')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('id_card')?.errors && userProfilesForm.get('id_card')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.id_card')?.errors && userProfilesForm.get('employee_details.id_card')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.id_card')?.errors && userProfilesForm.get('employee_details.id_card')?.touched"
                                 >
                                 <label for="pass">Personalausw.</label>
                             </div>
                         </div>   
                         <div class="row ">
-                            <div class="col-6 pe-1">
+                            <div class="col-6 pe-1" formGroupName="employee_details">
                                 <label 
                                     for="partner_entry" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['entry']"
+                                    [class.required]="requiredStatus['employee_details.entry']"
                                 >Eintritt</label>
                                 <input 
                                     autocomplete="off" 
@@ -743,34 +743,34 @@
                                     id="partner_entry" 
                                     type="date"
                                     formControlName="entry"
-                                    [class.is-invalid]="userProfilesForm.get('entry')?.errors && userProfilesForm.get('entry')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('entry')?.errors && userProfilesForm.get('entry')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.entry')?.errors && userProfilesForm.get('employee_details.entry')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.entry')?.errors && userProfilesForm.get('employee_details.entry')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('entry')?.errors?.['dateInvalid']"
+                                    *ngIf="userProfilesForm.get('employee_details.entry')?.errors?.['dateInvalid']"
                                 >
                                     Ungültiges Eintrittsdatum.
                                 </div>
                                 
                             </div>
-                            <div class="form_check pt-4 col-6 ps-1">
+                            <div class="form_check pt-4 col-6 ps-1" formGroupName="employee_details">
                                 <input 
                                     id="ust_nachw" 
                                     type="checkbox"
                                     formControlName="vat_liability_proven"
-                                    [class.is-invalid]="userProfilesForm.get('vat_liability_proven')?.errors && userProfilesForm.get('vat_liability_proven')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('vat_liability_proven')?.errors && userProfilesForm.get('vat_liability_proven')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.vat_liability_proven')?.errors && userProfilesForm.get('employee_details.vat_liability_proven')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.vat_liability_proven')?.errors && userProfilesForm.get('employee_details.vat_liability_proven')?.touched"
                                 >
                                 <label for="ust_nachw">UST-Pfl. Nachw.</label>
                             </div>
                         </div> 
                         <div class="row ">
-                            <div class="col-6 pe-1">
+                            <div class="col-6 pe-1" formGroupName="employee_details">
                                 <label 
                                     for="partner_exit" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['exit']"
+                                    [class.required]="requiredStatus['employee_details.exit']"
                                 >Austritt</label>
                                 <input 
                                     autocomplete="off" 
@@ -778,23 +778,23 @@
                                     id="partner_exit" 
                                     type="date"
                                     formControlName="exit"
-                                    [class.is-invalid]="userProfilesForm.get('exit')?.errors && userProfilesForm.get('exit')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('exit')?.errors && userProfilesForm.get('exit')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.exit')?.errors && userProfilesForm.get('employee_details.exit')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.exit')?.errors && userProfilesForm.get('employee_details.exit')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('exit')?.errors?.['dateInvalid']"
+                                    *ngIf="userProfilesForm.get('employee_details.exit')?.errors?.['dateInvalid']"
                                 >
                                     Ungültiges Austrittsdatum.
                                 </div>
                             </div>
-                            <div class="form_check pt-4 col-6 ps-1">
+                            <div class="form_check pt-4 col-6 ps-1" formGroupName="employee_details">
                                 <input 
                                     id="business_reg" 
                                     type="checkbox"
                                     formControlName="business_registration"
-                                    [class.is-invalid]="userProfilesForm.get('business_registration')?.errors && userProfilesForm.get('business_registration')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('business_registration')?.errors && userProfilesForm.get('business_registration')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.business_registration')?.errors && userProfilesForm.get('employee_details.business_registration')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.business_registration')?.errors && userProfilesForm.get('employee_details.business_registration')?.touched"
                                 >
                                 <label for="business_reg">Gewerbeanm.</label>
                             </div>
@@ -807,11 +807,11 @@
                 <div card-body>
                     <form [formGroup]="userProfilesForm">
                         <div class="row ">
-                            <div class="col-6 pe-1">
+                            <div class="col-6 pe-1" formGroupName="employee_details">
                                 <label 
                                     for="tax_office" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['tax_office']"
+                                    [class.required]="requiredStatus['employee_details.tax_office']"
                                 >Finanzamt</label>
                                 <input 
                                     autocomplete="off" 
@@ -819,17 +819,17 @@
                                     id="tax_office"  
                                     type="text"
                                     formControlName="tax_office"
-                                    [class.is-invalid]="userProfilesForm.get('tax_office')?.errors && userProfilesForm.get('tax_office')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('tax_office')?.errors && userProfilesForm.get('tax_office')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.tax_office')?.errors && userProfilesForm.get('employee_details.tax_office')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.tax_office')?.errors && userProfilesForm.get('employee_details.tax_office')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('tax_office')?.errors?.['minlength']"
+                                    *ngIf="userProfilesForm.get('employee_details.tax_office')?.errors?.['minlength']"
                                 >
                                  Das Finanzamt muss mindestens 2 Zeichen lang sein.
                                 </div>
                             </div>
-                            <div class="form_check pt-4 col-6 ps-1">
+                            <div class="form_check pt-4 col-6 ps-1" formGroupName="employee_details">
                                 <input 
                                     id="ust" 
                                     type="checkbox"
@@ -840,11 +840,11 @@
                         </div>
                         
                         <div class="row">
-                            <div class="col-6 pe-1">
+                            <div class="col-6 pe-1" formGroupName="employee_details">
                                 <label 
                                     for="steuer_nr" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['tax_number']"
+                                    [class.required]="requiredStatus['employee_details.tax_number']"
                                 >Steuer-Nr</label>
                                 <input 
                                     autocomplete="off" 
@@ -852,21 +852,21 @@
                                     id="steuer_nr"  
                                     type="text"
                                     formControlName="tax_number"
-                                    [class.is-invalid]="userProfilesForm.get('tax_number')?.errors && userProfilesForm.get('tax_number')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('tax_number')?.errors && userProfilesForm.get('tax_number')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.tax_number')?.errors && userProfilesForm.get('employee_details.tax_number')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.tax_number')?.errors && userProfilesForm.get('employee_details.tax_number')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('tax_number')?.errors?.['pattern']"
+                                    *ngIf="userProfilesForm.get('employee_details.tax_number')?.errors?.['pattern']"
                                 >
                                     Ungültige Steuernummer. Überprüfen Sie das Format und die Ziffern.
                                 </div>
                             </div>
-                            <div class="col-6 ps-1">
+                            <div class="col-6 ps-1" formGroupName="employee_details">
                                 <label 
                                     for="steuer_id" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['tax_id']"
+                                    [class.required]="requiredStatus['employee_details.tax_id']"
                                 >Steuer-ID</label>
                                 <input 
                                     autocomplete="off" 
@@ -874,23 +874,23 @@
                                     id="steuer_id"  
                                     type="text"
                                     formControlName="tax_id"
-                                    [class.is-invalid]="userProfilesForm.get('tax_id')?.errors && userProfilesForm.get('tax_id')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('tax_id')?.errors && userProfilesForm.get('tax_id')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.tax_id')?.errors && userProfilesForm.get('employee_details.tax_id')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.tax_id')?.errors && userProfilesForm.get('employee_details.tax_id')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('tax_id')?.errors?.['pattern']"
+                                    *ngIf="userProfilesForm.get('employee_details.tax_id')?.errors?.['pattern']"
                                 >
                                     Ungültige Steuer-ID. Überprüfen Sie das Format und die Ziffern.
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-12">
+                            <div class="col-12" formGroupName="employee_details">
                                 <label 
                                     for="datev_nr" 
                                     class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['datev_no']"
+                                    [class.required]="requiredStatus['employee_details.datev_no']"
                                 >DATEV-Nr</label>
                                 <input 
                                     autocomplete="off" 
@@ -898,12 +898,12 @@
                                     id="datev_nr" 
                                     type="text"
                                     formControlName="datev_no"
-                                    [class.is-invalid]="userProfilesForm.get('datev_no')?.errors && userProfilesForm.get('datev_no')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('datev_no')?.errors && userProfilesForm.get('datev_no')?.touched"
+                                    [class.is-invalid]="userProfilesForm.get('employee_details.datev_no')?.errors && userProfilesForm.get('employee_details.datev_no')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('employee_details.datev_no')?.errors && userProfilesForm.get('employee_details.datev_no')?.touched"
                                 >
                                 <div 
                                     class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('datev_no')?.errors?.['pattern']"
+                                    *ngIf="userProfilesForm.get('employee_details.datev_no')?.errors?.['pattern']"
                                 >
                                     Ungültige DATEV-Nummer.
                                 </div>
@@ -917,7 +917,7 @@
                 <div card-body>
                     <form [formGroup]="userProfilesForm">
                         <div class="row ">
-                            <div class="form_check inverse  pt-2 col-6 pe-1">
+                            <div class="form_check inverse  pt-2 col-6 pe-1" formGroupName="employee_details">
                                 <input 
                                     id="abr_block" 
                                     type="checkbox"
@@ -925,7 +925,7 @@
                                 >
                                 <label for="abr_block">Abr. sperren</label>
                             </div>
-                            <div class="form_check inverse pt-2 col-6 ps-1">
+                            <div class="form_check inverse pt-2 col-6 ps-1"  formGroupName="employee_details">
                                 <input 
                                     id="ausz_block" 
                                     type="checkbox"
