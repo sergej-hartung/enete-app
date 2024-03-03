@@ -14,40 +14,27 @@ return new class extends Migration
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
             
-            $table->string('vp_nr')->nullable();
-            $table->string('egon_nr')->unique()->nullable();
-            $table->string('company')->nullable();
             $table->string('salutation');
             $table->string('title')->nullable();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('marital_status')->nullable();           
+     
             $table->date('birthdate')->nullable();
             $table->string('email');
             $table->timestamp('email_sent')->nullable();
             $table->string('email_verification_hash')->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->boolean('id_card')->nullable();
-            $table->boolean('business_registration')->nullable();
-            $table->boolean('sales_tax_liability')->nullable();
-            $table->boolean('vat_liability_proven')->nullable();
-            $table->string('tax_number')->nullable();
-            $table->string('tax_id')->nullable();
-            $table->string('tax_office')->nullable();
-            $table->string('datev_no')->nullable();
-            $table->date('entrance')->nullable();
-            $table->date('entry')->nullable();
-            $table->date('exit')->nullable();
-            $table->boolean('billing_blocked')->nullable();
-            $table->boolean('payout_blocked')->nullable();
+
             $table->text('internal_note')->nullable();
             $table->text('external_note')->nullable();
-            $table->unsignedBigInteger('status_id')->nullable();
-            $table->unsignedBigInteger('career_id')->nullable();
-            $table->unsignedBigInteger('user_profile_categorie_id')->nullable();
+
             $table->unsignedBigInteger('parent_id')->nullable();            
-            $table->timestamp('last_visit')->nullable();            
+            // $table->timestamp('last_visit')->nullable();            
             $table->foreign('parent_id')->references('id')->on('user_profiles')->onDelete('set null');
+            $table->enum('user_type',['is_admin', 'is_employee', 'is_customer'])->default('is_customer');
+            $table->boolean('is_admin')->default(false);
+            $table->boolean('is_employee')->default(false);
+            $table->boolean('is_customer')->default(false);
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();
             $table->timestamps();

@@ -45,7 +45,7 @@ export class AdminService extends DataService<Partner> {
     // Создаем HttpParams на основе текущих фильтров
     let httpParams = new HttpParams({ fromObject: this.currentFilters });
   
-    this.http.get<PartnerData>(`${this.apiUrl}/user-profiles`, { params: httpParams })
+    this.http.get<PartnerData>(`${this.apiUrl}/user-profiles/admins`, { params: httpParams })
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {

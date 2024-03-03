@@ -31,7 +31,7 @@ export class CategorieService extends DataService<Categorie> {
   
 
   fetchData(): void {
-    this.http.get<CategorieData>(`${this.apiUrl}/user-profile/categories`)
+    this.http.get<CategorieData>(`${this.apiUrl}/user-profile/employee/categories`)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {

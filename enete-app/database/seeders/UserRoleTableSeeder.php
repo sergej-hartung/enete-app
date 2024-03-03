@@ -14,15 +14,16 @@ class UserRoleTableSeeder extends Seeder
     public function run(): void
     {
         $careers = [
-            ['admin','Administrator'], 
-            ['vp','Vertriebspartner'],
-            ['vision_vp','Vision Vp'],
-            ['shop','Shop'],
+            ['admin','Administrator','is_admin'], 
+            ['vp','Vertriebspartner','is_employee'],
+            ['vision_vp','Vision Vp','is_employee'],
+            ['shop','Shop', 'is_employee'],
         ];
         foreach ($careers as $career) {
             DB::table('user_roles')->insert([
                 'name' => $career[0],
                 'description' => $career[1],
+                'type' => $career[2],
                 'created_at' => now(),
             ]);
         }

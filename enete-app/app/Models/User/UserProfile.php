@@ -26,9 +26,14 @@ class UserProfile extends Model
     }
 
     // Связь с пользовательским статусом
-    public function status()
+    // public function status()
+    // {
+    //     return $this->belongsTo(UserProfileStatus::class, 'status_id');
+    // }
+
+    public function employee()
     {
-        return $this->belongsTo(UserProfileStatus::class, 'status_id');
+        return $this->hasOne(UserEmployeeDetails::class, 'user_profile_id');
     }
 
     // Связь с банковскими счетами

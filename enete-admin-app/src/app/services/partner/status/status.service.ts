@@ -30,7 +30,7 @@ export class StatusService extends DataService<Status> {
   
 
   fetchData(): void {
-    this.http.get<StatusData>(`${this.apiUrl}/user-profile/statuses`)
+    this.http.get<StatusData>(`${this.apiUrl}/user-profile/employee/statuses`)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {

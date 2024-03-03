@@ -73,7 +73,7 @@ export class PartnerService extends DataService<Partner> {
     // Создаем HttpParams на основе текущих фильтров
     let httpParams = new HttpParams({ fromObject: this.currentFilters });
   
-    this.http.get<PartnerData>(`${this.apiUrl}/user-profiles`, { params: httpParams })
+    this.http.get<PartnerData>(`${this.apiUrl}/user-profile/employees`, { params: httpParams })
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
@@ -97,7 +97,7 @@ export class PartnerService extends DataService<Partner> {
   }
 
   fetchDetailedDataById(id: number): void {
-    this.http.get<{'data': Partner}>(`${this.apiUrl}/user-profiles/${id}`)
+    this.http.get<{'data': Partner}>(`${this.apiUrl}/user-profile/employees/${id}`)
       .pipe(
         takeUntil(this.destroy$),
       )

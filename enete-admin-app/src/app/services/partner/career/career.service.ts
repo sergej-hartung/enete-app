@@ -31,7 +31,7 @@ export class CareerService extends DataService<Career> {
   
 
   fetchData(): void {
-    this.http.get<CareerData>(`${this.apiUrl}/user-profile/careers`)
+    this.http.get<CareerData>(`${this.apiUrl}/user-profile/employee/careers`)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
