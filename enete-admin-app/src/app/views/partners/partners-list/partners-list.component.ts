@@ -55,7 +55,7 @@ export class PartnersListComponent implements OnInit, OnDestroy {
       },
       {
         type: 'select',
-        key: 'user_profile_categorie_id',
+        key: 'categorie_id',
         label: 'Kategorie',
         options: [],
       }
@@ -109,7 +109,7 @@ export class PartnersListComponent implements OnInit, OnDestroy {
       options.push(option)
     })
 
-    let filter = this.filters?.find(f => f.type === "select" && f.key === 'user_profile_categorie_id' && f.label === 'Kategorie')
+    let filter = this.filters?.find(f => f.type === "select" && f.key === 'categorie_id' && f.label === 'Kategorie')
     if(filter) filter.options = options
   }
 

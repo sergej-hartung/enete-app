@@ -34,9 +34,7 @@ export class AdminManagementComponent {
     this.mainNavbarService.setIconState('save', true, true);
     this.mainNavbarService.setIconState('new', true, false);
 
-    this.adminService.fetchData({
-      'is_admin': 'true'
-    })
+    this.adminService.fetchData()
 
 
     // this.mainNavbarService.iconClicks$

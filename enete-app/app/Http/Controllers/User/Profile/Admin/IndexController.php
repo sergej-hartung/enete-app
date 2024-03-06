@@ -15,6 +15,7 @@ class IndexController extends Controller
     public function __invoke(IndexAdminProfileRequest $request)
     {
         $data = $request->validated();
+
         $filter = app()->make(UserProfileFilter::class, ['queryParams' => array_filter($data)]);
 
         $profile = UserProfile::with(['users'])->where('user_type', '=', 'is_admin')->filter($filter)->sort($data)->get();

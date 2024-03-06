@@ -35,469 +35,485 @@
                             </div>
                         </div>                       
                     </div>
-                    <div class="col-12 ps-2 pe-1 pt-2" *ngIf="userProfilesForm">
+                    <div class="col-12 ps-2   pt-2" *ngIf="userProfilesForm">
+                        
                         <!-- Stammdaten -->
                         <app-card>
                             <div card-header>Stammdaten</div>
                             <div card-body>
                                 <form [formGroup]="userProfilesForm">
                                     <div class="row">
-                                        <div class="col-2 pe-1 ">
-                                            <label 
-                                                for="anrede" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['salutation']"
-                                            >Anrede</label>
-                                            <select 
-                                                id="anrede" 
-                                                class="form-select form-select-sm"
-                                                formControlName="salutation"
-                                                [class.is-invalid]="userProfilesForm.get('salutation')?.errors && userProfilesForm.get('salutation')?.touched"
-                                                [class.is-valid]="!userProfilesForm.get('salutation')?.errors && userProfilesForm.get('salutation')?.touched"
-                                            >
-                                                <option value="Herr">Herr</option>
-                                                <option value="Frau">Frau</option>
-                                                <option value="Familie">Familie</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-2 ps-1 pe-1">
-                                            <label 
-                                                for="title" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['title']"
-                                            >Titel</label>
-                                            <select 
-                                                id="title" 
-                                                class="form-select form-select-sm"
-                                                formControlName="title"
-                                                [class.is-invalid]="userProfilesForm.get('title')?.errors && userProfilesForm.get('title')?.touched"
-                                                [class.is-valid]="!userProfilesForm.get('title')?.errors && userProfilesForm.get('title')?.touched"
-                                            >
-                                                <option value="kein Titel">kein Titel</option>
-                                                <option value="Dr.">Dr.</option>
-                                                <option value="Prof.">Prof.</option>
-                                                <option value="Prof.Dr.">Prof.Dr.</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-2 pe-1 ps-1">
-                                            <label 
-                                                for="date_of_birth" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['birthdate']"
-                                            >Geburtsdatum</label>
-                                            <input 
-                                                type="date" 
-                                                class="form-control form-control-sm" 
-                                                id="date_of_birth"
-                                                formControlName="birthdate"
-                                                [class.is-invalid]="userProfilesForm.get('birthdate')?.errors && userProfilesForm.get('birthdate')?.touched"
-                                                [class.is-valid]="!userProfilesForm.get('birthdate')?.errors && userProfilesForm.get('birthdate')?.touched"
-                                            >
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="userProfilesForm.get('birthdate')?.errors?.['dateInvalid']"
-                                            >
-                                                Ungültiges Datum.
-                                            </div>
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="userProfilesForm.get('birthdate')?.errors?.['dateInvalidFormat']"
-                                            >
-                                                Ungültiges Datumsformat. Verwenden Sie das Format JJJJ-MM-TT.
-                                            </div>
-                                        </div>
-                                        <div class="col-3 pe-1 ps-1">
-                                            <label 
-                                                for="last_name" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['last_name']"
-                                            >Name</label>
-                                            <input 
-                                                type="text" 
-                                                class="form-control form-control-sm" 
-                                                id="last_name" 
-                                                formControlName="last_name"
-                                                [class.is-invalid]="userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
-                                                [class.is-valid]="!userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
-                                            >
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="userProfilesForm.get('last_name')?.errors?.['required']"
-                                            >
-                                                Nachname ist erforderlich.
-                                            </div>
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="userProfilesForm.get('last_name')?.errors?.['minlength']"
-                                            >
-                                                Nachname ist zu kurz.
-                                            </div>
-                                        </div>
-                                        <div class="col-3 ps-1">
-                                            <label 
-                                                for="first_name" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['first_name']"
-                                            >Vorname</label>
-                                            <input 
-                                                type="text" 
-                                                class="form-control form-control-sm" 
-                                                id="first_name" 
-                                                formControlName="first_name"
-                                                [class.is-invalid]="userProfilesForm.get('first_name')?.errors && userProfilesForm.get('first_name')?.touched"
-                                                [class.is-valid]="!userProfilesForm.get('first_name')?.errors && userProfilesForm.get('first_name')?.touched"
-                                            >
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="userProfilesForm.get('first_name')?.errors?.['required']"
-                                            >
-                                                Vorname ist erforderlich.
-                                            </div>
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="userProfilesForm.get('first_name')?.errors?.['minlength']"
-                                            >
-                                                Vorname ist zu kurz.
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </form>
-                                <form [formGroup]="userProfilesForm"> 
-                                    <ng-container formArrayName="addresses"> 
-                                        <ng-container *ngFor="let address of addresses.controls; let i = index" [formGroupName]="i" > 
+                                        <div class="col-6">
                                             <div class="row">
-                                                <div class="col-4 pe-1">
+                                                <div class="col-4 pe-1 ">
                                                     <label 
-                                                        for="street" 
+                                                        for="anrede" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="requiredStatus['addresses[' + i + '].street']"
-                                                    >Straße</label>
+                                                        [class.required]="requiredStatus['salutation']"
+                                                    >Anrede</label>
+                                                    <select 
+                                                        id="anrede" 
+                                                        class="form-select form-select-sm"
+                                                        formControlName="salutation"
+                                                        [class.is-invalid]="userProfilesForm.get('salutation')?.errors && userProfilesForm.get('salutation')?.touched"
+                                                        [class.is-valid]="!userProfilesForm.get('salutation')?.errors && userProfilesForm.get('salutation')?.touched"
+                                                    >
+                                                        <option value="Herr">Herr</option>
+                                                        <option value="Frau">Frau</option>
+                                                        <option value="Familie">Familie</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-4 ps-1 pe-1">
+                                                    <label 
+                                                        for="title" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['title']"
+                                                    >Titel</label>
+                                                    <select 
+                                                        id="title" 
+                                                        class="form-select form-select-sm"
+                                                        formControlName="title"
+                                                        [class.is-invalid]="userProfilesForm.get('title')?.errors && userProfilesForm.get('title')?.touched"
+                                                        [class.is-valid]="!userProfilesForm.get('title')?.errors && userProfilesForm.get('title')?.touched"
+                                                    >
+                                                        <option value="kein Titel">kein Titel</option>
+                                                        <option value="Dr.">Dr.</option>
+                                                        <option value="Prof.">Prof.</option>
+                                                        <option value="Prof.Dr.">Prof.Dr.</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-4 pe-1 ps-1">
+                                                    <label 
+                                                        for="date_of_birth" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['birthdate']"
+                                                    >Geburtsdatum</label>
                                                     <input 
-                                                        type="text" 
+                                                        type="date" 
                                                         class="form-control form-control-sm" 
-                                                        id="street" 
-                                                        formControlName="street"
-                                                        [class.is-invalid]="address.get('street')?.errors && address.get('street')?.touched"
-                                                        [class.is-valid]="!address.get('street')?.errors && address.get('street')?.touched"
+                                                        id="date_of_birth"
+                                                        formControlName="birthdate"
+                                                        [class.is-invalid]="userProfilesForm.get('birthdate')?.errors && userProfilesForm.get('birthdate')?.touched"
+                                                        [class.is-valid]="!userProfilesForm.get('birthdate')?.errors && userProfilesForm.get('birthdate')?.touched"
                                                     >
                                                     <div 
                                                         class="invalid-feedback custom-invalid-feedback"
-                                                        *ngIf="address.get('street')?.errors?.['minlength']"
+                                                        *ngIf="userProfilesForm.get('birthdate')?.errors?.['dateInvalid']"
                                                     >
-                                                        Straße ist zu kurz.
+                                                        Ungültiges Datum.
+                                                    </div>
+                                                    <div 
+                                                        class="invalid-feedback custom-invalid-feedback"
+                                                        *ngIf="userProfilesForm.get('birthdate')?.errors?.['dateInvalidFormat']"
+                                                    >
+                                                        Ungültiges Datumsformat. Verwenden Sie das Format JJJJ-MM-TT.
                                                     </div>
                                                 </div>
-                                                <div class="col-2 ps-1 pe-1">
+                                                <div class="col-6 pe-1 ">
                                                     <label 
-                                                        for="house_nr" 
+                                                        for="last_name" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="requiredStatus['addresses[' + i + '].house_number']"
-                                                    >Haus-Nr.</label>
+                                                        [class.required]="requiredStatus['last_name']"
+                                                    >Name</label>
                                                     <input 
                                                         type="text" 
                                                         class="form-control form-control-sm" 
-                                                        id="house_nr" 
-                                                        formControlName="house_number"
-                                                        [class.is-invalid]="address.get('house_number')?.errors && address.get('house_number')?.touched"
-                                                        [class.is-valid]="!address.get('house_number')?.errors && address.get('house_number')?.touched"
+                                                        id="last_name" 
+                                                        formControlName="last_name"
+                                                        [class.is-invalid]="userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
+                                                        [class.is-valid]="!userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
                                                     >
                                                     <div 
                                                         class="invalid-feedback custom-invalid-feedback"
-                                                        *ngIf="address.get('house_number')?.errors?.['pattern']"
+                                                        *ngIf="userProfilesForm.get('last_name')?.errors?.['required']"
                                                     >
-                                                        Ungültige Hausnummer.
+                                                        Nachname ist erforderlich.
+                                                    </div>
+                                                    <div 
+                                                        class="invalid-feedback custom-invalid-feedback"
+                                                        *ngIf="userProfilesForm.get('last_name')?.errors?.['minlength']"
+                                                    >
+                                                        Nachname ist zu kurz.
                                                     </div>
                                                 </div>
-                                                <div class="col-2 pe-1 ps-1">
+                                                <div class="col-6 pe-1 ps-1">
                                                     <label 
-                                                        for="plz" 
+                                                        for="first_name" 
                                                         class="form-label custom-label-sm"
-                                                        [class.required]="requiredStatus['addresses[' + i + '].zip']"
-                                                    >PLZ</label>
+                                                        [class.required]="requiredStatus['first_name']"
+                                                    >Vorname</label>
                                                     <input 
                                                         type="text" 
                                                         class="form-control form-control-sm" 
-                                                        id="plz" 
-                                                        formControlName="zip"
-                                                        [class.is-invalid]="address.get('zip')?.errors && address.get('zip')?.touched"
-                                                        [class.is-valid]="!address.get('zip')?.errors && address.get('zip')?.touched"
+                                                        id="first_name" 
+                                                        formControlName="first_name"
+                                                        [class.is-invalid]="userProfilesForm.get('first_name')?.errors && userProfilesForm.get('first_name')?.touched"
+                                                        [class.is-valid]="!userProfilesForm.get('first_name')?.errors && userProfilesForm.get('first_name')?.touched"
                                                     >
                                                     <div 
                                                         class="invalid-feedback custom-invalid-feedback"
-                                                        *ngIf="address.get('zip')?.errors?.['pattern']"
+                                                        *ngIf="userProfilesForm.get('first_name')?.errors?.['required']"
                                                     >
-                                                        Ungültige PLZ.
+                                                        Vorname ist erforderlich.
                                                     </div>
-                                                </div>
-                                                <div class="col-4 ps-1">
-                                                    <label 
-                                                        for="city" 
-                                                        class="form-label custom-label-sm"
-                                                        [class.required]="requiredStatus['addresses[' + i + '].city']"
-                                                    >Ort</label>
-                                                    <input 
-                                                        type="text" 
-                                                        class="form-control form-control-sm" 
-                                                        id="city" 
-                                                        formControlName="city"
-                                                        [class.is-invalid]="address.get('city')?.errors && address.get('city')?.touched"
-                                                        [class.is-valid]="!address.get('city')?.errors && address.get('city')?.touched"
-                                                    >
                                                     <div 
                                                         class="invalid-feedback custom-invalid-feedback"
-                                                        *ngIf="address.get('city')?.errors?.['minlength']"
+                                                        *ngIf="userProfilesForm.get('first_name')?.errors?.['minlength']"
                                                     >
-                                                        Ort ist zu kurz.
+                                                        Vorname ist zu kurz.
                                                     </div>
                                                 </div>
                                             </div>
-                                        </ng-container>
-                                    </ng-container> 
-                                </form>
-                            </div>
-                        </app-card>
-                        <!-- END Stammdaten -->
-            
-                        <!-- Kommunikation -->
-                        <app-card>
-                            <div card-header>Kommunikation</div>
-                            <div card-body>
-                                <form [formGroup]="userProfilesForm">
-                                                                           
-                                        <div  class="row">
-                                            <div class="col-3 pe-1">
-                                                <label 
-                                                    for="email" 
-                                                    class="form-label custom-label-sm"
-                                                    [class.required]="requiredStatus['email']"
-                                                >E-Mail</label>
-                                                <div class="input-group">                     
-                                                    <input 
-                                                        type="email" 
-                                                        class="form-control form-control-sm" 
-                                                        id="email" 
-                                                        formControlName="email"
-                                                        [class.is-invalid]="userProfilesForm.get('email')?.errors && userProfilesForm.get('email')?.touched"
-                                                        [class.is-valid]="!userProfilesForm.get('email')?.errors && userProfilesForm.get('email')?.touched"
-                                                    >
-                                                    <!-- <span class="input-group-text"><i class="fa-solid fa-at"></i></span> -->
-                                                    <div 
-                                                        class="invalid-feedback custom-invalid-feedback"
-                                                        *ngIf="userProfilesForm.get('email')?.errors?.['required']"
-                                                    >
-                                                        E-Mail ist erforderlich.
-                                                    </div>
-                                                    <div 
-                                                        class="invalid-feedback custom-invalid-feedback"
-                                                        *ngIf="userProfilesForm.get('email')?.errors?.['email']"
-                                                    >
-                                                        Ungültige E-Mail-Adresse.
-                                                    </div>
-                                                    <div 
-                                                        class="invalid-feedback custom-invalid-feedback"
-                                                        *ngIf="userProfilesForm.get('email')?.errors?.['emailExists']"
-                                                    >
-                                                        Die E-Mail-Adresse ist bereits vergeben
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <ng-container formArrayName="contacts">
-                                                <ng-container *ngFor="let contact of contacts.controls; let i = index" [formGroupName]="i">
-                                                    <div class="col-2 ps-1 pe-1">                                        
-                                                        <label 
-                                                            for='prefix_phone-{{i}}' 
-                                                            class="form-label custom-label-sm"
-                                                            [class.required]="requiredStatus['contacts[' + i + '].prefix']"
-                                                        >Vorwahl</label>
-                                                        <input 
-                                                            type="text" 
-                                                            id='prefix_phone-{{i}}'
-                                                            autocomplete="off" 
-                                                            class="form-control form-control-sm"  
-                                                            formControlName="prefix"
-                                                            [class.is-invalid]="contact.get('prefix')?.errors && contact.get('prefix')?.touched"
-                                                            [class.is-valid]="!contact.get('prefix')?.errors && contact.get('prefix')?.touched"
-                                                        >
-                                                        <div 
-                                                            class="invalid-feedback custom-invalid-feedback"
-                                                            *ngIf="contact.get('prefix')?.errors?.['pattern']"
-                                                        >
-                                                            Nur Zahlen sind für die Vorwahl erlaubt.
-                                                        </div>
-                                                    </div>
-                                                    <div class="col ps-1 pe-1" *ngIf="contact.get('user_profile_contact_type_id')?.value == 1">
-                                                        <label 
-                                                            for='tel_number-{{i}}' 
-                                                            class="form-label custom-label-sm"
-                                                            [class.required]="requiredStatus['contacts[' + i + '].number']"
-                                                        >Tel. Nummer</label>
-                                                        <div class="input-group">
+                                        </div>
+                                        <div class="col-6">
+                                            <ng-container formArrayName="addresses"> 
+                                                <ng-container *ngFor="let address of addresses.controls; let i = index" [formGroupName]="i" > 
+                                                    <div class="row">
+                                                        <div class="col-7 ps-1 pe-1">
+                                                            <label 
+                                                                for="street" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].street']"
+                                                            >Straße</label>
                                                             <input 
                                                                 type="text" 
-                                                                id='tel_number-{{i}}' 
                                                                 class="form-control form-control-sm" 
-                                                                formControlName="number"
-                                                                [class.is-invalid]="contact.get('number')?.errors && contact.get('number')?.touched"
-                                                                [class.is-valid]="!contact.get('number')?.errors && contact.get('number')?.touched"
+                                                                id="street" 
+                                                                formControlName="street"
+                                                                [class.is-invalid]="address.get('street')?.errors && address.get('street')?.touched"
+                                                                [class.is-valid]="!address.get('street')?.errors && address.get('street')?.touched"
                                                             >
-                                                            <!-- <span class="input-group-text" ><i class="fas fa-phone"></i></span> -->
                                                             <div 
                                                                 class="invalid-feedback custom-invalid-feedback"
-                                                                *ngIf="contact.get('number')?.errors?.['pattern']"
+                                                                *ngIf="address.get('street')?.errors?.['minlength']"
                                                             >
-                                                                Nur Zahlen sind für die Nummer erlaubt.
+                                                                Straße ist zu kurz.
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col ps-1" *ngIf="contact.get('user_profile_contact_type_id')?.value == 2">
-                                                        <label 
-                                                            for='mobil_number-{{i}}' 
-                                                            class="form-label custom-label-sm"
-                                                            [class.required]="requiredStatus['contacts[' + i + '].number']"
-                                                        >Mobil. Nr</label>
-                                                        <div class="input-group">
+                                                        <div class="col-5 ps-1 ">
+                                                            <label 
+                                                                for="house_nr" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].house_number']"
+                                                            >Haus-Nr.</label>
                                                             <input 
                                                                 type="text" 
-                                                                id='mobil_number-{{i}}' 
                                                                 class="form-control form-control-sm" 
-                                                                formControlName="number" 
-                                                                [class.is-invalid]="contact.get('number')?.errors && contact.get('number')?.touched"
-                                                                [class.is-valid]="!contact.get('number')?.errors && contact.get('number')?.touched"
+                                                                id="house_nr" 
+                                                                formControlName="house_number"
+                                                                [class.is-invalid]="address.get('house_number')?.errors && address.get('house_number')?.touched"
+                                                                [class.is-valid]="!address.get('house_number')?.errors && address.get('house_number')?.touched"
                                                             >
-                                                            <!-- <span class="input-group-text" ><i class="fa-solid fa-mobile-screen-button"></i></span> -->
                                                             <div 
                                                                 class="invalid-feedback custom-invalid-feedback"
-                                                                *ngIf="contact.get('number')?.errors?.['pattern']"
+                                                                *ngIf="address.get('house_number')?.errors?.['pattern']"
                                                             >
-                                                                Nur Zahlen sind für die Nummer erlaubt.
+                                                                Ungültige Hausnummer.
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-4 pe-1 ps-1">
+                                                            <label 
+                                                                for="plz" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].zip']"
+                                                            >PLZ</label>
+                                                            <input 
+                                                                type="text" 
+                                                                class="form-control form-control-sm" 
+                                                                id="plz" 
+                                                                formControlName="zip"
+                                                                [class.is-invalid]="address.get('zip')?.errors && address.get('zip')?.touched"
+                                                                [class.is-valid]="!address.get('zip')?.errors && address.get('zip')?.touched"
+                                                            >
+                                                            <div 
+                                                                class="invalid-feedback custom-invalid-feedback"
+                                                                *ngIf="address.get('zip')?.errors?.['pattern']"
+                                                            >
+                                                                Ungültige PLZ.
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-8 ps-1">
+                                                            <label 
+                                                                for="city" 
+                                                                class="form-label custom-label-sm"
+                                                                [class.required]="requiredStatus['addresses[' + i + '].city']"
+                                                            >Ort</label>
+                                                            <input 
+                                                                type="text" 
+                                                                class="form-control form-control-sm" 
+                                                                id="city" 
+                                                                formControlName="city"
+                                                                [class.is-invalid]="address.get('city')?.errors && address.get('city')?.touched"
+                                                                [class.is-valid]="!address.get('city')?.errors && address.get('city')?.touched"
+                                                            >
+                                                            <div 
+                                                                class="invalid-feedback custom-invalid-feedback"
+                                                                *ngIf="address.get('city')?.errors?.['minlength']"
+                                                            >
+                                                                Ort ist zu kurz.
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </ng-container>
                                             </ng-container> 
-                                        </div> 
-                                     
-                                </form>
-                                <form [formGroup]="userProfilesForm">                                
-                                    <div class="row">
+                                        </div>
                                         
                                     </div>
                                 </form>
                             </div>
                         </app-card>
-                        <!--END Kommunikation -->
-                        <app-card *ngIf="user">
-                            <div card-header>Zugangsdaten</div>
-                            <div card-body>
-                                <form  [formGroup]="user">
-                                    <div class="row">
-                                        <div class="col pe-1">
-                                            <label 
-                                                for="user-login" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['user.login_name']"
-                                            >Login</label>
-                                            <input 
-                                                type="text" 
-                                                class="form-control form-control-sm is-invalid" 
-                                                [class.is-invalid]="user.get('login_name')?.errors && user.get('login_name')?.touched"
-                                                [class.is-valid]="!user.get('login_name')?.errors && user.get('login_name')?.touched"
-                                                id="user-login" 
-                                                formControlName="login_name"
-                                            >
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="user.get('login_name')?.errors?.['required']"
-                                            >
-                                                Login ist erforderlich.
+                        <!-- END Stammdaten -->
+            
+                        
+                        
+                        <div class="row">
+                            <div class="col-6 pe-1">
+                                <!-- Kommunikation -->
+                                <app-card>
+                                    <div card-header>Kommunikation</div>
+                                    <div card-body>
+                                        <form [formGroup]="userProfilesForm">
+                                                                                   
+                                                <div  class="row">
+                                                    <div class="col-12">
+                                                        <label 
+                                                            for="email" 
+                                                            class="form-label custom-label-sm"
+                                                            [class.required]="requiredStatus['email']"
+                                                        >E-Mail</label>
+                                                        <div class="input-group">                     
+                                                            <input 
+                                                                type="email" 
+                                                                class="form-control form-control-sm" 
+                                                                id="email" 
+                                                                formControlName="email"
+                                                                [class.is-invalid]="userProfilesForm.get('email')?.errors && userProfilesForm.get('email')?.touched"
+                                                                [class.is-valid]="!userProfilesForm.get('email')?.errors && userProfilesForm.get('email')?.touched"
+                                                            >
+                                                            <!-- <span class="input-group-text"><i class="fa-solid fa-at"></i></span> -->
+                                                            <div 
+                                                                class="invalid-feedback custom-invalid-feedback"
+                                                                *ngIf="userProfilesForm.get('email')?.errors?.['required']"
+                                                            >
+                                                                E-Mail ist erforderlich.
+                                                            </div>
+                                                            <div 
+                                                                class="invalid-feedback custom-invalid-feedback"
+                                                                *ngIf="userProfilesForm.get('email')?.errors?.['email']"
+                                                            >
+                                                                Ungültige E-Mail-Adresse.
+                                                            </div>
+                                                            <div 
+                                                                class="invalid-feedback custom-invalid-feedback"
+                                                                *ngIf="userProfilesForm.get('email')?.errors?.['emailExists']"
+                                                            >
+                                                                Die E-Mail-Adresse ist bereits vergeben
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <ng-container formArrayName="contacts">
+                                                        <ng-container *ngFor="let contact of contacts.controls; let i = index" [formGroupName]="i">
+                                                            <div class="col-4  pe-1">                                        
+                                                                <label 
+                                                                    for='prefix_phone-{{i}}' 
+                                                                    class="form-label custom-label-sm"
+                                                                    [class.required]="requiredStatus['contacts[' + i + '].prefix']"
+                                                                >Vorwahl</label>
+                                                                <input 
+                                                                    type="text" 
+                                                                    id='prefix_phone-{{i}}'
+                                                                    autocomplete="off" 
+                                                                    class="form-control form-control-sm"  
+                                                                    formControlName="prefix"
+                                                                    [class.is-invalid]="contact.get('prefix')?.errors && contact.get('prefix')?.touched"
+                                                                    [class.is-valid]="!contact.get('prefix')?.errors && contact.get('prefix')?.touched"
+                                                                >
+                                                                <div 
+                                                                    class="invalid-feedback custom-invalid-feedback"
+                                                                    *ngIf="contact.get('prefix')?.errors?.['pattern']"
+                                                                >
+                                                                    Nur Zahlen sind für die Vorwahl erlaubt.
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8 ps-1" *ngIf="contact.get('user_profile_contact_type_id')?.value == 1">
+                                                                <label 
+                                                                    for='tel_number-{{i}}' 
+                                                                    class="form-label custom-label-sm"
+                                                                    [class.required]="requiredStatus['contacts[' + i + '].number']"
+                                                                >Tel. Nummer</label>
+                                                                <div class="input-group">
+                                                                    <input 
+                                                                        type="text" 
+                                                                        id='tel_number-{{i}}' 
+                                                                        class="form-control form-control-sm" 
+                                                                        formControlName="number"
+                                                                        [class.is-invalid]="contact.get('number')?.errors && contact.get('number')?.touched"
+                                                                        [class.is-valid]="!contact.get('number')?.errors && contact.get('number')?.touched"
+                                                                    >
+                                                                    <span class="input-group-text" ><i class="fas fa-phone"></i></span>
+                                                                    <div 
+                                                                        class="invalid-feedback custom-invalid-feedback"
+                                                                        *ngIf="contact.get('number')?.errors?.['pattern']"
+                                                                    >
+                                                                        Nur Zahlen sind für die Nummer erlaubt.
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-8 ps-1" *ngIf="contact.get('user_profile_contact_type_id')?.value == 2">
+                                                                <label 
+                                                                    for='mobil_number-{{i}}' 
+                                                                    class="form-label custom-label-sm"
+                                                                    [class.required]="requiredStatus['contacts[' + i + '].number']"
+                                                                >Mobil. Nr</label>
+                                                                <div class="input-group">
+                                                                    <input 
+                                                                        type="text" 
+                                                                        id='mobil_number-{{i}}' 
+                                                                        class="form-control form-control-sm" 
+                                                                        formControlName="number" 
+                                                                        [class.is-invalid]="contact.get('number')?.errors && contact.get('number')?.touched"
+                                                                        [class.is-valid]="!contact.get('number')?.errors && contact.get('number')?.touched"
+                                                                    >
+                                                                    <span class="input-group-text" ><i class="fa-solid fa-mobile-screen-button"></i></span>
+                                                                    <div 
+                                                                        class="invalid-feedback custom-invalid-feedback"
+                                                                        *ngIf="contact.get('number')?.errors?.['pattern']"
+                                                                    >
+                                                                        Nur Zahlen sind für die Nummer erlaubt.
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                    </ng-container> 
+                                                </div> 
+                                             
+                                        </form>
+                                        <form [formGroup]="userProfilesForm">                                
+                                            <div class="row">
+                                                
                                             </div>
-                                        </div>
-                                        <div class="col ps-1 pe-1">
-                                            <label 
-                                                for="user-role" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['user.role_id']"
-                                            >Rolle</label>
-                                            <select 
-                                                id="user-role" 
-                                                class="form-select form-select-sm"
-                                                formControlName="role_id"
-                                                [class.is-invalid]="user.get('role_id')?.errors && user.get('role_id')?.touched"
-                                                [class.is-valid]="!user.get('role_id')?.errors && user.get('role_id')?.touched"
-                                            >
-                                                <option value="1">admin</option>
-                                                <option value="2">vp</option>
-                                                <option value="3">vision_vp</option>
-                                                <option value="4">shop</option>
-                                            </select>
-                                        </div>
-                                        <div class="col ps-1">
-                                            <label 
-                                                for="user-status" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['user.status_id']"
-                                            >Status</label>
-                                            <select 
-                                                id="user-status" 
-                                                class="form-select form-select-sm"
-                                                formControlName="status_id"
-                                                [class.is-invalid]="user.get('status_id')?.errors && user.get('status_id')?.touched"
-                                                [class.is-valid]="!user.get('status_id')?.errors && user.get('status_id')?.touched"
-                                            >
-                                                <option value="1">Activ</option>
-                                                <option value="2">Inaktiv</option>
-                                            </select>
-                                        </div>
-                                        
+                                        </form>
                                     </div>
-                                    <div class="row">
-                                        <div class="col pe-1">
-                                            <label 
-                                                for="user-password" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['user.password']"
-                                            >Passwort</label>
-                                            <input 
-                                                type="text" 
-                                                class="form-control form-control-sm " 
-                                                [class.is-invalid]="user.get('password')?.errors && user.get('password')?.touched"
-                                                [class.is-valid]="!user.get('password')?.errors && user.get('password')?.touched"
-                                                id="user-password" 
-                                                formControlName="password"
-                                            >
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="user.get('password')?.errors?.['required']"
-                                            >
-                                                Login ist erforderlich.
-                                            </div>
-                                        </div>  
-                                        <div class="col ps-1">
-                                            <label 
-                                                for="user-password_confirmation" 
-                                                class="form-label custom-label-sm"
-                                                [class.required]="requiredStatus['user.password_confirmation']"
-                                            >Passwort bestätigen</label>
-                                            <input 
-                                                type="text" 
-                                                class="form-control form-control-sm" 
-                                                [class.is-invalid]="user.get('password_confirmation')?.errors && user.get('password_confirmation')?.touched"
-                                                [class.is-valid]="!user.get('password_confirmation')?.errors && user.get('password_confirmation')?.touched"
-                                                id="user-password_confirmation" 
-                                                formControlName="password_confirmation"
-                                            >
-                                            <div 
-                                                class="invalid-feedback custom-invalid-feedback"
-                                                *ngIf="user.get('password_confirmation')?.errors?.['required']"
-                                            >
-                                                Login ist erforderlich.
-                                            </div>
-                                        </div>                                                
-                                    </div>
-                                </form>
+                                </app-card>
+                                <!--END Kommunikation -->
                             </div>
-                        </app-card>
+                            <div class="col-6 ps-1">
+                                <app-card *ngIf="user">
+                                    <div card-header>Zugangsdaten</div>
+                                    <div card-body>
+                                        <form  [formGroup]="user">
+                                            <div class="row">
+                                                
+                                                <div class="col-6  pe-1">
+                                                    <label 
+                                                        for="user-role" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['user.role_id']"
+                                                    >Rolle</label>
+                                                    <select 
+                                                        id="user-role" 
+                                                        class="form-select form-select-sm"
+                                                        formControlName="role_id"
+                                                        [class.is-invalid]="user.get('role_id')?.errors && user.get('role_id')?.touched"
+                                                        [class.is-valid]="!user.get('role_id')?.errors && user.get('role_id')?.touched"
+                                                    >
+                                                        <option value="1">admin</option>
+                                                        <option value="2">vp</option>
+                                                        <option value="3">vision_vp</option>
+                                                        <option value="4">shop</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-6 ps-1">
+                                                    <label 
+                                                        for="user-status" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['user.status_id']"
+                                                    >Status</label>
+                                                    <select 
+                                                        id="user-status" 
+                                                        class="form-select form-select-sm"
+                                                        formControlName="status_id"
+                                                        [class.is-invalid]="user.get('status_id')?.errors && user.get('status_id')?.touched"
+                                                        [class.is-valid]="!user.get('status_id')?.errors && user.get('status_id')?.touched"
+                                                    >
+                                                        <option value="1">Activ</option>
+                                                        <option value="2">Inaktiv</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label 
+                                                        for="user-login" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['user.login_name']"
+                                                    >Login</label>
+                                                    <input 
+                                                        type="text" 
+                                                        class="form-control form-control-sm is-invalid" 
+                                                        [class.is-invalid]="user.get('login_name')?.errors && user.get('login_name')?.touched"
+                                                        [class.is-valid]="!user.get('login_name')?.errors && user.get('login_name')?.touched"
+                                                        id="user-login" 
+                                                        formControlName="login_name"
+                                                    >
+                                                    <div 
+                                                        class="invalid-feedback custom-invalid-feedback"
+                                                        *ngIf="user.get('login_name')?.errors?.['required']"
+                                                    >
+                                                        Login ist erforderlich.
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6 pe-1">
+                                                    <label 
+                                                        for="user-password" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['user.password']"
+                                                    >Passwort</label>
+                                                    <input 
+                                                        type="text" 
+                                                        class="form-control form-control-sm " 
+                                                        [class.is-invalid]="user.get('password')?.errors && user.get('password')?.touched"
+                                                        [class.is-valid]="!user.get('password')?.errors && user.get('password')?.touched"
+                                                        id="user-password" 
+                                                        formControlName="password"
+                                                    >
+                                                    <div 
+                                                        class="invalid-feedback custom-invalid-feedback"
+                                                        *ngIf="user.get('password')?.errors?.['required']"
+                                                    >
+                                                        Login ist erforderlich.
+                                                    </div>
+                                                </div>  
+                                                <div class="col-6 ps-1">
+                                                    <label 
+                                                        for="user-password_confirmation" 
+                                                        class="form-label custom-label-sm"
+                                                        [class.required]="requiredStatus['user.password_confirmation']"
+                                                    >Passwort bestätigen</label>
+                                                    <input 
+                                                        type="text" 
+                                                        class="form-control form-control-sm" 
+                                                        [class.is-invalid]="user.get('password_confirmation')?.errors && user.get('password_confirmation')?.touched"
+                                                        [class.is-valid]="!user.get('password_confirmation')?.errors && user.get('password_confirmation')?.touched"
+                                                        id="user-password_confirmation" 
+                                                        formControlName="password_confirmation"
+                                                    >
+                                                    <div 
+                                                        class="invalid-feedback custom-invalid-feedback"
+                                                        *ngIf="user.get('password_confirmation')?.errors?.['required']"
+                                                    >
+                                                        Login ist erforderlich.
+                                                    </div>
+                                                </div>                                                
+                                            </div>
+                                        </form>
+                                    </div>
+                                </app-card>
+                            </div>
+                        </div>
+                        
+                        
                     </div>
                 </div> 
                 <div class="row no-gutters">

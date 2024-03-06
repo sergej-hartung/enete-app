@@ -90,7 +90,7 @@ export class AdminService extends DataService<Partner> {
 
   addItem(item: FormData | any): any {
     console.log(item);
-    this.http.post<Partner>(`${this.apiUrl}/user-profiles`, item)
+    this.http.post<Partner>(`${this.apiUrl}/user-profile/admins`, item)
         .pipe(
           takeUntil(this.destroy$),
         )
@@ -113,7 +113,7 @@ export class AdminService extends DataService<Partner> {
 
   updateItem(id: number, item: FormData | any): any {
     item.append('_method', 'PATCH')
-    this.http.post<{'data': Partner}>(`${this.apiUrl}/user-profiles/${id}`, item)
+    this.http.post<{'data': Partner}>(`${this.apiUrl}/user-profile/admins/${id}`, item)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: updatedPartner => {

@@ -30,9 +30,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-profile', 'namespa
 // user-profiele-admin
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-profile', 'namespace' => 'App\Http\Controllers\User\Profile\Admin'], function($router){
     Route::get('/admins', 'IndexController')->middleware('transform.boolean');
-    // Route::post('/admin', 'StoreController')->middleware('transform.boolean');
+    Route::post('/admins', 'StoreController')->middleware('transform.boolean');
     Route::get('/admins/{profileId}', 'ShowController');
-    // Route::patch('/admin/{profileId}', 'UpdateController')->middleware('transform.boolean');
+    Route::patch('/admins/{profileId}', 'UpdateController')->middleware('transform.boolean');
 });
 
 // user-profiele-statuses

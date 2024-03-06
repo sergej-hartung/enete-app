@@ -16,7 +16,7 @@ class UserAdminProfileTableSeeder extends Seeder
         $userProfile = [
             'id' => 1,
             'salutation' => 'Herr', 
-             'title' => 'kein Titel',
+            'title' => 'kein Titel',
             'first_name' => 'Sergej',
             'last_name' => 'Hartung',
             'email' => 'sergej_hartung@gmx.net',

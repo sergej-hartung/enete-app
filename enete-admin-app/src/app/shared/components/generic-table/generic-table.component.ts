@@ -13,7 +13,8 @@ export interface FilterOption {
 interface Accessible {
   accesses?: {
       status?: {
-          name: string;
+        id: number,
+        name: string;
       };
   }[];
 }
@@ -36,7 +37,7 @@ export class GenericTableComponent<T> {
   private textFilterSubject = new Subject<{ key: string; value: any }>();
   private selectFilterSubject = new Subject<{ key: string; value: any }>();
 
-  isLoded = false;
+  isLoaded = false;
   isExpanded: boolean = false;
   data?: any[];
   currentSortColumn: string | null = null;
@@ -61,7 +62,7 @@ export class GenericTableComponent<T> {
         .subscribe(data => {  
           if(data){
             this.setData(data["data"]) 
-            this.isLoded = true
+            this.isLoaded = true
           }            
           //this.isLoded = true 
           // console.log(data)       
@@ -140,11 +141,11 @@ export class GenericTableComponent<T> {
   getAccessIcon(accesses: Accessible['accesses']) {
     let access 
     if(accesses){
-      access = accesses.find(a => a.status && a.status.name === 'active');
+      access = accesses.find(a => a.status && a.status.id === 1);
       if(access){
         return {'icon': 'fa-solid fa-key', 'color': '#69b548'}
       }else{
-        access = accesses.find(a => a.status && a.status.name === 'inactive');
+        access = accesses.find(a => a.status && a.status.id === 2);
         if(access) return {'icon': 'fa-solid fa-key', 'color': '#C41425'}
       }
 

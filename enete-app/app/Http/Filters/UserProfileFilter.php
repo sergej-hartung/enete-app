@@ -28,11 +28,25 @@ class UserProfileFilter extends AbstractFilter{
     //     });
     // }
 
+    // public function search(Builder $builder, $value){ 
+    //     $builder->whereHas('employee', function ($query) use ($value) {
+    //         $query->where('vp_nr', 'like', "%{$value}%")
+    //               ->orWhere('first_name', 'like', "%{$value}%") // Если first_name и last_name находятся в user_profiles, их следует оставить вне whereHas
+    //               ->orWhere('last_name', 'like', "%{$value}%");
+    //     });
+    // }
+
     public function search(Builder $builder, $value){ 
-        $builder->whereHas('employee', function ($query) use ($value) {
-            $query->where('vp_nr', 'like', "%{$value}%")
-                  ->orWhere('first_name', 'like', "%{$value}%") // Если first_name и last_name находятся в user_profiles, их следует оставить вне whereHas
-                  ->orWhere('last_name', 'like', "%{$value}%");
+        $builder->where(function($query) use ($value) {
+            $query->whereHas('employee', function ($subQuery) use ($value) {
+                $subQuery->where('vp_nr', 'like', "%{$value}%")
+                        ->orWhere('first_name', 'like', "%{$value}%") 
+                        ->orWhere('last_name', 'like', "%{$value}%");
+            })->orWhere(function ($subQuery) use ($value) {
+                $subQuery->where('first_name', 'like', "%{$value}%")
+                        ->orWhere('last_name', 'like', "%{$value}%")
+                        ->orWhere('id', 'like', "%{$value}%");
+            });
         });
     }
 

@@ -12,19 +12,19 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\User\Profile\UpdateProfileRequest;
-use App\Http\Resources\User\Profile\UpdateProfileResource;
+use App\Http\Requests\User\Profile\Admin\UpdateAdminProfileRequest;
+use App\Http\Resources\User\Profile\Admins\UpdateAdminProfileResource;
 use Illuminate\Support\Facades\Storage;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateProfileRequest $request, $id)
+    public function __invoke(UpdateAdminProfileRequest $request, $id)
     {
         try {
             DB::beginTransaction();
             //dd($request->validated());
             $addresses = false;
-            $banks = false;
+            //$banks = false;
             $contacts = false;
             $users = false;
             $userPassword = false;
@@ -33,15 +33,15 @@ class UpdateController extends Controller
 
             $data = $request->validated();
             $userProfile = UserProfile::findOrFail($request->id);
-            
+
             if (isset($data['addresses'])) {
                 $addresses = $data['addresses'];
                 unset($data['addresses']);
             }
-            if (isset($data['banks'])) {
-                $banks = $data['banks'];
-                unset($data['banks']);
-            }
+            // if (isset($data['banks'])) {
+            //     $banks = $data['banks'];
+            //     unset($data['banks']);
+            // }
             if (isset($data['contacts'])) {
                 $contacts = $data['contacts'];
                 unset($data['contacts']);
@@ -70,11 +70,11 @@ class UpdateController extends Controller
                 }
             }
 
-            if ($banks && is_array($banks)) {
-                foreach ($banks as $bankData) {
-                    $userProfile->banks()->updateOrCreate(['id' => $bankData['id'] ?? null], $bankData);
-                }
-            }
+            // if ($banks && is_array($banks)) {
+            //     foreach ($banks as $bankData) {
+            //         $userProfile->banks()->updateOrCreate(['id' => $bankData['id'] ?? null], $bankData);
+            //     }
+            // }
 
             if($contacts && is_array($contacts)){
                 foreach ($contacts as $contactData) {
@@ -136,22 +136,11 @@ class UpdateController extends Controller
 
             $userProfile->fresh();
 
-            if ($userProfile->status_id == 3 || $userProfile->status_id == 4) {
-                $users = $userProfile->users;
-                if ($users) {
-                    foreach ($users as $user) {
-                        $user->status_id = 2;
-                        $user->save();
-                    }
-                }
-            }
-            $userProfile->fresh();
-
             $userProfile->with('addresses', 'banks', 'contacts', 'status', 'parent', 'users');
 
             DB::commit();
             //return response($userProfile);
-            return new UpdateProfileResource($userProfile);
+            return new UpdateAdminProfileResource($userProfile);
             
         } catch (\Exception $exception) {
             DB::rollBack();

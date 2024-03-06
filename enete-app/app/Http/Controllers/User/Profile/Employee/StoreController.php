@@ -2,145 +2,54 @@
 
 namespace App\Http\Controllers\User\Profile\Employee;
 
-use App\Mail\VerifyEmail;
-use App\Mail\SendLoginDetails;
-use App\Models\User\User;
-use Illuminate\Support\Str;
-use Illuminate\Http\Request;
-use App\Models\User\UserProfile;
+
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\User\Profile\Employee\StoreEmployeeProfileRequest;
-use Illuminate\Support\Facades\Storage;
+use App\Services\UserProfileService;
+
 
 class StoreController extends Controller
 {
+
+    protected $userProfileService;
+
+    public function __construct(UserProfileService $userProfileService)
+    {
+        $this->userProfileService = $userProfileService;
+    }
+
     public function __invoke(StoreEmployeeProfileRequest $request)
     {
         try {
-              //dd($request->file());
-              //dd($request->validated());
+            // Начало транзакции БД для обеспечения атомарности операций
             DB::beginTransaction();
 
-            $employee_details = false;
-            $addresses = false;
-            $banks = false;
-            $contacts = false;
-            $users = false;
-            $avatarPaths = [];
-
+            // Валидация и получение данных из запроса
             $data = $request->validated();
 
-            //dd($data);
-
-            if (isset($data['employee_details'])) {
-                $employee_details = $data['employee_details'];
-                unset($data['employee_details']);
-            }
-            if (isset($data['addresses'])) {
-                $addresses = $data['addresses'];
-                unset($data['addresses']);
-            }
-            if (isset($data['banks'])) {
-                $banks = $data['banks'];
-                unset($data['banks']);
-            }
-            if (isset($data['contacts'])) {
-                $contacts = $data['contacts'];
-                unset($data['contacts']);
-            }
-            if (isset($data['users'])) {
-                $users = $data['users'];
-                unset($data['users']);
-            }
-            
-            $data['email_verification_hash'] = md5(Str::random(40));
             $data['user_type'] = 'is_employee';
 
-            $profile = UserProfile::create($data);
-            $this->SentEmailVerificationHash($profile);
-
-            if ($employee_details && is_array($employee_details)) {               
-                $profile->employee()->create($employee_details);
-            }
-            if ($addresses && is_array($addresses)) {
-                foreach ($addresses as $address) {
-                    $profile->addresses()->create($address);
-                }
-            }
-
-            if ($banks && is_array($banks)) {
-                foreach ($banks as $bank) {
-                    $profile->banks()->create($bank);
-                }
-            }
-
-            if($contacts && is_array($contacts)){
-                foreach($contacts as $contact){
-                    $profile->contacts()->create($contact);
-                }
-            }
-
-            if($users && is_array($users)){
-                foreach($users as $key => $user){
-                    try{
-                        //dd($user);
-                        if(isset($request->file()['users'][$key]['avatar'])){
-                            $avatar = $request->file()['users'][$key]['avatar'];
-                            $path = Storage::disk('public')->put('avatars', $avatar);
-                            if ($path === false) {
-                                throw new \Exception("Error saving avatar file.");
-                            }
-                            $user['avatar'] = url(Storage::url($path));
-                            $avatarPaths[] = $path;
-                        }
-                        $password = $user['password'];
-                        $user['password'] = Hash::make($user['password']);                        
-                        $user = $profile->users()->create($user);
-                        //dd($user);
-                        Mail::to($profile->email)->send(new SendLoginDetails($user, $password));
-                        $user->access_data_sent = now();
-                        $user->save();
-
-                    }catch(\Exception $e){
-                        DB::rollBack();
-                        // Удаляем все файлы, которые уже могли быть сохранены
-                        foreach ($avatarPaths as $path) {
-                            if (Storage::disk('public')->exists($path)) {
-                                Storage::disk('public')->delete($path);
-                            }
-                        }
-
-                        return response()->json(['error' => $e->getMessage()], 500);
-                    }
+            $extractedData = $this->userProfileService->extractData($data);
                      
-                }
-            }
+            $profile = $this->userProfileService->handleUserProfiles($extractedData);           
+            $this->userProfileService->handleRelatedEntities($profile, $extractedData);   
+            $this->userProfileService->sendEmailVerificationHash($profile);
+            
+            $this->userProfileService->handleUsers($request, $profile, $extractedData['users'] ?? []);
 
-            //return response([], 201);
-
+            // Фиксация транзакции
             DB::commit();
             return response('', 201);
-
         } catch (\Exception $exception) {
-            DB::rollBack();
-
-            foreach ($avatarPaths as $path) {
-                if (Storage::disk('public')->exists($path)) {
-                    Storage::disk('public')->delete($path);
-                }
-            }
-            return $exception->getMessage();
-        }      
+            // Откат транзакции в случае ошибки
+            DB::rollBack();   
+            // Очистка загруженных файлов    
+            $this->userProfileService->cleanupUploadedFiles();
+            // Возврат ответа с ошибкой
+            return response()->json(['error' => $exception->getMessage()], 500);
+        }
     }
 
-    private function SentEmailVerificationHash ($profile ){
-        if($profile){
-            Mail::to($profile->email)->send(new VerifyEmail($profile));
-            $profile->email_sent = now();
-            $profile->save();
-        }       
-    }
+ 
 }

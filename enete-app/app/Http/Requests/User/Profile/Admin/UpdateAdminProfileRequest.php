@@ -4,7 +4,7 @@ namespace App\Http\Requests\User\Profile\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateProfileRequest extends FormRequest
+class UpdateAdminProfileRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,39 +23,17 @@ class UpdateProfileRequest extends FormRequest
     {
         return [
             
-            'id'                                           => 'nullable|integer|exists:user_profiles,id',
-            'vp_nr'                                        => 'sometimes|string|unique:user_profiles,vp_nr|max:255',
-            'egon_nr'                                      => 'sometimes|string|unique:user_profiles,egon_nr|max:255',
-            'company'                                      => 'nullable|sometimes|string|max:255',
             'salutation'                                   => 'nullable|sometimes|string|max:255',
             'title'                                        => 'nullable|sometimes|string|max:255',
             'first_name'                                   => 'nullable|string|max:255',
             'last_name'                                    => 'nullable|string|max:255',
-            'marital_status'                               => 'nullable|sometimes|string|max:255',
             'birthdate'                                    => 'nullable|sometimes|date',
             'email'                                        => 'sometimes|string|email|max:255',
             'email_sent'                                   => 'nullable|date',  
             'email_verification_hash'                      => 'nullable|string|max:255',
             'email_verified_at'                            => 'nullable|date',
-            'id_card'                                      => 'nullable|boolean',
-            'business_registration'                        => 'nullable|boolean',
-            'sales_tax_liability'                          => 'nullable|boolean',
-            'vat_liability_proven'                         => 'nullable|boolean',
-            'tax_number'                                   => 'nullable|string|max:255',
-            'tax_id'                                       => 'nullable|string|max:255',
-            'tax_office'                                   => 'nullable|string|max:255',
-            'datev_no'                                     => 'nullable|string|max:255',
-            'entrance'                                     => 'nullable|date',
-            'entry'                                        => 'nullable|date',
-            'exit'                                         => 'nullable|date',
-            'billing_blocked'                              => 'nullable|boolean',
-            'payout_blocked'                               => 'nullable|boolean',
             'internal_note'                                => 'nullable|string',
             'external_note'                                => 'nullable|string',
-            'status_id'                                    => 'nullable|integer|exists:user_profile_statuses,id',
-            'career_id'                                    => 'nullable|integer|exists:user_profile_careers,id',                         //hinzufügen exist
-            'user_profile_categorie_id'                    => 'nullable|integer|exists:user_profile_categories,id',
-            'parent_id'                                    => 'nullable|integer|exists:user_profiles,id',
 
             'addresses'                                    => 'nullable|sometimes|array',
             'addresses.*.id'                               => 'nullable|sometimes|integer|exists:user_profile_addresses,id',
@@ -66,20 +44,20 @@ class UpdateProfileRequest extends FormRequest
             'addresses.*.house_number'                     => 'nullable|sometimes|string|max:255',
             'addresses.*.country'                          => 'nullable|sometimes|string|max:255', 
 
-            'banks'                                        => 'nullable|sometimes|array',
-            'banks.*.id'                                   => 'nullable|sometimes|integer|max:255|exists:user_profile_banks,id',
-            'banks.*.salutation'                           => 'nullable|sometimes|string|max:255',
-            'banks.*.first_name'                           => 'nullable|sometimes|string|max:255',
-            'banks.*.last_name'                            => 'nullable|sometimes|string|max:255',
-            'banks.*.zip'                                  => 'nullable|sometimes|string|max:10',
-            'banks.*.city'                                 => 'nullable|sometimes|string|max:255',
-            'banks.*.street'                               => 'nullable|sometimes|string|max:255',
-            'banks.*.house_number'                         => 'nullable|sometimes|string|max:255',
-            'banks.*.country'                              => 'nullable|sometimes|string|max:255',
-            'banks.*.bic'                                  => 'nullable|sometimes|string|max:11', // BIC is typically 8 or 11 characters
-            'banks.*.iban'                                 => 'nullable|sometimes|string|max:34', // IBAN max length is 34 characters
-            'banks.*.bank_name'                            => 'nullable|sometimes|string|max:255',
-            'banks.*.user_profile_bank_categorie_id'       => 'nullable|sometimes|integer|exists:user_profile_bank_categories,id',
+            // 'banks'                                        => 'nullable|sometimes|array',
+            // 'banks.*.id'                                   => 'nullable|sometimes|integer|max:255|exists:user_profile_banks,id',
+            // 'banks.*.salutation'                           => 'nullable|sometimes|string|max:255',
+            // 'banks.*.first_name'                           => 'nullable|sometimes|string|max:255',
+            // 'banks.*.last_name'                            => 'nullable|sometimes|string|max:255',
+            // 'banks.*.zip'                                  => 'nullable|sometimes|string|max:10',
+            // 'banks.*.city'                                 => 'nullable|sometimes|string|max:255',
+            // 'banks.*.street'                               => 'nullable|sometimes|string|max:255',
+            // 'banks.*.house_number'                         => 'nullable|sometimes|string|max:255',
+            // 'banks.*.country'                              => 'nullable|sometimes|string|max:255',
+            // 'banks.*.bic'                                  => 'nullable|sometimes|string|max:11', // BIC is typically 8 or 11 characters
+            // 'banks.*.iban'                                 => 'nullable|sometimes|string|max:34', // IBAN max length is 34 characters
+            // 'banks.*.bank_name'                            => 'nullable|sometimes|string|max:255',
+            // 'banks.*.user_profile_bank_categorie_id'       => 'nullable|sometimes|integer|exists:user_profile_bank_categories,id',
 
             'contacts'                                     => 'nullable|sometimes|array',
             'contacts.*.id'                                => 'nullable|sometimes|integer|exists:user_profile_contacts,id',

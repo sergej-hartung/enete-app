@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\User\Profile\Employee\StoreAdminProfileRequest;
+use App\Http\Requests\User\Profile\Admin\StoreAdminProfileRequest;
 use Illuminate\Support\Facades\Storage;
 
 class StoreController extends Controller
@@ -20,28 +20,26 @@ class StoreController extends Controller
     public function __invoke(StoreAdminProfileRequest $request)
     {
         try {
-              //dd($request->file());
-              //dd($request->validated());
+
             DB::beginTransaction();
 
             $addresses = false;
-            $banks = false;
+            //$banks = false;
             $contacts = false;
             $users = false;
             $avatarPaths = [];         
 
             $data = $request->validated();
 
-            dd($data);
 
             if (isset($data['addresses'])) {
                 $addresses = $data['addresses'];
                 unset($data['addresses']);
             }
-            if (isset($data['banks'])) {
-                $banks = $data['banks'];
-                unset($data['banks']);
-            }
+            // if (isset($data['banks'])) {
+            //     $banks = $data['banks'];
+            //     unset($data['banks']);
+            // }
             if (isset($data['contacts'])) {
                 $contacts = $data['contacts'];
                 unset($data['contacts']);
@@ -51,6 +49,7 @@ class StoreController extends Controller
                 unset($data['users']);
             }
             $data['email_verification_hash'] = md5(Str::random(40));
+            $data['user_type'] = 'is_admin';
 
             $profile = UserProfile::create($data);
             $this->SentEmailVerificationHash($profile);
@@ -61,11 +60,11 @@ class StoreController extends Controller
                 }
             }
 
-            if ($banks && is_array($banks)) {
-                foreach ($banks as $bank) {
-                    $profile->banks()->create($bank);
-                }
-            }
+            // if ($banks && is_array($banks)) {
+            //     foreach ($banks as $bank) {
+            //         $profile->banks()->create($bank);
+            //     }
+            // }
 
             if($contacts && is_array($contacts)){
                 foreach($contacts as $contact){

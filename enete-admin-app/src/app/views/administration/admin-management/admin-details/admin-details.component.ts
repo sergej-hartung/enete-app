@@ -602,6 +602,23 @@ export class AdminDetailsComponent {
   }
 
   private patchValueProfilesForm(data: any, newUser: boolean = false){    
+    if(data['data']['contacts']){
+      if(Array.isArray(data['data']['contacts']) && data['data']['contacts'].length == 0){
+        this.userProfilesForm.patchValue({
+          'contacts': [
+            {
+              'user_profile_contact_type_id': '1',
+              'user_profile_contact_category_id': '1'
+            },
+            {
+              'user_profile_contact_type_id': '2',
+              'user_profile_contact_category_id': '1'
+            }
+          ],
+        })
+      }
+    }
+
     if(data['data']['users']){
       if(Array.isArray(data['data']['users']) && data['data']['users'].length > 0){
         data['data']['users'].forEach(user => {
