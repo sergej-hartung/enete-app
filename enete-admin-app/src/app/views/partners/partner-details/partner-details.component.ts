@@ -13,6 +13,7 @@ import { Categorie } from '../../../models/partner/categorie/categorie';
 import { CareerService } from '../../../services/partner/career/career.service';
 import { Career } from '../../../models/partner/career/career';
 import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
+import { exit } from 'process';
 
 class RequiredStatus {
   [key: string]: boolean;
@@ -116,18 +117,18 @@ export class PartnerDetailsComponent {
       .subscribe(errors => {
       console.log(errors)
       this.mainNavbarService.setIconState('save', true, true)
-   
-      if (errors?.vp_nr?.includes("The vp nr has already been taken.")) {
-        this.userProfilesForm.controls['vp_nr'].setErrors({ vpNrExists: true });
+        console.log(errors)
+      if (errors['employee_details.vp_nr']?.includes("The employee details.vp nr has already been taken.")) {
+        this.userProfilesForm.get('employee_details.vp_nr')?.setErrors({ vpNrExists: true });
       }
-      if (errors?.egon_nr?.includes("The egon nr has already been taken.")) {
-        this.userProfilesForm.controls['egon_nr'].setErrors({ egonNrExists: true });
+      if (errors['employee_details.egon_nr']?.includes("The employee details.egon nr has already been taken.")) {
+        this.userProfilesForm.get('employee_details.egon_nr')?.setErrors({ egonNrExists: true });
         console.log(this.userProfilesForm)
       }
 
-      if (errors?.email?.includes("The email has already been taken.")) {
-        this.userProfilesForm.controls['email'].setErrors({ emailExists: true });
-      }
+      // if (errors?.email?.includes("The email has already been taken.")) {
+      //   this.userProfilesForm.controls['email'].setErrors({ emailExists: true });
+      // }
     });
 
     // get Partner und ptch in Form
@@ -215,6 +216,25 @@ export class PartnerDetailsComponent {
       });
 
       //console.log(this.users)
+  }
+
+  addNewDocuments(files: File[]){
+    console.log(files);
+    let documentsChanged = false;
+    Array.from(files).forEach(file => {
+      if(this.documents){
+        this.documents.push(this.createDocumentsFormGroup(file));
+        documentsChanged = true;
+      }else{
+        this.userProfilesForm.addControl("documents", new FormArray([this.createDocumentsFormGroup(file)]));
+        documentsChanged = true;
+      }
+    });
+  
+    if (documentsChanged) {
+      // Пометить FormArray documents как "грязный"
+      this.documents.markAsDirty();
+    }
   }
 
 
@@ -330,6 +350,10 @@ export class PartnerDetailsComponent {
 
   get users(){
     return this.userProfilesForm.get('users') as FormArray;
+  }
+
+  get documents(){
+    return this.userProfilesForm.get('documents') as FormArray;
   }
 
   getDirtyValues(form: any) {
@@ -448,11 +472,17 @@ export class PartnerDetailsComponent {
         career_id: new FormControl('',[Validators.required, Validators.pattern('^[0-9]+$')]),
         categorie_id: new FormControl('',[Validators.pattern('^[0-9]+$')]),
       }),
-
+      documents: new FormArray([]),
       contacts: new FormArray([this.createContactFormGroup(), this.createContactFormGroup()]),
       addresses: new FormArray([this.createAddressFormGroup()]),
       banks: new FormArray([this.createBankFormGroup()]),      
     });
+  }
+
+  private createDocumentsFormGroup(f: File){
+    return new FormGroup({
+      file: new FormControl(f)
+    })
   }
 
   private createUserFormGroup(newUser: boolean = false): FormGroup {
@@ -550,6 +580,7 @@ export class PartnerDetailsComponent {
     this.partnerService.setFormDirty(false)
     this.mainNavbarService.setIconState('save', true, true)
     this.userProfilesForm.removeControl('users')
+    this.userProfilesForm.removeControl('documents')
   }
   
   ngOnDestroy() {

@@ -14,14 +14,6 @@
                     ></app-partner-details-generally>                     
                 </ng-template>
             </li>
-            <!-- <li [ngbNavItem]="2">
-                <button ngbNavLink>Bankdaten</button>
-                <ng-template ngbNavContent>
-                    <p>
-                        Zuganf
-                    </p>
-                </ng-template>
-            </li> -->
             <li [ngbNavItem]="2" [disabled]="!dataLoadedOrNew">
                 <button ngbNavLink>Zugang</button>
                 <ng-template ngbNavContent>
@@ -31,6 +23,26 @@
                         (newAccess)="addNewAccess($event)"
                     ></app-partner-details-access>
                                         
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="3" [disabled]="!dataLoadedOrNew">
+                <button ngbNavLink>Bemerkung</button>
+                <ng-template ngbNavContent>
+                    <app-partner-details-note
+                        [userProfilesForm]="userProfilesForm"
+                    ></app-partner-details-note>
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="4" [disabled]="!dataLoadedOrNew">
+                <button ngbNavLink>Datenarchiv</button>
+                <ng-template ngbNavContent>
+                    <!-- <app-partner-details-note
+                        [userProfilesForm]="userProfilesForm"
+                    ></app-partner-details-note> -->
+                    <app-partner-details-file-list
+                        [userProfilesForm]="userProfilesForm"
+                        (newDocuments)="addNewDocuments($event)"
+                    ></app-partner-details-file-list>
                 </ng-template>
             </li>
         </ul>

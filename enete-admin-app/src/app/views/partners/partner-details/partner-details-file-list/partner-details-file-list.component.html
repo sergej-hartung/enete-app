@@ -1,0 +1,41 @@
+<div class="container-fluid" *ngIf="documents">
+    <div class="row">
+        <div class="col">
+            <ul class="file-list">
+                <li *ngFor="let document of documents.controls; index as i">
+                    <ng-container *ngIf="document.get('file')?.value">
+                        <!-- Иконка файла -->
+                        <div class="file-icon-wrapper">
+                            <i *ngIf="document.get('file')?.value?.type == 'application/pdf'" class="file-icon fa fa-file-pdf"></i>
+                            <i *ngIf="document.get('file')?.value?.type == 'image/jpeg'" class="file-icon fa fa-file-image"></i>
+                        </div>
+                        <!-- Название файла -->
+                        <div class="file-name">{{document.get('file')?.value?.name}}</div>
+                        <!-- Размер файла -->
+                        <div class="file-size">{{document.get('file')?.value?.size | fileSize}}</div>
+                        <!-- Действия с файлом -->
+                        <div class="file-action" (click)="downloadFile(document)">
+                            <i class="fa fa-download"></i>
+                        </div>
+                        <div class="file-action delite" (click)="deleteFile(document, i)">
+                            <i class="fa fa-trash-can"></i>
+                        </div>
+                    </ng-container>
+                </li>
+                <!-- Повторите для каждого файла -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="col-12 ps-2 pe-2">
+    <div class="custom-dropzone-wrap">
+        <div class="custom-dropzone" ngx-dropzone 
+            [multiple]="true" 
+            [accept]="'*'"
+            (change)="fileChangeEvent($event)"
+        >
+            <ngx-dropzone-label>Avatar</ngx-dropzone-label>
+        </div>
+    </div>     
+</div>

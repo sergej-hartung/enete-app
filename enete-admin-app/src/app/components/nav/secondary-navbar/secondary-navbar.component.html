@@ -7,31 +7,36 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item" routerLinkActive="active">
               <a class="nav-link"  routerLink="/dashboard">
-                  <i class="bi bi-house-door"></i> Dashboard
+                  <i class="fa-solid fa-house"></i> Dashboard
+                  <!-- <i class="bi bi-house-door"></i> Dashboard -->
               </a>
             </li>
             <li class="nav-item" routerLinkActive="active">
               <a class="nav-link" routerLink="/client" >
-                  <i class="bi bi-people"></i> Kunde
+                <i class="fa-solid fa-users"></i> Kunde
+                  <!-- <i class="bi bi-people"></i> Kunde -->
               </a>
             </li>
             <li class="nav-item" routerLinkActive="active">
               <a class="nav-link" routerLink="/contracts">
-                  <i class="bi bi-file-earmark-text"></i> Verträge
+                  <!-- <i class="bi bi-file-earmark-text"></i> Verträge -->
+                  <i class="fa-solid fa-file-contract"></i> Verträge
               </a>
             </li>
             <li class="nav-item" routerLinkActive="active">
               <a class="nav-link" routerLink="/partner" >
-                  <i class="bi bi-file-earmark-text"></i> Partner
+                  <i class="fa-solid fa-user-tie"></i> Partner
+                  <!-- <i class="bi bi-file-earmark-text"></i> Partner -->
               </a>
             </li>
             <li class="nav-item" routerLinkActive="active">
               <a class="nav-link" routerLink="/products">
-                  <i class="bi bi-file-earmark-text"></i> Produkte
+                  <i class="fa-solid fa-box"></i> Produkte
+                  <!-- <i class="bi bi-file-earmark-text"></i>Produkte -->
               </a>
             </li>
             <li ngbDropdown class="nav-item" role="presentation" routerLinkActive="active">
-              <button type="button" class="nav-link" ngbDropdownToggle>Verwaltung</button>
+              <button type="button" class="nav-link" ngbDropdownToggle> <i class="fa-solid fa-gears"></i> Verwaltung</button>
               <div ngbDropdownMenu>
                 <li>
                   <a class="dropdown-item" routerLink="/admin-management">Admin-Verwaltung</a>

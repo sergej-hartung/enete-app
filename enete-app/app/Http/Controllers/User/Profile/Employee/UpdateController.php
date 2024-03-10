@@ -15,173 +15,38 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\User\Profile\Employee\UpdateEmployeeProfileRequest;
 use App\Http\Resources\User\Profile\Employees\UpdateEmployeeProfileResource;
 use Illuminate\Support\Facades\Storage;
+use App\Services\UserProfileService;
 
 class UpdateController extends Controller
 {
+    protected $userProfileService;
+
+    public function __construct(UserProfileService $userProfileService)
+    {
+        $this->userProfileService = $userProfileService;
+    }
+
     public function __invoke(UpdateEmployeeProfileRequest $request, $id)
     {
         try {
             DB::beginTransaction();
-            //dd($request->validated());
-            $employee_details = false;
-            $addresses = false;
-            $banks = false;
-            $contacts = false;
-            $users = false;
-            $userPassword = false;
-            $modifyEmail = false;
-            $avatarPaths = [];
-
             $data = $request->validated();
-            $userProfile = UserProfile::findOrFail($request->id);
-            //dd($data);
-            if (isset($data['employee_details'])) {
-                $employee_details = $data['employee_details'];
-                unset($data['employee_details']);
-            }
-            if (isset($data['addresses'])) {
-                $addresses = $data['addresses'];
-                unset($data['addresses']);
-            }
-            if (isset($data['banks'])) {
-                $banks = $data['banks'];
-                unset($data['banks']);
-            }
-            if (isset($data['contacts'])) {
-                $contacts = $data['contacts'];
-                unset($data['contacts']);
-            }
-            if (isset($data['users'])) {
-                $users = $data['users'];
-                unset($data['users']);
-            }
-            if(isset($data['email'])){
-                $data['email_verification_hash'] = md5(Str::random(40));
-                $modifyEmail = true;
-            }
-            
-            if(count($data) !== 0){
-                $userProfile->update($data);
-            }
-            
-            if($modifyEmail){
-                $userProfile->fresh();
-                $this->SentEmailVerificationHash($userProfile);
-            } 
 
-            if ($employee_details && is_array($employee_details)) {
-                $userProfile->employee()->updateOrCreate(['id' => $employee_details['id'] ?? null], $employee_details);
-            }
-
-            if ($addresses && is_array($addresses)) {
-                foreach ($addresses as $addressData) {
-                    $userProfile->addresses()->updateOrCreate(['id' => $addressData['id'] ?? null], $addressData);
-                }
-            }
-
-            if ($banks && is_array($banks)) {
-                foreach ($banks as $bankData) {
-                    $userProfile->banks()->updateOrCreate(['id' => $bankData['id'] ?? null], $bankData);
-                }
-            }
-
-            if($contacts && is_array($contacts)){
-                foreach ($contacts as $contactData) {
-                    $userProfile->contacts()->updateOrCreate(['id' => $contactData['id'] ?? null], $contactData);
-                }
-            }
-
-            if($users && is_array($users)){
-                foreach($users as $key => $user){
-                    try{
-                        
-                        //dd($user);
-                        if(isset($request->file()['users'][$key]['avatar'])){
-                            $avatar = $request->file()['users'][$key]['avatar'];
-
-                            // Проверяем, существует ли текущий аватар пользователя и удаляем его
-                            $currentUser = $userProfile->users()->where('id', $user['id'] ?? null)->first();
-                            if ($currentUser && $currentUser->avatar) {
-                                $currentAvatarPath = str_replace(url('/') . '/storage', '', $currentUser->avatar);
-                                Storage::disk('public')->delete($currentAvatarPath);
-                            }
-
-                            $path = Storage::disk('public')->put('avatars', $avatar);
-                            if ($path === false) {
-                                throw new \Exception("Error saving avatar file.");
-                            }
-                            $user['avatar'] = url(Storage::url($path));
-                            $avatarPaths[] = $path;
-                        }
-                        if(isset($user['password'])){
-                            $userPassword = $user['password'];
-                            $user['password'] = Hash::make($user['password']);
-                        }
-                        
-                        
-                        $userObj = $userProfile->users()->updateOrCreate(['id' => $user['id'] ?? null], $user);
-                        //dd($user);
-                        if($userPassword){
-                            $userProfile->fresh();
-                            Mail::to($userProfile->email)->send(new SendLoginDetails($userObj, $userPassword));
-                            $userObj->access_data_sent = now();
-                            $userObj->save();
-                        }
-                        
-
-                    }catch(\Exception $e){
-                        DB::rollBack();
-                        // Удаляем все файлы, которые уже могли быть сохранены
-                        foreach ($avatarPaths as $path) {
-                            if (Storage::disk('public')->exists($path)) {
-                                Storage::disk('public')->delete($path);
-                            }
-                        }
-                        return response()->json(['error' => $e->getMessage()], 500);
-                    }
-                     
-                }
-            }
-
-            $userProfile->fresh();
-
-            if ($userProfile->employee->status_id == 3 || $userProfile->employee->status_id == 4) {
-                $users = $userProfile->users;
-                if ($users) {
-                    foreach ($users as $user) {
-                        $user->status_id = 2;
-                        $user->save();
-                    }
-                }
-            }
-            $userProfile->fresh();
-
-            $userProfile->with('addresses', 'banks', 'contacts', 'status', 'parent', 'users');
+            $userProfile = $this->userProfileService->updateEmployeeProfile($request, $id, $data);
 
             DB::commit();
-            //return response($userProfile);
+
             return new UpdateEmployeeProfileResource($userProfile);
             
         } catch (\Exception $exception) {
             DB::rollBack();
 
-            foreach ($avatarPaths as $path) {
-                if (Storage::disk('public')->exists($path)) {
-                    Storage::disk('public')->delete($path);
-                }
-            }
-            return $exception->getMessage();
+            $this->userProfileService->cleanupUploadedFiles();
+            
+            return response()->json(['error' => $exception->getMessage()], 500);
         }
 
         
     }
 
-
-    private function SentEmailVerificationHash ($profile ){
-        if($profile){
-            Mail::to($profile->email)->send(new VerifyEmail($profile));
-            $profile->email_sent = now();
-            $profile->save();
-        }       
-    }
 }

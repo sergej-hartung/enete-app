@@ -65,7 +65,7 @@ export class PartnerDetailsAccessComponent {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({action, proceedCallback}) => {
         if(action == 'selectRow'){
-          this.restSelectedUser()
+          this.resetSelectedUser()
           console.log('resetSelected')
         }     
     });
@@ -83,7 +83,7 @@ export class PartnerDetailsAccessComponent {
 
             }
             if(data.requestType == "patch" && data.entityType == 'partner'){
-              this.restSelectedUser()
+              this.resetSelectedUser()
             }
           } else if(data == null ){
 
@@ -119,7 +119,7 @@ export class PartnerDetailsAccessComponent {
   onSelectUser(i: number){
     console.log(i)
     if(this.selectedUserIndex == i){
-      this.restSelectedUser()
+      this.resetSelectedUser()
     }else{
       const usersArray = this.users
       if(usersArray){
@@ -133,10 +133,12 @@ export class PartnerDetailsAccessComponent {
 
   generateUserData(){
     let login = ''
+
     if(this.users && this.users.length > 1){
-      login = this.userProfilesForm.get('vp_nr')?.value + '-'+ (this.selectedUserIndex ? this.selectedUserIndex + 1 : '') ?? ''
+      //login = this.userProfilesForm.get('vp_nr')?.value + '-'+ ((this.selectedUserIndex ? this.selectedUserIndex + 1 : '') ?? '')
+      login = this.userProfilesForm.get('employee_details.vp_nr')?.value + '-' + (this.selectedUserIndex ? this.selectedUserIndex + 1 : '');
     }else{
-      login = this.userProfilesForm.get('vp_nr')?.value ?? ''
+      login = this.userProfilesForm.get('employee_details.vp_nr')?.value ?? ''
     }
     const role_id = "2"
     const status = "1"
@@ -307,7 +309,7 @@ export class PartnerDetailsAccessComponent {
     return password;
   }
 
-  private restSelectedUser(){
+  private resetSelectedUser(){
     this.selectedUserIndex = undefined
     this.selectedUser = null
   }

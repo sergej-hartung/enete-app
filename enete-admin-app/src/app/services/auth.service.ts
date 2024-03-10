@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   refreshToken(): Observable<any> {
-    const token = localStorage.getItem('access_token');
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
     return this.http.post<{ access_token: string }>(`${this.authUrl}/auth/refresh`, { token }).pipe(
       tap(tokens => {
         this.storeToken(tokens['access_token']);
@@ -42,18 +42,23 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('access_token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('access_token');
+    }
     this.tokenSubject.next(null);
     this.router.navigate(['/login']);
   }
 
   private storeToken(accessToken: string): void {
-    localStorage.setItem('access_token', accessToken);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('access_token', accessToken);
+    }
+    
     this.tokenSubject.next(accessToken);
   }
 
   getToken(): string | null {
-    return localStorage.getItem('access_token');
+    return typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
   }
 
   isLoggedIn(): boolean {

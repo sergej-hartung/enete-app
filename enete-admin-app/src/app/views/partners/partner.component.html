@@ -36,13 +36,26 @@
     </div>
 </section>
 
-<ng-template #customTitleTemplate>
+<ng-template #notSaveTitleTemplate>
     <span>
         <i style="color: rgb(237, 28, 36);" class="fas fa-exclamation-triangle"></i> 
         Speicherung nicht abgeschlossen!
     </span>
 </ng-template>
   
-<ng-template #customMessageTemplate>
+<ng-template #notSaveMessageTemplate>
     Warnung: Dieser Vorgang kann nicht mehr rückgängig gemacht werden!
+</ng-template>
+
+<ng-template #deleteFileTitleTemplate>
+    <span>
+        <i style="color: rgb(237, 28, 36);" class="fas fa-trash"></i>
+        Datei löschen?
+    </span>
+</ng-template>
+
+<ng-template #deleteFileMessageTemplate>
+    <div>
+        Sind Sie sicher, dass Sie diese Datei löschen möchten? Dies kann nicht rückgängig gemacht werden!
+    </div>
 </ng-template>

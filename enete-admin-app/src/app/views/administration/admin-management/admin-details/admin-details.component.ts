@@ -65,7 +65,8 @@ export class AdminDetailsComponent {
   ngOnInit() {
     
     this.setRequiredStatus();
-
+    console.log(this.requiredStatus)
+    console.log('test')
     // this.statusService.data$
     //   .pipe(takeUntil(this.unsubscribe$))
     //   .subscribe(data => {
@@ -220,6 +221,7 @@ export class AdminDetailsComponent {
       console.log(this.userProfilesForm)
     }
     this.setRequiredStatus();
+    console.log(this.requiredStatus)
     //this.selectedUser = this.getLastUser()
   }
 

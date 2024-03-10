@@ -16,8 +16,10 @@ import { CareerService } from '../../services/partner/career/career.service';
 export class PartnerComponent {
 
   private unsubscribe$ = new Subject<void>();
-  @ViewChild('customTitleTemplate') customTitleTemplate!: TemplateRef<any>;
-  @ViewChild('customMessageTemplate') customMessageTemplate!: TemplateRef<any>;
+  @ViewChild('notSaveTitleTemplate') notSaveTitleTemplate!: TemplateRef<any>;
+  @ViewChild('notSaveMessageTemplate') notSaveMessageTemplate!: TemplateRef<any>;
+  @ViewChild('deleteFileTitleTemplate') deleteFileTitleTemplate!: TemplateRef<any>;
+  @ViewChild('deleteFileMessageTemplate') deleteFileMessageTemplate!: TemplateRef<any>;
   
   constructor(
     private partnerService: PartnerService,
@@ -84,14 +86,18 @@ export class PartnerComponent {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({action, proceedCallback}) => {
         console.log(action)
-        if(action == 'selectRow' || action == 'sort' || action == 'filter'){
+        if(action == 'selectRow' || action == 'sort' || action == 'filter' || action == 'deletePartnerFile'){
           this.partnerService.getFormDirty()
           .pipe(take(1))
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(isDitry => {
             if(isDitry){
               //this.partnerService.setFormDirty(false)
-              this.showNotification(proceedCallback)
+              if(action == 'deletePartnerFile'){
+                this.showNotification(proceedCallback, this.deleteFileTitleTemplate, this.deleteFileMessageTemplate)
+              }else{
+                this.showNotification(proceedCallback)
+              }             
               //proceedCallback()
             }else{
               proceedCallback()
@@ -105,12 +111,12 @@ export class PartnerComponent {
 
   
 
-  showNotification(proceedCallback: any) {
+  showNotification(proceedCallback: any, tpl = this.notSaveTitleTemplate, msg = this.notSaveMessageTemplate,) {
     this.notificationService.configureNotification(
       null,// 'test',  // No simple title, using a template
       null,// 'Test text',  // No simple message, using a template
-      this.customTitleTemplate,
-      this.customMessageTemplate,
+      tpl,
+      msg,
       // null,
       // null,
       'Weiter',  // acceptBtnTitle

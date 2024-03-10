@@ -116,34 +116,8 @@
                         </div>
                         <!-- Row 2: Name and Vorname -->
                         <div class="row">
+                            
                             <div class="col-6 pe-1">
-                                <label 
-                                    for="last_name" 
-                                    class="form-label custom-label-sm"
-                                    [class.required]="requiredStatus['last_name']"
-                                >Name</label>
-                                <input 
-                                    type="text" 
-                                    class="form-control form-control-sm" 
-                                    id="last_name" 
-                                    formControlName="last_name"
-                                    [class.is-invalid]="userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
-                                    [class.is-valid]="!userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
-                                >
-                                <div 
-                                    class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('last_name')?.errors?.['required']"
-                                >
-                                    Nachname ist erforderlich.
-                                </div>
-                                <div 
-                                    class="invalid-feedback custom-invalid-feedback"
-                                    *ngIf="userProfilesForm.get('last_name')?.errors?.['minlength']"
-                                >
-                                    Nachname ist zu kurz.
-                                </div>
-                            </div>
-                            <div class="col-6 ps-1">
                                 <label 
                                     for="first_name" 
                                     class="form-label custom-label-sm"
@@ -168,6 +142,33 @@
                                     *ngIf="userProfilesForm.get('first_name')?.errors?.['minlength']"
                                 >
                                     Vorname ist zu kurz.
+                                </div>
+                            </div>
+                            <div class="col-6 ps-1">
+                                <label 
+                                    for="last_name" 
+                                    class="form-label custom-label-sm"
+                                    [class.required]="requiredStatus['last_name']"
+                                >Name</label>
+                                <input 
+                                    type="text" 
+                                    class="form-control form-control-sm" 
+                                    id="last_name" 
+                                    formControlName="last_name"
+                                    [class.is-invalid]="userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
+                                    [class.is-valid]="!userProfilesForm.get('last_name')?.errors && userProfilesForm.get('last_name')?.touched"
+                                >
+                                <div 
+                                    class="invalid-feedback custom-invalid-feedback"
+                                    *ngIf="userProfilesForm.get('last_name')?.errors?.['required']"
+                                >
+                                    Nachname ist erforderlich.
+                                </div>
+                                <div 
+                                    class="invalid-feedback custom-invalid-feedback"
+                                    *ngIf="userProfilesForm.get('last_name')?.errors?.['minlength']"
+                                >
+                                    Nachname ist zu kurz.
                                 </div>
                             </div>
                         </div>

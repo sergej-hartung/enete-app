@@ -8,20 +8,23 @@ use App\Http\Controllers\Controller;
 use App\Http\Filters\UserProfileFilter;
 use App\Http\Resources\User\Profile\Admins\IndexAdminProfileResource;
 use App\Http\Requests\User\Profile\Admin\IndexAdminProfileRequest;
+use App\Services\UserProfileService;
 
 class IndexController extends Controller
 {
+    protected $userProfileService;
+
+    public function __construct(UserProfileService $userProfileService)
+    {
+        $this->userProfileService = $userProfileService;
+    }
     
     public function __invoke(IndexAdminProfileRequest $request)
     {
-        $data = $request->validated();
 
-        $filter = app()->make(UserProfileFilter::class, ['queryParams' => array_filter($data)]);
-
-        $profile = UserProfile::with(['users'])->where('user_type', '=', 'is_admin')->filter($filter)->sort($data)->get();
-
+        $profiles = $this->userProfileService->getAdminProfiles($request->validated());
         
-        return IndexAdminProfileResource::collection($profile);
+        return IndexAdminProfileResource::collection($profiles);
     }
 }
 

@@ -1,0 +1,30 @@
+<div class="row no-gutters">
+    <div class="col-12 ps-2 pe-2 pt-0 pb-2">
+
+        <form [formGroup]="userProfilesForm">
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <label for="internal_note" class="form-label custom-label-sm">Intern</label>
+                    <textarea 
+                        class="form-control form-control-sm" 
+                        id="internal_note"
+                        formControlName="internal_note"
+                        rows="10"
+                    ></textarea>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-12">
+                    <label for="external_note" class="form-label custom-label-sm">Intern</label>
+                    <textarea 
+                        class="form-control form-control-sm" 
+                        id="internal_note"
+                        formControlName="external_note"
+                        rows="10"
+                    ></textarea>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>

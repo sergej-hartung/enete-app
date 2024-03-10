@@ -12,6 +12,9 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
 import { PartnerDetailsGenerallyComponent } from './partner-details/partner-details-generally/partner-details-generally.component';
 import { PartnerDetailsAccessComponent } from './partner-details/partner-details-access/partner-details-access.component';
 import { ImageCropperModule } from 'ngx-image-cropper';
+import { PartnerDetailsNoteComponent } from './partner-details/partner-details-note/partner-details-note.component';
+import { PartnerDetailsFileListComponent } from './partner-details/partner-details-file-list/partner-details-file-list.component';
+import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
 
 
 
@@ -22,6 +25,9 @@ import { ImageCropperModule } from 'ngx-image-cropper';
     PartnerDetailsComponent,
     PartnerDetailsGenerallyComponent,
     PartnerDetailsAccessComponent,
+    PartnerDetailsNoteComponent,
+    PartnerDetailsFileListComponent,
+    FileSizePipe
   ],
   imports: [
     CommonModule,

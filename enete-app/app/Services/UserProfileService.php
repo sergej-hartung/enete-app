@@ -11,49 +11,227 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User\UserProfile;
+use App\Http\Filters\UserProfileFilter;
+
+use App\Traits\HandlesUserProfile;
 
 class UserProfileService{
 
-    public $avatarPaths = [];
+    use HandlesUserProfile;
+
+    protected $avatarPaths;
+
+    public function __construct() {
+        $this->avatarPaths = collect();
+    }
+
+    public function getAdminProfiles(array $data){
+        $filter = app()->make(UserProfileFilter::class, ['queryParams' => array_filter($data)]);
+        $profiles = UserProfile::with(['users'])->where('user_type', '=', 'is_admin')->filter($filter)->sort($data)->get();
+
+        $fieldsToDecrypt = ['first_name', 'last_name']; 
+        foreach($profiles as $profile){
+            $this->decryptFields($profile, $fieldsToDecrypt);
+        }
+
+        return $profiles;
+    }
+
+    public function findAdminProfilesById($profileId){
+        $profile = UserProfile::with([
+                'users', 
+                'users.status',
+                'addresses', 
+                'contacts'
+            ])->where('user_type', '=', 'is_admin')->find($profileId);
+
+        if (!$profile) {
+            return null;
+        }
+
+        //$fieldsToDecrypt = ['first_name', 'last_name'];
+        $fieldsToDecrypt = [];
+
+        // Конфигурация для связанных моделей
+        $relationsToDecrypt = [
+            'addresses' => ['zip', 'city', 'street', 'house_number', 'country'],
+            //'banks' => ['first_name', 'last_name', 'zip', 'city', 'street', 'house_number', 'country', 'bic', 'iban', 'bank_name'],
+            'contacts' => ['prefix', 'number']
+        ];
+
+        $this->decryptFields($profile, $fieldsToDecrypt, $relationsToDecrypt);
+
+        return $profile;
+    }
+
+    public function createAdminProfile($request, $data){
+        $data['user_type'] = 'is_admin';
+        $extractedData = $this->extractData($data);
+   
+        $profile = $this->handleUserProfiles($extractedData);           
+        $this->handleRelatedEntities($profile, $extractedData);   
+        $this->sendEmailVerificationHash($profile);
+            
+        $this->handleUsers($request, $profile, $extractedData['users'] ?? []);
+    }
+
+    public function updateAdminProfile($request, $id, $data){
+        
+        $profile = UserProfile::findOrFail($id);
+        $extractedData = $this->extractData($data);
+        //dd($extractedData);
+        $this->handleUserProfiles($extractedData, $profile, true);           
+        $this->handleRelatedEntities($profile, $extractedData, true);
+        $this->handleUsers($request, $profile, $extractedData['users'] ?? [], true);
+
+        $profile->fresh();
 
 
-    public function extractData(&$data)
-    {
+        $profile = UserProfile::with('addresses', 'contacts', 'users.status', 'parent', 'users')->find($id);
+
+        //$fieldsToDecrypt = ['first_name', 'last_name'];
+        $fieldsToDecrypt = [];
+
+        $relationsToDecrypt = [ // Конфигурация для связанных моделей
+            'addresses' => ['zip', 'city', 'street', 'house_number', 'country'], // Поля для расшифровки в связанной модели 'addresses'
+            //'banks' => ['first_name','last_name','zip', 'city', 'street', 'house_number', 'country', 'bic', 'iban', 'bank_name'],
+            'contacts' => ['prefix', 'number']
+        ];
+
+        $this->decryptFields($profile, $fieldsToDecrypt, $relationsToDecrypt);
+        //dd($profile);
+        return $profile;
+
+    }
+
+
+    public function getEmployeeProfiles(array $data){
+        $filter = app()->make(UserProfileFilter::class, ['queryParams' => array_filter($data)]);
+
+        $profiles = UserProfile::with(['users', 'employee.status'])
+            ->where('user_type', '=', 'is_employee')
+            ->filter($filter)
+            ->sort($data)
+            ->get();
+
+        $fieldsToDecrypt = ['first_name', 'last_name']; 
+        foreach($profiles as $profile){
+            $this->decryptFields($profile, $fieldsToDecrypt);
+        }
+
+        return $profiles;
+    }
+
+    public function findEmployeeProfilesById($profileId){
+        $profile = UserProfile::with([
+            'users', 
+            'users.status',
+            'parent',
+            'addresses', 
+            'contacts', 
+            'banks', 
+            'employee'
+        ])->where('user_type', '=', 'is_employee')->find($profileId);
+        
+        if (!$profile) {
+            return null;
+        }
+
+        //$this->decryptProfileFields($profile);// Поля для расшифровки в основной модели
+        //$fieldsToDecrypt = ['first_name', 'last_name'];
+        $fieldsToDecrypt = [];
+
+        // Конфигурация для связанных моделей
+        $relationsToDecrypt = [
+            'addresses' => ['zip', 'city', 'street', 'house_number', 'country'],
+            'banks' => ['first_name', 'last_name', 'zip', 'city', 'street', 'house_number', 'country', 'bic', 'iban', 'bank_name'],
+            'contacts' => ['prefix', 'number']
+        ];
+
+        $this->decryptFields($profile, $fieldsToDecrypt, $relationsToDecrypt);
+
+        return $profile;
+    }
+
+    public function createEmployeeProfile($request, $data){
+        $data['user_type'] = 'is_employee';
+        $extractedData = $this->extractData($data);
+   
+        $profile = $this->handleUserProfiles($extractedData);           
+        $this->handleRelatedEntities($profile, $extractedData);   
+        $this->sendEmailVerificationHash($profile);
+            
+        $this->handleUsers($request, $profile, $extractedData['users'] ?? []);
+    }
+
+    public function updateEmployeeProfile($request, $id, $data){
+        
+        $profile = UserProfile::findOrFail($id);
+        $extractedData = $this->extractData($data);
+        //dd($extractedData);
+        $this->handleUserProfiles($extractedData, $profile, true);           
+        $this->handleRelatedEntities($profile, $extractedData, true);
+        $this->handleUsers($request, $profile, $extractedData['users'] ?? [], true);
+
+        $profile->fresh();
+
+        if ($profile->employee->status_id == 3 || $profile->employee->status_id == 4) {
+            $users = $profile->users;
+            if ($users) {
+                foreach ($users as $user) {
+                    $user->status_id = 2;
+                    $user->save();
+                }
+            }
+        }
+
+        $profile = UserProfile::with('addresses', 'banks', 'contacts', 'users.status', 'parent', 'users')->find($id);
+
+        $fieldsToDecrypt = ['first_name', 'last_name']; // Поля для расшифровки в основной модели
+        $relationsToDecrypt = [ // Конфигурация для связанных моделей
+            'addresses' => ['zip', 'city', 'street', 'house_number', 'country'], // Поля для расшифровки в связанной модели 'addresses'
+            'banks' => ['first_name','last_name','zip', 'city', 'street', 'house_number', 'country', 'bic', 'iban', 'bank_name'],
+            'contacts' => ['prefix', 'number']
+        ];
+
+        $this->decryptFields($profile, $fieldsToDecrypt, $relationsToDecrypt);
+        //dd($profile);
+        return $profile;
+
+    }
+
+
+    public function extractData(array $data){
         return [
-            'employee_details' => Arr::pull($data, 'employee_details', false),
-            'addresses' => Arr::pull($data, 'addresses', false),
-            'banks' => Arr::pull($data, 'banks', false),
-            'contacts' => Arr::pull($data, 'contacts', false),
-            'users' => Arr::pull($data, 'users', false),
+            'employee_details' => Arr::pull($data, 'employee_details', []),
+            'addresses' => Arr::pull($data, 'addresses', []),
+            'banks' => Arr::pull($data, 'banks', []),
+            'contacts' => Arr::pull($data, 'contacts', []),
+            'users' => Arr::pull($data, 'users', []),
             'user_profile' => $data
         ];
     }
 
-    public function handleUserProfiles($entities){
-        $value = $this->encryptExcept(
-            $entities['user_profile'], 
-            [
-                'salutation', 
-                'title', 
-                'birthdate',              
-                'email', 
-                'email_sent',
-                'email_verification_hash',
-                'internal_note', 
-                'external_note', 
-                'parent_id', 
-                'user_type',
-                'created_by',
-                'updated_by'
-            ]);
 
-        $value['email_verification_hash'] = hash('sha256', Str::random(40));
+    public function handleUserProfiles($entities, UserProfile $profile = null, bool $update = false){
 
-        return UserProfile::create($value);
+        $value = $entities['user_profile'];
+
+        if($update && $profile){
+            if(isset($value['email'])){
+                $value['email_verification_hash'] = hash('sha256', Str::random(40));
+                $this->sendEmailVerificationHash();
+            }
+            $profile->update($value);
+        }else{
+            $value['email_verification_hash'] = hash('sha256', Str::random(40));
+
+            return UserProfile::create($value);
+        }
+        
     }
 
-    public function handleRelatedEntities($profile, $entities)
-    {
+    public function handleRelatedEntities(UserProfile $profile, $entities, $update = false){
         foreach ($entities as $entityKey => $entityValue) {
             if (!$entityValue || !is_array($entityValue)) {
                 continue;
@@ -64,7 +242,12 @@ class UserProfileService{
 
                 case 'employee_details':
                     
-                    $profile->employee()->create($entityValue);
+                    if($update){                 
+                        $profile->employee()->updateOrCreate(['id' => $entityValue['id'] ?? null], $entityValue);
+                    }else{
+                        $profile->employee()->create($entityValue);
+                    }
+                    
                     break;
                 case 'addresses':
 
@@ -72,7 +255,7 @@ class UserProfileService{
                         $value = $this->encryptExcept(
                             $value, 
                             [
-                                'id ',
+                                'id',
                                 'user_profile_id ',
                                 'user_profile_address_category_id', 
                                 'created_by', 
@@ -81,9 +264,16 @@ class UserProfileService{
                                 'updated_at',
                                 'deleted_at'
                             ]);
+
+                        if($update){
+                            $profile->addresses()->updateOrCreate(['id' => $value['id'] ?? null], $value);
+                        }
                     }
                     unset($value); // Разрыв ссылки на последний элемент
-                    $profile->addresses()->createMany($entityValue);
+                    if(!$update){
+                        $profile->addresses()->createMany($entityValue);
+                    }
+                    
                     break;
                 case 'banks':
 
@@ -91,7 +281,7 @@ class UserProfileService{
                         $value = $this->encryptExcept(
                             $value, 
                             [
-                                'id ',
+                                'id',
                                 'user_profile_id ',
                                 'salutation ',
                                 'user_profile_bank_categorie_id',
@@ -101,9 +291,15 @@ class UserProfileService{
                                 'updated_at',
                                 'deleted_at'
                             ]);
+                        if($update){
+                            $profile->banks()->updateOrCreate(['id' => $value['id'] ?? null], $value);
+                        }
                     }
                     unset($value); // Разрыв ссылки на последний элемент
-                    $profile->banks()->createMany($entityValue);
+                    if(!$update){
+                        $profile->banks()->createMany($entityValue);
+                    }
+                    
                     break;
                 case 'contacts':
 
@@ -122,81 +318,65 @@ class UserProfileService{
                                 'updated_at',
                                 'deleted_at',
                             ]);
+                        if($update){
+                            $profile->contacts()->updateOrCreate(['id' => $value['id'] ?? null], $value);
+                        }
                     }
                     unset($value); // Разрыв ссылки на последний элемент
-                    $profile->contacts()->createMany($entityValue);
+                    if(!$update){
+                        $profile->contacts()->createMany($entityValue);
+                    }
+                    
                     break;
             }
         }
-    }
+    } 
 
-    public function encryptExcept(array $data, array $except){
-        return collect($data)->mapWithKeys(function ($value, $key) use ($except) {
-            // Пропускаем шифрование для исключённых ключей
-            if (in_array($key, $except)) {
-                return [$key => $value];
+    public function handleUsers($request, $profile, $users, $update = false){     
+        foreach ($users as $key => &$user) {
+            // Обработка загрузки аватара и получение его URL
+            $avatarUrl = $this->handleAvatarUpload($request, $user, $key, $profile);
+            if ($avatarUrl) {
+                $user['avatar'] = $avatarUrl;
             }
-
-            // Шифруем значение, если ключ не исключён
-            return [$key => Crypt::encryptString($value)];
-        })->all();
-    }
-
-    /**
- * Расшифровывает указанные поля для модели и её связанных данных.
- *
- * @param \Illuminate\Database\Eloquent\Model $entity Модель для расшифровки
- * @param array $fields Список полей для расшифровки
- * @param array $relations Ассоциативный массив связей и полей для расшифровки
- * @param bool $excludeFields Указывает, применять ли список полей как исключения
- */
-public function decryptFields($entity, array $fields, array $relations = [], bool $excludeFields = false)
-{
-    // Расшифровка основных полей модели
-    foreach ($entity->getAttributes() as $field => $value) {
-        if (($excludeFields && !in_array($field, $fields)) || (!$excludeFields && in_array($field, $fields))) {
-            if (!empty($value)) { // Проверка на пустое значение перед расшифровкой
-                $entity->$field = Crypt::decryptString($value);
-            }
-        }
-    }
-
-    // Обработка связанных данных
-    foreach ($relations as $relation => $relFields) {
-        if ($entity->relationLoaded($relation)) {
-            $relatedData = $entity->$relation;
-
-            // Обработка как коллекции, так и одиночных моделей
-            if ($relatedData instanceof \Illuminate\Database\Eloquent\Collection) {
-                foreach ($relatedData as $relatedItem) {
-                    $this->decryptFields($relatedItem, $relFields, [], $excludeFields);
+    
+            // Проверка, обновляем мы пользователя или создаём нового
+            if ($update && isset($user['id'])) {
+                // Обновляем пользователя
+                $existingUser = $profile->users()->where('id', $user['id'])->first();
+                if (!$existingUser) {
+                    throw new \Exception("User not found.");
                 }
-            } elseif($relatedData instanceof \Illuminate\Database\Eloquent\Model) {
-                $this->decryptFields($relatedData, $relFields, [], $excludeFields);
+    
+                // Обновление пароля, если он предоставлен
+                if (!empty($user['password'])) {
+                    $user['password'] = Hash::make($user['password']);
+                }
+    
+                $existingUser->update($user);
+            } else {
+                // Создание нового пользователя
+                $user['password'] = Hash::make($user['password']); // Хеширование пароля
+                $createdUser = $profile->users()->create($user);
+    
+                // После создания пользователя можно выполнить дополнительные действия,
+                // например отправить уведомление или сохранить дополнительную информацию
+                $this->sendEmailAuthDetails($profile, $createdUser, $user['password']);
             }
         }
+        unset($user); // Разрыв ссылки для предотвращения неожиданного поведения
+        
     }
-}
 
-    public function handleUsers($request, $profile, $users)
-    {        
-        foreach ($users as $key => $user) {
-            if ($request->hasFile("users.$key.avatar")) {
-                $avatar = $request->file("users.$key.avatar");
-                $path = $this->uploadAvatar($avatar);
-                $user['avatar'] = url(Storage::url($path));
-                $this->avatarPaths[] = $path;
-            }
 
-            $user['password'] = Hash::make($user['password']);
-            $createdUser = $profile->users()->create($user);
 
-            $this->sendEmailAuthDetails($profile, $createdUser, $user['password']);
+    protected function handleAvatarUpload($request, array &$user, int $key, UserProfile $profile){
+        if (!$request->hasFile("users.$key.avatar")) {
+            return null;
         }
-    }
 
-    public function uploadAvatar($avatar)
-    {
+        $avatar = $request->file("users.$key.avatar");
+
         // Проверки валидности файла
         if (!$avatar->isValid()) {
             throw new \Exception("Invalid avatar file.");
@@ -212,27 +392,41 @@ public function decryptFields($entity, array $fields, array $relations = [], boo
             throw new \Exception("Only JPEG, PNG, and GIF files are allowed.");
         }
 
-        // Загрузка файла
-        return $avatar->store('avatars', 'public');
+
+        // Удаляем старый аватар, если он существует и это обновление пользователя
+        if (!empty($user['id'])) {
+            $existingUser = $profile->users()->where('id', $user['id'])->first();
+            if ($existingUser && $existingUser->avatar) {
+                $currentAvatarPath = parse_url($existingUser->avatar, PHP_URL_PATH);
+                // Удаление начинается от публичного пути, поэтому удаляем '/storage'
+                $currentAvatarPath = str_replace('/storage/', '', $currentAvatarPath);
+                Storage::disk('public')->delete($currentAvatarPath);
+            }
+        }
+
+        // Путь для загрузки
+        $path = $avatar->store('avatars', 'public');
+        $this->avatarPaths[] = $path;
+
+        // Возвращаем URL к загруженному файлу
+        return url(Storage::url($path));
     }
 
     // Метод для отправки письма с хешем верификации
-    public function sendEmailVerificationHash($profile)
-    {
+    public function sendEmailVerificationHash($profile){
         Mail::to($profile->email)->queue(new VerifyEmail($profile));
         $profile->email_sent = now();
+        $profile->email_verified_at = null;
         $profile->save();
     }
 
-    public function sendEmailAuthDetails($profile, $user, $password)
-    {
+    public function sendEmailAuthDetails($profile, $user, $password){
         Mail::to($profile->email)->queue(new SendLoginDetails($user, $password));
-        $profile->email_sent = now();
+        //$profile->email_sent = now();
         $profile->save();
     }
 
-    public function cleanupUploadedFiles()
-    {
+    public function cleanupUploadedFiles(){
         foreach ($this->avatarPaths as $path) {
             
             Storage::disk('public')->delete($path);

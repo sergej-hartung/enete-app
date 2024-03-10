@@ -20,18 +20,9 @@ class IndexController extends Controller
     }
 
     public function __invoke(IndexEmployeeProfileRequest $request)
-    {
-        $data = $request->validated();
-        $filter = app()->make(UserProfileFilter::class, ['queryParams' => array_filter($data)]);
+    { 
+        $profiles = $this->userProfileService->getEmployeeProfiles($request->validated());
 
-        $profiles = UserProfile::with(['users', 'employee.status'])->where('user_type', '=', 'is_employee')->filter($filter)->sort($data)->get();
-
-        $fieldsToDecrypt = ['first_name', 'last_name']; 
-
-        foreach($profiles as $profile){
-            $this->userProfileService->decryptFields($profile, $fieldsToDecrypt);
-        }    
-        
         return IndexEmployeeProfileResource::collection($profiles);
     }
 }

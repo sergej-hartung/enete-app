@@ -38,9 +38,9 @@ export class PartnersListComponent implements OnInit, OnDestroy {
 
     this.parnerColumns = [
       {key: 'id', title: '#', sortable: true},
-      {key: 'vp_nr', title: 'GP-NR.', sortable: true},
-      {key: 'last_name', title: 'Nachname', sortable: true},
+      {key: 'vp_nr', title: 'GP-NR.', sortable: true},     
       {key: 'first_name', title: 'Vorname', sortable: true},
+      {key: 'last_name', title: 'Nachname', sortable: true},
       {key: 'accesses', title: 'Zugang', isIcon: true},
       {key: 'status', title: 'Status', sortable: true, isIcon: true},
     ]
