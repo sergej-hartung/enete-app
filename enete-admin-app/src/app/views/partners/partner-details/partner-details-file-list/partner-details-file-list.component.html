@@ -2,7 +2,11 @@
     <div class="row">
         <div class="col">
             <ul class="file-list">
-                <li *ngFor="let document of documents.controls; index as i">
+                <li 
+                    *ngFor="let document of documents.controls; index as i" 
+                    (click)="toggleDocuments(document, i, content)"
+                    [class.selected]="selectedDokument == i + 1"
+                >
                     <ng-container *ngIf="document.value">
                         <!-- Иконка файла -->
                         <div class="file-icon-wrapper">
@@ -21,7 +25,7 @@
                         <div class="file-action" (click)="downloadFile(document)">
                             <i class="fa fa-download"></i>
                         </div>
-                        <div class="file-action delite" (click)="deleteFile(document, i)">
+                        <div class="file-action delite" (click)="deleteFile(document, i); $event.stopPropagation()">
                             <i class="fa fa-trash-can"></i>
                         </div>
                     </ng-container>
@@ -39,7 +43,24 @@
             [accept]="'*'"
             (change)="fileChangeEvent($event)"
         >
-            <ngx-dropzone-label>Avatar</ngx-dropzone-label>
+            <ngx-dropzone-label>Dokumente</ngx-dropzone-label>
         </div>
     </div>     
 </div>
+<ng-template #content let-offcanvas>
+	<div class="offcanvas-header">
+		<!-- <h4 class="offcanvas-title" id="offcanvas-basic-title">Profile update</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button> -->
+	</div>
+	<div class="offcanvas-body">
+		<app-preview-documents></app-preview-documents>
+		
+	</div>
+</ng-template>
+<ng-container *ngIf="isBrowser">
+    <pdf-viewer *ngIf="pdfSrc" [src]="pdfSrc"
+                [render-text]="true"
+                [original-size]="false"
+                style="width: 100%; height: 500px">
+    </pdf-viewer>
+  </ng-container>

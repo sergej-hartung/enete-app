@@ -12,8 +12,7 @@ import { Status } from '../../../models/partner/status/status';
 import { Categorie } from '../../../models/partner/categorie/categorie';
 import { CareerService } from '../../../services/partner/career/career.service';
 import { Career } from '../../../models/partner/career/career';
-import { NgxDropzoneChangeEvent } from 'ngx-dropzone';
-import { exit } from 'process';
+
 
 class RequiredStatus {
   [key: string]: boolean;
@@ -477,13 +476,13 @@ export class PartnerDetailsComponent {
     });
   }
 
-  private createDocumentsFormGroup(f: File){
+  private createDocumentsFormGroup(f: File | {name: string, size: string, type:string}){
     return new FormGroup({
       id: new FormControl(),
-      name: new FormControl(f.name),
-      size: new FormControl(f.size),
-      type: new FormControl(f.type),
-      file: new FormControl(f)
+      name: new FormControl(f['name'] ? f.name : ''),
+      size: new FormControl(f['size'] ? f.size : ''),
+      type: new FormControl(f['type'] ? f.type : ''),
+      file: new FormControl(f instanceof File ? f : null)
     })
   }
 
@@ -543,6 +542,17 @@ export class PartnerDetailsComponent {
         })
       }
     } 
+    if(data['data']['documents']){
+      if(Array.isArray(data['data']['documents']) && data['data']['documents'].length > 0){
+        data['data']['documents'].forEach(document => {
+          if(this.documents){
+            this.documents.push(this.createDocumentsFormGroup(document));
+          }else{
+            this.userProfilesForm.addControl("documents", new FormArray([this.createDocumentsFormGroup(document)]));
+          }
+        })
+      }
+    }
     this.userProfilesForm.patchValue(data.data)
     this.checkBlockedStatusUserProfiles()
   }

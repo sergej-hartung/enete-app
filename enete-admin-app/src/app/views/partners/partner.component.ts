@@ -86,21 +86,21 @@ export class PartnerComponent {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({action, proceedCallback}) => {
         console.log(action)
-        if(action == 'selectRow' || action == 'sort' || action == 'filter' || action == 'deletePartnerFile'){
+        if(action == 'deletePartnerFile'){
+          this.showNotification(proceedCallback, this.deleteFileTitleTemplate, this.deleteFileMessageTemplate)
+        }
+
+        if(action == 'selectRow' || action == 'sort' || action == 'filter' || action == 'deletePartnerFile' ){
           this.partnerService.getFormDirty()
           .pipe(take(1))
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(isDitry => {
-            if(isDitry){
-              //this.partnerService.setFormDirty(false)
-              if(action == 'deletePartnerFile'){
-                this.showNotification(proceedCallback, this.deleteFileTitleTemplate, this.deleteFileMessageTemplate)
-              }else{
-                this.showNotification(proceedCallback)
-              }             
-              //proceedCallback()
+            if(isDitry && action != 'deletePartnerFile'){
+              this.showNotification(proceedCallback)         
             }else{
-              proceedCallback()
+              if(action != 'deletePartnerFile'){
+                proceedCallback()
+              }       
             }
           })
         }else{

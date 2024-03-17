@@ -131,7 +131,8 @@ class UserProfileService{
             'parent',
             'addresses', 
             'contacts', 
-            'banks', 
+            'banks',
+            'documents',
             'employee'
         ])->where('user_type', '=', 'is_employee')->find($profileId);
         
@@ -147,7 +148,8 @@ class UserProfileService{
         $relationsToDecrypt = [
             'addresses' => ['zip', 'city', 'street', 'house_number', 'country'],
             'banks' => ['first_name', 'last_name', 'zip', 'city', 'street', 'house_number', 'country', 'bic', 'iban', 'bank_name'],
-            'contacts' => ['prefix', 'number']
+            'contacts' => ['prefix', 'number'],
+            'documents' => ['name']
         ];
 
         $this->decryptFields($profile, $fieldsToDecrypt, $relationsToDecrypt);
@@ -163,7 +165,7 @@ class UserProfileService{
         $this->handleRelatedEntities($profile, $extractedData);   
         $this->sendEmailVerificationHash($profile);         
         $this->handleUsers($request, $profile, $extractedData['users'] ?? []);
-        
+        $this->handleDocuments($request, $profile, $extractedData['documents'] ?? []);
     }
 
     public function updateEmployeeProfile($request, $id, $data){
@@ -173,7 +175,7 @@ class UserProfileService{
         $this->handleUserProfiles($extractedData, $profile, true);           
         $this->handleRelatedEntities($profile, $extractedData, true);
         $this->handleUsers($request, $profile, $extractedData['users'] ?? [], true);
-        $this->handleDocuments($request, $profile, $extractedData['documents'] ?? []);
+        $this->handleDocuments($request, $profile, $extractedData['documents'] ?? [], true);
         $profile->fresh();
 
         if ($profile->employee->status_id == 3 || $profile->employee->status_id == 4) {
@@ -186,13 +188,14 @@ class UserProfileService{
             }
         }
 
-        $profile = UserProfile::with('addresses', 'banks', 'contacts', 'users.status', 'parent', 'users')->find($id);
+        $profile = UserProfile::with('addresses', 'banks', 'contacts', 'users.status', 'parent', 'users', 'documents')->find($id);
 
         $fieldsToDecrypt = ['first_name', 'last_name']; // Поля для расшифровки в основной модели
         $relationsToDecrypt = [ // Конфигурация для связанных моделей
             'addresses' => ['zip', 'city', 'street', 'house_number', 'country'], // Поля для расшифровки в связанной модели 'addresses'
             'banks' => ['first_name','last_name','zip', 'city', 'street', 'house_number', 'country', 'bic', 'iban', 'bank_name'],
-            'contacts' => ['prefix', 'number']
+            'contacts' => ['prefix', 'number'],
+            'documents' => ['name']
         ];
 
         $this->decryptFields($profile, $fieldsToDecrypt, $relationsToDecrypt);
@@ -284,8 +287,8 @@ class UserProfileService{
                             $value, 
                             [
                                 'id',
-                                'user_profile_id ',
-                                'salutation ',
+                                'user_profile_id',
+                                'salutation',
                                 'user_profile_bank_categorie_id',
                                 'created_by',
                                 'updated_by',
@@ -378,7 +381,10 @@ class UserProfileService{
             if ($documentPath) {
                 $document['path'] = $documentPath;
             }
-    
+            $document = $this->encryptExcept(
+                $document, 
+                ['id','user_profile_id','file', 'path', 'size', 'type', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at']
+            );
 
             if ($update && isset($document['id'])) {
 
@@ -386,7 +392,7 @@ class UserProfileService{
                 if (!$existingDocument) {
                     throw new \Exception("User not found.");
                 }   
-    
+                
                 $existingDocument->update($document);
             } else {
                 $profile->documents()->create($document);
@@ -473,7 +479,7 @@ class UserProfileService{
 
         $path = $document->store('documents', 'local');
         $this->documentPaths[] = $path;
-        dd($path);
+        unset($d['file']);
         return $path;
         
     }

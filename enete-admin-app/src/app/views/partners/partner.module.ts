@@ -14,7 +14,9 @@ import { PartnerDetailsAccessComponent } from './partner-details/partner-details
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { PartnerDetailsNoteComponent } from './partner-details/partner-details-note/partner-details-note.component';
 import { PartnerDetailsFileListComponent } from './partner-details/partner-details-file-list/partner-details-file-list.component';
+import { PreviewDocumentsComponent } from './partner-details/partner-details-file-list/preview-documents/preview-documents.component';
 import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 
@@ -27,7 +29,8 @@ import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
     PartnerDetailsAccessComponent,
     PartnerDetailsNoteComponent,
     PartnerDetailsFileListComponent,
-    FileSizePipe
+    FileSizePipe,
+    PreviewDocumentsComponent
   ],
   imports: [
     CommonModule,
@@ -37,7 +40,8 @@ import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
     ReactiveFormsModule,
     NgxDropzoneModule,
     ImageCropperModule,
-    FormsModule
+    FormsModule,
+    //PdfViewerModule
   ]
 })
 export class PartnerModule { }

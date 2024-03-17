@@ -9,6 +9,7 @@ use App\Http\Resources\User\User\UserResourceExpanded;
 use App\Http\Resources\User\Profile\Banks\BankResource;
 use App\Http\Resources\User\Profile\Address\AddressResource;
 use App\Http\Resources\User\Profile\Contacts\ContactsResource;
+use App\Http\Resources\User\Profile\Documents\DocumentsResource;
 use App\Http\Resources\User\Profile\Employees\EmployeeDetails\EmployeeDetailsResource;
 use App\Http\Resources\User\Profile\Employees\EmployeeDetails\Status\IndexStatusResource;
 
@@ -38,6 +39,7 @@ class UpdateEmployeeProfileResource extends JsonResource
             "contacts"                  => ContactsResource::collection($this->contacts),
             "banks"                     => BankResource::collection($this->banks),
             "users"                     => UserResourceExpanded::collection($this->users),
+            "documents"                 => DocumentsResource::collection($this->documents),
 
             'status'                    => $this->employee ? new IndexStatusResource($this->employee->status) : null,
             'vp_nr'                     => $this->employee ? $this->employee->vp_nr : null,

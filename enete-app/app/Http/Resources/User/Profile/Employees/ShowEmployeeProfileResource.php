@@ -9,6 +9,7 @@ use App\Http\Resources\User\User\UserResourceExpanded;
 use App\Http\Resources\User\Profile\Banks\BankResource;
 use App\Http\Resources\User\Profile\Address\AddressResource;
 use App\Http\Resources\User\Profile\Contacts\ContactsResource;
+use App\Http\Resources\User\Profile\Documents\DocumentsResource;
 use App\Http\Resources\User\Profile\Employees\EmployeeDetails\EmployeeDetailsResource;
 
 class ShowEmployeeProfileResource extends JsonResource
@@ -37,6 +38,7 @@ class ShowEmployeeProfileResource extends JsonResource
             "contacts"                  => ContactsResource::collection($this->contacts),
             "banks"                     => BankResource::collection($this->banks),
             "users"                     => UserResourceExpanded::collection($this->users),
+            "documents"                 => DocumentsResource::collection($this->documents),
             "parent"                    => $this->whenLoaded('parent', function() {
                 return $this->parent->employee->vp_nr . ' ' . $this->parent->first_name . ' ' . $this->parent->last_name;
             }),

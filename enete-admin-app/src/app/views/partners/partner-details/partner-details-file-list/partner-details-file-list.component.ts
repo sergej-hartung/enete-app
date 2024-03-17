@@ -1,8 +1,11 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, inject, TemplateRef, PLATFORM_ID, Inject} from "@angular/core";
+import { isPlatformBrowser } from '@angular/common';
+import { NgbOffcanvas, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
-import { Subject, takeUntil } from "rxjs";
 import { PartnerService } from "../../../../services/partner/partner.service";
+import { Subject, takeUntil } from "rxjs";
 
+declare var require: any;
 
 @Component({
     selector: 'app-partner-details-file-list',
@@ -13,19 +16,39 @@ import { PartnerService } from "../../../../services/partner/partner.service";
     @Input() userProfilesForm!: FormGroup;
     @Output() newDocuments = new EventEmitter<any>();
     private unsubscribe$ = new Subject<void>();
+
+    private offcanvasService = inject(NgbOffcanvas);
+    closeResult = '';
+
+    selectedDokument: number|undefined
+    pdfSrc!: string
     
     files: File[] = []
 
+    isBrowser: boolean = false;
+    
+
     constructor(
+      @Inject(PLATFORM_ID) private platformId: Object,
       private partnerService: PartnerService,
-    ) {}
+    ) {
+      this.isBrowser = isPlatformBrowser(this.platformId);
+    }
 
     ngOnInit() {
+      if (this.isBrowser) {
+        // Динамический импорт ng2-pdf-viewer
+        import('ng2-pdf-viewer').then(module => {
+          const PDFViewerModule = module.PdfViewerModule;
+          // Теперь PDFViewerModule доступен для использования
+        });
+      }
+
       this.partnerService.confirmAction$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(({action, proceedCallback}) => {
           if(action == 'selectRow'){
-            
+            this.selectedDokument = undefined
             console.log('resetSelected')
           }     
       });
@@ -47,11 +70,18 @@ import { PartnerService } from "../../../../services/partner/partner.service";
 
     }
 
-    ngOnDestroy() {
-      console.log('test')
-      
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
+    toggleDocuments(document: any, index: number, content: TemplateRef<any>){
+      if(this.selectedDokument == (index + 1)){
+        this.selectedDokument = undefined
+        if(this.offcanvasService.hasOpenOffcanvas()){
+          this.offcanvasService.dismiss(content)
+        } 
+      }else{
+        this.selectedDokument = index + 1
+        if(!this.offcanvasService.hasOpenOffcanvas()){
+          this.openCustomPanelClass(content)
+        }     
+      }
     }
 
     downloadFile(document: any) {
@@ -61,17 +91,30 @@ import { PartnerService } from "../../../../services/partner/partner.service";
     }
 
     deleteFile(document: any, index: number) {
-      // Логика для удаления файла из FormArray и возможно с сервера
-      console.log('Deleting file:', document.get('file').value.name);
+      console.log('delited')
+      //console.log('Deleting file:', document.get('file').value.name);
     
       this.partnerService?.confirmAction('deletePartnerFile', () => {
         this.documents.removeAt(index);
     
         // Проверяем, если это был последний элемент в массиве, удаляем весь массив
-        if (this.documents.length === 0) {
+        if (this.documents && this.documents.length === 0) {
           this.userProfilesForm.removeControl('documents');
         }
       });
       // Здесь может быть вызов сервиса для удаления файла с сервера
+    }
+
+
+    openCustomPanelClass(content: TemplateRef<any>) {
+      this.offcanvasService.open(content, { panelClass: 'custom-canvas', backdrop: false });
+    }
+
+
+    ngOnDestroy() {
+      console.log('test')
+      
+      this.unsubscribe$.next();
+      this.unsubscribe$.complete();
     }
   }
