@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_profile_id');
             $table->string('path');
-            $table->string('document_name');
-            $table->string('document_size');
+            $table->string('name');
+            $table->string('size');
+            $table->string('type');
             $table->foreign('user_profile_id')->references('id')->on('user_profiles')->onDelete('cascade');
             $table->integer('created_by')->nullable();
             $table->integer('updated_by')->nullable();

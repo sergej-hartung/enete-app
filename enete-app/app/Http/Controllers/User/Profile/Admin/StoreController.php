@@ -45,11 +45,4 @@ class StoreController extends Controller
         }      
     }
 
-    private function SentEmailVerificationHash ($profile ){
-        if($profile){
-            Mail::to($profile->email)->send(new VerifyEmail($profile));
-            $profile->email_sent = now();
-            $profile->save();
-        }       
-    }
 }

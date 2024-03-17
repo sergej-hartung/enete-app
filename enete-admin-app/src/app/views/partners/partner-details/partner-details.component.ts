@@ -257,7 +257,7 @@ export class PartnerDetailsComponent {
 
     // Обработка обычных полей формы
     Object.keys(this.getDirtyValues(this.userProfilesForm)).forEach(key => {
-      if (!['users', 'contacts', 'addresses', 'banks', 'employee_details'].includes(key)) {
+      if (!['users', 'documents', 'contacts', 'addresses', 'banks', 'employee_details'].includes(key)) {
         formData.append(key, this.userProfilesForm.value[key]);
       }
     });
@@ -269,21 +269,19 @@ export class PartnerDetailsComponent {
       formData.append(`employee_details[${key}]`, value);
     });
   
-    // Обработка массива users
-    this.getDirtyValues(this.userProfilesForm)['users']?.forEach((user:any, index:any) => {
-      // console.log(this.getDirtyValues(this.userProfilesForm))
-      // console.log(index)
-      // console.log(user)
-      Object.keys(user).forEach(field => {
-        const value = user[field];
-        if (value instanceof File) {
-          formData.append(`users[${index}][${field}]`, value, value.name);
-        } else {
 
-          formData.append(`users[${index}][${field}]`, value);
-        }
-        // console.log(value)
+    ['users', 'documents'].forEach(arrayName => {
+      this.getDirtyValues(this.userProfilesForm)[arrayName]?.forEach((item: any, index:any) => {
+        Object.keys(item).forEach(field => {
+          const value = item[field];
+          if (value instanceof File) {
+            formData.append(`${arrayName}[${index}][${field}]`, value, value.name);
+          } else {
+            formData.append(`${arrayName}[${index}][${field}]`, value);
+          }
+        });
       });
+
     });
 
     
@@ -481,6 +479,10 @@ export class PartnerDetailsComponent {
 
   private createDocumentsFormGroup(f: File){
     return new FormGroup({
+      id: new FormControl(),
+      name: new FormControl(f.name),
+      size: new FormControl(f.size),
+      type: new FormControl(f.type),
       file: new FormControl(f)
     })
   }

@@ -31,7 +31,6 @@ class UpdateController extends Controller
         try {
             DB::beginTransaction();
             $data = $request->validated();
-
             $userProfile = $this->userProfileService->updateEmployeeProfile($request, $id, $data);
 
             DB::commit();

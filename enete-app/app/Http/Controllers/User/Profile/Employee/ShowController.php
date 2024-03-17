@@ -23,11 +23,12 @@ class ShowController extends Controller
     public function __invoke($profileId)
     {
         $profile = $this->userProfileService->findEmployeeProfilesById($profileId);
+
         if (!$profile) {
             return response()->json(['message' => 'Profile not found'], 404);
         }
         
-         return new ShowEmployeeProfileResource($profile);
+        return new ShowEmployeeProfileResource($profile);
     }
 }
 

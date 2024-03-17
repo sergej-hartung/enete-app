@@ -20,6 +20,7 @@ class UserProfileService{
     use HandlesUserProfile;
 
     protected $avatarPaths;
+    protected $documentPaths;
 
     public function __construct() {
         $this->avatarPaths = collect();
@@ -123,6 +124,7 @@ class UserProfileService{
     }
 
     public function findEmployeeProfilesById($profileId){
+
         $profile = UserProfile::with([
             'users', 
             'users.status',
@@ -159,20 +161,19 @@ class UserProfileService{
    
         $profile = $this->handleUserProfiles($extractedData);           
         $this->handleRelatedEntities($profile, $extractedData);   
-        $this->sendEmailVerificationHash($profile);
-            
+        $this->sendEmailVerificationHash($profile);         
         $this->handleUsers($request, $profile, $extractedData['users'] ?? []);
+        
     }
 
     public function updateEmployeeProfile($request, $id, $data){
-        
         $profile = UserProfile::findOrFail($id);
         $extractedData = $this->extractData($data);
         //dd($extractedData);
         $this->handleUserProfiles($extractedData, $profile, true);           
         $this->handleRelatedEntities($profile, $extractedData, true);
         $this->handleUsers($request, $profile, $extractedData['users'] ?? [], true);
-
+        $this->handleDocuments($request, $profile, $extractedData['documents'] ?? []);
         $profile->fresh();
 
         if ($profile->employee->status_id == 3 || $profile->employee->status_id == 4) {
@@ -208,6 +209,7 @@ class UserProfileService{
             'banks' => Arr::pull($data, 'banks', []),
             'contacts' => Arr::pull($data, 'contacts', []),
             'users' => Arr::pull($data, 'users', []),
+            'documents' => Arr::pull($data, 'documents', []),
             'user_profile' => $data
         ];
     }
@@ -220,7 +222,7 @@ class UserProfileService{
         if($update && $profile){
             if(isset($value['email'])){
                 $value['email_verification_hash'] = hash('sha256', Str::random(40));
-                $this->sendEmailVerificationHash();
+                $this->sendEmailVerificationHash($profile);
             }
             $profile->update($value);
         }else{
@@ -368,6 +370,31 @@ class UserProfileService{
         
     }
 
+    public function handleDocuments($request, $profile, $documents, $update = false){
+
+        foreach ($documents as $key => &$document) {
+            // Обработка загрузки аватара и получение его URL
+            $documentPath = $this->handleDocumentUpload($request, $document, $key, $profile);
+            if ($documentPath) {
+                $document['path'] = $documentPath;
+            }
+    
+
+            if ($update && isset($document['id'])) {
+
+                $existingDocument = $profile->documents()->where('id', $document['id'])->first();
+                if (!$existingDocument) {
+                    throw new \Exception("User not found.");
+                }   
+    
+                $existingDocument->update($document);
+            } else {
+                $profile->documents()->create($document);
+            }
+        }
+        unset($document); // Разрыв ссылки для предотвращения неожиданного поведения
+    }
+
 
 
     protected function handleAvatarUpload($request, array &$user, int $key, UserProfile $profile){
@@ -412,6 +439,45 @@ class UserProfileService{
         return url(Storage::url($path));
     }
 
+    protected function handleDocumentUpload($request, array &$d, int $key, UserProfile $profile){
+        
+        if (!$request->hasFile("documents.$key.file")) {
+            return null;
+        }
+
+        $document = $request->file("documents.$key.file");
+
+        if (!$document->isValid()) {
+            throw new \Exception("Invalid Document file.");
+        }
+
+        // Проверка размера файла
+        if ($document->getSize() > 5000000) { // примерный лимит в 5MB
+            throw new \Exception("The Document file is too large.");
+        }
+
+         // Проверка типа файла
+        if (!in_array($document->getMimeType(), ['image/jpeg', 'image/png', 'image/gif','application/pdf'])) {
+            throw new \Exception("Only JPEG, PNG, GIF and PDF files are allowed.");
+        }
+       // dd($d);
+        if (!empty($d['id'])) {
+            $existingDocument = $profile->documents()->where('id', $d['id'])->first();
+            if ($existingDocument) {
+
+                // Удаление начинается от публичного пути, поэтому удаляем '/storage'
+                $currentDokumentPath = str_replace('/storage/', '', $existingDocument->path);
+                Storage::disk('local')->delete($currentDokumentPath);
+            }
+        }
+
+        $path = $document->store('documents', 'local');
+        $this->documentPaths[] = $path;
+        dd($path);
+        return $path;
+        
+    }
+
     // Метод для отправки письма с хешем верификации
     public function sendEmailVerificationHash($profile){
         Mail::to($profile->email)->queue(new VerifyEmail($profile));
@@ -428,6 +494,10 @@ class UserProfileService{
 
     public function cleanupUploadedFiles(){
         foreach ($this->avatarPaths as $path) {
+            
+            Storage::disk('public')->delete($path);
+        }
+        foreach ($this->documentPaths as $path) {
             
             Storage::disk('public')->delete($path);
         }

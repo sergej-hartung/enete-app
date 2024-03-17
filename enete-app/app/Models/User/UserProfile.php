@@ -48,6 +48,10 @@ class UserProfile extends Model
         return $this->hasMany(UserProfileContact::class, 'user_profile_id');
     }
 
+    public function documents(){
+        return $this->hasMany(UserProfileDocument::class, 'user_profile_id');
+    }
+
     public function parent()
     {
         return $this->belongsTo(UserProfile::class, 'parent_id');

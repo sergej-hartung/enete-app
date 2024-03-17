@@ -9,4 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class UserProfileDocument extends Model
 {
     use HasFactory, SoftDeletes;
+    protected $guarded = false;
+
+     // Связь адреса с профилем пользователя
+     public function userProfile()
+     {
+         return $this->belongsTo(UserProfile::class, 'user_profile_id');
+     }
 }

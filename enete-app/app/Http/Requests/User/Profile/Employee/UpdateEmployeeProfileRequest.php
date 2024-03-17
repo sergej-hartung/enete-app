@@ -99,6 +99,13 @@ class UpdateEmployeeProfileRequest extends FormRequest
             'avatar'                                       => 'sometimes|file',
             //'documents'            => 'array',
 
+            'documents'                                    => 'nullable|sometimes|array',
+            'documents.*.id'                               => 'nullable|sometimes|integer|exists:user_profile_documents,id',
+            'documents.*.name'                             => 'nullable|string|max:255',
+            'documents.*.size'                             => 'nullable|integer',
+            'documents.*.type'                             => 'nullable|string|max:255',
+            'documents.*.file'                             => 'file',
+
         ];
     }
 }

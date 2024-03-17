@@ -3,17 +3,21 @@
         <div class="col">
             <ul class="file-list">
                 <li *ngFor="let document of documents.controls; index as i">
-                    <ng-container *ngIf="document.get('file')?.value">
+                    <ng-container *ngIf="document.value">
                         <!-- Иконка файла -->
                         <div class="file-icon-wrapper">
-                            <i *ngIf="document.get('file')?.value?.type == 'application/pdf'" class="file-icon fa fa-file-pdf"></i>
-                            <i *ngIf="document.get('file')?.value?.type == 'image/jpeg'" class="file-icon fa fa-file-image"></i>
+                            <i *ngIf="document.get('type')?.value == 'application/pdf'" class="file-icon fa fa-file-pdf"></i>
+                            <i *ngIf="document.get('type')?.value == 'image/jpeg'" class="file-icon fa fa-file-image"></i>
                         </div>
                         <!-- Название файла -->
-                        <div class="file-name">{{document.get('file')?.value?.name}}</div>
+                        <div class="file-name">{{document.get('name')?.value}}</div>
                         <!-- Размер файла -->
-                        <div class="file-size">{{document.get('file')?.value?.size | fileSize}}</div>
+                        <div class="file-size">{{document.get('size')?.value | fileSize}}</div>
                         <!-- Действия с файлом -->
+                        <div class="file-action" (click)="downloadFile(document)">
+                            <i class="fa fa-eye"></i>
+                            
+                        </div>
                         <div class="file-action" (click)="downloadFile(document)">
                             <i class="fa fa-download"></i>
                         </div>

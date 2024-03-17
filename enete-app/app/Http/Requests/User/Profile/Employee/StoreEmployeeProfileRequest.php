@@ -92,6 +92,13 @@ class StoreEmployeeProfileRequest extends FormRequest
             'users.*.status_id'                            => 'required|integer|exists:user_statuses,id',
             'avatar'                                       => 'file',
 
+            'documents'                                    => 'nullable|sometimes|array',
+            'documents.*.name'                             => 'nullable|string|max:255',
+            'documents.*.size'                             => 'nullable|integer',
+            'documents.*.type'                             => 'nullable|string|max:255',
+            'documents.*.file'                             => 'file',
+            //'avatar'                                       => 'file',
+
         ];
     }
 }

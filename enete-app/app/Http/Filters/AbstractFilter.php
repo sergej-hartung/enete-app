@@ -41,7 +41,7 @@ abstract class AbstractFilter implements FilterInterface
     {
     }
 
-    /**
+    /** 
      * @param string $key
      * @param mixed|null $default
      *
