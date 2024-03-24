@@ -762,4 +762,12 @@ footer{
 .custom-canvas.offcanvas.offcanvas-start{
     width: 41.66666667%;
     margin-bottom: $max-height-footer;
+    margin-top: ($max-height-main-nav + $max-height-second-nav);
+}
+
+
+.custom-canvas{
+    .offcanvas-body{
+        padding: 0;
+    }
 }

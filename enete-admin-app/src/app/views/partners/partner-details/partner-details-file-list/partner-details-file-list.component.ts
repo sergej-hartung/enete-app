@@ -1,8 +1,10 @@
-import { Component, EventEmitter, Input, Output, inject, TemplateRef, PLATFORM_ID, Inject} from "@angular/core";
-import { isPlatformBrowser } from '@angular/common';
+import { Component, EventEmitter, Input, Output, inject, TemplateRef, Renderer2} from "@angular/core";
+
 import { NgbOffcanvas, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FormArray, FormControl, FormGroup } from "@angular/forms";
 import { PartnerService } from "../../../../services/partner/partner.service";
+import { DocumentService } from "../../../../services/partner/documents/documents.service"
+
 import { Subject, takeUntil } from "rxjs";
 
 declare var require: any;
@@ -21,37 +23,50 @@ declare var require: any;
     closeResult = '';
 
     selectedDokument: number|undefined
-    pdfSrc!: string
+    selectedDocumentFile: File|Blob|undefined
     
     files: File[] = []
 
-    isBrowser: boolean = false;
+    isDownload: boolean = false;
     
 
     constructor(
-      @Inject(PLATFORM_ID) private platformId: Object,
       private partnerService: PartnerService,
-    ) {
-      this.isBrowser = isPlatformBrowser(this.platformId);
-    }
+      private documentService: DocumentService,
+      private renderer: Renderer2
+    ) {}
 
     ngOnInit() {
-      if (this.isBrowser) {
-        // Динамический импорт ng2-pdf-viewer
-        import('ng2-pdf-viewer').then(module => {
-          const PDFViewerModule = module.PdfViewerModule;
-          // Теперь PDFViewerModule доступен для использования
-        });
-      }
 
       this.partnerService.confirmAction$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(({action, proceedCallback}) => {
           if(action == 'selectRow'){
             this.selectedDokument = undefined
+            this.selectedDocumentFile = undefined
             console.log('resetSelected')
           }     
       });
+
+      this.documentService.file$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(file => {
+          console.log(file)
+          if(this.isDownload && file){
+            const url = window.URL.createObjectURL(file);
+            const anchor = document.createElement('a');
+            anchor.download = 'document.pdf'; // Укажите здесь нужное имя файла
+            //anchor.download
+            anchor.href = url;
+            anchor.click();
+            
+            window.URL.revokeObjectURL(url);
+            this.isDownload = false
+          }
+          if(!this.isDownload && file){
+            this.selectedDocumentFile = file
+          }
+        })
     }
     
     get documents(): FormArray{
@@ -68,29 +83,49 @@ declare var require: any;
       console.log(event);
       this.files.splice(this.files.indexOf(event), 1);
 
-    }
+    } 
 
-    toggleDocuments(document: any, index: number, content: TemplateRef<any>){
+    toggleDocuments(document: any, index: number, content: TemplateRef<any>, event: any){
+      event.stopPropagation()
+      
       if(this.selectedDokument == (index + 1)){
         this.selectedDokument = undefined
         if(this.offcanvasService.hasOpenOffcanvas()){
           this.offcanvasService.dismiss(content)
+          this.removeInputElement()
         } 
+        this.selectedDocumentFile = undefined
       }else{
         this.selectedDokument = index + 1
+       
+        let file = document.get('file')?.value
+        let id = document.get('id')?.value
+        if(file){
+          this.selectedDocumentFile = file
+        }else if(!file && id){
+          this.documentService.downloadDocumentById(id)
+        }  
+
         if(!this.offcanvasService.hasOpenOffcanvas()){
           this.openCustomPanelClass(content)
-        }     
+        }
       }
+
+      
     }
 
-    downloadFile(document: any) {
-      // Логика для скачивания файла
-      console.log('Downloading file:', document.get('file').value.name);
-      // Здесь должен быть ваш код для скачивания файла
+    downloadFile(document: any, event: any){
+      console.log('downloads')
+      event.stopPropagation()
+      let id = document.get('id')?.value
+      if(id){
+        this.isDownload = true
+        this.documentService.downloadDocumentById(id)
+      }     
     }
 
-    deleteFile(document: any, index: number) {
+    deleteFile(document: any, index: number, event: any) {
+      event.stopPropagation()
       console.log('delited')
       //console.log('Deleting file:', document.get('file').value.name);
     
@@ -110,10 +145,24 @@ declare var require: any;
       this.offcanvasService.open(content, { panelClass: 'custom-canvas', backdrop: false });
     }
 
+    removeInputElement() {
+      // Используем querySelector для поиска элемента в DOM
+      const inputElement = document.querySelector('input#fileInput');
+  
+      // Проверяем, найден ли элемент
+      if (inputElement) {
+        // Используем Renderer2 для безопасного удаления элемента из DOM
+        this.renderer.removeChild(inputElement.parentNode, inputElement);
+      } else {
+        // Элемент не найден
+        console.log('Элемент input#fileInput не найден в DOM.');
+      }
+    }
 
     ngOnDestroy() {
       console.log('test')
-      
+      this.selectedDokument = undefined
+      this.selectedDocumentFile = undefined
       this.unsubscribe$.next();
       this.unsubscribe$.complete();
     }

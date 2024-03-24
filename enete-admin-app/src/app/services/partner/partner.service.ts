@@ -34,35 +34,6 @@ export class PartnerService extends DataService<Partner> {
   }
 
 
-  // fetchData(params?: {[key: string]: string}): void {
-
-  //   let httpParams = new HttpParams();
-
-  //   if (params) {
-  //       this.updateFilters(params)
-  //       console.log(this.currentFilters)
-  //       Object.keys(this.currentFilters).forEach(key => {
-  //           if (this.currentFilters[key] !== null && this.currentFilters[key] !== undefined) {
-  //               httpParams = httpParams.set(key, this.currentFilters[key]);
-  //           }
-  //       });
-  //   }
-
-  //   this.http.get<PartnerData>(`${this.apiUrl}/user-profiles`, { params: httpParams })
-  //     .pipe(
-  //       takeUntil(this.destroy$),
-  //     )
-  //     .subscribe({
-  //       next: data => {
-  //         this._data.next(data.data)
-  //       },
-  //       error: (error) => {
-  //         this.handleError(error.error.errors)
-  //       }
-        
-  //     });
-  // }
-
   fetchData(params?: {[key: string]: string}): void {
 
     // Обновляем фильтры, если они предоставлены

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User\UserProfile;
+use App\Models\User\UserProfileDocument;
 use App\Http\Filters\UserProfileFilter;
 
 use App\Traits\HandlesUserProfile;
@@ -204,6 +205,24 @@ class UserProfileService{
 
     }
 
+    public function downloadProfileDocument($documentId){
+        $document = UserProfileDocument::find($documentId);
+       // dd($document);
+        if ($document) {
+            $this->decryptFields($document, ['path', 'name']);
+        }else{
+            throw new \Exception('Document not found.');
+        }
+
+        $filePath = $document->path;
+        $downloadName = $document->name;
+
+        if (!Storage::exists($filePath)) {
+            throw new \Exception('File does not exist.');
+        }
+
+        return Storage::download($filePath, $downloadName);
+    }
 
     public function extractData(array $data){
         return [
@@ -499,14 +518,20 @@ class UserProfileService{
     }
 
     public function cleanupUploadedFiles(){
-        foreach ($this->avatarPaths as $path) {
+        if($this->avatarPaths && is_array($this->avatarPaths)){
+            foreach ($this->avatarPaths as $path) {
             
-            Storage::disk('public')->delete($path);
+                Storage::disk('public')->delete($path);
+            }
         }
-        foreach ($this->documentPaths as $path) {
+        
+        if($this->documentPaths && is_array($this->documentPaths)){
+            foreach ($this->documentPaths as $path) {
             
-            Storage::disk('public')->delete($path);
+                Storage::disk('public')->delete($path);
+            }
         }
+        
     }
 
 }

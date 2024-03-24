@@ -19,6 +19,10 @@ Route::patch('/test', function(Request $request){
     dd($request->all());
 });
 
+Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-dockuments', 'namespace' => 'App\Http\Controllers\User\Profile\Dockument'], function($router){
+    Route::get('/download/{id}', 'DownloadController');
+});
+
 // user-profiele-employee
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-profile', 'namespace' => 'App\Http\Controllers\User\Profile\Employee'], function($router){
     Route::get('/employees', 'IndexController')->middleware('transform.boolean');

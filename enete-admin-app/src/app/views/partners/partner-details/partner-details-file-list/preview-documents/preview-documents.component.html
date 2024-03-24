@@ -1,3 +1,38 @@
-
-
-test
+<!-- <ngx-extended-pdf-viewer
+*ngIf="file"
+    [src]="file"
+    [height]="'auto'" 
+    [textLayer]="true"
+    [showHandToolButton]="true">
+</ngx-extended-pdf-viewer> -->
+<ngx-extended-pdf-viewer 
+    *ngIf="file && file['type'] === 'application/pdf'" 
+    backgroundColor="#ffffff" 
+    [src]="file" 
+    [zoom]="'auto'"
+    [height]="'auto'"
+    [showToolbar]="true"
+    [showBorders]="true"
+    [showSidebarButton]="true"
+    [showFindButton]="false"
+    [showPagingButtons]="true"
+    [showDrawEditor]="false"
+    [showStampEditor]="false"
+    [showTextEditor]="false"
+    [showZoomButtons]="true"
+    [showPresentationModeButton]="true"
+    [showOpenFileButton]="false"
+    [showPrintButton]="true"
+    [showDownloadButton]="true"
+    [showSecondaryToolbarButton]="false"
+    [showRotateCwButton]="true"
+    [showRotateCcwButton]="true"
+    [showHandToolButton]="false"
+    [showScrollingButton]="true"
+    [showSpreadButton]="true"
+    [showPropertiesButton]="true"
+></ngx-extended-pdf-viewer>
+<div *ngIf="file && isImage">
+    <img *ngIf="fileUrl" [src]="fileUrl" alt="Image preview" style="max-width: 100%; height: auto;">
+</div>
+<!-- <img *ngIf="fileUrl" [src]="fileUrl" alt="Image preview" style="max-width: 100%; height: auto;"> -->

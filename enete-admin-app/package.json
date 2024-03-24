@@ -32,6 +32,7 @@
     "material-symbols": "^0.14.3",
     "ng2-pdf-viewer": "^10.0.0",
     "ngx-dropzone": "^3.1.0",
+    "ngx-extended-pdf-viewer": "^19.4.1",
     "ngx-image-cropper": "^7.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

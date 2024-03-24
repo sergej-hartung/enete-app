@@ -16,7 +16,8 @@ import { PartnerDetailsNoteComponent } from './partner-details/partner-details-n
 import { PartnerDetailsFileListComponent } from './partner-details/partner-details-file-list/partner-details-file-list.component';
 import { PreviewDocumentsComponent } from './partner-details/partner-details-file-list/preview-documents/preview-documents.component';
 import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
-import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
+//import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 
@@ -41,6 +42,7 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     NgxDropzoneModule,
     ImageCropperModule,
     FormsModule,
+    NgxExtendedPdfViewerModule
     //PdfViewerModule
   ]
 })

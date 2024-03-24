@@ -4,7 +4,7 @@
             <ul class="file-list">
                 <li 
                     *ngFor="let document of documents.controls; index as i" 
-                    (click)="toggleDocuments(document, i, content)"
+                    (click)="toggleDocuments(document, i, content, $event); $event.stopPropagation()"
                     [class.selected]="selectedDokument == i + 1"
                 >
                     <ng-container *ngIf="document.value">
@@ -18,14 +18,14 @@
                         <!-- Размер файла -->
                         <div class="file-size">{{document.get('size')?.value | fileSize}}</div>
                         <!-- Действия с файлом -->
-                        <div class="file-action" (click)="downloadFile(document)">
+                        <div class="file-action" (click)="downloadFile(document, $event); $event.stopPropagation()">
                             <i class="fa fa-eye"></i>
                             
                         </div>
-                        <div class="file-action" (click)="downloadFile(document)">
+                        <div class="file-action" (click)="downloadFile(document, $event); $event.stopPropagation()">
                             <i class="fa fa-download"></i>
                         </div>
-                        <div class="file-action delite" (click)="deleteFile(document, i); $event.stopPropagation()">
+                        <div class="file-action delite" (click)="deleteFile(document, i, $event); $event.stopPropagation()">
                             <i class="fa fa-trash-can"></i>
                         </div>
                     </ng-container>
@@ -48,19 +48,11 @@
     </div>     
 </div>
 <ng-template #content let-offcanvas>
-	<div class="offcanvas-header">
-		<!-- <h4 class="offcanvas-title" id="offcanvas-basic-title">Profile update</h4>
-		<button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button> -->
-	</div>
+	<!-- <div class="offcanvas-header">
+	</div> -->
 	<div class="offcanvas-body">
-		<app-preview-documents></app-preview-documents>
+		<app-preview-documents *ngIf="selectedDocumentFile" [file]="selectedDocumentFile"></app-preview-documents>
 		
 	</div>
 </ng-template>
-<ng-container *ngIf="isBrowser">
-    <pdf-viewer *ngIf="pdfSrc" [src]="pdfSrc"
-                [render-text]="true"
-                [original-size]="false"
-                style="width: 100%; height: 500px">
-    </pdf-viewer>
-  </ng-container>
+
