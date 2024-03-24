@@ -98,6 +98,7 @@ declare var require: any;
       }else{
         this.selectedDokument = index + 1
        
+        this.removeInputElement()
         let file = document.get('file')?.value
         let id = document.get('id')?.value
         if(file){
@@ -153,16 +154,18 @@ declare var require: any;
       if (inputElement) {
         // Используем Renderer2 для безопасного удаления элемента из DOM
         this.renderer.removeChild(inputElement.parentNode, inputElement);
-      } else {
-        // Элемент не найден
-        console.log('Элемент input#fileInput не найден в DOM.');
       }
     }
 
     ngOnDestroy() {
-      console.log('test')
+      console.log('test')  
+      if(this.offcanvasService.hasOpenOffcanvas()){
+        this.offcanvasService.dismiss()
+        this.removeInputElement()
+      } 
       this.selectedDokument = undefined
       this.selectedDocumentFile = undefined
+
       this.unsubscribe$.next();
       this.unsubscribe$.complete();
     }
