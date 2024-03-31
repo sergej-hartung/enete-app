@@ -32,7 +32,7 @@
     [showSpreadButton]="true"
     [showPropertiesButton]="true"
 ></ngx-extended-pdf-viewer>
-<div *ngIf="file && isImage">
+<div class="img-view" *ngIf="file && isImage">
     <img *ngIf="fileUrl" [src]="fileUrl" alt="Image preview" style="max-width: 100%; height: auto;">
 </div>
 <!-- <img *ngIf="fileUrl" [src]="fileUrl" alt="Image preview" style="max-width: 100%; height: auto;"> -->

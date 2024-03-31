@@ -224,6 +224,16 @@ class UserProfileService{
         return Storage::download($filePath, $downloadName);
     }
 
+    public function deleteProfileDocument($documentId){
+        $document = UserProfileDocument::find($documentId);
+
+        if ($document) {
+            $document->delete();
+        }else{
+            throw new \Exception('Document not found.');
+        }
+    }
+
     public function extractData(array $data){
         return [
             'employee_details' => Arr::pull($data, 'employee_details', []),

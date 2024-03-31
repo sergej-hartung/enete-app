@@ -21,6 +21,7 @@ Route::patch('/test', function(Request $request){
 
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-dockuments', 'namespace' => 'App\Http\Controllers\User\Profile\Dockument'], function($router){
     Route::get('/download/{id}', 'DownloadController');
+    Route::delete('/{id}', 'DeleteController');
 });
 
 // user-profiele-employee

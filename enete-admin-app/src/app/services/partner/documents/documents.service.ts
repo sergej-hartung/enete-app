@@ -47,6 +47,26 @@ export class DocumentService extends DataService<any> {
       });
   }
 
+  deleteDocumentById(id: number){
+    this.http.delete<any>(`${this.apiUrl}/user-dockuments/${id}`)
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: data => {
+          console.log(data)
+          this._data.next({
+            data: data,
+            requestType: 'delete',
+            entityType: 'documents'
+          });
+        },
+        error: (error) => {
+          this.handleError(error)
+        }
+      });
+  }
+
   fetchData(): void {
   }
 

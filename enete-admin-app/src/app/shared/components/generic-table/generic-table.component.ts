@@ -179,7 +179,7 @@ export class GenericTableComponent<T> {
     const element = event.target as HTMLInputElement | HTMLSelectElement;
     const value = element.value;
     const key = filterOption.key;
-  
+
     if (value !== null && value !== undefined) {
       if (filterOption.type === 'text') {
         this.textFilterSubject.next({ key, value });

@@ -670,6 +670,39 @@
                                     class="form-control  form-control-sm" 
                                     id="leadership"  
                                     type="text"
+                                    [(ngModel)]="displayParentData"
+                                    (ngModelChange)="onParentDataChange($event)"
+                                    (focus)="clearInput()"
+                                    (blur)="restoreInputData()"
+                                    [ngModelOptions]="{standalone: true}"
+                                >
+                                <!-- <div 
+                                    class="invalid-feedback custom-invalid-feedback"
+                                    *ngIf="userProfilesForm.get('parent')?.errors?.['pattern']"
+                                > 
+                                    Nur Zahlen sind erlaubt.
+                                </div> -->
+                            </div>
+                            <div class="col-4 ps-1">
+                                <label for="rek_status" class="form-label custom-label-sm">Rekrut. Satus</label>
+                                <select class="form-select form-select-sm" id="rek_status" disabled>
+                                    <option selected="">gek. -&gt; WV</option>
+                                    <option>UVP</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8 pe-1">
+                                <label 
+                                    for="leadership" 
+                                    class="form-label custom-label-sm"
+                                    [class.required]="requiredStatus['parent']"
+                                >Führung</label>
+                                <input 
+                                    autocomplete="off" 
+                                    class="form-control  form-control-sm" 
+                                    id="leadership"  
+                                    type="text"
                                     formControlName="parent"
                                     [class.is-invalid]="userProfilesForm.get('parent')?.errors && userProfilesForm.get('parent')?.touched"
                                     [class.is-valid]="!userProfilesForm.get('parent')?.errors && userProfilesForm.get('parent')?.touched"

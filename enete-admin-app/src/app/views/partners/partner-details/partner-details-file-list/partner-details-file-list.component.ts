@@ -28,6 +28,7 @@ declare var require: any;
     files: File[] = []
 
     isDownload: boolean = false;
+    removeDockumentFileIndex: number|undefined
     
 
     constructor(
@@ -65,6 +66,28 @@ declare var require: any;
           }
           if(!this.isDownload && file){
             this.selectedDocumentFile = file
+          }
+        })
+
+        this.documentService.data$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(data => {
+          console.log(data)
+          console.log(this.removeDockumentFileIndex)
+          if(data?.entityType == "documents" && data?.requestType == 'delete'){
+            if(this.removeDockumentFileIndex !== undefined){
+              this.documents.removeAt(this.removeDockumentFileIndex);
+              this.removeDockumentFileIndex = undefined
+
+              if (this.documents && this.documents.length === 0) {
+                this.userProfilesForm.removeControl('documents');
+              }
+              if(this.offcanvasService.hasOpenOffcanvas()){
+                this.offcanvasService.dismiss()
+                this.removeInputElement()
+              } 
+            }
+            
           }
         })
     }
@@ -131,12 +154,24 @@ declare var require: any;
       //console.log('Deleting file:', document.get('file').value.name);
     
       this.partnerService?.confirmAction('deletePartnerFile', () => {
-        this.documents.removeAt(index);
+        //console.log()
+        let id = this.documents['controls'][index].get('id')?.value
+        if(id){
+          this.documentService.deleteDocumentById(id)
+          this.removeDockumentFileIndex = index
+        }else{
+          this.documents.removeAt(index);
+        }
+        
     
         // Проверяем, если это был последний элемент в массиве, удаляем весь массив
         if (this.documents && this.documents.length === 0) {
           this.userProfilesForm.removeControl('documents');
         }
+        if(this.offcanvasService.hasOpenOffcanvas()){
+          this.offcanvasService.dismiss()
+          this.removeInputElement()
+        } 
       });
       // Здесь может быть вызов сервиса для удаления файла с сервера
     }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\User\Profile\Employees;
 
+use App\Http\Requests\User\Profile\Employee\IndexEmployeeProfileRequest;
 use Illuminate\Http\Request;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -40,7 +41,8 @@ class ShowEmployeeProfileResource extends JsonResource
             "users"                     => UserResourceExpanded::collection($this->users),
             "documents"                 => DocumentsResource::collection($this->documents),
             "parent"                    => $this->whenLoaded('parent', function() {
-                return $this->parent->employee->vp_nr . ' ' . $this->parent->first_name . ' ' . $this->parent->last_name;
+                //return $this->parent->employee->vp_nr . ' ' . $this->parent->first_name . ' ' . $this->parent->last_name;
+                return new ParentEmployeeProfileResource($this->parent);
             }),
         ];
     }

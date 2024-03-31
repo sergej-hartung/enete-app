@@ -18,10 +18,10 @@
                         <!-- Размер файла -->
                         <div class="file-size">{{document.get('size')?.value | fileSize}}</div>
                         <!-- Действия с файлом -->
-                        <div class="file-action" (click)="downloadFile(document, $event); $event.stopPropagation()">
+                        <!-- <div class="file-action" (click)="downloadFile(document, $event); $event.stopPropagation()">
                             <i class="fa fa-eye"></i>
                             
-                        </div>
+                        </div> -->
                         <div class="file-action" (click)="downloadFile(document, $event); $event.stopPropagation()">
                             <i class="fa fa-download"></i>
                         </div>
