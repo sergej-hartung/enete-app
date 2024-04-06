@@ -10,10 +10,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export abstract class DataService<T> implements IDataService<T> {
     // BehaviorSubjects to hold and stream the current state of the data
-    protected _data = new BehaviorSubject<DataResponse<T[]> | null>(null);
+    public _data = new BehaviorSubject<DataResponse<T[]> | null>(null);
     public data$: Observable<DataResponse<T[]> | null> = this._data.asObservable();
 
-    protected _detailedData = new BehaviorSubject<DataResponse<T> | null>(null);
+    public _detailedData = new BehaviorSubject<DataResponse<T> | null>(null);
     public detailedData$: Observable<DataResponse<T> | null> = this._detailedData.asObservable();
 
     // Subjects for handling actions and notifications

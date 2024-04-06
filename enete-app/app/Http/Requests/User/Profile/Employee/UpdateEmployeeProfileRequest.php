@@ -36,6 +36,7 @@ class UpdateEmployeeProfileRequest extends FormRequest
             'internal_note'                                => 'nullable|string',
             'external_note'                                => 'nullable|string',
             'parent_id'                                    => 'nullable|integer|exists:user_profiles,id',
+            //'parent.id'                                    => 'nullable|sometimes|integer|exists:user_profiles,id',
 
             'employee_details.id'                          => 'nullable|integer|exists:user_employee_details,id',
             'employee_details.vp_nr'                       => 'sometimes|string|unique:user_employee_details,vp_nr|max:255',

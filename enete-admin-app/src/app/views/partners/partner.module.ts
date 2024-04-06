@@ -6,7 +6,7 @@ import { PartnerComponent } from './partner.component';
 import { PartnersListComponent } from './partners-list/partners-list.component';
 import { PartnerDetailsComponent } from './partner-details/partner-details.component';
 import { SharedModule } from '../../shared/shared.module';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbNavModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
 import { PartnerDetailsGenerallyComponent } from './partner-details/partner-details-generally/partner-details-generally.component';
@@ -42,7 +42,8 @@ import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
     NgxDropzoneModule,
     ImageCropperModule,
     FormsModule,
-    NgxExtendedPdfViewerModule
+    NgxExtendedPdfViewerModule,
+    NgbTypeaheadModule
     //PdfViewerModule
   ]
 })

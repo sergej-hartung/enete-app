@@ -23,7 +23,6 @@ class StoreController extends Controller
     {
         try {
             DB::beginTransaction();
-
             $this->userProfileService->createEmployeeProfile($request, $request->validated());
 
             DB::commit();

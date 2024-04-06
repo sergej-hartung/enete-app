@@ -13,5 +13,6 @@ export interface Partner {
     users: UserLogin[]|string;
     status: UserProfilStatus|string;
     selected?: boolean;
+    documents?: [];
 }
 

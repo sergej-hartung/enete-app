@@ -45,7 +45,8 @@ class UpdateEmployeeProfileResource extends JsonResource
             'vp_nr'                     => $this->employee ? $this->employee->vp_nr : null,
 
             "parent"                    => $this->whenLoaded('parent', function() {
-                return $this->parent->employee->vp_nr . ' ' . $this->parent->first_name . ' ' . $this->parent->last_name;
+                //return $this->parent->employee->vp_nr . ' ' . $this->parent->first_name . ' ' . $this->parent->last_name;
+                return new ParentEmployeeProfileResource($this->parent);
             }),
         ];
     }

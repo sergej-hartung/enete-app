@@ -17,6 +17,7 @@ declare var require: any;
   export class PartnerDetailsFileListComponent {
     @Input() userProfilesForm!: FormGroup;
     @Output() newDocuments = new EventEmitter<any>();
+
     private unsubscribe$ = new Subject<void>();
 
     private offcanvasService = inject(NgbOffcanvas);
@@ -29,7 +30,8 @@ declare var require: any;
 
     isDownload: boolean = false;
     removeDockumentFileIndex: number|undefined
-    
+    archive = false
+    loadingData = false
 
     constructor(
       private partnerService: PartnerService,
@@ -191,6 +193,21 @@ declare var require: any;
         this.renderer.removeChild(inputElement.parentNode, inputElement);
       }
     }
+
+    toggleArchive(){
+      this.archive = !this.archive
+
+      if(this.archive){
+        this.documentService.fetchData({'user_profile_id': '4', 'type': 'deleted'})
+      }
+      else{
+        this.documentService.fetchData()
+      }
+      // console.log(this.documentService._data.getValue())
+      // console.log(this.partnerService._detailedData.getValue()?.data['documents'])
+    }
+
+
 
     ngOnDestroy() {
       console.log('test')  

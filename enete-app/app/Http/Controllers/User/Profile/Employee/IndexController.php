@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Filters\UserProfileFilter;
 use App\Http\Resources\User\Profile\Employees\IndexEmployeeProfileResource;
 use App\Http\Requests\User\Profile\Employee\IndexEmployeeProfileRequest;
+use App\Http\Resources\User\Profile\Employees\ParentEmployeeProfileResource;
 use App\Services\UserProfileService;
 
 class IndexController extends Controller
@@ -19,11 +20,15 @@ class IndexController extends Controller
         $this->userProfileService = $userProfileService;
     }
 
-    public function __invoke(IndexEmployeeProfileRequest $request)
+    public function __invoke(IndexEmployeeProfileRequest $request, $type = null)
     { 
         $profiles = $this->userProfileService->getEmployeeProfiles($request->validated());
-
-        return IndexEmployeeProfileResource::collection($profiles);
+        if($type === 'parent'){
+            return ParentEmployeeProfileResource::collection($profiles);
+        }else{
+            return IndexEmployeeProfileResource::collection($profiles);
+        }
+        
     }
 }
 

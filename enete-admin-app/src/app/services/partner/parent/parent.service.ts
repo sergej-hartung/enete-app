@@ -1,23 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
+import { PartnerData, Partner } from '../../../models/partner/partner';
+import {DataService} from '../../data.service'
 import { BehaviorSubject, Observable, Subject, catchError, of, takeUntil } from 'rxjs';
-import { DataService } from '../../data.service';
-
 
 
 // PartnerService: Specific service extending DataService for handling Partner type data
 @Injectable({
   providedIn: 'root'
 })
-export class DocumentService extends DataService<any> {
+export class ParentService extends DataService<Partner> {
 
-
-  protected _file = new BehaviorSubject<any | null>(null);
-  public file$: Observable<any | null> = this._file.asObservable();
 
   private destroy$ = new Subject<void>();
-
+  private formDirty = new BehaviorSubject<boolean | null>(false);
 
   private currentFilters: {[key: string]: string} = {
     // Примеры параметров фильтрации
@@ -27,54 +24,18 @@ export class DocumentService extends DataService<any> {
     // 'sortField': 'last_name',
     // 'sortOrder': 'asc'
   };
-  
 
   constructor(http: HttpClient) { 
     super(http, environment.apiUrl);
   }
 
-  
-
-  // get filters(){
-  // }
-  
-  downloadDocumentById(id: number){
-    this.http.get(`${this.apiUrl}/user-dockuments/download/${id}`,{responseType: 'blob', observe: 'body'})
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe({
-        next: blob => {
-          console.log(blob)
-          this._file.next(blob);
-        },
-        error: (error) => {
-          this.handleError(error)
-        }
-      });
+  override get filters(){
+    return this.currentFilters
   }
 
-  deleteDocumentById(id: number){
-    this.http.delete<any>(`${this.apiUrl}/user-dockuments/${id}`)
-      .pipe(
-        takeUntil(this.destroy$),
-      )
-      .subscribe({
-        next: data => {
-          console.log(data)
-          this._data.next({
-            data: data,
-            requestType: 'delete',
-            entityType: 'documents'
-          });
-        },
-        error: (error) => {
-          this.handleError(error)
-        }
-      });
-  }
 
   fetchData(params?: {[key: string]: string}): void {
+
     // Обновляем фильтры, если они предоставлены
     if (params) {
       this.updateFilters(params);
@@ -83,7 +44,7 @@ export class DocumentService extends DataService<any> {
     // Создаем HttpParams на основе текущих фильтров
     let httpParams = new HttpParams({ fromObject: this.currentFilters });
   
-    this.http.get<any>(`${this.apiUrl}/user-dockuments`, { params: httpParams })
+    this.http.get<PartnerData>(`${this.apiUrl}/user-profile/employees/parent`, { params: httpParams })
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
@@ -98,7 +59,7 @@ export class DocumentService extends DataService<any> {
             this._data.next({
               data: data["data"],
               requestType: 'get',
-              entityType: 'documents'
+              entityType: 'partners'
             });
           }
         },
@@ -107,19 +68,19 @@ export class DocumentService extends DataService<any> {
   }
 
   fetchDetailedDataById(id: number): void {
-    
-  }
-
-  addItem(item: any | any): any {
    
   }
 
-  updateItem(id:number, item: any): void {
+  addItem(item: FormData | any): any {
+    
+  }
+
+  updateItem(id: number, item: FormData | any): any {
     
   }
 
   deleteItem(id: number): void {
-    
+
   }
 
 
@@ -128,14 +89,17 @@ export class DocumentService extends DataService<any> {
     this.errorSubject.next(errors);
   }
 
- 
-
-  resetDetailedData(): void {
-    this._detailedData.next(null);
-  }
-
-  confirmAction(action: string, proceedCallback: () => void) {
-    this.confirmActionSource.next({action, proceedCallback});
+  private extractBriefInfo(partner: Partner): any {
+    // Возвращаем только нужные поля
+    return {
+        id: partner.id,
+        first_name: partner.first_name,
+        last_name: partner.last_name,
+        status: partner.status,
+        vp_nr: partner.vp_nr,
+        accesses: partner.users,
+        // Добавьте другие поля, которые необходимы для краткого представления
+    };
   }
 
   private updateFilters(newFilters: {[key: string]: string}): void {
@@ -147,6 +111,38 @@ export class DocumentService extends DataService<any> {
         delete this.currentFilters[key];
       }
     });
+  }
+  
+  // private updateFilters(filters: {[key: string]: string}): void {
+
+  //   const updatedFilters = {...this.currentFilters};
+
+  //   Object.keys(filters).forEach(key => {
+  //       const value = filters[key];
+  //       if(value !== null && value !== '') {
+  //           updatedFilters[key] = value;
+  //       } else {
+  //           delete updatedFilters[key];
+  //       }
+  //   });
+
+  //   this.currentFilters = updatedFilters;
+  // }
+
+  resetDetailedData(): void {
+    this._detailedData.next(null);
+  }
+
+  confirmAction(action: string, proceedCallback: () => void) {
+    this.confirmActionSource.next({action, proceedCallback});
+  }
+
+  setFormDirty(isDirty: boolean) {
+    this.formDirty.next(isDirty);
+  }
+
+  getFormDirty(): Observable<boolean | null> {
+    return this.formDirty.asObservable();
   }
 
   ngOnDestroy() {

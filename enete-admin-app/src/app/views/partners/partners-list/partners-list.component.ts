@@ -1,10 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {Tablecolumn } from '../../../models/tablecolumn';
-import {Partner} from '../../../models/partner/partner';
 import { Subject} from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { PartnerService } from '../../../services/partner/partner.service'
-import { UserLogin } from '../../../models/user-login';
 import { FilterOption, GenericTableComponent } from '../../../shared/components/generic-table/generic-table.component';
 import { MainNavbarService } from '../../../services/main-navbar.service';
 import { StatusService } from '../../../services/partner/status/status.service';
@@ -21,11 +19,23 @@ import { Categorie } from '../../../models/partner/categorie/categorie';
 })
 export class PartnersListComponent implements OnInit, OnDestroy {
 
-  @ViewChild('genericTable') genericTableComponent!: GenericTableComponent<PartnerService>;
+  @ViewChild('genericTable') genericTable!: GenericTableComponent<PartnerService>;
 
-  IsExpandable?: boolean
-  parnerColumns: Tablecolumn[] = []
-  filters?: FilterOption[]
+  IsExpandable = true;
+  parnerColumns: Tablecolumn[] = [
+    { key: 'id', title: '#', sortable: true },
+    { key: 'vp_nr', title: 'GP-NR.', sortable: true }, 
+    { key: 'first_name', title: 'Vorname', sortable: true },
+    { key: 'last_name', title: 'Nachname', sortable: true },
+    { key: 'accesses', title: 'Zugang', isIcon: true },
+    { key: 'status', title: 'Status', sortable: true, isIcon: true },
+  ];
+
+  filters: FilterOption[] = [
+    { type: 'text', key: 'search', label: 'Search' },
+    { type: 'select', key: 'status_id', label: 'Status', options: [] },
+    { type: 'select', key: 'categorie_id', label: 'Kategorie', options: [] },
+  ];
 
   private unsubscribe$ = new Subject<void>();
   
@@ -34,120 +44,56 @@ export class PartnersListComponent implements OnInit, OnDestroy {
     private statusService: StatusService,
     private categorieService: CategorieService,
     private mainNavbarService: MainNavbarService
-  ) {
-
-    this.parnerColumns = [
-      {key: 'id', title: '#', sortable: true},
-      {key: 'vp_nr', title: 'GP-NR.', sortable: true},     
-      {key: 'first_name', title: 'Vorname', sortable: true},
-      {key: 'last_name', title: 'Nachname', sortable: true},
-      {key: 'accesses', title: 'Zugang', isIcon: true},
-      {key: 'status', title: 'Status', sortable: true, isIcon: true},
-    ]
-
-    this.filters = [
-      { type: 'text', key: 'search', label: 'Search' },
-      {
-        type: 'select',
-        key: 'status_id',
-        label: 'Status',
-        options: [],
-      },
-      {
-        type: 'select',
-        key: 'categorie_id',
-        label: 'Kategorie',
-        options: [],
-      }
-    ]
-
-    this.IsExpandable = true
-  }
+  ) {}
   
   ngOnInit() {
+    this.listenForIconClicks();
+    this.subscribeToData();
+  }
+
+  private listenForIconClicks(): void {
     this.mainNavbarService.iconClicks$
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(iconName => {
-        if (iconName === 'new') {
-          this.genericTableComponent.resetSelectedRow()
-        }
-    });
+      .subscribe(iconName => iconName === 'new' && this.genericTable.resetSelectedRow());
+  }
 
-    this.statusService.data$
+  private subscribeToData(): void {
+    this.setupServiceSubscription(this.statusService, 'statuses', 'status_id', 'Status');
+    this.setupServiceSubscription(this.categorieService, 'categories', 'categorie_id', 'Kategorie');
+  }
+
+  private setupServiceSubscription(service: StatusService | CategorieService, entityType: string, key: string, label: string): void {
+    service.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {
-        if(data){                       
-          if(data.requestType == "get" && data.entityType == 'statuses'){
-            this.setStatuses(data.data)
-            this.checkFilters()
-          }
+        if (data && data.requestType === "get" && data.entityType === entityType) {
+          this.updateFilterOptions(key, label, data.data);
+          this.updateSelectedFilters();
         }
-      })
-
-    this.categorieService.data$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {
-        // console.log(data)
-        if(data){                       
-          if(data.requestType == "get" && data.entityType == 'categories'){
-            
-            this.setCategories(data.data)
-            this.checkFilters()
-          }
-        }
-      })
+      });
   }
 
-  setCategories(data: Categorie[]){
-    let options = <{label: string, value: string}[]>[{label: 'Alle', value: ''}]
-
-    data.forEach(d => {
-      let option = {
-        label: d.name,
-        value: d.id.toString()
-      }
-      options.push(option)
-    })
-
-    let filter = this.filters?.find(f => f.type === "select" && f.key === 'categorie_id' && f.label === 'Kategorie')
-    if(filter) filter.options = options
+  private updateFilterOptions(key: string, label: string, data: Status[] | Categorie[]): void {
+    const options = [{ label: 'Alle', value: '' }, ...data.map(d => ({ label: d.name, value: d.id.toString() }))];
+    const filter = this.filters.find(f => f.key === key && f.label === label);
+    if (filter) filter.options = options;
   }
 
-  setStatuses(data: Status[]){
-    let options = <{label: string, value: string}[]>[{label: 'Alle', value: ''}]
-
-    data.forEach(d => {
-      let option = {
-        label: d.name,
-        value: d.id.toString()
-      }
-      options.push(option)
-    })
-
-    let filter = this.filters?.find(f => f.type === "select" && f.key === 'status_id' && f.label === 'Status')
-    if(filter) filter.options = options
-  }
-
-  checkFilters(){
-    if(this.partnerService.filters && !this.isObjectEmpty(this.partnerService.filters)){
-      let dataServiceFilters = this.partnerService.filters
-      Object.keys(dataServiceFilters).forEach(filterKey => {
-        let filter = this.filters?.find(f => f.type === 'select' && f.key == filterKey)
-        if(filter && 'options' in filter){
-          let selectedFilter = filter.options?.find(o => o.value === dataServiceFilters[filterKey])
-          // console.log(selectedFilter)
-          if(selectedFilter) selectedFilter['selected'] = true
+  private updateSelectedFilters(): void {
+    if (this.partnerService.filters && !this.isObjectEmpty(this.partnerService.filters)) {
+      const { filters } = this.partnerService;
+      Object.keys(filters).forEach(filterKey => {
+        const filter = this.filters.find(f => f.key === filterKey && f.type === 'select');
+        if (filter && filter.options) {
+          const selectedOption = filter.options.find(option => option.value === filters[filterKey]);
+          if (selectedOption) selectedOption.selected = true;
         }
-      })
+      });
     }
   }
 
-  isObjectEmpty(objectName: Object){
-    return (
-      objectName &&
-      Object.keys(objectName).length === 0 &&
-      objectName.constructor === Object
-    );
+  isObjectEmpty(obj: Object): boolean {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
   }
 
   ngOnDestroy() {

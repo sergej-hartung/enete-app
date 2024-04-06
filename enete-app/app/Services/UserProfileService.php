@@ -205,8 +205,24 @@ class UserProfileService{
 
     }
 
+    public function getProfileDocuments($data){
+        $documents = null;
+        if(isset($data['type']) && $data['type'] == 'deleted' && isset($data['user_profile_id'])){
+            $documents = UserProfileDocument::onlyTrashed()->where('user_profile_id', '=', $data['user_profile_id'])->get();  
+        }else if(isset($data['user_profile_id'])){
+            $documents = UserProfileDocument::where('user_profile_id', '=', $data['user_profile_id'])->get();
+        }
+
+        $fieldsToDecrypt = ['name']; 
+        foreach($documents as $document){
+            $this->decryptFields($document, $fieldsToDecrypt);
+        }
+
+        return $documents;
+    }
+
     public function downloadProfileDocument($documentId){
-        $document = UserProfileDocument::find($documentId);
+        $document = UserProfileDocument::withTrashed()->find($documentId);
        // dd($document);
         if ($document) {
             $this->decryptFields($document, ['path', 'name']);

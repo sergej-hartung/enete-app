@@ -150,6 +150,14 @@ $max-height-footer: 20px;
     color: #dcdcdc; 
 }
 
+.dropdown-item.active{
+    background-color: #484543; 
+    color: #dcdcdc; 
+}
+
+
+
+
 // Second Menu
 .second-navbar {
     max-height: $max-height-second-nav;
@@ -773,5 +781,50 @@ footer{
 .custom-canvas{
     .offcanvas-body{
         padding: 0;
+    }
+}
+
+.search-input + .dropdown-menu.show{
+    font-size: 0.8rem;
+
+    .ngb-highlight{
+        font-weight: 600;
+    }
+}
+
+.archive-btn{
+    text-align: right;
+    margin-bottom: 0.25rem;
+    .btn{
+        //color: #6c757d;
+        color: rgba(108, 117, 125, 0.7);
+        font-weight: 500;
+        font-size: 0.9rem;
+
+        &:hover{
+            background-color: rgba(200, 200, 200, 0.3) !important;
+            border-radius: 5px !important;
+        }
+        &:disabled{
+            border-color: transparent;
+        }
+
+        &:first-child:active{
+
+            background-color: rgba(200, 200, 200, 0.5) !important;
+            color: #545b62;
+            border-color: transparent;
+            font-weight: 600;
+        }
+        &.active{
+            background-color: transparent;
+            border-color: transparent;
+            color: #545b62;
+            font-weight: 600;
+
+            i{
+                color: rgb(105, 181, 72);
+            }
+        }
     }
 }

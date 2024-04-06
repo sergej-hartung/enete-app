@@ -20,16 +20,51 @@ Route::patch('/test', function(Request $request){
 });
 
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-dockuments', 'namespace' => 'App\Http\Controllers\User\Profile\Dockument'], function($router){
+    /**
+     * Get Dokuments
+     * kien Type (Get Dokuments) type = 'delete' (Get Deleted Dokuments)
+     */
+    Route::get('/', 'IndexController');
+    
+    /**
+     * Download Documents
+     */
     Route::get('/download/{id}', 'DownloadController');
+
+    /**
+     * Softdelete Dokument
+     */
     Route::delete('/{id}', 'DeleteController');
 });
 
 // user-profiele-employee
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-profile', 'namespace' => 'App\Http\Controllers\User\Profile\Employee'], function($router){
-    Route::get('/employees', 'IndexController')->middleware('transform.boolean');
+    
+    /**
+     * Get Employees
+     * kien Type (Get Employees) type = 'parent' (Get Parent Employees)
+     */
+    Route::get('/employees/{type?}', 'IndexController')
+        ->where('type', '[A-Za-z]+')
+        ->middleware('transform.boolean');
+
+    /**
+     * Get Detailed Employee
+     */
+    Route::get('/employees/{profileId}', 'ShowController')
+        ->where('profileId', '[0-9]+');
+
+    /**
+     * Create Employee
+     */
     Route::post('/employees', 'StoreController')->middleware('transform.boolean');
-    Route::get('/employees/{profileId}', 'ShowController');
-    Route::patch('/employees/{profileId}', 'UpdateController')->middleware('transform.boolean');
+
+    /**
+     * Update Employee
+     */
+    Route::patch('/employees/{profileId}', 'UpdateController')
+        ->where('profileId', '[0-9]+')
+        ->middleware('transform.boolean');
 });
 
 // user-profiele-admin

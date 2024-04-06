@@ -1,3 +1,13 @@
+<div class="col ps-2 pe-2 archive-btn">
+    <button 
+        class="btn"
+        [class.active]="archive"
+        [disabled]="loadingData"
+        (click)="toggleArchive()"
+    ><i class="fa-solid fa-box-archive"></i> Archiv</button>
+</div>
+
+
 <div class="container-fluid" *ngIf="documents">
     <div class="row">
         <div class="col">
@@ -55,4 +65,3 @@
 		
 	</div>
 </ng-template>
-

@@ -657,7 +657,7 @@
                                 </select>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-8 pe-1">
                                 <label 
@@ -667,16 +667,20 @@
                                 >Führung</label>
                                 <input 
                                     autocomplete="off" 
-                                    class="form-control  form-control-sm" 
+                                    class="form-control  form-control-sm search-input" 
                                     id="leadership"  
                                     type="text"
                                     [(ngModel)]="displayParentData"
-                                    (ngModelChange)="onParentDataChange($event)"
+                                    [ngbTypeahead]="search"
+                                    [inputFormatter]="formatter"
+                                    [resultFormatter]="formatter"
+                                    (ngModelChange)="selectedParentEmployee()"
                                     (focus)="clearInput()"
                                     (blur)="restoreInputData()"
                                     [ngModelOptions]="{standalone: true}"
+                                    
                                 >
-                                <!-- <div 
+                                <!-- <div (ngModelChange)="onParentDataChange($event)"
                                     class="invalid-feedback custom-invalid-feedback"
                                     *ngIf="userProfilesForm.get('parent')?.errors?.['pattern']"
                                 > 
@@ -691,7 +695,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-8 pe-1">
                                 <label 
                                     for="leadership" 
@@ -721,7 +725,7 @@
                                     <option>UVP</option>
                                 </select>
                             </div>
-                        </div>
+                        </div> -->
                     </form>
                 </div>
             </app-card>
