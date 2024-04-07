@@ -55,7 +55,7 @@ export class AdminService extends DataService<Partner> {
       )
       .subscribe({
         next: data => {
-          console.log(data)
+            
           if (data) {
             this._data.next({
               data: data["data"],
@@ -75,7 +75,7 @@ export class AdminService extends DataService<Partner> {
       )
       .subscribe({
         next: data => {
-          console.log(data)
+            
           this._detailedData.next({
             data: data["data"],
             requestType: 'get',
@@ -89,14 +89,14 @@ export class AdminService extends DataService<Partner> {
   }
 
   addItem(item: FormData | any): any {
-    console.log(item);
+      
     this.http.post<Partner>(`${this.apiUrl}/user-profile/admins`, item)
         .pipe(
           takeUntil(this.destroy$),
         )
         .subscribe({
           next: newPartner => {
-            console.log(newPartner)
+              
               this._detailedData.next({
                 data: newPartner,
                 requestType: 'post',
@@ -105,7 +105,7 @@ export class AdminService extends DataService<Partner> {
               //this.successSubject.next('created');
           },
           error: (error) => {
-            console.log(error)
+              
             this.handleError(error)
           }
       });
@@ -139,7 +139,7 @@ export class AdminService extends DataService<Partner> {
            
         },
         error: (error) => {
-          console.log(error)
+            
           this.handleError(error)
         }
     });

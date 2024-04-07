@@ -106,25 +106,25 @@ export class PartnerDetailsComponent {
 
   private processDetailedData(data: any): void {
     if(data && data.requestType == "get" && data.entityType == 'partner'){
-      console.log('get')
-      console.log(data)
+        
+        
       this.resetUserProfilesForm()
       this.patchValueProfilesForm(data, false)
       this.dataLoadedOrNew = true
     }
     if(data && data.requestType == "post" && data.entityType == 'partner'){
-      console.log('post')
-      console.log(data)
+        
+        
 
       this.resetUserProfilesForm()
       this.dataLoadedOrNew = false
       this.active = 1
       this.partnerService.fetchData()
-      console.log(this.userProfilesForm)
+        
     }
     if(data && data.requestType == "patch" && data.entityType == 'partner'){
-      console.log('patch')
-      console.log(data)     
+        
+        
 
       this.resetUserProfilesForm()
       this.patchValueProfilesForm(data, false)
@@ -141,10 +141,10 @@ export class PartnerDetailsComponent {
 
   private handleFormChanges() {
     this.userProfilesForm.valueChanges.pipe(takeUntil(this.unsubscribe$), debounceTime(500)).subscribe(values => {
-        console.log(values)
-        console.log(this.userProfilesForm)
+          
+          
         if(this.userProfilesForm.dirty) { //   
-          console.log('dirty')
+            
           this.partnerService.setFormDirty(this.userProfilesForm.dirty);
           if(this.userProfilesForm.valid){
             this.mainNavbarService.setIconState('save', true, false);
@@ -164,14 +164,14 @@ export class PartnerDetailsComponent {
         }
 
         if (iconName === 'save') {
-          console.log('submit Save')
+            
           this.submitForm()
         }
       });
   }
 
   addNewDocuments(files: File[]){
-    console.log(files);
+      
     let documentsChanged = false;
     Array.from(files).forEach(file => {
       this.formService.addDocuments(this.userProfilesForm, file)
@@ -185,7 +185,7 @@ export class PartnerDetailsComponent {
 
 
   addNewAccess(newUser: boolean = false){
-    console.log(newUser)
+      
 
     this.formService.addAccess(this.userProfilesForm, newUser)
     this.setRequiredStatus();
@@ -203,7 +203,7 @@ export class PartnerDetailsComponent {
 
   private prepareFormData(formGroup: FormGroup): FormData {
     const formData = new FormData();
-    console.log(this.getDirtyValues(this.userProfilesForm))
+      
     // Обработка обычных полей формы
     Object.keys(this.getDirtyValues(this.userProfilesForm)).forEach(key => {
       if (!['users', 'documents', 'contacts', 'addresses', 'banks', 'employee_details', 'parent'].includes(key)) {
@@ -213,7 +213,7 @@ export class PartnerDetailsComponent {
       if(['parent'].includes(key)){
         Object.keys(this.userProfilesForm.value[key]).forEach(k => {
           if(k === 'id' && this.userProfilesForm.value[key][k]){
-            console.log(this.userProfilesForm.value[key][k])
+              
             formData.append('parent_id', this.userProfilesForm.value[key][k]);
           }
         })
@@ -409,7 +409,7 @@ export class PartnerDetailsComponent {
       })
     }
 
-    console.log(statuses)
+      
     if(this.userProfilesForm.get('status_id')?.value == 3 || this.userProfilesForm.get('status_id')?.value == 4){
       return true
     }else{
@@ -426,7 +426,7 @@ export class PartnerDetailsComponent {
   }
   
   ngOnDestroy() {
-    console.log('destroy Partners')
+      
     this.resetUserProfilesForm()
     this.dataLoadedOrNew = false
     this.userLoadOrNew = false

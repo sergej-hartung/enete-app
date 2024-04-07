@@ -65,7 +65,7 @@ export class GenericTableComponent<T> {
             this.isLoaded = true
           }            
           //this.isLoded = true 
-          // console.log(data)       
+          //          
         });
     }
 
@@ -76,20 +76,20 @@ export class GenericTableComponent<T> {
   //   if(this.dataService && this.dataService?.filters && !this.isObjectEmpty(this.dataService.filters)){
   //     let dataServiceFilters = this.dataService.filters
   //     Object.keys(dataServiceFilters).forEach(filterKey => {
-  //       console.log(this.filters)
+  //         
   //       let filter = this.filters?.find(f => {
-  //         //console.log(f.type === 'select')
-  //         //console.log(f.key == filterKey)
-  //         console.log(f.key)
-  //         //console.log(filterKey)
+  //         //  
+  //         //  
+  //           
+  //         //  
   //         // f.type === 'select' && 
   //       })
-  //       console.log(filter)
-  //       console.log(this.filters)
-  //       console.log(filterKey)
+  //         
+  //         
+  //         
   //       if(filter && 'options' in filter){
   //         let selectedFilter = filter.options?.find(o => o.value === dataServiceFilters[filterKey])
-  //         console.log(selectedFilter)
+  //           
   //         if(selectedFilter) selectedFilter['selected'] = true
   //       }
   //     })
@@ -149,7 +149,7 @@ export class GenericTableComponent<T> {
         if(access) return {'icon': 'fa-solid fa-key', 'color': '#C41425'}
       }
 
-      console.log(accesses)
+        
     }  
     return {'icon': 'fa-solid fa-key', 'color': '#ccc'}
     //return access ? {'icon': 'fa-solid fa-key', 'color': '#69b548'} : {'icon': 'fa-solid fa-key', 'color': '#C41425'}; // Пример классов для состояния доступа
@@ -160,12 +160,12 @@ export class GenericTableComponent<T> {
       if (row.selected) {
         return;
       }
-      console.log(this.data)
+        
       this.data?.forEach(d => d.selected = false);
       row.selected = true;
   
       if (this.rowSelectionMode === 'service' && this.dataService) {
-        //console.log("Взаимодействие с сервисом", row);
+        //  
         this.dataService.fetchDetailedDataById(row['id'])
         
       } else if(this.rowSelectionMode === 'parent') {
@@ -191,7 +191,7 @@ export class GenericTableComponent<T> {
 
   sort(column: string): void {
     this.dataService?.confirmAction('sort', () => {
-      console.log(column)
+        
       if (this.currentSortColumn === column) {
         this.currentSortOrder = this.currentSortOrder === 'asc' ? 'desc' : this.currentSortOrder === 'desc' ? '' : 'asc';
         if(this.currentSortOrder === '') this.currentSortColumn = null;
@@ -216,7 +216,7 @@ export class GenericTableComponent<T> {
   toggleExpand() {
     this.isExpanded = !this.isExpanded;
     // this.expanded.emit(this.isExpanded); 
-     console.log(this.isExpanded)
+       
   }
 
   applyFilter(filter: { key: string; value: any }) {

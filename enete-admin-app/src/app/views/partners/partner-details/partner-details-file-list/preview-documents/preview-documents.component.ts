@@ -2,6 +2,7 @@ import { Component, inject, Input, SimpleChanges, TemplateRef} from "@angular/co
 import { NgbDatepickerModule, NgbOffcanvas, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
 import { PartnerService } from "../../../../../services/partner/partner.service";
+import { DocumentService } from "../../../../../services/partner/documents/documents.service";
 
 @Component({
     selector: 'app-preview-documents',
@@ -14,35 +15,33 @@ export class PreviewDocumentsComponent {
     isImage: boolean = false;
     fileUrl: string = ''
     
-    constructor(
-        private partnerService: PartnerService,
-    ) {
+    constructor() {
         pdfDefaultOptions.assetsFolder = 'bleeding-edge';
     }
 
     
     ngOnInit(): void {
-      console.log(this.file)
+        
       if (this.file) {
         const fileType = this.file.type;
         this.isImage = fileType.startsWith('image/');
-        console.log(this.isImage);
+          
         if(this.isImage){
           this.getImageSrc()
-          console.log(this.fileUrl)
+            
         }
       }
     }
 
     ngOnChanges(changes: SimpleChanges) {
-      console.log(this.file)
+        
       if (this.file) {
         const fileType = this.file.type;
         this.isImage = fileType.startsWith('image/');
-        console.log(this.isImage);
+          
         if(this.isImage){
           this.fileUrl = this.getImageSrc()
-          console.log(this.fileUrl)
+            
         }
       }
     }
@@ -52,6 +51,12 @@ export class PreviewDocumentsComponent {
         return URL.createObjectURL(this.file);
       }
       return ''
+    }
+
+    ngOnDestroy() {
+      this.fileUrl = ''
+      this.isImage = false;
+        
     }
 }
 

@@ -6,6 +6,7 @@ import { PartnerService } from "../../../../services/partner/partner.service";
 import { DocumentService } from "../../../../services/partner/documents/documents.service"
 
 import { Subject, takeUntil } from "rxjs";
+import { FormService } from "../../../../services/form.service";
 
 declare var require: any;
 
@@ -28,33 +29,37 @@ declare var require: any;
     
     files: File[] = []
 
+    
     isDownload: boolean = false;
     removeDockumentFileIndex: number|undefined
+
     archive = false
     loadingData = false
+    archiveForm: FormGroup
 
     constructor(
       private partnerService: PartnerService,
       private documentService: DocumentService,
-      private renderer: Renderer2
-    ) {}
+      private renderer: Renderer2,
+      private formService: FormService
+    ) {
+      this.archiveForm = this.formService.initArchiveDocuments()
+    }
 
     ngOnInit() {
 
-      this.partnerService.confirmAction$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(({action, proceedCallback}) => {
+      this.partnerService.confirmAction$.pipe(takeUntil(this.unsubscribe$)).subscribe(({action, proceedCallback}) => {
           if(action == 'selectRow'){
             this.selectedDokument = undefined
             this.selectedDocumentFile = undefined
-            console.log('resetSelected')
+            this.archive = false
+            this.resetArchivForm()
+              
           }     
       });
 
-      this.documentService.file$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(file => {
-          console.log(file)
+      this.documentService.file$.pipe(takeUntil(this.unsubscribe$)).subscribe(file => {
+            
           if(this.isDownload && file){
             const url = window.URL.createObjectURL(file);
             const anchor = document.createElement('a');
@@ -69,50 +74,69 @@ declare var require: any;
           if(!this.isDownload && file){
             this.selectedDocumentFile = file
           }
-        })
+      })
 
-        this.documentService.data$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(data => {
-          console.log(data)
-          console.log(this.removeDockumentFileIndex)
-          if(data?.entityType == "documents" && data?.requestType == 'delete'){
-            if(this.removeDockumentFileIndex !== undefined){
-              this.documents.removeAt(this.removeDockumentFileIndex);
-              this.removeDockumentFileIndex = undefined
+      this.documentService.data$.pipe(takeUntil(this.unsubscribe$)).subscribe(data => {
+          
+          
+        if(data?.entityType == "documents" && data?.requestType == 'delete'){
+          if(this.removeDockumentFileIndex !== undefined){
+            this.documents.removeAt(this.removeDockumentFileIndex);
+            this.removeDockumentFileIndex = undefined
 
-              if (this.documents && this.documents.length === 0) {
-                this.userProfilesForm.removeControl('documents');
-              }
-              if(this.offcanvasService.hasOpenOffcanvas()){
-                this.offcanvasService.dismiss()
-                this.removeInputElement()
-              } 
+            if (this.documents && this.documents.length === 0) {
+              this.userProfilesForm.removeControl('documents');
             }
-            
+            if(this.offcanvasService.hasOpenOffcanvas()){
+              this.offcanvasService.dismiss()
+              this.removeInputElement()
+            } 
+          } 
+        }
+
+        if(data?.entityType == "documents" && data?.requestType == 'get'){
+          if(data['data'] && Array.isArray(data['data'])){
+            this.patchArchiveForm(data['data'])
+          }      
+        }
+
+        if(data?.entityType == "documentRestore" && data?.requestType == 'get'){
+          if(this.archive){
+            const userProfileId = this.userProfilesForm.get('id')?.value
+            if(userProfileId){
+              this.documentService.fetchData({'user_profile_id': userProfileId, 'type': 'deleted'})
+              this.partnerService.fetchDetailedDataById(userProfileId)
+            }     
           }
-        })
+        }
+      })
     }
     
     get documents(): FormArray{
       return this.userProfilesForm.get('documents') as FormArray;
     }
 
+    get archiveDocuments(): FormArray{
+      return this.archiveForm?.get('documents') as FormArray
+    }
+
     fileChangeEvent(event: any) {
-      console.log(event)
+        
       const filesToAdd = event.addedFiles as FileList;
       this.newDocuments.emit(filesToAdd)
     }
 
     onRemove(event: any){
-      console.log(event);
+        
       this.files.splice(this.files.indexOf(event), 1);
 
     } 
 
     toggleDocuments(document: any, index: number, content: TemplateRef<any>, event: any){
       event.stopPropagation()
-      
+        
+        
+        
       if(this.selectedDokument == (index + 1)){
         this.selectedDokument = undefined
         if(this.offcanvasService.hasOpenOffcanvas()){
@@ -141,7 +165,7 @@ declare var require: any;
     }
 
     downloadFile(document: any, event: any){
-      console.log('downloads')
+        
       event.stopPropagation()
       let id = document.get('id')?.value
       if(id){
@@ -152,8 +176,11 @@ declare var require: any;
 
     deleteFile(document: any, index: number, event: any) {
       event.stopPropagation()
-      console.log('delited')
-      //console.log('Deleting file:', document.get('file').value.name);
+        
+      //  
+
+      this.selectedDokument = undefined
+      this.selectedDocumentFile = undefined
     
       this.partnerService?.confirmAction('deletePartnerFile', () => {
         //console.log()
@@ -195,22 +222,66 @@ declare var require: any;
     }
 
     toggleArchive(){
+        
+
+      this.selectedDokument = undefined
+      this.selectedDocumentFile = undefined
+      if(this.offcanvasService.hasOpenOffcanvas()){
+        this.offcanvasService.dismiss()
+        this.removeInputElement()
+      } 
+
       this.archive = !this.archive
 
       if(this.archive){
-        this.documentService.fetchData({'user_profile_id': '4', 'type': 'deleted'})
+        const userProfileId = this.userProfilesForm.get('id')?.value
+        if(userProfileId){
+          this.documentService.fetchData({'user_profile_id': userProfileId, 'type': 'deleted'})
+        }     
       }
-      else{
-        this.documentService.fetchData()
-      }
-      // console.log(this.documentService._data.getValue())
-      // console.log(this.partnerService._detailedData.getValue()?.data['documents'])
+    }
+
+    restoreDockumentArchive(document: any, event: any){
+      event.stopPropagation()
+      this.selectedDokument = undefined
+      this.selectedDocumentFile = undefined
+
+      let id = document.get('id')?.value
+      if(id){
+        this.documentService.restoreDocumentById(id)
+        if(this.offcanvasService.hasOpenOffcanvas()){
+          this.offcanvasService.dismiss()
+          this.removeInputElement()
+        } 
+        // this.selectedDokument = undefined
+        // this.selectedDocumentFile = undefined
+
+        // if(this.archive){
+        //   const userProfileId = this.userProfilesForm.get('id')?.value
+        //   if(userProfileId){
+        //     this.documentService.fetchData({'user_profile_id': userProfileId, 'type': 'deleted'})
+        //   }     
+        // }
+      }  
+      //this.documentService.restoreDocumentById()
+    }
+
+    patchArchiveForm(data: any[]){
+      this.resetArchivForm()
+      data.forEach(document => {
+        this.formService.addDocuments(this.archiveForm, document)
+      })
+      this.archiveForm.get('documents')?.patchValue(data)
+    }
+
+    resetArchivForm(){
+      this.archiveForm.reset()
+      this.archiveForm.removeControl('documents')
     }
 
 
-
     ngOnDestroy() {
-      console.log('test')  
+        
       if(this.offcanvasService.hasOpenOffcanvas()){
         this.offcanvasService.dismiss()
         this.removeInputElement()
@@ -218,6 +289,10 @@ declare var require: any;
       this.selectedDokument = undefined
       this.selectedDocumentFile = undefined
 
+      this.archive = false
+      this.resetArchivForm()
+      this.documentService.resetData()
+      this.documentService.resetFile()
       this.unsubscribe$.next();
       this.unsubscribe$.complete();
     }

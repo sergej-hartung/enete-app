@@ -65,8 +65,8 @@ export class AdminDetailsComponent {
   ngOnInit() {
     
     this.setRequiredStatus();
-    console.log(this.requiredStatus)
-    console.log('test')
+      
+      
     // this.statusService.data$
     //   .pipe(takeUntil(this.unsubscribe$))
     //   .subscribe(data => {
@@ -80,7 +80,7 @@ export class AdminDetailsComponent {
     // this.categorieService.data$
     //   .pipe(takeUntil(this.unsubscribe$))
     //   .subscribe(data => {
-    //     // console.log(data)
+    //     //   
     //     if(data){                       
     //       if(data.requestType == "get" && data.entityType == 'categories'){
     //         this.categories = data.data
@@ -91,7 +91,7 @@ export class AdminDetailsComponent {
     //   this.careerService.data$
     //   .pipe(takeUntil(this.unsubscribe$))
     //   .subscribe(data => {
-    //     // console.log(data)
+    //     //   
     //     if(data){                       
     //       if(data.requestType == "get" && data.entityType == 'careers'){
     //         this.careers = data.data
@@ -104,7 +104,7 @@ export class AdminDetailsComponent {
     this.adminService.errors$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(errors => {
-      console.log(errors)
+        
       this.mainNavbarService.setIconState('save', true, true)
    
       if (errors?.vp_nr?.includes("The vp nr has already been taken.")) {
@@ -112,7 +112,7 @@ export class AdminDetailsComponent {
       }
       if (errors?.egon_nr?.includes("The egon nr has already been taken.")) {
         this.userProfilesForm.controls['egon_nr'].setErrors({ egonNrExists: true });
-        console.log(this.userProfilesForm)
+          
       }
 
       if (errors?.email?.includes("The email has already been taken.")) {
@@ -125,11 +125,11 @@ export class AdminDetailsComponent {
       this.adminService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(data => { 
-           console.log(data)
+             
           if(data){                       
             if(data.requestType == "get" && data.entityType == 'admin'){
-              console.log('get')
-              console.log(data)
+                
+                
               this.resetUserProfilesForm()
               this.patchValueProfilesForm(data, false)
               //this.addNewAccess()
@@ -138,8 +138,8 @@ export class AdminDetailsComponent {
               this.user
             }
             if(data.requestType == "post" && data.entityType == 'admin'){
-              console.log('post')
-              console.log(data)
+                
+                
 
               this.resetUserProfilesForm()
               this.dataLoadedOrNew = false
@@ -147,8 +147,8 @@ export class AdminDetailsComponent {
               this.adminService.fetchData()
             }
             if(data.requestType == "patch" && data.entityType == 'admin'){
-              console.log('patch')
-              console.log(data)     
+                
+                     
 
               this.resetUserProfilesForm()
               this.patchValueProfilesForm(data, false)
@@ -159,7 +159,7 @@ export class AdminDetailsComponent {
           } else if(data == null ){
             this.adminService.setFormDirty(false)
             this.mainNavbarService.setIconState('save', true, true)
-            console.log(this.userProfilesForm)
+              
             this.userProfilesForm.reset()
             this.dataLoadedOrNew = false
           }      
@@ -171,10 +171,10 @@ export class AdminDetailsComponent {
       .pipe(takeUntil(this.unsubscribe$))
       .pipe(debounceTime(500))
       .subscribe(values => {
-        console.log(values)
-        console.log(this.userProfilesForm)
+          
+          
         if(this.userProfilesForm.dirty) { //   
-          console.log('dirty')
+            
           this.adminService.setFormDirty(this.userProfilesForm.dirty);
           if(this.userProfilesForm.valid){
             this.mainNavbarService.setIconState('save', true, false);
@@ -191,9 +191,9 @@ export class AdminDetailsComponent {
         if (iconName === 'new') {
             this.active = 1
             this.setDataNewUserProfile()  
-            console.log(this.userProfilesForm)         
+                       
             this.dataLoadedOrNew = true          
-            console.log('new')
+              
           // Обработка нажатия на иконку new
         }
         // if(iconName === 'new' && this.active === 2){
@@ -201,27 +201,27 @@ export class AdminDetailsComponent {
         // }
 
         if (iconName === 'save') {
-          console.log('submit Save')
+            
           this.submitForm()
         }
       });
-      //console.log(this.users)
+      //  
       
   }
 
 
   addNewAccess(newUser: boolean = false){
-    console.log(newUser)
+      
     if(!this.users){
       this.userProfilesForm.addControl("users", new FormArray([this.createUserFormGroup(newUser)]))
     }else{
       if(this.users){
         this.users.push(this.createUserFormGroup(newUser))
       }
-      console.log(this.userProfilesForm)
+        
     }
     this.setRequiredStatus();
-    console.log(this.requiredStatus)
+      
     //this.selectedUser = this.getLastUser()
   }
 
@@ -237,9 +237,9 @@ export class AdminDetailsComponent {
   
     // Обработка массива users
     this.getDirtyValues(this.userProfilesForm)['users']?.forEach((user:any, index:any) => {
-      // console.log(this.getDirtyValues(this.userProfilesForm))
-      // console.log(index)
-      // console.log(user)
+      //   )
+      //   
+      //   
       Object.keys(user).forEach(field => {
         const value = user[field];
         if (value instanceof File) {
@@ -248,7 +248,7 @@ export class AdminDetailsComponent {
 
           formData.append(`users[${index}][${field}]`, value);
         }
-        // console.log(value)
+        //   
       });
     });
 
@@ -262,7 +262,7 @@ export class AdminDetailsComponent {
       });
 
     });
-    console.log(this.userProfilesForm.get('id')?.value)
+      
 
     if(this.userProfilesForm.get('id')?.value){
       this.adminService.updateItem(this.userProfilesForm.get('id')?.value, formData)
@@ -332,7 +332,7 @@ export class AdminDetailsComponent {
 
   fileChangeEvent(event: any): void {
     this.file = event.addedFiles[0] ? event.addedFiles[0] : null
-    console.log(this.file)
+      
   }
 
   rotateLeft() {
@@ -352,18 +352,18 @@ export class AdminDetailsComponent {
   }
 
   updateRotation() {
-    console.log('rotate')
+      
     this.transform = {
       ...this.transform,
       rotate: this.rotation
     };
 
-    console.log(this.transform)
+      
   }
 
 
   onRemove() {
-		// console.log(event);
+		//   
 		// this.files.splice(this.files.indexOf(event), 1);
     this.file = undefined
     this.croppedImage = undefined
@@ -382,7 +382,7 @@ export class AdminDetailsComponent {
   }
 
   imgConfirmed(){
-    console.log(this.croppedImageBlob)
+      
 
     this.user.patchValue({
       avatar: this.croppedImageBlob
@@ -393,8 +393,8 @@ export class AdminDetailsComponent {
 
   imageCropped(event: ImageCroppedEvent) {
     if (event.objectUrl !== null && event.objectUrl !== undefined){
-      console.log(event)
-      if(event.blob && event.blob instanceof Blob) console.log(URL.createObjectURL(event.blob))
+        
+      if(event.blob && event.blob instanceof Blob)   
       
       this.croppedImageBlob = event.blob
       this.croppedImage = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
@@ -405,11 +405,11 @@ export class AdminDetailsComponent {
 
   imageLoaded(image: LoadedImage) {
     this.showCropper = true;
-    console.log('Image loaded');
+      
   }
 
   cropperReady(sourceImageDimensions: Dimensions) {
-    console.log('Cropper ready', sourceImageDimensions);
+      
     this.loading = false;
   }
 
@@ -422,9 +422,9 @@ export class AdminDetailsComponent {
     const user = this.user;
     if (user) {
       const avatar: Blob | null = user?.get('avatar')?.value ?? null;
-      //console.log(avatar)
+      //  
       if (avatar instanceof Blob) {
-        //console.log(avatar)
+        //  
         if (this.urlCache.has(avatar)) {
           // Возвращаем кэшированный URL, если он уже был создан для этого blob
           return this.urlCache.get(avatar) || null;
@@ -654,7 +654,7 @@ export class AdminDetailsComponent {
   //     })
   //   }
 
-  //   console.log(statuses)
+  //     
   //   if(this.userProfilesForm.get('status_id')?.value == 3 || this.userProfilesForm.get('status_id')?.value == 4){
   //     return true
   //   }else{
@@ -670,13 +670,13 @@ export class AdminDetailsComponent {
   }
   
   ngOnDestroy() {
-    console.log('destroy Admin')
+      
     this.resetUserProfilesForm()
     this.dataLoadedOrNew = false
     this.userLoadOrNew = false
-    console.log(this.userProfilesForm)
-    console.log(this.dataLoadedOrNew)
-    console.log(this.userLoadOrNew)
+      
+      
+      
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     

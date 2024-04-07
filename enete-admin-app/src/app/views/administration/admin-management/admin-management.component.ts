@@ -42,10 +42,10 @@ export class AdminManagementComponent {
     //   .subscribe(iconName => {
     //     if (iconName === 'new') {
     //       // this.partnerService.data$.subscribe(data => {
-    //       //   console.log(data)
+    //       //     
     //       // })
     //       // this.partnerService.resetDetailedData();
-    //       console.log('new')
+    //         
     //       //this.showNotification()
     //       // Обработка нажатия на иконку save
     //     }
@@ -54,7 +54,7 @@ export class AdminManagementComponent {
     this.mainNavbarService.confirmAction$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({action, proceedCallback}) => {
-        console.log(action)
+          
         if(action == 'new'){
           this.adminService.getFormDirty()
           .pipe(take(1))
@@ -76,7 +76,7 @@ export class AdminManagementComponent {
     this.adminService.confirmAction$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(({action, proceedCallback}) => {
-        console.log(action)
+          
         if(action == 'selectRow' || action == 'sort' || action == 'filter'){
           this.adminService.getFormDirty()
           .pipe(take(1))

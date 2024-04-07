@@ -46,7 +46,7 @@ export class PartnerDetailsAccessComponent {
     private partnerService: PartnerService,
   ) {
     // if(this.userProfilesForm.controls['users']){
-    //   console.log(this.userProfilesForm.get('users'))
+    //     
     // }
     //this.selectedUser = this.getLastUser() ? this.getLastUser() : false
     
@@ -55,7 +55,7 @@ export class PartnerDetailsAccessComponent {
   ngOnInit() {
     // this.selectedUser = this.getLastUser() ? this.getLastUser() : false
     // this.selectedUserIndex = this.getLastUserIndex()
-    console.log(this.selectedUser)
+      
 
     // if(this.userProfilesForm){
     //   this.selectedUser = this.getLastUser()
@@ -66,7 +66,7 @@ export class PartnerDetailsAccessComponent {
       .subscribe(({action, proceedCallback}) => {
         if(action == 'selectRow'){
           this.resetSelectedUser()
-          console.log('resetSelected')
+            
         }     
     });
 
@@ -74,7 +74,7 @@ export class PartnerDetailsAccessComponent {
       this.partnerService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(data => { 
-          console.log(data)
+            
           if(data){                       
             if(data.requestType == "get" && data.entityType == 'partner'){
 
@@ -97,9 +97,9 @@ export class PartnerDetailsAccessComponent {
     const usersArray = this.users;
     if (usersArray) {
       const avatar: Blob | null = usersArray.at(userIndex)?.get('avatar')?.value ?? null;
-      //console.log(avatar)
+      //  
       if (avatar instanceof Blob) {
-        //console.log(avatar)
+        //  
         if (this.urlCache.has(avatar)) {
           // Возвращаем кэшированный URL, если он уже был создан для этого blob
           return this.urlCache.get(avatar) || null;
@@ -117,7 +117,7 @@ export class PartnerDetailsAccessComponent {
   }
 
   onSelectUser(i: number){
-    console.log(i)
+      
     if(this.selectedUserIndex == i){
       this.resetSelectedUser()
     }else{
@@ -143,7 +143,7 @@ export class PartnerDetailsAccessComponent {
     const role_id = "2"
     const status = "1"
     const password = this.generatePassword(10)
-    console.log(login)
+      
     this.selectedUser.patchValue({
       login_name: login,
       role_id: role_id,
@@ -157,14 +157,14 @@ export class PartnerDetailsAccessComponent {
 
   fileChangeEvent(event: any): void {
     this.file = event.addedFiles[0] ? event.addedFiles[0] : null
-    console.log(this.file)
+      
   }
 
 
   imageCropped(event: ImageCroppedEvent) {
     if (event.objectUrl !== null && event.objectUrl !== undefined){
-      console.log(event)
-      if(event.blob && event.blob instanceof Blob) console.log(URL.createObjectURL(event.blob))
+        
+      if(event.blob && event.blob instanceof Blob)   
       
       this.croppedImageBlob = event.blob
       this.croppedImage = this.sanitizer.bypassSecurityTrustUrl(event.objectUrl);
@@ -176,12 +176,12 @@ export class PartnerDetailsAccessComponent {
 
   imageLoaded(image: LoadedImage) {
     this.showCropper = true;
-    console.log('Image loaded');
+      
   }
 
 
   cropperReady(sourceImageDimensions: Dimensions) {
-    console.log('Cropper ready', sourceImageDimensions);
+      
     this.loading = false;
   }
 
@@ -207,13 +207,13 @@ export class PartnerDetailsAccessComponent {
   }
 
   updateRotation() {
-    console.log('rotate')
+      
     this.transform = {
       ...this.transform,
       rotate: this.rotation
     };
 
-    console.log(this.transform)
+      
   }
 
   get users(): FormArray{
@@ -224,11 +224,11 @@ export class PartnerDetailsAccessComponent {
 
   // onSelectF(event: any){
   //   this.file = event.addedFiles[0]
-  //   console.log(this.file)
+  //     
   // }
 
 	onRemove() {
-		// console.log(event);
+		//   
 		// this.files.splice(this.files.indexOf(event), 1);
     this.file = undefined
     this.croppedImage = undefined
@@ -250,7 +250,7 @@ export class PartnerDetailsAccessComponent {
     this.newAccess.emit(true)
     this.selectedUser = this.getLastUser()
     this.selectedUserIndex = this.getLastUserIndex()
-    console.log(this.requiredStatus)
+      
   }
 
   getLastUser(){
@@ -258,7 +258,7 @@ export class PartnerDetailsAccessComponent {
     if(usersArray){
       const lastUserIndex = usersArray.length - 1
       const lastUser = usersArray.at(lastUserIndex) as FormGroup
-      console.log(lastUser)
+        
       return lastUser
     }
     return false
@@ -273,7 +273,7 @@ export class PartnerDetailsAccessComponent {
   }
 
   imgConfirmed(){
-    console.log(this.croppedImageBlob)
+      
 
     this.selectedUser.patchValue({
       avatar: this.croppedImageBlob
@@ -317,7 +317,7 @@ export class PartnerDetailsAccessComponent {
   ngOnDestroy() {
     // Перебираем все кэшированные URL и освобождаем их
     this.urlCache.forEach((value: string, key: Blob) => {
-      console.log(value)
+        
       URL.revokeObjectURL(value); // Здесь value - это строка URL, а не Blob
     });
     this.urlCache.clear(); // Очищаем кэш после освобождения URL

@@ -54,7 +54,7 @@ export class PartnerService extends DataService<Partner> {
       )
       .subscribe({
         next: data => {
-          console.log(data)
+            
           if (data) {
             this._data.next({
               data: data["data"],
@@ -74,7 +74,7 @@ export class PartnerService extends DataService<Partner> {
       )
       .subscribe({
         next: data => {
-          console.log(data)
+            
           this._detailedData.next({
             data: data["data"],
             requestType: 'get',
@@ -88,14 +88,14 @@ export class PartnerService extends DataService<Partner> {
   }
 
   addItem(item: FormData | any): any {
-    console.log(item);
+      
     this.http.post<Partner>(`${this.apiUrl}/user-profile/employees`, item)
         .pipe(
           takeUntil(this.destroy$),
         )
         .subscribe({
           next: newPartner => {
-            console.log(newPartner)
+              
               this._detailedData.next({
                 data: newPartner,
                 requestType: 'post',
@@ -104,7 +104,7 @@ export class PartnerService extends DataService<Partner> {
               //this.successSubject.next('created');
           },
           error: (error) => {
-            console.log(error)
+              
             this.handleError(error)
           }
       });
@@ -138,7 +138,7 @@ export class PartnerService extends DataService<Partner> {
            
         },
         error: (error) => {
-          console.log(error)
+            
           this.handleError(error)
         }
     });

@@ -43,7 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
         switchMap((token: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(token['access_token']);
-          console.log(token['access_token'])
+           (token['access_token'])
           return next.handle(this.addToken(request, token['access_token']));
         }),
         catchError((error) => {
@@ -58,7 +58,7 @@ export class AuthInterceptor implements HttpInterceptor {
         filter(token => token != null),
         take(1),
         switchMap(accessToken => {
-            console.log(accessToken)
+              
           return next.handle(this.addToken(request, accessToken));
         })
       );

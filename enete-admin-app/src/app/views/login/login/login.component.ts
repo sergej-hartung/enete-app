@@ -22,11 +22,11 @@ export class LoginComponent {
   validate() {
     this.adminUp = true;
     this.cmsDown = true;
-    console.log(this.username)
-    console.log(this.password)
+      
+      
     this.authService.login(this.username, this.password).subscribe({
       next: (response) => {
-        console.log('Успешный вход', response);
+          
         // Редирект или действия после успешного входа
         this.router.navigate(['/partner']); // Пример редиректа на страницу администратора
       },

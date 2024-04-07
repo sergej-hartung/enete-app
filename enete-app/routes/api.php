@@ -32,6 +32,11 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'user-dockuments', 'name
     Route::get('/download/{id}', 'DownloadController');
 
     /**
+     * Download Documents
+     */
+    Route::get('/restore/{id}', 'RestoreController')->where('id', '[0-9]+');
+
+    /**
      * Softdelete Dokument
      */
     Route::delete('/{id}', 'DeleteController');

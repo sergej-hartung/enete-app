@@ -78,7 +78,7 @@ export class AdminListComponent {
     // this.categorieService.data$
     //   .pipe(takeUntil(this.unsubscribe$))
     //   .subscribe(data => {
-    //     // console.log(data)
+    //     //   
     //     if(data){                       
     //       if(data.requestType == "get" && data.entityType == 'categories'){
             
@@ -126,7 +126,7 @@ export class AdminListComponent {
         let filter = this.filters?.find(f => f.type === 'select' && f.key == filterKey)
         if(filter && 'options' in filter){
           let selectedFilter = filter.options?.find(o => o.value === dataServiceFilters[filterKey])
-          // console.log(selectedFilter)
+          //   
           if(selectedFilter) selectedFilter['selected'] = true
         }
       })

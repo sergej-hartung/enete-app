@@ -828,3 +828,91 @@ footer{
         }
     }
 }
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    color: #6c757d;
+
+    &.archive{
+        color: rgba(108, 117, 125, 0.5) 
+    }
+}
+
+.file-list li {
+    border-bottom: 1px solid #eee;
+    padding: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Обеспечивает равное расстояние */
+    transition: 0.2s;
+    cursor: pointer;
+
+    &.selected{
+        background: #3a3633;
+        color: #c0bbb7;
+    }
+}
+
+.file-icon-wrapper {
+    flex-basis: 10%; /* Задайте базовый размер для иконки */
+    text-align: center; /* Центрирование иконки */
+}
+
+.file-name{
+    flex-basis: 50%;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 15px;
+    white-space: nowrap;
+}
+
+.file-size {
+    flex-basis: 30%; /* Задайте базовый размер для названия и размера файла */
+    text-align: left; /* Выравнивание текста */
+}
+
+.file-action {
+    flex-basis: 10%;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, color 0.2s ease; /* Плавный переход */
+}
+
+.file-action:hover {
+    transform: scale(1.2); /* Увеличиваем размер при наведении */
+    color: #007bff; /* Изменяем цвет при наведении */
+}
+
+.file-action:active {
+    transform: scale(1.1); /* Уменьшаем немного при клике */
+    color: #0056b3; /* Делаем цвет темнее при клике */
+}
+
+.delite:hover {
+    color: #d63384; /* Яркий цвет при наведении для удаления */
+}
+
+.delite:active {
+    color: #c82333; /* Темный цвет при активации для удаления */
+}
+
+
+
+.custom-dropzone-wrap {
+    margin-bottom: 0.7rem;
+
+    .custom-dropzone {
+        height: 100px;
+    }
+}
+
+.img-preview {
+    padding: 5px;
+    max-width: 100%;
+}
+
+.delite{
+    color: rgb(196, 20, 37);
+}

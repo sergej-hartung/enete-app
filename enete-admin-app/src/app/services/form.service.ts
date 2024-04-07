@@ -138,4 +138,10 @@ export class FormService {
       form.addControl("users", this.fb.array([this.createUserFormGroup(newUser)]))
     }
   }
+
+  initArchiveDocuments(): FormGroup{
+    return this.fb.group({
+      documents: this.fb.array([]),
+    })
+  }
 }

@@ -59,11 +59,11 @@ export class PartnerDetailsGenerallyComponent {
                 // Immediately return an empty array if the search term is too short
                 return of([]);
             }else{
-              console.log(term)
+                
               this.applyFilter({key: 'search', value: term})
               return this.parentService.data$.pipe(
                 map(response => {
-                  //console.log(response)
+                  //  
                   if(response && response['data']){
                     //return response['data'].map((item: any) => `${item.vp_nr}, ${item.first_name} ${item.last_name}`)
                     return response['data']
@@ -78,13 +78,13 @@ export class PartnerDetailsGenerallyComponent {
     );
 
   selectedParentEmployee(){
-    console.log(this.displayParentData)
+      
     if(this.displayParentData && this.displayParentData['id']){
       const parent = this.userProfilesForm?.get('parent')
       parent?.patchValue({...this.displayParentData})
       parent?.markAsDirty()
     }
-    console.log(this.userProfilesForm)
+      
   }
 
   formatter = (x: Partner | null) => `${x?.vp_nr}, ${x?.first_name} ${x?.last_name}`;
@@ -99,18 +99,18 @@ export class PartnerDetailsGenerallyComponent {
   }
 
   clearInput() {
-    this.displayParentData = null;
+    //this.displayParentData = null;
   }
 
   restoreInputData() {
-    console.log(this.displayParentData)
+      
     if (!this.displayParentData) {
       this.updateDisplayParentData();
     }
   }
 
   // onParentDataChange(newValue: string) {
-  //   console.log(newValue)
+  //   )**)(newValue)
   //       let key = 'search'
   //       let value = newValue
   //       this.textFilterSubject.next({ key, value });

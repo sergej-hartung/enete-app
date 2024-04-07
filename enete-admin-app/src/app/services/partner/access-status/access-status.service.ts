@@ -40,7 +40,7 @@ export class AccessStatusService extends DataService<Status> {
       )
       .subscribe({
         next: data => {
-          console.log(data)
+            
           if (data) {
             this._data.next({
               data: data["data"],

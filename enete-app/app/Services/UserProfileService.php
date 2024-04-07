@@ -221,6 +221,13 @@ class UserProfileService{
         return $documents;
     }
 
+    public function restoreProfileDocument($id){
+        $document = UserProfileDocument::withTrashed()->find($id);
+        if($document){
+            $document->restore();
+        }
+    }
+
     public function downloadProfileDocument($documentId){
         $document = UserProfileDocument::withTrashed()->find($documentId);
        // dd($document);

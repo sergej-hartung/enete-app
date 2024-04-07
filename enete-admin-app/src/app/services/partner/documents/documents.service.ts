@@ -45,7 +45,7 @@ export class DocumentService extends DataService<any> {
       )
       .subscribe({
         next: blob => {
-          console.log(blob)
+            
           this._file.next(blob);
         },
         error: (error) => {
@@ -61,11 +61,31 @@ export class DocumentService extends DataService<any> {
       )
       .subscribe({
         next: data => {
-          console.log(data)
+            
           this._data.next({
             data: data,
             requestType: 'delete',
             entityType: 'documents'
+          });
+        },
+        error: (error) => {
+          this.handleError(error)
+        }
+      });
+  }
+
+  restoreDocumentById(id:number){
+    this.http.get<any>(`${this.apiUrl}/user-dockuments/restore/${id}`)
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: data => {
+            
+          this._data.next({
+            data: data,
+            requestType: 'get',
+            entityType: 'documentRestore'
           });
         },
         error: (error) => {
@@ -93,7 +113,7 @@ export class DocumentService extends DataService<any> {
       )
       .subscribe({
         next: data => {
-          console.log(data)
+            
           if (data) {
             this._data.next({
               data: data["data"],
@@ -128,6 +148,14 @@ export class DocumentService extends DataService<any> {
     this.errorSubject.next(errors);
   }
 
+
+  resetData(): void {
+    this._data.next(null);
+  }
+
+  resetFile(): void {
+    this._file.next(null)
+  }
  
 
   resetDetailedData(): void {
