@@ -12,14 +12,16 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
+    path: 'products',
+    loadChildren: () => import('./views/products/products.module').then(m => m.ProductsModule),
+    canLoad: [AuthGuard]
+  },
+  {
     path: 'admin-management',
     loadChildren: () => import('./views/administration/admin-management/admin-management.module').then(m => m.AdminManagementModule),
     canLoad: [AuthGuard]
   },
-  // {
-  //   path: 'products',
-  //   loadChildren: () => import('./views/login/login.module').then(m => m.LoginModule)
-  // }
+  
 ];
 
 @NgModule({

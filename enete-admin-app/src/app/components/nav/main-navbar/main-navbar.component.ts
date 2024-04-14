@@ -14,7 +14,6 @@ export class MainNavbarComponent {
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    private partnerService: PartnerService,
     public mainNavbarService: MainNavbarService
     ) {}
 

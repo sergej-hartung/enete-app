@@ -1,0 +1,23 @@
+<div class="row no-gutters">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
+      <li [ngbNavItem]="1">
+          <button ngbNavLink>Produktdetails</button>
+          <ng-template ngbNavContent>
+            Produktdetails                     
+          </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+          <button ngbNavLink>Zuordnungen</button>
+          <ng-template ngbNavContent>
+            Zuordnungen                                  
+          </ng-template>
+      </li>
+      <li [ngbNavItem]="3">
+          <button ngbNavLink>Einstellungen</button>
+          <ng-template ngbNavContent>
+            Einstellungen
+          </ng-template>
+      </li>
+  </ul>
+  <div [ngbNavOutlet]="nav" class="pe-0 ps-0"></div>
+</div>

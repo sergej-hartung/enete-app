@@ -53,6 +53,9 @@ export class PartnerDetailsComponent {
     this.loadData();
     this.handleFormChanges();
     this.handleNavbarActions();
+
+    this.partnerService._data
+
   }
 
   private loadData() {
@@ -105,6 +108,7 @@ export class PartnerDetailsComponent {
   }
 
   private processDetailedData(data: any): void {
+    console.log(data)
     if(data && data.requestType == "get" && data.entityType == 'partner'){
         
         
@@ -136,6 +140,7 @@ export class PartnerDetailsComponent {
       this.mainNavbarService.setIconState('save', true, true)
       this.userProfilesForm.reset()
       this.dataLoadedOrNew = false
+      this.active = 1
     }      
   }
 
