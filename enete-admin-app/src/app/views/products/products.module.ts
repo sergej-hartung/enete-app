@@ -6,7 +6,8 @@ import { ProductsComponent } from './products.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { ProductGroupComponent } from './product-group/product-group.component';
 import { ProductListComponent } from './product-list/product-list.component';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '../../shared/shared.module';
 
 
 @NgModule({
@@ -20,6 +21,8 @@ import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     ProductsRoutingModule,
     NgbNavModule,
+    NgbDropdownModule,
+    SharedModule
   ]
 })
 export class ProductsModule { }

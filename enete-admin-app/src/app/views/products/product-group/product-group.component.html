@@ -1,1 +1,23 @@
-<p>product-group works!</p>
+<div class="row no-gutters">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
+      <li [ngbNavItem]="1">
+          <button ngbNavLink>Tarife</button>
+          <ng-template ngbNavContent>
+            <app-generic-table 
+              class="table-responsive"
+              [columns]="parnerColumns"
+              [isExpandable]="false"
+              [dataService]="productService"
+              #genericTable 
+            ></app-generic-table>                   
+          </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+          <button ngbNavLink>Hardware</button>
+          <ng-template ngbNavContent>
+            Zuordnungen                                  
+          </ng-template>
+      </li>
+  </ul>
+  <div [ngbNavOutlet]="nav" class="pe-0 ps-0"></div>
+</div>

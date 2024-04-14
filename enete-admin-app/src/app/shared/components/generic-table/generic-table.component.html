@@ -1,33 +1,55 @@
-<div class="filter" *ngIf="filters && filters.length">
-    <div class="row no-gutters" [class.expandable_table]="isExpandable" [class.pe-1]="!isExpandable">
-        <ng-container *ngFor="let filter of filters">
-            <div class="col-5 pe-1" *ngIf="filter?.key === 'search' && filter?.type === 'text'">
-                <div class="input-group input-group-sm mb-1 mt-1">
-                            
-                    <input 
-                        type="text" 
-                        class="form-control form-control-sm"
-                        (input)="onFilterChange(filter, $event)"
-                    >
-                    <span class="input-group-text custom-input-group-text" id="inputGroup-sizing-sm">
-                        <i class="bi bi-search"></i>
-                    </span>
-                </div>
-            </div>
-            <div class="col pe-1 ps-1" *ngIf="filter.type === 'select'">
-                <div class="input-group input-group-sm mb-1 mt-1">
-                    <select 
-                        class="form-select form-select-sm custom-form-select-sm" 
-                        id="{{filter.key}}"
-                        (change)="onFilterChange(filter, $event)"
-                    >
-                        <option *ngFor="let option of filter.options" [selected]="option.selected" [value]="option.value">{{option.label}}</option>
-                    </select>
-                    <label class="input-group-text custom-input-group-text" for="{{filter.key}}">{{filter.label}}</label>
-                </div> 
-                    
-            </div>
+<div class="filter" [class.not_expanable_table]="!isExpandable" *ngIf="filters && filters.length">
+    <div class="row no-gutters" [class.expandable_table]="isExpandable" >
+        <ng-container *ngIf="customFilterTemplate; else builtInFilters">
+            <ng-container [ngTemplateOutlet]="customFilterTemplate">
+                <ng-container *ngFor="let filter of filters">
+                    <div class="col-5 pe-1" *ngIf="filter?.key === 'search' && filter?.type === 'text'">
+                        <div class="input-group input-group-sm mb-1 mt-1">
+                                    
+                            <input 
+                                type="text" 
+                                class="form-control form-control-sm"
+                                (input)="onFilterChange(filter, $event)"
+                            >
+                            <span class="input-group-text custom-input-group-text" id="inputGroup-sizing-sm">
+                                <i class="bi bi-search"></i>
+                            </span>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
         </ng-container>
+        <ng-template #builtInFilters>
+            <ng-container *ngFor="let filter of filters">
+                <div class="col-5 pe-1" *ngIf="filter?.key === 'search' && filter?.type === 'text'">
+                    <div class="input-group input-group-sm mb-1 mt-1">
+                                
+                        <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            (input)="onFilterChange(filter, $event)"
+                        >
+                        <span class="input-group-text custom-input-group-text" id="inputGroup-sizing-sm">
+                            <i class="bi bi-search"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="col pe-1 ps-1" *ngIf="filter.type === 'select'">
+                    <div class="input-group input-group-sm mb-1 mt-1">
+                        <select 
+                            class="form-select form-select-sm custom-form-select-sm" 
+                            id="{{filter.key}}"
+                            (change)="onFilterChange(filter, $event)"
+                        >
+                            <option *ngFor="let option of filter.options" [selected]="option.selected" [value]="option.value">{{option.label}}</option>
+                        </select>
+                        <label class="input-group-text custom-input-group-text" for="{{filter.key}}">{{filter.label}}</label>
+                    </div> 
+                        
+                </div>
+            </ng-container>
+        </ng-template>
+        
         <div 
             class="expandable_table-btn"
             *ngIf="isExpandable"
@@ -43,7 +65,7 @@
     </div>
     
 </div>
-<table class="table table-sm table-hover" [class.table_without_filter] = "!filters">
+<table class="table table-sm table-hover generic-table" [class.table_without_filter] = "!filters">
     <thead>
         <tr>
             <ng-container *ngFor="let column of columns">

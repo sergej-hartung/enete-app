@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { Tablecolumn } from '../../../models/tablecolumn';
 import { IDataService } from '../../../models/data-interface';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
+
 
 export interface FilterOption {
   type: 'text' | 'select'; // тип фильтра: текстовое поле или выпадающий список
@@ -33,6 +34,8 @@ export class GenericTableComponent<T> {
   @Input() dataService?: IDataService<T>;
   @Output() rowSelected = new EventEmitter<T>();
 
+  @ContentChild('customFilters') customFilterTemplate?: TemplateRef<any>;
+
   private unsubscribe$ = new Subject<void>();
   private textFilterSubject = new Subject<{ key: string; value: any }>();
   private selectFilterSubject = new Subject<{ key: string; value: any }>();
@@ -42,6 +45,11 @@ export class GenericTableComponent<T> {
   data?: any[];
   currentSortColumn: string | null = null;
   currentSortOrder: 'asc' | 'desc' | '' = '';
+
+  filterContext = {
+    $implicit: this.filters,
+    onFilterChange: this.onFilterChange.bind(this)  // Привязываем метод к контексту компонента
+  };
     
   constructor() {
     this.textFilterSubject
