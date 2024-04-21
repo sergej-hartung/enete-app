@@ -11,8 +11,8 @@ class ComboStatus extends Model
 
     protected $fillable = ['name', 'created_by', 'updated_by'];
 
-    public function mappings()
+    public function tariffs()
     {
-        return $this->hasMany(ComboStatusMapping::class);
+        return $this->belongsToMany(Tariff::class, 'combo_status_mappings', 'combo_status_id', 'tariff_id');
     }
 }

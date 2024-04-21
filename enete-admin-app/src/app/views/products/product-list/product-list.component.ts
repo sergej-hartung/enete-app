@@ -12,6 +12,7 @@ export class ProductListComponent {
 
   active = 1;
 
+  dataLoadedOrNew = false
   IsExpandable = false;
   parnerColumns: Tablecolumn[] = [
     { key: 'id', title: '#', sortable: true },

@@ -6,8 +6,11 @@
             <app-generic-table 
               class="table-responsive"
               [columns]="parnerColumns"
+              [total]="false"
               [isExpandable]="false"
-              [dataService]="productService"
+              [dataService]="tariffGroupService"
+              [rowSelectionMode]="'parent'"
+              (rowSelected)="selectedRow($event)"
               #genericTable 
             ></app-generic-table>                   
           </ng-template>

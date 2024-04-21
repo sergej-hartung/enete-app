@@ -27,4 +27,9 @@ class Commission extends Model
     {
         return $this->belongsTo(CommissionStatus::class, 'status_id');
     }
+
+    public function commissionGroups()
+    {
+        return $this->belongsToMany(CommissionGroup::class, 'commission_group_mappings', 'commission_id', 'group_id')->withPivot('difference');
+    }
 }

@@ -55,7 +55,6 @@ export class AdminService extends DataService<Partner> {
       )
       .subscribe({
         next: data => {
-            
           if (data) {
             this._data.next({
               data: data["data"],

@@ -11,13 +11,13 @@ class CategoryMapping extends Model
 
     protected $fillable = ['category_id', 'tariff_id', 'created_by', 'updated_by'];
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+    // public function category()
+    // {
+    //     return $this->belongsTo(Category::class);
+    // }
 
-    public function tariff()
-    {
-        return $this->belongsTo(Tariff::class);
-    }
+    // public function tariff()
+    // {
+    //     return $this->belongsTo(Tariff::class);
+    // }
 }

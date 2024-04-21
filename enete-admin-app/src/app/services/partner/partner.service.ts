@@ -54,7 +54,7 @@ export class PartnerService extends DataService<Partner> {
       )
       .subscribe({
         next: data => {
-            
+          console.log(data)
           if (data) {
             this._data.next({
               data: data["data"],

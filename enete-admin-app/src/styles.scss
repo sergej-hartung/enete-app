@@ -762,11 +762,13 @@ footer{
 }
 
 .default-content{
+    .default-products,
     .default-user-profile{
         font-size: 10rem;
         padding-top: 4rem;
         color: #6c757d52;       
     }
+    .default-products-title,
     .default-user-profile-title{
         font-size: 4rem;
         font-weight: 600;

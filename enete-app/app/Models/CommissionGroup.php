@@ -11,8 +11,8 @@ class CommissionGroup extends Model
 
     protected $fillable = ['group_name', 'icon', 'default_difference', 'created_by', 'updated_by'];
 
-    public function mappings()
+    public function commissions()
     {
-        return $this->hasMany(CommissionGroupMapping::class, 'group_id');
+        return $this->belongsToMany(Commission::class, 'commission_group_mappings', 'group_id', 'commission_id')->withPivot('difference');
     }
 }

@@ -16,9 +16,16 @@ class Attribute extends Model
         return $this->belongsTo(AttributeType::class, 'input_type_id');
     }
 
-    public function tariff()
+    public function tariffs()
     {
-        return $this->belongsTo(Tariff::class);
+        return $this->belongsToMany(Tariff::class, 'tariff_attribute_mappings')
+                    ->withPivot('value_varchar', 'value_text', 'is_active')
+                    ->withTimestamps();
+    }
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class, 'group_attribute_mappings', 'attribute_id', 'group_id');
     }
 
     public function creator()

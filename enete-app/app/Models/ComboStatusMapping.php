@@ -11,13 +11,13 @@ class ComboStatusMapping extends Model
     
     protected $fillable = ['combo_status_id', 'tariff_id', 'created_by', 'updated_by'];
 
-    public function comboStatus()
-    {
-        return $this->belongsTo(ComboStatus::class);
-    }
+    // public function comboStatus()
+    // {
+    //     return $this->belongsTo(ComboStatus::class);
+    // }
 
-    public function tariff()
-    {
-        return $this->belongsTo(Tariff::class);
-    }
+    // public function tariff()
+    // {
+    //     return $this->belongsTo(Tariff::class);
+    // }
 }

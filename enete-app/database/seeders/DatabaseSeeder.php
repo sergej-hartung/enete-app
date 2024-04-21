@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             UserStatusesTableSeeder::class,
             UserAdminProfileTableSeeder::class,
             UserAdminTableSeeder::class,
+            GroupSeeder::class,
         ]);
     }
 }

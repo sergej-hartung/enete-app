@@ -97,9 +97,11 @@
             (click)="selectRow(row)"
             [class.selected-custom]="row.selected"
         >
-            <td *ngFor="let column of columns">
+            <td *ngFor="let column of columns">            
                 <ng-container *ngIf="column.isIcon; else textContent">
-                    <i [class]="row[column.key]['icon']" [style.color]="row[column.key]['color']" ></i> 
+                    <!-- <i [class]="row[column.key]['icon']" [style.color]="row[column.key]['color']" ></i>  -->
+                    <i [class]="row[column.key + 'Icon'].icon" [style.color]="row[column.key + 'Icon'].color"></i>
+                    <!-- <i [class]="row.iconData.icon" [style.color]="row.iconData.color"></i> -->
                 </ng-container>
                 <ng-template #textContent>{{ column.isIcon ? '' : row[column.key] }}</ng-template>
             </td>
@@ -107,6 +109,6 @@
        
     </tbody>
 </table>
-<div class="table-foot" *ngIf="data">
+<div class="table-foot" *ngIf="data && total">
     total: {{data.length}}
 </div>

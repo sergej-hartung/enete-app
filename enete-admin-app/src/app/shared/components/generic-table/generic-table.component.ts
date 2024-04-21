@@ -32,6 +32,7 @@ export class GenericTableComponent<T> {
   @Input() isExpandable?: boolean = false;
   @Input() filters?: FilterOption[] = []
   @Input() dataService?: IDataService<T>;
+  @Input() total: boolean = true;
   @Output() rowSelected = new EventEmitter<T>();
 
   @ContentChild('customFilters') customFilterTemplate?: TemplateRef<any>;
@@ -71,97 +72,68 @@ export class GenericTableComponent<T> {
           if(data){
             this.setData(data["data"]) 
             this.isLoaded = true
-          }            
-          //this.isLoded = true 
-          //          
+          }    
         });
     }
-
-    //this.checkFilters()
   }
 
-  // checkFilters(){
-  //   if(this.dataService && this.dataService?.filters && !this.isObjectEmpty(this.dataService.filters)){
-  //     let dataServiceFilters = this.dataService.filters
-  //     Object.keys(dataServiceFilters).forEach(filterKey => {
-  //         
-  //       let filter = this.filters?.find(f => {
-  //         //  
-  //         //  
-  //           
-  //         //  
-  //         // f.type === 'select' && 
-  //       })
-  //         
-  //         
-  //         
-  //       if(filter && 'options' in filter){
-  //         let selectedFilter = filter.options?.find(o => o.value === dataServiceFilters[filterKey])
-  //           
-  //         if(selectedFilter) selectedFilter['selected'] = true
-  //       }
-  //     })
-  //   }
+
+  // setData(data: T[]){
+  //   this.data = data.map(d => {
+  //     const item = d as any; 
+
+  //     return {
+  //       ...item,
+  //       accesses: this.getAccessIcon(item.accesses),
+  //       //status_id: this.getStatusIcon(item.status)
+  //     };
+  //   });
+
+  //   console.log(this.data)
   // }
-
-  // isObjectEmpty(objectName: Object){
-  //   return (
-  //     objectName &&
-  //     Object.keys(objectName).length === 0 &&
-  //     objectName.constructor === Object
-  //   );
-  // }
-
-  setData(data: T[]){
-    this.data = data.map(d => {
-      const item = d as any; 
-
-      return {
-        ...item,
-        accesses: this.getAccessIcon(item.accesses),
-        //status_id: this.getStatusIcon(item.status)
-      };
+  setData(data: T[]) {
+    this.data = data.map(item => {
+      const result = { ...item as any };
+      this.columns?.forEach(column => {
+        if (column['isIcon']) {
+          result[column['key'] + 'Icon'] = this.getIconData(item, column['key']);
+        }
+      });
+      return result;
     });
   }
-
-  // getStatusIcon(status: any) {
-  //   if(status && 'name' in status){
-  //     switch (status.name) {
-  //       case 'Aktiv':
-  //         return 'fa-solid fa-circle-check text-success-custom';
-  //       case 'Inaktiv':
-  //         return 'fa-solid fa-circle-exclamation text-warning'; 
-  //       case 'Interessent':
-  //         return 'fa-solid fa-circle-info text-info'; // Пример другого класса иконки
-  //       case 'Gesperrt':
-  //         return 'fa-solid fa-circle-xmark text-danger'; // Пример другого класса иконки
-  //       case 'Gekündigt':
-  //         return 'fa-solid fa-circle-xmark text-danger'; // Пример другого класса иконки
-  //       default:
-  //         return '';
-  //     }
-  //   }else{
-  //     return '';
-  //   }
-    
-  // }
   
-  getAccessIcon(accesses: Accessible['accesses']) {
-    let access 
-    if(accesses){
-      access = accesses.find(a => a.status && a.status.id === 1);
-      if(access){
-        return {'icon': 'fa-solid fa-key', 'color': '#69b548'}
-      }else{
-        access = accesses.find(a => a.status && a.status.id === 2);
-        if(access) return {'icon': 'fa-solid fa-key', 'color': '#C41425'}
-      }
+  // getAccessIcon(accesses: Accessible['accesses']) {
+  //   let access 
+  //   if(accesses){
+  //     access = accesses.find(a => a.status && a.status.id === 1);
+  //     if(access){
+  //       return {'icon': 'fa-solid fa-key', 'color': '#69b548'}
+  //     }else{
+  //       access = accesses.find(a => a.status && a.status.id === 2);
+  //       if(access) return {'icon': 'fa-solid fa-key', 'color': '#C41425'}
+  //     }  
+  //   }  
+  //   return {'icon': 'fa-solid fa-key', 'color': '#ccc'}
+  //   //return access ? {'icon': 'fa-solid fa-key', 'color': '#69b548'} : {'icon': 'fa-solid fa-key', 'color': '#C41425'}; // Пример классов для состояния доступа
+  // }
 
-        
-    }  
-    return {'icon': 'fa-solid fa-key', 'color': '#ccc'}
-    //return access ? {'icon': 'fa-solid fa-key', 'color': '#69b548'} : {'icon': 'fa-solid fa-key', 'color': '#C41425'}; // Пример классов для состояния доступа
+  getIconData(item: any, key: string): { icon?: string; color?: string } {
+    if (key === 'accesses') {
+      return this.getAccessIcon(item['accesses']);
+    } else if (key === 'status' && item['status']) {
+      return { icon: item.status['icon'], color: item.status['color']};
+    } else if (key === 'icon' && item['icon']) {
+      return { icon: item.icon, color: item.color};
+    }
+    return {};  // Return empty object when no icon data should be added
   }
+
+  getAccessIcon(accesses: any[]): { icon: string; color: string } {
+    const access = accesses.find(a => a.status && a.status.id === 1) || accesses.find(a => a.status && a.status.id === 2);
+    return access ? { icon: 'fa-solid fa-key', color: access.status.id === 1 ? '#69b548' : '#C41425' } : { icon: 'fa-solid fa-key', color: '#ccc' };
+  }
+  
 
   selectRow(row: any) {
     this.dataService?.confirmAction('selectRow', () => {
