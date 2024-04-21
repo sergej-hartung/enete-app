@@ -117,23 +117,23 @@ Route::group(['prefix' => 'auth', 'namespace' => 'App\Http\Controllers\Auth'], f
 });
 
 
-Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($router) {
+// Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($router) {
     
-    $router->get('/tariffs', 'App\Http\Controllers\Tariff\TariffIndexController')->name('tariffs.index');
-    $router->get('/tariffs/{tariffId}', 'App\Http\Controllers\Tariff\TariffShowController')->name('tariffs.show');
+//     $router->get('/tariffs', 'App\Http\Controllers\Tariff\TariffIndexController')->name('tariffs.index');
+//     $router->get('/tariffs/{tariffId}', 'App\Http\Controllers\Tariff\TariffShowController')->name('tariffs.show');
     
-    $router->group(['prefix' => 'tariff-groups'], function ($router) {
-        $router->get('/', 'App\Http\Controllers\Tariff\Group\TariffGroupIndexController')->name('tariff-groups.index');
-        $router->get('/{groupId}/tariffs', 'App\Http\Controllers\Tariff\Group\TariffByGroupController')->name('tariff-groups.tariffs');
-    });
+//     $router->group(['prefix' => 'tariff-groups'], function ($router) {
+//         $router->get('/', 'App\Http\Controllers\Tariff\Group\TariffGroupIndexController')->name('tariff-groups.index');
+//         $router->get('/{groupId}/tariffs', 'App\Http\Controllers\Tariff\Group\TariffByGroupController')->name('tariff-groups.tariffs');
+//     });
 
-    $router->get('/hardware', 'App\Http\Controllers\Hardware\HardwareIndexController')->name('hardware.index');
-    $router->get('/hardware/{hardwareId}', 'App\Http\Controllers\Hardware\HardwareShowController')->name('hardware.show');
+//     $router->get('/hardware', 'App\Http\Controllers\Hardware\HardwareIndexController')->name('hardware.index');
+//     $router->get('/hardware/{hardwareId}', 'App\Http\Controllers\Hardware\HardwareShowController')->name('hardware.show');
 
-    $router->group(['prefix' => 'hardware-groups'], function ($router) {
-        $router->get('/', 'App\Http\Controllers\Hardware\Group\HardwareGroupIndexController')->name('hardware-groups.index');
-        $router->get('/{groupId}/hardware', 'App\Http\Controllers\Hardware\Group\HardwareByGroupController')->name('hardware-groups.hardware');
-    });
-});
+//     $router->group(['prefix' => 'hardware-groups'], function ($router) {
+//         $router->get('/', 'App\Http\Controllers\Hardware\Group\HardwareGroupIndexController')->name('hardware-groups.index');
+//         $router->get('/{groupId}/hardware', 'App\Http\Controllers\Hardware\Group\HardwareByGroupController')->name('hardware-groups.hardware');
+//     });
+// });
 
 Route::post('/email/verify/{hash}', 'App\Http\Controllers\User\VerificationController');
