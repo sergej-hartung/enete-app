@@ -19,20 +19,23 @@ export class ProductGroupComponent {
 
   constructor(
     public tariffGroupService: TariffGroupService,
-    private tariffService: TariffService
+    private tariffService: TariffService,
+    private productService: ProductService,
   ) {
     this.tariffGroupService.fetchData();
   }
 
   selectedRow(event: any){
     console.log(event)
-    this.tariffService.tariffGroupId.emit(event.id)
+    //this.tariffService.tariffGroupId.emit(event.id)
+    this.productService.setTariggGroupId(event.id)
     this.tariffService.fetchDataByGroupId(event.id)
   }
 
   navChange(event: any){
     if(event['nextId'] === 2){
-      this.tariffService._resetData.emit()
+      this.productService._resetTariffData.emit()
+      //this.productService.resetTariffGroupId()
     }
   }
 

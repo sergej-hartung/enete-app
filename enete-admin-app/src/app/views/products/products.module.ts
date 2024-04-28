@@ -8,6 +8,8 @@ import { ProductGroupComponent } from './product-group/product-group.component';
 import { ProductListComponent } from './product-list/product-list.component';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../../shared/shared.module';
+import { TariffListComponent } from './product-list/tariff-list/tariff-list.component';
+import { HardwareListComponent } from './product-list/hardware-list/hardware-list.component';
 
 
 @NgModule({
@@ -15,7 +17,9 @@ import { SharedModule } from '../../shared/shared.module';
     ProductsComponent,
     ProductDetailsComponent,
     ProductGroupComponent,
-    ProductListComponent
+    ProductListComponent,
+    TariffListComponent,
+    HardwareListComponent
   ],
   imports: [
     CommonModule,

@@ -31,22 +31,22 @@ class Tariff extends Model
 
     public function provider()
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(TariffProvider::class);
     }
 
     public function networkOperator()
     {
-        return $this->belongsTo(NetworkOperator::class);
+        return $this->belongsTo(TariffNetworkOperator::class);
     }
 
     public function status()
     {
-        return $this->belongsTo(Status::class);
+        return $this->belongsTo(TariffStatus::class);
     }
 
     public function group()
     {
-        return $this->belongsTo(Group::class);
+        return $this->belongsTo(TariffGroup::class);
     }
 
     public function creator()

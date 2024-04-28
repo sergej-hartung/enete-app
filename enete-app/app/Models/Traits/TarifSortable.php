@@ -22,7 +22,7 @@ trait TarifSortable {
         $sortableFields = [
             'id'             => ['table' => 'tariffs', 'column' => 'id'],
             'external_id'    => ['table' => 'tariffs', 'column' => 'external_id'],      
-            'provider.name'  => ['table' => 'providers', 'column' => 'name'],
+            'provider.name'  => ['table' => 'tariff_providers', 'column' => 'name'],
             'name_short'     => ['table' => 'tariffs', 'column' => 'name_short'],
             'status'         => ['table' => 'tariffs', 'column' => 'status_id'],
             'is_published'   => ['table' => 'tariffs', 'column' => 'is_published'],

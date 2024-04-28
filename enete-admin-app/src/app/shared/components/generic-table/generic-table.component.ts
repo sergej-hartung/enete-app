@@ -219,6 +219,7 @@ export class GenericTableComponent<T> {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    console.log('destroy generetic table')
   }
 }
 

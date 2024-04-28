@@ -17,8 +17,8 @@ export class TariffService extends DataService<Tariff> {
   private destroy$ = new Subject<void>();
   private formDirty = new BehaviorSubject<boolean | null>(false);
 
-  public _resetData = new EventEmitter()
-  public tariffGroupId = new EventEmitter()
+  //public _resetData = new EventEmitter()
+  //public tariffGroupId = new EventEmitter()
 
   private currentFilters: {[key: string]: string} = {
     // Примеры параметров фильтрации

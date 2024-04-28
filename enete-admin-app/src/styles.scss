@@ -375,7 +375,8 @@ $max-height-footer: 20px;
             background: #3a3633;
             color: #c0bbb7;
             font-weight: 500;  
-            border: none;        
+            border: none; 
+            text-wrap: nowrap;       
         }
         th:first-child{
             padding-left:calc(var(--bs-gutter-x) * 0.5 + 0.5rem) ;
