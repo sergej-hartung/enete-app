@@ -24,7 +24,12 @@ class DatabaseSeeder extends Seeder
             UserStatusesTableSeeder::class,
             UserAdminProfileTableSeeder::class,
             UserAdminTableSeeder::class,
-            GroupSeeder::class,
+            TariffGroupSeeder::class,
+            TariffStatusSeeder::class,
+            TariffProviderSeeder::class,
+            TariffGroupProviderMappSeeder::class,
+            TariffNetworkOperatorSeeder::class,
+            TariffGroupNetworkOperatorMappSeeder::class
         ]);
     }
 }

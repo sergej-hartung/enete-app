@@ -3,6 +3,7 @@ import { MainNavbarService } from '../../services/main-navbar.service';
 import { TariffGroupService } from '../../services/product/tariff/tariff-group.service';
 import { Subject, take, takeUntil } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
+import { TariffService } from '../../services/product/tariff/tariff.service';
 
 @Component({
   selector: 'app-products',
@@ -18,6 +19,7 @@ export class ProductsComponent {
   constructor(
     private mainNavbarService: MainNavbarService,
     public tariffGroupService: TariffGroupService,
+    public tariffService: TariffService,
     private notificationService: NotificationService
   ) {}
 
@@ -36,9 +38,14 @@ export class ProductsComponent {
     this.tariffGroupService.confirmAction$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(action => this.handleProductAction(action));
+
+    this.tariffService.confirmAction$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(action => this.handleProductAction(action));
   }
 
   private handleProductAction(action: any): void {
+    console.log()
     switch (action.action) {
       // case 'deletePartnerFile':
       //   this.showNotification(action.proceedCallback, this.deleteFileTitleTemplate, this.deleteFileMessageTemplate);

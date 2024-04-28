@@ -9,7 +9,13 @@
                 [columns]="parnerColumns"
                 [filters]="filters"
                 [isExpandable]="IsExpandable"
-                [dataService]="productService"
+                [dataService]="tariffService"
+                [rowSelectionMode]="'parent'"
+                [sortMode]="'parent'"
+                [filterMode]="'parent'"
+                (rowSelected)="selectedRow($event)"
+                (sortEvent)="sort($event)"
+                (filterEvent)="filter($event)"
                 #genericTable 
               >
               <ng-template #customFilters let-onFilterChange="onFilterChange">
@@ -31,9 +37,9 @@
                                       id="{{filter.key}}"
                                       (change)="onFilterChange(filter, $event)"
                                   >
-                                      <!-- <option *ngFor="let option of filter.options" [selected]="option.selected" [value]="option.value">{{option.label}}</option> -->
-                                      <option>test 1</option>
-                                      <option>test 2</option>
+                                      <option *ngFor="let option of filter.options" [selected]="option.selected" [value]="option.value">{{option.label}}</option>
+                                      <!-- <option>test 1</option>
+                                      <option>test 2</option> -->
                                   </select>
                               </div> 
                       </ng-container>

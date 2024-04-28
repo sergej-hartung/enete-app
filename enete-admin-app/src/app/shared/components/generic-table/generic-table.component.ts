@@ -29,11 +29,15 @@ export class GenericTableComponent<T> {
   
   @Input() columns?: Tablecolumn[];
   @Input() rowSelectionMode: 'service'|'parent' = 'service';
+  @Input() sortMode: 'service'|'parent' = 'service';
+  @Input() filterMode: 'service'|'parent' = 'service';
   @Input() isExpandable?: boolean = false;
   @Input() filters?: FilterOption[] = []
   @Input() dataService?: IDataService<T>;
   @Input() total: boolean = true;
   @Output() rowSelected = new EventEmitter<T>();
+  @Output() filterEvent = new EventEmitter<{ [x:string]:any }>();
+  @Output() sortEvent = new EventEmitter<{ sortField:string|null, sortOrder:string }>();
 
   @ContentChild('customFilters') customFilterTemplate?: TemplateRef<any>;
 
@@ -77,20 +81,6 @@ export class GenericTableComponent<T> {
     }
   }
 
-
-  // setData(data: T[]){
-  //   this.data = data.map(d => {
-  //     const item = d as any; 
-
-  //     return {
-  //       ...item,
-  //       accesses: this.getAccessIcon(item.accesses),
-  //       //status_id: this.getStatusIcon(item.status)
-  //     };
-  //   });
-
-  //   console.log(this.data)
-  // }
   setData(data: T[]) {
     this.data = data.map(item => {
       const result = { ...item as any };
@@ -102,21 +92,11 @@ export class GenericTableComponent<T> {
       return result;
     });
   }
+
+  resolveNestedPath(object: any, path: string): any {
+    return path.split('.').reduce((obj, key) => (obj && obj[key] !== undefined) ? obj[key] : undefined, object);
+  }
   
-  // getAccessIcon(accesses: Accessible['accesses']) {
-  //   let access 
-  //   if(accesses){
-  //     access = accesses.find(a => a.status && a.status.id === 1);
-  //     if(access){
-  //       return {'icon': 'fa-solid fa-key', 'color': '#69b548'}
-  //     }else{
-  //       access = accesses.find(a => a.status && a.status.id === 2);
-  //       if(access) return {'icon': 'fa-solid fa-key', 'color': '#C41425'}
-  //     }  
-  //   }  
-  //   return {'icon': 'fa-solid fa-key', 'color': '#ccc'}
-  //   //return access ? {'icon': 'fa-solid fa-key', 'color': '#69b548'} : {'icon': 'fa-solid fa-key', 'color': '#C41425'}; // Пример классов для состояния доступа
-  // }
 
   getIconData(item: any, key: string): { icon?: string; color?: string } {
     if (key === 'accesses') {
@@ -125,8 +105,14 @@ export class GenericTableComponent<T> {
       return { icon: item.status['icon'], color: item.status['color']};
     } else if (key === 'icon' && item['icon']) {
       return { icon: item.icon, color: item.color};
+    } else if(key === 'is_published'){
+      return this.getIsPublishedIcon(item['is_published'])
     }
     return {};  // Return empty object when no icon data should be added
+  }
+
+  getIsPublishedIcon(isPublished: number): { icon: string; color: string }{
+    return { icon: isPublished === 1 ? 'fa-check-circle fas': 'fa-times-circle fas', color: isPublished === 1 ? '#69b548' : '#c00' }
   }
 
   getAccessIcon(accesses: any[]): { icon: string; color: string } {
@@ -179,15 +165,24 @@ export class GenericTableComponent<T> {
         this.currentSortColumn = column;
         this.currentSortOrder = 'asc';
       }
-  
-      if (this.dataService) {
-        //this.isLoded = false 
-        this.dataService.fetchData({ 
+
+      if(this.sortMode === 'service'){
+        if (this.dataService) {
+          //this.isLoded = false 
+          this.dataService.fetchData({ 
+            sortField: this.currentSortColumn,
+            sortOrder: this.currentSortOrder
+          });
+          this.dataService.resetDetailedData();
+        }
+      }else{
+        this.sortEvent.emit({
           sortField: this.currentSortColumn,
           sortOrder: this.currentSortOrder
-        });
-        this.dataService.resetDetailedData();
+        })
       }
+  
+      
     })   
   }
 
@@ -201,14 +196,18 @@ export class GenericTableComponent<T> {
 
   applyFilter(filter: { key: string; value: any }) {
     this.dataService?.confirmAction('filter', () => {
-      if(this.dataService){
-        this.dataService.fetchData({         
-          [filter.key]: filter.value
-        });
-        this.dataService.resetDetailedData();
+      if(this.filterMode === 'service'){
+        if(this.dataService){
+          this.dataService.fetchData({         
+            [filter.key]: filter.value
+          });
+          this.dataService.resetDetailedData();
+        }
+      }else{
+        this.filterEvent.emit({[filter.key]: filter.value})
       }
-    })
-    
+      
+    })   
   }
   
   resetSelectedRow() {

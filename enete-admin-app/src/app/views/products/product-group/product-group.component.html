@@ -1,5 +1,9 @@
 <div class="row no-gutters">
-    <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
+    <ul ngbNav #nav="ngbNav" 
+        [(activeId)]="active" 
+        (navChange)="navChange($event)"
+        class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1"
+    >
       <li [ngbNavItem]="1">
           <button ngbNavLink>Tarife</button>
           <ng-template ngbNavContent>

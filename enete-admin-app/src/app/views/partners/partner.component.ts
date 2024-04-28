@@ -112,5 +112,10 @@ export class PartnerComponent {
     this.partnerService.resetDetailedData()
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+
+    this.partnerService.resetData()
+    this.statusService.resetData()
+    this.categorieService.resetData()
+    this.careerService.resetData()
   }
 }

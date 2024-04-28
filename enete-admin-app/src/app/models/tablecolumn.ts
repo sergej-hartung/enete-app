@@ -3,4 +3,5 @@ export interface Tablecolumn {
     title: string;
     sortable?: boolean;
     isIcon?: boolean;
+    isDate?: boolean;
 }

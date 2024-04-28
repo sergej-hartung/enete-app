@@ -2,7 +2,7 @@
 
 namespace App\Models\User;
 
-use App\Models\Traits\Sortable;
+use App\Models\Traits\UserSortable;
 use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class UserProfile extends Model
 {
-    use HasFactory, SoftDeletes, Filterable, Sortable;
+    use HasFactory, SoftDeletes, Filterable, UserSortable;
 
     protected $guarded = false;
 

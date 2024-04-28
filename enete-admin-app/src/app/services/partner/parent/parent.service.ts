@@ -133,6 +133,10 @@ export class ParentService extends DataService<Partner> {
     this._detailedData.next(null);
   }
 
+  resetData():void {
+    this._data.next(null);
+  }
+
   confirmAction(action: string, proceedCallback: () => void) {
     this.confirmActionSource.next({action, proceedCallback});
   }

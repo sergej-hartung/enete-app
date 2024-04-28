@@ -338,7 +338,7 @@ $max-height-footer: 20px;
 }
 
 .generic-table{
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     margin-bottom: 0;
     tr:not(.selected-custom):hover >td{
         cursor: pointer;
@@ -353,28 +353,16 @@ $max-height-footer: 20px;
     }
 
     i{
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
      
     > .table-responsive::-webkit-scrollbar {
         display: none;
     }
 
-    // table{
-        
-    // }
-
-    // .table_without_filter{
-    //     thead{
-    //         th{
-    //             top: 0px;
-    //             background: #f9f9f9;
-    //             color: #545b62;
-    //         }
-    //     }
-    // }
-
-    
+    .icon-cell{
+        text-align: center;
+    }
 
     thead{
         .sortable{
@@ -383,6 +371,7 @@ $max-height-footer: 20px;
         th{
             position: sticky;
             top: 38px;
+            height: 28px;
             background: #3a3633;
             color: #c0bbb7;
             font-weight: 500;  
@@ -913,8 +902,9 @@ footer{
     margin-top: ($max-height-main-nav + $max-height-second-nav);
 }
 
-
 .custom-canvas{
+    z-index: 1101;
+
     .offcanvas-body{
         padding: 0;
     }
