@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { TariffService } from '../../../services/product/tariff/tariff.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { ProductService } from '../../../services/product/product.service';
 
 
 @Component({
@@ -12,12 +13,18 @@ export class ProductListComponent {
 
   active = 1;
 
+  tariffOrHardware: number | null = 1
+
   private unsubscribe$ = new Subject<void>();
 
-  constructor(public tariffService: TariffService,) {}
+  constructor(public tariffService: TariffService, private productService: ProductService) {}
 
   ngOnInit() {    
-
+    this.productService.tariffOrHardwareTabActive$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(id =>{
+        this.tariffOrHardware = id
+      })
 
   }
 

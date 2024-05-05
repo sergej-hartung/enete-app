@@ -11,6 +11,9 @@ export class ProductService {
 
   public _resetTariffData = new EventEmitter()
 
+  private _tariffOrHardwareTabActive = new BehaviorSubject<number | null>(null);
+  public tariffOrHardwareTabActive$: Observable<number | null> = this._tariffOrHardwareTabActive.asObservable();
+
   private _tariffGroupId = new BehaviorSubject<number | null>(null);
   public tariffGroupId$: Observable<number | null> = this._tariffGroupId.asObservable();
 
@@ -25,8 +28,12 @@ export class ProductService {
     this._tariffGroupId.next(null);
   }
 
-  setTariggGroupId(id: number){
+  setTariffGroupId(id: number){
     this._tariffGroupId.next(id)
+  }
+
+  setTariffOrHardwareTabActive(id: number){
+    this._tariffOrHardwareTabActive.next(id)
   }
 
 

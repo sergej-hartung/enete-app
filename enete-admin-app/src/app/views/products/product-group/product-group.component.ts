@@ -3,6 +3,7 @@ import { ProductService } from '../../../services/product/product.service';
 import { TariffGroupService } from '../../../services/product/tariff/tariff-group.service';
 import { TariffService } from '../../../services/product/tariff/tariff.service';
 import { Tablecolumn } from '../../../models/tablecolumn';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-product-group',
@@ -12,10 +13,14 @@ import { Tablecolumn } from '../../../models/tablecolumn';
 export class ProductGroupComponent {
   active = 1;
 
+  isLoading = false
+
   parnerColumns: Tablecolumn[] = [
     { key: 'icon', title: '', isIcon: true  },
     { key: 'name', title: 'Gruppe', sortable: false }, 
   ];
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     public tariffGroupService: TariffGroupService,
@@ -25,11 +30,21 @@ export class ProductGroupComponent {
     this.tariffGroupService.fetchData();
   }
 
+  ngOnInit() {
+    this.productService.setTariffOrHardwareTabActive(this.active)
+    this.tariffService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {  
+        this.isLoading = false
+      });
+  }
+
+  
+
   selectedRow(event: any){
-    console.log(event)
-    //this.tariffService.tariffGroupId.emit(event.id)
-    this.productService.setTariggGroupId(event.id)
+    this.productService.setTariffGroupId(event.id)
     this.tariffService.fetchDataByGroupId(event.id)
+    this.isLoading = true
   }
 
   navChange(event: any){
@@ -37,11 +52,15 @@ export class ProductGroupComponent {
       this.productService._resetTariffData.emit()
       //this.productService.resetTariffGroupId()
     }
+    this.productService.setTariffOrHardwareTabActive(event['nextId'])
   }
 
   ngOnDestroy() {
     console.log('destroy Group')
     this.tariffGroupService.resetData()
+
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }

@@ -12,6 +12,8 @@ import { TariffService } from '../../services/product/tariff/tariff.service';
 })
 export class ProductsComponent {
 
+  addOrNewProducts = false
+
   private unsubscribe$ = new Subject<void>();
   @ViewChild('notSaveTitleTemplate') notSaveTitleTemplate!: TemplateRef<any>;
   @ViewChild('notSaveMessageTemplate') notSaveMessageTemplate!: TemplateRef<any>;
@@ -27,6 +29,13 @@ export class ProductsComponent {
   ngOnInit() {
     this.initIconStates();
     this.setupProductActions()
+
+    this.mainNavbarService.confirmAction$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(button => {
+        this.addOrNewProducts = !this.addOrNewProducts
+        console.log(button)
+      })
   }
 
   private initIconStates(): void {

@@ -29,6 +29,7 @@ export class GenericTableComponent<T> {
   
   @Input() columns?: Tablecolumn[];
   @Input() rowSelectionMode: 'service'|'parent' = 'service';
+  @Input() isLoading: boolean = false;  // если идет загрузка данных в mode parent блокируеться выбор selectRow
   @Input() sortMode: 'service'|'parent' = 'service';
   @Input() filterMode: 'service'|'parent' = 'service';
   @Input() isExpandable?: boolean = false;
@@ -40,6 +41,7 @@ export class GenericTableComponent<T> {
   @Output() sortEvent = new EventEmitter<{ sortField:string|null, sortOrder:string }>();
 
   @ContentChild('customFilters') customFilterTemplate?: TemplateRef<any>;
+
 
   private unsubscribe$ = new Subject<void>();
   private textFilterSubject = new Subject<{ key: string; value: any }>();
@@ -121,7 +123,45 @@ export class GenericTableComponent<T> {
   }
   
 
+  // selectRow(row: any) {
+  //   this.dataService?.confirmAction('selectRow', () => {
+  //     if (row.selected) {
+  //       return;
+  //     }
+        
+  //     this.data?.forEach(d => {
+  //       if (d.selected && d['originalIconColor']) {
+  //         d['iconIcon'].color  = d.originalIconColor;
+  //       }
+  //       d.selected = false
+  //     });
+
+  //     row.selected = true;
+
+  //     // Сохраняем исходный цвет иконки и изменяем на белый, если текущий черный
+  //     if (row?.iconIcon?.color === 'rgb(54, 54, 54)' || row?.iconIcon?.color === '#363636') {
+  //       console.log(row)
+  //       row.originalIconColor = row['iconIcon'].color; // Сохраняем исходный цвет
+  //       row['iconIcon'].color = '#c0bbb7'; // Изменяем цвет на белый
+  //     }
+  //     // console.log(row)
+  //     if (this.rowSelectionMode === 'service' && this.dataService) {
+  //       this.dataService.fetchDetailedDataById(row['id'])       
+  //     } else if(this.rowSelectionMode === 'parent') {
+  //       this.rowSelected.emit(row);
+  //     }
+  //   })    
+  // }
+
   selectRow(row: any) {
+    if (this.rowSelectionMode === 'service') {
+      this.handleServiceRowSelection(row);
+    } else if (!this.isLoading && this.rowSelectionMode === 'parent') {
+      this.handleParentRowSelection(row);
+    }
+  }
+
+  private handleServiceRowSelection(row: any) {
     this.dataService?.confirmAction('selectRow', () => {
       if (row.selected) {
         return;
@@ -131,24 +171,51 @@ export class GenericTableComponent<T> {
         if (d.selected && d['originalIconColor']) {
           d['iconIcon'].color  = d.originalIconColor;
         }
-        d.selected = false
+        d.selected = false;
       });
-
+  
       row.selected = true;
-
-      // Сохраняем исходный цвет иконки и изменяем на белый, если текущий черный
+  
       if (row?.iconIcon?.color === 'rgb(54, 54, 54)' || row?.iconIcon?.color === '#363636') {
-        console.log(row)
-        row.originalIconColor = row['iconIcon'].color; // Сохраняем исходный цвет
-        row['iconIcon'].color = '#c0bbb7'; // Изменяем цвет на белый
+        row.originalIconColor = row['iconIcon'].color;
+        row['iconIcon'].color = '#c0bbb7';
       }
-      // console.log(row)
-      if (this.rowSelectionMode === 'service' && this.dataService) {
-        this.dataService.fetchDetailedDataById(row['id'])       
-      } else if(this.rowSelectionMode === 'parent') {
-        this.rowSelected.emit(row);
+  
+      if (this.dataService) {
+        this.dataService.fetchDetailedDataById(row['id']);
       }
-    })    
+    });
+  }
+
+  private handleParentRowSelection(row: any) {
+    // Здесь вы можете добавить код для управления переключением
+    // selectRow с компонента, соответствующего компоненту GenericTableComponent
+    // Например, вы можете создать событие и передать выбранную строку
+    // для обработки в родительском компоненте, или сделать что-то еще, 
+    // соответствующее вашим требованиям.
+
+    this.dataService?.confirmAction('selectRow', () => {
+      if (row.selected) {
+        return;
+      }
+
+      this.data?.forEach(d => {
+        if (d.selected && d['originalIconColor']) {
+          d['iconIcon'].color  = d.originalIconColor;
+        }
+        d.selected = false;
+      });
+  
+      row.selected = true;
+  
+      if (row?.iconIcon?.color === 'rgb(54, 54, 54)' || row?.iconIcon?.color === '#363636') {
+        row.originalIconColor = row['iconIcon'].color;
+        row['iconIcon'].color = '#c0bbb7';
+      }
+
+      this.rowSelected.emit(row);
+    })
+    
   }
 
 

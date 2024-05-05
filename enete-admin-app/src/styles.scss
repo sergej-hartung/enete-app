@@ -312,6 +312,7 @@ app-product-list{
     }
 
     app-generic-table{
+        min-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-nav-tabs-custom - $max-height-footer - 0.25rem);
         max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-nav-tabs-custom - $max-height-footer - 0.25rem);
     }
 }
@@ -431,7 +432,7 @@ app-partners-list{
     min-height: 38px;
     background: #fff;
     padding-left: calc(var(--bs-gutter-x) * 0.5 + 0.5rem);
-    z-index: 1100;
+    z-index: 1101; 
 
     &.not_expanable_table{
         padding-right: calc(var(--bs-gutter-x) * 0.5 + 0.5rem);

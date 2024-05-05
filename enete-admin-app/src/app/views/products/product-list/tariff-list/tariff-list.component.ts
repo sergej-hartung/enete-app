@@ -21,6 +21,10 @@ export class TariffListComponent {
   groupId: number | null = null
   dataLoadedOrNew = false
   IsExpandable = false;
+
+  proviedersLoaded = false
+  networkOperatorsLoaded = false
+  tariffStatusesLoaded = false
   
   parnerColumns: Tablecolumn[] = [
     { key: 'id', title: '#', sortable: true },
@@ -69,10 +73,7 @@ export class TariffListComponent {
     this.productService._resetTariffData 
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(event =>{
-        this.tariffService.resetData()
-        this.productService.resetTariffGroupId()
-        this.groupId = null
-        this.dataLoadedOrNew = false
+        this.resetData()
       })
 
     this.productService.tariffGroupId$ 
@@ -81,10 +82,12 @@ export class TariffListComponent {
         if(id && this.groupId != id){
           this.groupId = id
           console.log(this.groupId)
-
-          this.tariffProviderService.fetchDataByGroupId(this.groupId)
-          this.tariffStatusService.fetchData()
-          this.tariffNetworkOperatorService.fetchData()          
+          if(!this.proviedersLoaded && !this.networkOperatorsLoaded && !this.tariffStatusesLoaded){
+            this.tariffProviderService.fetchDataByGroupId(this.groupId)
+            this.tariffStatusService.fetchData()
+            this.tariffNetworkOperatorService.fetchData()
+            console.log('load provider status networkOperator')
+          }        
         }
       })
 
@@ -103,6 +106,7 @@ export class TariffListComponent {
               options.push(option)
             })
             item.options = options
+            this.tariffStatusesLoaded = true
           }
         }    
       });
@@ -122,8 +126,9 @@ export class TariffListComponent {
               options.push(option)
             })
             item.options = options
+            this.proviedersLoaded = true
           }
-
+          
           console.log(this.filters)
         }    
       });
@@ -143,6 +148,7 @@ export class TariffListComponent {
               options.push(option)
             })
             item.options = options
+            this.networkOperatorsLoaded
           }
 
           console.log(this.filters)
@@ -166,12 +172,23 @@ export class TariffListComponent {
     //this.tariffService.fetchDataByGroupId(event.id)
   }
 
+  private resetData(){
+    this.tariffService.resetData()
+    this.productService.resetTariffGroupId()
+    this.groupId = null
+    this.dataLoadedOrNew = false
+  }
+
 
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
     console.log('destroy list')
 
+    this.resetData()
+    this.tariffStatusService.resetData()
+    this.tariffNetworkOperatorService.resetData()
+    this.tariffProviderService.resetData()
     //this.tariffService.resetData()
     //this.groupId = undefined
   }

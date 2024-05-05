@@ -1,3 +1,3 @@
 
-<app-tariff-list class="row no-gutters"></app-tariff-list>
-<!-- <app-hardware-list></app-hardware-list> -->
+<app-tariff-list *ngIf="tariffOrHardware == 1" class="row no-gutters"></app-tariff-list>
+<app-hardware-list *ngIf="tariffOrHardware == 2"></app-hardware-list>

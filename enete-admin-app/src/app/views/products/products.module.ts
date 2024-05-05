@@ -10,6 +10,9 @@ import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../../shared/shared.module';
 import { TariffListComponent } from './product-list/tariff-list/tariff-list.component';
 import { HardwareListComponent } from './product-list/hardware-list/hardware-list.component';
+import { ProductAddEditComponent } from './product-add-edit/product-add-edit.component';
+import { TariffAddEditComponent } from './product-add-edit/tariff-add-edit/tariff-add-edit.component';
+import { HardwareAddEditComponent } from './product-add-edit/hardware-add-edit/hardware-add-edit.component';
 
 
 @NgModule({
@@ -19,7 +22,10 @@ import { HardwareListComponent } from './product-list/hardware-list/hardware-lis
     ProductGroupComponent,
     ProductListComponent,
     TariffListComponent,
-    HardwareListComponent
+    HardwareListComponent,
+    ProductAddEditComponent,
+    TariffAddEditComponent,
+    HardwareAddEditComponent
   ],
   imports: [
     CommonModule,
