@@ -127,13 +127,24 @@ export class GenericTableComponent<T> {
         return;
       }
         
-      this.data?.forEach(d => d.selected = false);
+      this.data?.forEach(d => {
+        if (d.selected && d['originalIconColor']) {
+          d['iconIcon'].color  = d.originalIconColor;
+        }
+        d.selected = false
+      });
+
       row.selected = true;
-  
+
+      // Сохраняем исходный цвет иконки и изменяем на белый, если текущий черный
+      if (row?.iconIcon?.color === 'rgb(54, 54, 54)' || row?.iconIcon?.color === '#363636') {
+        console.log(row)
+        row.originalIconColor = row['iconIcon'].color; // Сохраняем исходный цвет
+        row['iconIcon'].color = '#c0bbb7'; // Изменяем цвет на белый
+      }
+      // console.log(row)
       if (this.rowSelectionMode === 'service' && this.dataService) {
-        //  
-        this.dataService.fetchDetailedDataById(row['id'])
-        
+        this.dataService.fetchDetailedDataById(row['id'])       
       } else if(this.rowSelectionMode === 'parent') {
         this.rowSelected.emit(row);
       }

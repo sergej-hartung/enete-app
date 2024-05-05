@@ -1,6 +1,6 @@
 
 
-<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
     <li [ngbNavItem]="1">
         <button ngbNavLink>Produkte</button>
         <ng-template ngbNavContent>

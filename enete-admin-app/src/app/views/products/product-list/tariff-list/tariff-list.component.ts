@@ -5,7 +5,7 @@ import { NetworkOperator } from '../../../../models/tariff/network-operator/netw
 import { Provider } from '../../../../models/tariff/provider/provider';
 import { Subject, takeUntil } from 'rxjs';
 import { TariffService } from '../../../../services/product/tariff/tariff.service';
-import { StatusService } from '../../../../services/partner/status/status.service';
+import { StatusService } from '../../../../services/product/tariff/status/status.service';
 import { ProviderService } from '../../../../services/product/tariff/provider/provider.service';
 import { NetworkOperatorService } from '../../../../services/product/tariff/network-operator/network-operator.service';
 import { ProductService } from '../../../../services/product/product.service';
