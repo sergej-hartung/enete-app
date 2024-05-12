@@ -19,7 +19,7 @@ class TariffByGroupController extends Controller
             ->where('group_id', '=', $id)
             ->filter($filter)
             ->sort($request->validated())
-            ->get();
+            ->get(); 
         
         return IndexTariffResource::collection($data);
     }

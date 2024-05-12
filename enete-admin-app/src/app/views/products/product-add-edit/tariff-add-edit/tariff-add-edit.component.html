@@ -1,1 +1,29 @@
-<p>tariff-add-edit works!</p>
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
+    <li [ngbNavItem]="1">
+        <button ngbNavLink>Tarifdetails</button>
+        <ng-template ngbNavContent>
+                    
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+        <button ngbNavLink>Attribute</button>
+        <ng-template ngbNavContent>                  
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="3">
+        <button ngbNavLink>Kalkulations-Matrix</button>
+        <ng-template ngbNavContent>                  
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="4">
+        <button ngbNavLink>Promo</button>
+        <ng-template ngbNavContent>                  
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="5">
+        <button ngbNavLink>Template</button>
+        <ng-template ngbNavContent>                  
+        </ng-template>
+    </li>
+</ul>
+<div [ngbNavOutlet]="nav" class="pe-0 ps-0"></div>

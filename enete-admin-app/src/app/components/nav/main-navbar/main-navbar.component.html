@@ -44,16 +44,25 @@
               </ul>
   
               <ul class="navbar-nav center-nav col-4" > 
-                  <li class="nav-item">
-                  <button class="btn nav-link">
-                      <i class="bi bi-plus-circle"></i> Add New
-                  </button>
+                  <li class="nav-item" *ngIf="iconsState['edit']?.active">
+                    <button 
+                        class="btn nav-link"
+                        [disabled]="iconsState['edit']?.disabled"
+                        (click)="handleIconClick('edit')"
+                    >
+                        <i class="fa-solid fa-pencil"></i> Bearbeiten
+                    </button>
+                  </li>
+                  <!-- <li class="nav-item">
+                    <button class="btn nav-link">
+                        <i class="bi bi-plus-circle"></i> Add New
+                    </button>
                   </li>
                   <li class="nav-item">
-                  <button class="btn nav-link">
-                      <i class="bi bi-question-circle"></i> Help
-                  </button>
-                  </li>
+                    <button class="btn nav-link">
+                        <i class="bi bi-question-circle"></i> Help
+                    </button>
+                  </li> -->
               </ul>
   
               <ul class="navbar-nav right-nav col-4"></ul> 

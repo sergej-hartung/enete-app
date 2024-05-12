@@ -9,6 +9,7 @@ import { StatusService } from '../../../../services/product/tariff/status/status
 import { ProviderService } from '../../../../services/product/tariff/provider/provider.service';
 import { NetworkOperatorService } from '../../../../services/product/tariff/network-operator/network-operator.service';
 import { ProductService } from '../../../../services/product/product.service';
+import { MainNavbarService } from '../../../../services/main-navbar.service';
 
 @Component({
   selector: 'app-tariff-list',
@@ -58,6 +59,7 @@ export class TariffListComponent {
     private tariffProviderService: ProviderService,
     private tariffNetworkOperatorService: NetworkOperatorService,
     private productService: ProductService,
+    private mainNavbarService: MainNavbarService,
   ) {}
 
   ngOnInit() {    
@@ -160,15 +162,18 @@ export class TariffListComponent {
   sort(event: any){
     console.log(event)
     this.tariffService.fetchDataByGroupId(this.groupId, event)
+    this.mainNavbarService.setIconState('edit', true, true);
   }
 
   filter(event: any){
     this.tariffService.fetchDataByGroupId(this.groupId, event)
+    this.mainNavbarService.setIconState('edit', true, true);
     //console.log(event)
   }
 
   selectedRow(event: any){
     console.log(event)
+    this.mainNavbarService.setIconState('edit', true, false);
     //this.tariffService.fetchDataByGroupId(event.id)
   }
 

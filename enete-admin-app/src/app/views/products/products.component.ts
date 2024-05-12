@@ -32,15 +32,28 @@ export class ProductsComponent {
 
     this.mainNavbarService.confirmAction$
       .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(action => {
+        if (action.action === 'new') {
+          this.handleFormDirty(action.proceedCallback);
+        } else {
+          action.proceedCallback();
+        }
+        // this.addOrNewProducts = !this.addOrNewProducts
+        // console.log(button)
+      })
+
+    this.mainNavbarService.iconClicks$
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe(button => {
+        //console.log(button)
         this.addOrNewProducts = !this.addOrNewProducts
-        console.log(button)
       })
   }
 
   private initIconStates(): void {
     this.mainNavbarService.setIconState('save', true, true);
     this.mainNavbarService.setIconState('new', true, false);
+    this.mainNavbarService.setIconState('edit', true, true);
   }
 
   private setupProductActions(): void {
@@ -90,5 +103,6 @@ export class ProductsComponent {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    console.log('destroy product component')
   }
 }

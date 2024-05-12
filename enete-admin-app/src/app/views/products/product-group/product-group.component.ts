@@ -4,6 +4,7 @@ import { TariffGroupService } from '../../../services/product/tariff/tariff-grou
 import { TariffService } from '../../../services/product/tariff/tariff.service';
 import { Tablecolumn } from '../../../models/tablecolumn';
 import { Subject, takeUntil } from 'rxjs';
+import { MainNavbarService } from '../../../services/main-navbar.service';
 
 @Component({
   selector: 'app-product-group',
@@ -26,6 +27,7 @@ export class ProductGroupComponent {
     public tariffGroupService: TariffGroupService,
     private tariffService: TariffService,
     private productService: ProductService,
+    private mainNavbarService: MainNavbarService,
   ) {
     this.tariffGroupService.fetchData();
   }
@@ -44,6 +46,7 @@ export class ProductGroupComponent {
   selectedRow(event: any){
     this.productService.setTariffGroupId(event.id)
     this.tariffService.fetchDataByGroupId(event.id)
+    this.mainNavbarService.setIconState('edit', true, true);
     this.isLoading = true
   }
 

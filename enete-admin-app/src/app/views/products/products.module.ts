@@ -13,6 +13,11 @@ import { HardwareListComponent } from './product-list/hardware-list/hardware-lis
 import { ProductAddEditComponent } from './product-add-edit/product-add-edit.component';
 import { TariffAddEditComponent } from './product-add-edit/tariff-add-edit/tariff-add-edit.component';
 import { HardwareAddEditComponent } from './product-add-edit/hardware-add-edit/hardware-add-edit.component';
+import { TariffDetailsAEComponent } from './product-add-edit/tariff-add-edit/tariff-details-a-e/tariff-details-a-e.component';
+import { TariffAttributeComponent } from './product-add-edit/tariff-add-edit/tariff-attribute/tariff-attribute.component';
+import { TariffPromoComponent } from './product-add-edit/tariff-add-edit/tariff-promo/tariff-promo.component';
+import { TariffCalcMatrixComponent } from './product-add-edit/tariff-add-edit/tariff-calc-matrix/tariff-calc-matrix.component';
+import { TariffViewTemplateComponent } from './product-add-edit/tariff-add-edit/tariff-view-template/tariff-view-template.component';
 
 
 @NgModule({
@@ -25,7 +30,12 @@ import { HardwareAddEditComponent } from './product-add-edit/hardware-add-edit/h
     HardwareListComponent,
     ProductAddEditComponent,
     TariffAddEditComponent,
-    HardwareAddEditComponent
+    HardwareAddEditComponent,
+    TariffDetailsAEComponent,
+    TariffAttributeComponent,
+    TariffPromoComponent,
+    TariffCalcMatrixComponent,
+    TariffViewTemplateComponent
   ],
   imports: [
     CommonModule,
