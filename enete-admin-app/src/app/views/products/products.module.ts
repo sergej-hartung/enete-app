@@ -18,6 +18,8 @@ import { TariffAttributeComponent } from './product-add-edit/tariff-add-edit/tar
 import { TariffPromoComponent } from './product-add-edit/tariff-add-edit/tariff-promo/tariff-promo.component';
 import { TariffCalcMatrixComponent } from './product-add-edit/tariff-add-edit/tariff-calc-matrix/tariff-calc-matrix.component';
 import { TariffViewTemplateComponent } from './product-add-edit/tariff-add-edit/tariff-view-template/tariff-view-template.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxDropzoneModule } from 'ngx-dropzone';
 
 
 @NgModule({
@@ -42,7 +44,10 @@ import { TariffViewTemplateComponent } from './product-add-edit/tariff-add-edit/
     ProductsRoutingModule,
     NgbNavModule,
     NgbDropdownModule,
-    SharedModule
+    SharedModule,
+    //ReactiveFormsModule, 
+    FormsModule,
+    NgxDropzoneModule,
   ]
 })
 export class ProductsModule { }

@@ -519,6 +519,32 @@ app-partners-list{
     }
 }
 
+.custom-label-sm{
+    padding-top: 0;
+    padding-bottom: 0;
+    font-size: .70rem;
+    line-height: 1.5;
+    margin-bottom: 0;
+    color: #6c757d;
+    padding-left: 2px;
+
+    &.required::after {
+        content:" *";
+        color:red;
+    }
+}
+
+.form-control-sm {
+    min-height: calc(1.5em + 0.5rem + calc(var(--bs-border-width) * 2));
+    padding: 0.2rem 0.5rem;
+    font-size: 0.8rem;
+    border-radius: var(--bs-border-radius-sm);
+
+    &.is-valid {
+        background-image: none;
+    }
+}
+
 .custom-card-header{
     font-size: .75rem;
     font-weight: 600;
@@ -1051,3 +1077,79 @@ footer{
 .hide-component {
     display: none;
   }
+
+
+app-tariff-add-edit{
+    height: 100%;
+}
+
+.tariff-add-edit-title-wrap{
+    padding-top: 0.5rem;
+}
+
+.tariff-add-edit-title{
+    padding-top: calc(0.4rem + 1px);
+    padding-bottom: 0.4rem;
+    text-align: center;
+    border-bottom: 1px solid #dee2eb;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #545b62;
+}
+
+.tariff-add-edit-content{
+    border-right: 1px solid #dee2eb;
+    padding-right: calc(var(--bs-gutter-x)* 0.5);
+    padding-left: calc(var(--bs-gutter-x)* 0.5);
+}
+
+.selected-info{
+    margin: 0 -0.5rem -0.5rem;
+    padding-left: 0.5rem;
+    font-size: 0.7rem;
+    color: #6c757d;
+    border-top: 1px solid rgba(0, 0, 0, 0.175);
+    background: #f2f2f2;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+}
+
+.form-check-card-custom-body{
+    margin: 0.5rem 0;
+    max-height: 102px;
+    overflow: auto;
+
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    scrollbar-width: none;
+
+    .form-check-input:checked {
+        background-color: #3a3633;
+        border-color: #3a3633;
+    }
+}
+
+.form-check-card-custom{
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.document-select{
+    background: #fff;
+    align-items: center;
+    cursor: pointer;
+    color: #717386;
+    border: 2px dashed #717386;
+    border-radius: 5px;
+    font-size: 16px;
+    overflow-x: auto;
+    width: 100%;
+    margin: 0.75rem 0;
+    height: 95px;
+
+    &:hover{
+        border: 2px solid #717386;
+    }
+}
+
