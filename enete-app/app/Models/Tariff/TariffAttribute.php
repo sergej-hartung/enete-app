@@ -13,7 +13,7 @@ class TariffAttribute extends Model
 
     public function inputType()
     {
-        return $this->belongsTo(AttributeType::class, 'input_type_id');
+        return $this->belongsTo(TariffAttributeType::class, 'input_type_id');
     }
 
     public function tariffs()

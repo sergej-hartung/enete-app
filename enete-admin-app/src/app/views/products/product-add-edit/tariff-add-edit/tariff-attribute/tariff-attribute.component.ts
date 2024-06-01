@@ -1,6 +1,11 @@
 import { Component, SimpleChanges} from '@angular/core';
 import { CdkDragDrop, moveItemInArray, copyArrayItem  } from '@angular/cdk/drag-drop';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {AttributeService} from '../../../../../services/product/tariff/attribute/attribute.service'
+import { ProductService } from '../../../../../services/product/product.service';
+import { Subject, delay, of, takeUntil } from 'rxjs';
+import { Attribute } from '../../../../../models/tariff/attribute/attribute';
+//import { ProviderService } from '../../../../services/product/tariff/provider/provider.service';
 
 
 interface Group {
@@ -17,62 +22,62 @@ interface Group {
   styleUrl: './tariff-attribute.component.scss'
 })
 export class TariffAttributeComponent {
-  tariffAttributes = [
-    {
-      code:'highspeed_data',
-      name:'Highspeed-Data(gesamt)',
-      is_system: '',
-      is_required: '',
-      is_frontend_visible: 1,
-      unit: 'Mbit/s',
-      attribute_type: 'Ganzzahlen'
-      // value_varchar: '',
-      // value_text: ''
-    },
-    {
-      code:'aktion_volumen',
-      name: 'Aktion-Volumen',
-      is_system: '',
-      is_required: '',
-      is_frontend_visible: 1,
-      unit: 'GB',
-      attribute_type: 'Ganzzahlen'
-      // value_varchar: '',
-      // value_text: ''
-    },
-    {
-      code:'laufzeit',
-      name: 'Tarif Laufzeit',
-      is_system: '',
-      is_required: '',
-      is_frontend_visible: 1,
-      unit: 'Monate',
-      attribute_type: 'Ganzzahlen'
-      // value_varchar: '',
-      // value_text: ''
-    },
-    {
-      code:'reg_basispreis',
-      name: 'Regulärer Basispreis',
-      is_system: '',
-      is_required: '',
-      is_frontend_visible: 1,
-      unit: 'EUR',
-      attribute_type: 'Dezimalzahlen'
-      // value_varchar: '',
-      // value_text: ''
-    },
-    {
-      code:'telefonie_allnet_flat',
-      name: 'Telefonie Allnet Flat',
-      is_system: '',
-      is_required: '',
-      is_frontend_visible: 0,
-      unit: '',
-      attribute_type: 'Dropdown'
-      // value_varchar: '',
-      // value_text: ''
-    }
+  tariffAttributes:Attribute[] = [
+    // {
+    //   code:'highspeed_data',
+    //   name:'Highspeed-Data(gesamt)',
+    //   is_system: '',
+    //   is_required: '',
+    //   is_frontend_visible: 1,
+    //   unit: 'Mbit/s',
+    //   attribute_type: 'Ganzzahlen'
+    //   // value_varchar: '',
+    //   // value_text: ''
+    // },
+    // {
+    //   code:'aktion_volumen',
+    //   name: 'Aktion-Volumen',
+    //   is_system: '',
+    //   is_required: '',
+    //   is_frontend_visible: 1,
+    //   unit: 'GB',
+    //   attribute_type: 'Ganzzahlen'
+    //   // value_varchar: '',
+    //   // value_text: ''
+    // },
+    // {
+    //   code:'laufzeit',
+    //   name: 'Tarif Laufzeit',
+    //   is_system: '',
+    //   is_required: '',
+    //   is_frontend_visible: 1,
+    //   unit: 'Monate',
+    //   attribute_type: 'Ganzzahlen'
+    //   // value_varchar: '',
+    //   // value_text: ''
+    // },
+    // {
+    //   code:'reg_basispreis',
+    //   name: 'Regulärer Basispreis',
+    //   is_system: '',
+    //   is_required: '',
+    //   is_frontend_visible: 1,
+    //   unit: 'EUR',
+    //   attribute_type: 'Dezimalzahlen'
+    //   // value_varchar: '',
+    //   // value_text: ''
+    // },
+    // {
+    //   code:'telefonie_allnet_flat',
+    //   name: 'Telefonie Allnet Flat',
+    //   is_system: '',
+    //   is_required: '',
+    //   is_frontend_visible: 0,
+    //   unit: '',
+    //   attribute_type: 'Dropdown'
+    //   // value_varchar: '',
+    //   // value_text: ''
+    // }
   ];
   groups: Group[] = [];
   
@@ -80,12 +85,19 @@ export class TariffAttributeComponent {
   connectedDropLists: string[] = [this.tariffDropListId];
 
   addNewGroup = false;
-  isCollapsed = false;
+  //isCollapsed = false;
   newGroupForm: FormGroup;
   editGroupIndex: number | null = null;
   editGroupForm: FormGroup;
+  groupId: number | null = null
 
-  constructor(private fb: FormBuilder) {
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(
+    private fb: FormBuilder, 
+    private attributeService: AttributeService,
+    private productService: ProductService,
+  ) {
     this.newGroupForm = this.fb.group({
       groupName: ['', Validators.required]
     });
@@ -95,7 +107,36 @@ export class TariffAttributeComponent {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnInit() { 
+    this.productService.tariffGroupId$ 
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(id =>{
+        if(id && this.groupId != id){
+          this.groupId = id
+          //this.attributeService.fetchDataByGroupId(this.groupId)
+          // console.log('test')
+          of(null).pipe(
+            delay(1000)
+          ).subscribe(() => {
+            this.attributeService.fetchDataByGroupId(this.groupId);
+          });
+        }
+      })
+
+    this.attributeService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {  
+        if(data){ 
+          if(data.entityType == 'tariffAttributesByGroup'){
+            this.tariffAttributes = data.data
+          }
+          console.log('loaded Attributes')
+          console.log(data)
+        }    
+      });
+  }
+
+  ngOnChanges(changes: SimpleChanges) {   
     this.updateConnectedDropLists();
   }
 
@@ -178,5 +219,10 @@ export class TariffAttributeComponent {
 
   canDropToTariffList = (drag: any) => {
     return drag.dropContainer.id === this.tariffDropListId;
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

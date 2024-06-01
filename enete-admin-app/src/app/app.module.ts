@@ -12,6 +12,7 @@ import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import {AuthInterceptor} from './interceptors/auth.interceptor';
+import {LoggingInterceptor} from './interceptors/logging.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 
 
@@ -38,6 +39,11 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoggingInterceptor,
       multi: true,
     },
     provideAnimationsAsync(),

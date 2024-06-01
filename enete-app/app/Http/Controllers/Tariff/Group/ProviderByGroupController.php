@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tariff\Group;
 
 use App\Models\Tariff;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Tariff\Provider\IndexTariffProviderResource;
 use App\Http\Resources\Tariff\IndexTariffResource;
 use App\Http\Requests\Tariff\Group\TariffByGroupRequest;
 use App\Http\Filters\TariffFilter;
@@ -16,6 +17,6 @@ class ProviderByGroupController extends Controller
 
         $group = TariffGroup::with('providers')->find($id);
         
-        return IndexTariffResource::collection($group->providers);
+        return IndexTariffProviderResource::collection($group->providers);
     }
 }

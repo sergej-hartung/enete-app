@@ -45,7 +45,7 @@ export class ProductsComponent {
     this.mainNavbarService.iconClicks$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(button => {
-        //console.log(button)
+        console.log(button)
         this.addOrNewProducts = !this.addOrNewProducts
       })
   }

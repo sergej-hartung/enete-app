@@ -1216,11 +1216,27 @@ app-tariff-add-edit{
 .left-panel{
     padding-right: calc(var(--bs-gutter-x)* 0.5) !important;
     padding-left: calc(var(--bs-gutter-x)* 0.5) !important;
+
+    max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 48.38px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    scrollbar-width: none;
 }
 
 .right-panel{
     padding-right: calc(var(--bs-gutter-x)* 0.5) !important;
     padding-left: calc(var(--bs-gutter-x)* 0.5) !important;
+
+    max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 48.38px);
+    overflow-y: auto;
+
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    scrollbar-width: none;
 }
 
 .input-group-sm-custom{
@@ -1236,6 +1252,9 @@ app-tariff-add-edit{
     i{
         margin-left: 0.5rem;
     }
+}
+.new-attribute-group{
+    margin-bottom: 20px;
 }
 
 // html, body { height: 100%; }

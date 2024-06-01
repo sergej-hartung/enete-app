@@ -29,7 +29,10 @@ class DatabaseSeeder extends Seeder
             TariffProviderSeeder::class,
             TariffGroupProviderMappSeeder::class,
             TariffNetworkOperatorSeeder::class,
-            TariffGroupNetworkOperatorMappSeeder::class
+            TariffGroupNetworkOperatorMappSeeder::class,
+            TariffAttributeTypesSeeder::class,
+            TariffAttributesSeeder::class,
+            TariffGroupAttributeMappingsSeeder::class
         ]);
     }
 }
