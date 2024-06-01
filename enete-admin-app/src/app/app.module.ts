@@ -11,7 +11,8 @@ import { SecondaryNavbarComponent } from './components/nav/secondary-navbar/seco
 import { SharedModule } from './shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
-import {AuthInterceptor} from './interceptors/auth.interceptor'
+import {AuthInterceptor} from './interceptors/auth.interceptor';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
 
 
 
@@ -39,6 +40,7 @@ import {AuthInterceptor} from './interceptors/auth.interceptor'
       useClass: AuthInterceptor,
       multi: true,
     },
+    provideAnimationsAsync(),
   ],
   bootstrap: [AppComponent]
 })

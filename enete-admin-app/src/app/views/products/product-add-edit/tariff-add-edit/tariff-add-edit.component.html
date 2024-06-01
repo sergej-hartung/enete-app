@@ -1,129 +1,6 @@
-<div class="col-5 d-flex flex-column">
-    <div class="tariff-add-edit-title-wrap">
-        <div class="tariff-add-edit-title">
-            Tarifdeatails
-        </div>
-    </div>
-    <div class="tariff-add-edit-content flex-grow-1">
-        <form>
-            <div class="row">
-                <div class="col-7 pe-1">
-                    <div class="row">
-                        
-                        <!-- <div class="col pe-1">
-                            <label for="id-extern" class="form-label custom-label-sm">Id-Extern</label>
-                            <input type="text" class="form-control form-control-sm" id="id-extern" placeholder="z.b P1234">
-                        </div> -->
-                        <div class="col pe-1">
-                            <label for="status" class="form-label custom-label-sm">Status</label>
-                            <select class="form-select form-select-sm" id="status">
-                                <option value="1">Aktive</option>
-                                <option value="2">Inactive</option>
-                                <option value="3">Unfolständig</option>
-                              </select>
-                        </div>
-                        <div class="form_check pt-4 col ps-1" >
-                            <input 
-                                id="is-published" 
-                                type="checkbox"
-                            >
-                            <label for="is-published">Web Active</label>
-                        </div>
-                    </div>
-                    <div class="row">
-                        
-                        <div class="col pe-1">
-                            <label for="name-short" class="form-label custom-label-sm">Name kurz</label>
-                            <input type="text" class="form-control form-control-sm" id="name-short">
-                        </div>
-                        <div class="col-7 ps-1">
-                            <label for="name" class="form-label custom-label-sm">Name</label>
-                            <input type="text" class="form-control form-control-sm" id="name">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col pe-1">
-                            <label for="id-extern" class="form-label custom-label-sm">Id-Extern</label>
-                            <input type="text" class="form-control form-control-sm" id="id-extern" placeholder="z.b P1234">
-                        </div>
-                        <div class="col pe-1 ps-1">
-                            <label for="provieder" class="form-label custom-label-sm">Provider</label>
-                            <select class="form-select form-select-sm" id="provider">
-                                <option value="1">Vodafone</option>
-                                <option value="2">T-mobile</option>
-                                <option value="3">O2 Telefonica</option>
-                                <option value="3">Otelo</option>
-                              </select>
-                        </div>
-                        <div class="col ps-1">
-                            <label for="networkoperator" class="form-label custom-label-sm">Netzbetreiber</label>
-                            <select class="form-select form-select-sm" id="networkoperator">
-                                <option value="1">Vodafone</option>
-                                <option value="2">T-mobile</option>
-                                <option value="3">O2 Telefonica</option>
-                              </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        
-                        <div class="col">
-                            <button class="btn document-select">PDF Dokument</button>
-                        </div>                       
-                    </div>
-                </div>
-                <div class="col ps-1">
-                    <div class="row">
-                        <div class="col pt-2">
-                            <app-card>
-                                <div card-header>Hardware Kombination</div>
-                                <div card-body>
-                                    <div class="form-check-card-custom-body">
-                                        <div *ngFor="let option of combiHardware; let i = index">
-                                            <div class="form-check form-check-card-custom">
-                                                <input type="checkbox" class="form-check-input" [id]="'hardware' + option.id" [(ngModel)]="option.checked" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateSelectedItems()">
-                                                <label class="form-check-label" [for]="'hardware' + option.id">{{ option.label }}</label>
-                                            </div>
-                                        </div>
-                                    </div>                           
-                                    <div class="selected-info">
-                                    {{ selectedCombiHardware.length }} selected / {{ combiHardware.length }} total 
-                                    </div>
-                                </div>
-                            </app-card>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <app-card>
-                                <div card-header>Kategorie</div>
-                                <div card-body>
-                                    <div class="form-check-card-custom-body">
-                                        <div *ngFor="let option of tariffCategorys; let i = index">
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input" [id]="'category' + option.id" [(ngModel)]="option.checked" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateSelectedItems()">
-                                                <label class="form-check-label" [for]="'category' + option.id">{{ option.label }}</label>
-                                            </div>
-                                        </div>
-                                    </div>                           
-                                    <div class="selected-info">
-                                        {{ selectedTariffCategorys.length }} selected / {{ tariffCategorys.length }} total 
-                                        </div>
-                                </div>
-                            </app-card>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <label for="tariff_note" class="form-label custom-label-sm">Intern</label>
-                    <textarea id="tariff_note" rows="10" class="form-control form-control-sm ng-pristine ng-valid ng-touched"></textarea>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
+
+<!-- <app-tariff-details class="col-5 d-flex flex-column"></app-tariff-details> -->
+<app-tariff-details-a-e class="col-5 d-flex flex-column"></app-tariff-details-a-e>
 <div class="col-7">
     <ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
         <!-- <li [ngbNavItem]="1">
@@ -134,7 +11,8 @@
         </li> -->
         <li [ngbNavItem]="1">
             <button ngbNavLink>Attribute</button>
-            <ng-template ngbNavContent>                  
+            <ng-template ngbNavContent> 
+                <app-tariff-attribute></app-tariff-attribute>                 
             </ng-template>
         </li>
         <li [ngbNavItem]="2">
