@@ -26,7 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('action_group_id')->nullable();
             $table->boolean('is_published')->nullable();
             $table->text('note')->nullable();
-            $table->unsignedBigInteger('pdf_document_id')->nullable();
+            $table->unsignedBigInteger('file_id')->nullable();
             $table->boolean('is_from_api')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

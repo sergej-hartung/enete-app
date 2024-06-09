@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductDocument\ProductDocumentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -156,6 +157,17 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
     //     $router->get('/', 'App\Http\Controllers\Hardware\Group\HardwareGroupIndexController')->name('hardware-groups.index');
     //     $router->get('/{groupId}/hardware', 'App\Http\Controllers\Hardware\Group\HardwareByGroupController')->name('hardware-groups.hardware');
     // });
+    $router->post('/create-folder', [ProductDocumentController::class, 'createFolder']); //erledigt
+    $router->post('/upload-file', [ProductDocumentController::class, 'uploadFile']); //erledigt
+    $router->get('/tree', [ProductDocumentController::class, 'getTree']); // erledigt
+    $router->get('/files', [ProductDocumentController::class, 'getFiles']);
+    $router->get('/file-content', [ProductDocumentController::class, 'getFileContent']); // erledigt
+    $router->get('/file-content/{id}', [ProductDocumentController::class, 'getFileContentById']);
+    $router->delete('/delete-folder', [ProductDocumentController::class, 'deleteFolder']);
+    $router->delete('/delete-file', [ProductDocumentController::class, 'deleteFile']);
+    $router->patch('/rename-folder', [ProductDocumentController::class, 'renameFolder']);
+    $router->patch('/rename-file', [ProductDocumentController::class, 'renameFile']);
+
 });
 
 Route::post('/email/verify/{hash}', 'App\Http\Controllers\User\VerificationController');

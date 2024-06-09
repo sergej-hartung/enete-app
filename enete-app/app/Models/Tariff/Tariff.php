@@ -16,7 +16,7 @@ class Tariff extends Model
     use SoftDeletes;
     use TarifSortable;
 
-    protected $fillable = ['external_id', 'api_distributor_id', 'name', 'name_short', 'provider_id', 'network_operator_id', 'group_id', 'template_id', 'status_id', 'has_action', 'action_group_id', 'is_web_active', 'note', 'pdf_document_id', 'is_from_api', 'created_by', 'updated_by'];
+    protected $fillable = ['external_id', 'api_distributor_id', 'name', 'name_short', 'provider_id', 'network_operator_id', 'group_id', 'template_id', 'status_id', 'has_action', 'action_group_id', 'is_web_active', 'note', 'file_id', 'is_from_api', 'created_by', 'updated_by'];
 
     // public function attributes()
     // {

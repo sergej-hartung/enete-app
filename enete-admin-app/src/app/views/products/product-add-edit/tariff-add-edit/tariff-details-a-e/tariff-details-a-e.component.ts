@@ -5,6 +5,7 @@ import { NetworkOperatorService } from '../../../../../services/product/tariff/n
 import { StatusService } from '../../../../../services/product/tariff/status/status.service';
 import { FormService } from '../../../../../services/form.service';
 import { FormGroup } from '@angular/forms';
+import { ProductService } from '../../../../../services/product/product.service';
 
 @Component({
   selector: 'app-tariff-details-a-e',
@@ -36,6 +37,7 @@ export class TariffDetailsAEComponent {
     private tariffStatusService: StatusService,
     private tariffProviderService: ProviderService,
     private tariffNetworkOperatorService: NetworkOperatorService,
+    private productService: ProductService,
     private formService: FormService
   ) {
     this.tariffFormGroup = this.formService.initTariffFormGroup()
@@ -72,6 +74,18 @@ export class TariffDetailsAEComponent {
         }   
       });
 
+      this.productService.tariffGroupId$ 
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(id =>{
+        if(id){
+          this.tariffFormGroup.get('group_id')?.setValue(id)
+        }
+      })
+
+  }
+
+  test(){
+    console.log(this.tariffFormGroup)
   }
 
   updateSelectedItems() {
