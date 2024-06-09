@@ -4,14 +4,16 @@ import { environment } from '../../../../../environments/environment';
 import { BehaviorSubject, Observable, Subject, catchError, of, takeUntil } from 'rxjs';
 //import { DataService } from '../../data.service';
 import { DataService } from '../../../data.service';
-import { NetworkOperator, NetworkOperatorData } from '../../../../models/tariff/network-operator/network-operator';
+
+// import { Attribute, AttributeData } from '../../../../models/tariff/attribute/attribute';
+import { AttributeGroup, AttributeGroupData } from '../../../../models/tariff/attributeGroup/attributeGroup';
 
 
 // PartnerService: Specific service extending DataService for handling Partner type data
 @Injectable({
   providedIn: 'root'
 })
-export class NetworkOperatorService extends DataService<NetworkOperator> {
+export class AttributeGroupService extends DataService<AttributeGroup> {
 
 
   private destroy$ = new Subject<void>();
@@ -26,31 +28,11 @@ export class NetworkOperatorService extends DataService<NetworkOperator> {
 
   
 
-  fetchDataByGroupId(id: any): void{
-    this.http.get<NetworkOperatorData>(`${this.apiUrl}/products/tariff-groups/${id}/network-operators`)
-      .pipe(
-        takeUntil(this.destroy$),
-        catchError(error => {
-          this.handleError(error);
-          return of(null); // Возвращаем Observable<null> в случае ошибки
-        })
-      )
-      .subscribe({
-        next: data => {
-          if (data) {
-            this._data.next({
-              data: data["data"],
-              requestType: 'get',
-              entityType: 'tariffNetworkOperatorByGroup'
-            });
-          }
-        },
-        error: error => console.error('Ошибка при получении данных:', error)
-      });
-  }
+  // get filters(){
+  // }
 
-  fetchData(): void {
-    this.http.get<NetworkOperatorData>(`${this.apiUrl}/products/tariff-network-operators`)
+  fetchData(id: any): void{
+    this.http.get<AttributeGroupData>(`${this.apiUrl}/products/tariff-attribute-groups/${id}`)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
@@ -60,29 +42,53 @@ export class NetworkOperatorService extends DataService<NetworkOperator> {
       )
       .subscribe({
         next: data => {
-            
           if (data) {
             this._data.next({
               data: data["data"],
               requestType: 'get',
-              entityType: 'tariffNetworkOperator'
+              entityType: 'tariffAttributeGroups'
             });
           }
         },
         error: error => console.error('Ошибка при получении данных:', error)
       });
-    
   }
+  
+
+//   fetchData(): void {
+//     this.http.get<AttributeGroupData>(`${this.apiUrl}/products/tariff-atributes`)
+//       .pipe(
+//         takeUntil(this.destroy$),
+//         catchError(error => {
+//           this.handleError(error);
+//           return of(null); // Возвращаем Observable<null> в случае ошибки
+//         })
+//       )
+//       .subscribe({
+//         next: data => {
+            
+//           if (data) {
+//             this._data.next({
+//               data: data["data"],
+//               requestType: 'get',
+//               entityType: 'tariffAttributes'
+//             });
+//           }
+//         },
+//         error: error => console.error('Ошибка при получении данных:', error)
+//       });
+    
+//   }
 
   fetchDetailedDataById(id: number): void {
     
   }
 
-  addItem(item: NetworkOperator | any): any {
+  addItem(item: AttributeGroup | any): any {
    
   }
 
-  updateItem(id:number, item: NetworkOperator): void {
+  updateItem(id:number, item: AttributeGroup): void {
     
   }
 

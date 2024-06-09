@@ -10,6 +10,7 @@ import { ProviderService } from '../../../../services/product/tariff/provider/pr
 import { NetworkOperatorService } from '../../../../services/product/tariff/network-operator/network-operator.service';
 import { ProductService } from '../../../../services/product/product.service';
 import { MainNavbarService } from '../../../../services/main-navbar.service';
+import { AttributeGroupService } from '../../../../services/product/tariff/attribute-group/attribute-group.service';
 
 @Component({
   selector: 'app-tariff-list',
@@ -60,6 +61,7 @@ export class TariffListComponent {
     private tariffNetworkOperatorService: NetworkOperatorService,
     private productService: ProductService,
     private mainNavbarService: MainNavbarService,
+    private attributeGroupService: AttributeGroupService
   ) {}
 
   ngOnInit() {    
@@ -83,19 +85,17 @@ export class TariffListComponent {
       .subscribe(id =>{
         if(id && this.groupId != id){
           this.groupId = id
-          console.log(this.groupId)
-          if(!this.proviedersLoaded && !this.networkOperatorsLoaded && !this.tariffStatusesLoaded){
-            this.tariffProviderService.fetchDataByGroupId(this.groupId)
-            this.tariffStatusService.fetchData()
-            this.tariffNetworkOperatorService.fetchData()
-            console.log('load provider status networkOperator')
-          }        
+          this.tariffProviderService.fetchDataByGroupId(this.groupId)
+          this.tariffStatusService.fetchData()
+          this.tariffNetworkOperatorService.fetchDataByGroupId(this.groupId)
+          console.log('load provider status networkOperator')      
         }
       })
 
     this.tariffStatusService.data$
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {  
+      .subscribe(data => { 
+        console.log(data) 
         if(data){ 
           let item = this.filters.find(item => item.key === 'status_id')
           if(item && data.data.length > 0){
@@ -109,15 +109,19 @@ export class TariffListComponent {
             })
             item.options = options
             this.tariffStatusesLoaded = true
+          }else if(item && data.data.length == 0){
+            item.options = []
           }
+
         }    
       });
 
     this.tariffProviderService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {  
-        if(data){ 
+        if(data){
           let item = this.filters.find(item => item.key === 'provider_id')
+          console.log(item)
           if(item && data.data.length > 0){
             let options:any  = [{label: 'alle', value: '0', selected: true}]
             data.data.forEach(item => {
@@ -129,6 +133,8 @@ export class TariffListComponent {
             })
             item.options = options
             this.proviedersLoaded = true
+          }else if(item && data.data.length == 0){
+            item.options = []
           }
           
           console.log(this.filters)
@@ -151,9 +157,9 @@ export class TariffListComponent {
             })
             item.options = options
             this.networkOperatorsLoaded
+          }else if(item && data.data.length == 0){
+            item.options = []
           }
-
-          console.log(this.filters)
         }    
       });
 
@@ -173,13 +179,20 @@ export class TariffListComponent {
 
   selectedRow(event: any){
     console.log(event)
-    this.mainNavbarService.setIconState('edit', true, false);
+    if(event){
+      //this.productService.setTariffId(event.id)
+      this.mainNavbarService.setIconState('edit', true, false);
+      this.attributeGroupService.fetchData(event.id)
+    }
+    
     //this.tariffService.fetchDataByGroupId(event.id)
   }
 
   private resetData(){
     this.tariffService.resetData()
+    this.attributeGroupService.resetData()
     this.productService.resetTariffGroupId()
+    this.productService.resetTariffId()
     this.groupId = null
     this.dataLoadedOrNew = false
   }

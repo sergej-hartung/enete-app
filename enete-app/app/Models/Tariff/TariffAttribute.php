@@ -4,6 +4,7 @@ namespace App\Models\Tariff;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\User;
 
 class TariffAttribute extends Model
 {
@@ -23,9 +24,17 @@ class TariffAttribute extends Model
                     ->withTimestamps();
     }
 
-    public function groups()
+    public function attributeGroups()
     {
-        return $this->belongsToMany(Group::class, 'group_attribute_mappings', 'attribute_id', 'group_id');
+        return $this->belongsToMany(TariffAttributeGroup::class, 'tariff_attribute_group_mappings', 'attribute_id', 'attribute_group_id')
+                    ->withPivot('value_varchar', 'value_text', 'is_active', 'position')
+                    ->orderBy('position'); // Сортировка по position
+    }
+
+    public function tariffGroups()
+    {
+        return $this->belongsToMany(TariffGroup::class, 'tariff_group_attribute_mappings', 'attribute_id', 'group_id');
+                    
     }
 
     public function creator()

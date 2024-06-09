@@ -121,14 +121,18 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
     
     // $router->get('/tariffs', 'App\Http\Controllers\Tariff\TariffIndexController')->name('tariffs.index'); 'middleware' => ['jwt.auth'], 
     // $router->get('/tariffs/{tariffId}', 'App\Http\Controllers\Tariff\TariffShowController')->name('tariffs.show');
-   
+    $router->group(['prefix' => 'tariffs'], function ($router) {
+        $router->post('/', 'App\Http\Controllers\Tariff\TariffStoreController')->name('tariffs.store');
+    });
+
     $router->group(['prefix' => 'tariff-groups'], function ($router) {
         $router->get('/', 'App\Http\Controllers\Tariff\Group\TariffGroupIndexController')->name('tariff-groups.index');
         $router->get('/{groupId}/tariffs', 'App\Http\Controllers\Tariff\Group\TariffByGroupController')->name('tariff-groups.tariffs');
         $router->get('/{groupId}/providers', 'App\Http\Controllers\Tariff\Group\ProviderByGroupController')->name('tariff-groups.providers');
+        $router->get('/{groupId}/network-operators', 'App\Http\Controllers\Tariff\Group\NetworkOperatorByGroupController')->name('tariff-groups.network-operators');
         $router->get('/{groupId}/attributes', 'App\Http\Controllers\Tariff\Group\AttributeByGroupController')->name('tariff-groups.attributes');
     });
-
+    
     $router->group(['prefix' => 'tariff-statuses'], function ($router) {
         $router->get('/', 'App\Http\Controllers\Tariff\TariffStatus\IndexController')->name('tariff-statuses.index');
     });
@@ -139,6 +143,10 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
 
     $router->group(['prefix' => 'tariff-network-operators'], function ($router) {
         $router->get('/', 'App\Http\Controllers\Tariff\TariffNetworkOperator\IndexController')->name('tariff-network-operators.index');
+    });
+
+    $router->group(['prefix' => 'tariff-attribute-groups'], function ($router) {
+        $router->get('/{tariffId}', 'App\Http\Controllers\Tariff\TariffAttributeGroup\IndexController')->name('tariff-attribute-groups.index');
     });
 
     // $router->get('/hardware', 'App\Http\Controllers\Hardware\HardwareIndexController')->name('hardware.index');

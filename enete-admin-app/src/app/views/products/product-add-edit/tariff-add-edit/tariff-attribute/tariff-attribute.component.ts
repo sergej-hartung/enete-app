@@ -1,102 +1,47 @@
-import { Component, SimpleChanges} from '@angular/core';
-import { CdkDragDrop, moveItemInArray, copyArrayItem  } from '@angular/cdk/drag-drop';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {AttributeService} from '../../../../../services/product/tariff/attribute/attribute.service'
+import { Component, SimpleChanges } from '@angular/core';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { AttributeService } from '../../../../../services/product/tariff/attribute/attribute.service';
 import { ProductService } from '../../../../../services/product/product.service';
+import { AttributeGroupService } from '../../../../../services/product/tariff/attribute-group/attribute-group.service';
 import { Subject, delay, of, takeUntil } from 'rxjs';
 import { Attribute } from '../../../../../models/tariff/attribute/attribute';
-//import { ProviderService } from '../../../../services/product/tariff/provider/provider.service';
-
+import { MainNavbarService } from '../../../../../services/main-navbar.service';
 
 interface Group {
+  id?: number;
   name: string;
-  attributes: any[];
+  attributes: Attribute[];
+  form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
   hidden?: boolean;
 }
-
-
 
 @Component({
   selector: 'app-tariff-attribute',
   templateUrl: './tariff-attribute.component.html',
-  styleUrl: './tariff-attribute.component.scss'
+  styleUrls: ['./tariff-attribute.component.scss']
 })
 export class TariffAttributeComponent {
-  tariffAttributes:Attribute[] = [
-    // {
-    //   code:'highspeed_data',
-    //   name:'Highspeed-Data(gesamt)',
-    //   is_system: '',
-    //   is_required: '',
-    //   is_frontend_visible: 1,
-    //   unit: 'Mbit/s',
-    //   attribute_type: 'Ganzzahlen'
-    //   // value_varchar: '',
-    //   // value_text: ''
-    // },
-    // {
-    //   code:'aktion_volumen',
-    //   name: 'Aktion-Volumen',
-    //   is_system: '',
-    //   is_required: '',
-    //   is_frontend_visible: 1,
-    //   unit: 'GB',
-    //   attribute_type: 'Ganzzahlen'
-    //   // value_varchar: '',
-    //   // value_text: ''
-    // },
-    // {
-    //   code:'laufzeit',
-    //   name: 'Tarif Laufzeit',
-    //   is_system: '',
-    //   is_required: '',
-    //   is_frontend_visible: 1,
-    //   unit: 'Monate',
-    //   attribute_type: 'Ganzzahlen'
-    //   // value_varchar: '',
-    //   // value_text: ''
-    // },
-    // {
-    //   code:'reg_basispreis',
-    //   name: 'Regulärer Basispreis',
-    //   is_system: '',
-    //   is_required: '',
-    //   is_frontend_visible: 1,
-    //   unit: 'EUR',
-    //   attribute_type: 'Dezimalzahlen'
-    //   // value_varchar: '',
-    //   // value_text: ''
-    // },
-    // {
-    //   code:'telefonie_allnet_flat',
-    //   name: 'Telefonie Allnet Flat',
-    //   is_system: '',
-    //   is_required: '',
-    //   is_frontend_visible: 0,
-    //   unit: '',
-    //   attribute_type: 'Dropdown'
-    //   // value_varchar: '',
-    //   // value_text: ''
-    // }
-  ];
+  tariffAttributes: Attribute[] = [];
   groups: Group[] = [];
-  
+
   tariffDropListId = 'tariffDropList';
   connectedDropLists: string[] = [this.tariffDropListId];
 
   addNewGroup = false;
-  //isCollapsed = false;
   newGroupForm: FormGroup;
   editGroupIndex: number | null = null;
   editGroupForm: FormGroup;
-  groupId: number | null = null
+  groupId: number | null = null;
 
   private unsubscribe$ = new Subject<void>();
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private attributeService: AttributeService,
     private productService: ProductService,
+    private mainNavbarService: MainNavbarService,
+    private attributeGroupService: AttributeGroupService
   ) {
     this.newGroupForm = this.fb.group({
       groupName: ['', Validators.required]
@@ -108,32 +53,40 @@ export class TariffAttributeComponent {
   }
 
   ngOnInit() { 
-    this.productService.tariffGroupId$ 
+    this.productService.tariffGroupId$
       .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(id =>{
-        if(id && this.groupId != id){
-          this.groupId = id
-          //this.attributeService.fetchDataByGroupId(this.groupId)
-          // console.log('test')
-          of(null).pipe(
-            delay(1000)
-          ).subscribe(() => {
-            this.attributeService.fetchDataByGroupId(this.groupId);
-          });
+      .subscribe(id => {
+        if (id && this.groupId !== id) {
+          this.groupId = id;
+          this.attributeService.fetchDataByGroupId(this.groupId);
+          // of(null).pipe(
+          //   delay(1000)
+          // ).subscribe(() => {
+          //   this.attributeService.fetchDataByGroupId(this.groupId);
+          // });
         }
-      })
+      });
 
     this.attributeService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {  
-        if(data){ 
-          if(data.entityType == 'tariffAttributesByGroup'){
-            this.tariffAttributes = data.data
-          }
-          console.log('loaded Attributes')
-          console.log(data)
-        }    
+        if (data && data.entityType === 'tariffAttributesByGroup') {
+          this.tariffAttributes = data.data;
+          this.updateTariffAttributesStatus(); // Обновление статуса после получения атрибутов
+          console.log('Loaded Attributes:', data);
+        }
       });
+
+    // this.mainNavbarService.iconClicks$
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe(button => {
+    //     console.log(button)
+    //     if (button === 'edit' && this.groupId) {
+    //       this.loadAttributeGroups();
+    //     }
+    //   });
+
+    this.loadAttributeGroups();
   }
 
   ngOnChanges(changes: SimpleChanges) {   
@@ -147,7 +100,14 @@ export class TariffAttributeComponent {
 
   saveNewGroup() {
     if (this.newGroupForm.valid) {
-      this.groups.push({ name: this.newGroupForm.value.groupName, attributes: [] });
+      const newGroup: Group = {
+        name: this.newGroupForm.value.groupName,
+        attributes: [],
+        form: this.fb.group({
+          attributes: this.fb.array([])
+        })
+      };
+      this.groups.push(newGroup);
       this.updateConnectedDropLists();
       this.addNewGroup = false;
       this.newGroupForm.reset();
@@ -180,6 +140,7 @@ export class TariffAttributeComponent {
   removeGroup(index: number) {
     this.groups.splice(index, 1);
     this.updateConnectedDropLists();
+    this.updateTariffAttributesStatus(); // Обновление статуса после удаления группы
   }
 
   toggleGroupAttributes(index: number) {
@@ -195,30 +156,138 @@ export class TariffAttributeComponent {
   }
 
   drop(event: CdkDragDrop<any[]>, group?: Group) {
+    console.log(this.groups)
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.moveItemInFormArray(group!.form.get('attributes') as FormArray, event.previousIndex, event.currentIndex);
     } else {
       if (group) {
         const attribute = event.previousContainer.data[event.previousIndex];
-        if (!group.attributes.includes(attribute)) {
-          copyArrayItem(event.previousContainer.data,
-                        event.container.data,
-                        event.previousIndex,
-                        event.currentIndex);
+        const attributeExists = group.attributes.some(attr => attr.id === attribute.id);
+        if (!attributeExists) {
+          const copiedAttribute = { ...attribute, isCopied: true, isFocused: false }; // isFocused по умолчанию false
+          group.attributes.splice(event.currentIndex, 0, copiedAttribute);
+  
+          const originalAttribute = this.tariffAttributes.find(attr => attr.id === attribute.id);
+          if (originalAttribute) {
+            originalAttribute.isCopied = true;
+          }
+  
+          const groupFormArray = group.form.get('attributes') as FormArray;
+          groupFormArray.insert(event.currentIndex, this.fb.group({
+            id: [attribute.id],
+            code: [attribute.code],
+            name: [attribute.name],
+            value_varchar: [null],
+            value_text: [null],
+            is_active: [attribute.is_frontend_visible]
+          }));
         }
       }
     }
   }
 
-  removeAttribute(group: Group, attribute: string) {
+  private moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number) {
+    const item = formArray.at(fromIndex);
+    formArray.removeAt(fromIndex);
+    formArray.insert(toIndex, item);
+  }
+
+  getDropdownOptions(attribute: Attribute) {
+    if (attribute.input_type === 'Dropdown' && attribute.details) {
+      const details = JSON.parse(attribute.details);
+      return details.options || [];
+    }
+    return [];
+  }
+
+  removeAttribute(group: Group, attribute: Attribute) {
+    console.log(attribute);
     const index = group.attributes.indexOf(attribute);
     if (index >= 0) {
+      const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
+      if (originalAttribute) {
+        originalAttribute.isCopied = false;
+      }
       group.attributes.splice(index, 1);
+
+      // Удаление FormControl для атрибута
+      const groupFormArray = group.form.get('attributes') as FormArray;
+      const formIndex = groupFormArray.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
+      if (formIndex >= 0) {
+        groupFormArray.removeAt(formIndex);
+      }
     }
+  }
+
+  setFocus(group: Group, index: number) {
+    group.attributes[index].isFocused = true;
+  }
+
+  removeFocus(group: Group, index: number) {
+    group.attributes[index].isFocused = false;
   }
 
   canDropToTariffList = (drag: any) => {
     return drag.dropContainer.id === this.tariffDropListId;
+  }
+
+  private loadAttributeGroups() {
+    if (this.groupId) {
+      this.attributeGroupService.data$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(response => {
+          if(response){
+            const groupsFromServer = response.data; // Здесь ваши группы из ответа сервера
+
+            this.groups = groupsFromServer.map(group => ({
+              id: group.id,
+              name: group.name,
+              attributes: group.attributs.map(attr => ({
+                ...attr,
+                isCopied: true // Отметьте атрибуты как скопированные
+              })),
+              hidden: false,
+              form: this.fb.group({
+                attributes: this.fb.array(
+                  group.attributs.map(attr => this.fb.group({
+                    id: [attr.id],
+                    code: [attr.code],
+                    name: [attr.name],
+                    value_varchar: [attr?.pivot?.value_varchar || ''],
+                    value_text: [attr?.pivot?.value_text || ''],
+                    is_active: [attr?.pivot?.is_active]
+                  }))
+                )
+              })
+            }));
+
+            this.updateTariffAttributesStatus();
+            this.updateConnectedDropLists();
+            console.log('Loaded Groups:', this.groups);
+          }       
+        });
+    }
+  }
+
+  private updateTariffAttributesStatus() {
+    // Создаем Set из всех id атрибутов, которые есть в группах
+    const copiedAttributeIds = new Set(this.groups.flatMap(group => group.attributes.map(attr => attr.id)));
+
+    // Обновляем статус `isCopied` для атрибутов в правой колонке
+    this.tariffAttributes.forEach(attribute => {
+      attribute.isCopied = copiedAttributeIds.has(attribute.id);
+    });
+  }
+
+  // Метод для безопасного приведения типов и получения FormArray
+  getAttributeFormArray(group: Group): FormArray {
+    return group.form.get('attributes') as FormArray;
+  }
+
+  // Метод для безопасного приведения типов и получения FormGroup
+  getFormGroupFromArray(group: FormArray, index: number): FormGroup {
+    return group.at(index) as FormGroup;
   }
 
   ngOnDestroy() {
@@ -226,3 +295,6 @@ export class TariffAttributeComponent {
     this.unsubscribe$.complete();
   }
 }
+
+
+

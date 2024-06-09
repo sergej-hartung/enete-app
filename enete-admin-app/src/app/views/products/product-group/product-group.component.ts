@@ -16,7 +16,7 @@ export class ProductGroupComponent {
 
   isLoading = false
 
-  parnerColumns: Tablecolumn[] = [
+  tariffColumns: Tablecolumn[] = [
     { key: 'icon', title: '', isIcon: true  },
     { key: 'name', title: 'Gruppe', sortable: false }, 
   ];
@@ -43,10 +43,11 @@ export class ProductGroupComponent {
 
   
 
-  selectedRow(event: any){
+  selectedTariffRow(event: any){
     this.productService.setTariffGroupId(event.id)
     this.tariffService.fetchDataByGroupId(event.id)
     this.mainNavbarService.setIconState('edit', true, true);
+    this.mainNavbarService.setIconState('new', true, false);
     this.isLoading = true
   }
 
@@ -55,7 +56,8 @@ export class ProductGroupComponent {
       this.productService._resetTariffData.emit()
       //this.productService.resetTariffGroupId()
     }
-    this.productService.setTariffOrHardwareTabActive(event['nextId'])
+    this.mainNavbarService.setIconState('new', true, true);
+    this.productService.setTariffOrHardwareTabActive(event['nextId'])  
   }
 
   ngOnDestroy() {

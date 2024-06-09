@@ -5,7 +5,7 @@ namespace App\Http\Resources\Tariff\Attribute;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndexTariffAttributeResource extends JsonResource
+class IndexTariffAttributeWithPivotResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,6 +25,7 @@ class IndexTariffAttributeResource extends JsonResource
             'is_required' => $this->is_required,
             'is_frontend_visible' => $this->is_frontend_visible,
             'details' => $this->details,   
+            'pivot' => $this->pivot,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,

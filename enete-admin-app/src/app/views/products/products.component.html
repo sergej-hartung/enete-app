@@ -11,7 +11,10 @@
                 class="col-4 product-details"> 
             </app-product-details>
         </div>
-        <div [class.hide-component]="!addOrNewProducts" class="row no-gutters partners-row">
+        <!-- <div [class.hide-component]="!addOrNewProducts" class="row no-gutters partners-row">
+            <app-product-add-edit class="p-0"></app-product-add-edit>
+        </div> -->
+        <div *ngIf="addOrNewProducts" class="row no-gutters partners-row">
             <app-product-add-edit class="p-0"></app-product-add-edit>
         </div>
     </div>

@@ -144,4 +144,20 @@ export class FormService {
       documents: this.fb.array([]),
     })
   }
+
+  public initTariffFormGroup(): FormGroup{
+    return this.fb.group({
+      id:                  [],
+      external_id:         ['', [Validators.pattern('^[a-zA-Z0-9üÜöÖäÄß]+$')]],
+      name:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9üÜöÖäÄß]+$')]],
+      name_short:          ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9üÜöÖäÄß]+$')]],
+      provider_id:         ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      network_operator_id: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      group_id:            ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      status_id:           ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      is_published:        ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      note:                ['', [Validators.pattern('^[a-zA-Z0-9üÜöÖäÄß]+$')]],
+      pdf_document_id:     ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+    })
+  }
 }

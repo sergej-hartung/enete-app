@@ -52,7 +52,8 @@ export class ProductsComponent {
 
   private initIconStates(): void {
     this.mainNavbarService.setIconState('save', true, true);
-    this.mainNavbarService.setIconState('new', true, false);
+    this.mainNavbarService.setIconState('new', true, true);
+    this.mainNavbarService.setIconState('back', true, true);
     this.mainNavbarService.setIconState('edit', true, true);
   }
 
@@ -67,7 +68,7 @@ export class ProductsComponent {
   }
 
   private handleProductAction(action: any): void {
-    console.log()
+    console.log(action)
     switch (action.action) {
       // case 'deletePartnerFile':
       //   this.showNotification(action.proceedCallback, this.deleteFileTitleTemplate, this.deleteFileMessageTemplate);

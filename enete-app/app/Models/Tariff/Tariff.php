@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Filterable;
 use App\Models\Traits\TarifSortable;
+use App\Models\User\User;
 
 class Tariff extends Model
 {
@@ -17,11 +18,16 @@ class Tariff extends Model
 
     protected $fillable = ['external_id', 'api_distributor_id', 'name', 'name_short', 'provider_id', 'network_operator_id', 'group_id', 'template_id', 'status_id', 'has_action', 'action_group_id', 'is_web_active', 'note', 'pdf_document_id', 'is_from_api', 'created_by', 'updated_by'];
 
-    public function attributes()
+    // public function attributes()
+    // {
+    //     return $this->belongsToMany(Attribute::class, 'tariff_attribute_mappings')
+    //                 ->withPivot('value_varchar', 'value_text', 'is_active')
+    //                 ->withTimestamps();
+    // }
+
+    public function attributeGroups()
     {
-        return $this->belongsToMany(Attribute::class, 'tariff_attribute_mappings')
-                    ->withPivot('value_varchar', 'value_text', 'is_active')
-                    ->withTimestamps();
+        return $this->hasMany(TariffAttributeGroup::class);
     }
 
     public function hardware()

@@ -14,8 +14,13 @@ export class ProductAddEditComponent {
 
 
   ngOnInit() {
-    
+    this.mainNavbarService.setIconState('back', true, false);
+    console.log('test')
   }
 
+  ngOnDestroy() {
+    this.mainNavbarService.setIconState('back', true, true);
+    //this.groupId = undefined
+  }
 
 }

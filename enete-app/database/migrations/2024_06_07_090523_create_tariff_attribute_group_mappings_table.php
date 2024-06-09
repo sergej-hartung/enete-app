@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tariff_attribute_mappings', function (Blueprint $table) {
+        Schema::create('tariff_attribute_group_mappings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tariff_id')->nullable();
+            $table->unsignedBigInteger('attribute_group_id')->nullable();
             $table->unsignedBigInteger('attribute_id')->nullable();
             $table->string('value_varchar', 255)->nullable();
             $table->text('value_text')->nullable();
             $table->boolean('is_active')->nullable();
+            $table->integer('position')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('tariff_id')->references('id')->on('tariffs')->onDelete('set null');
+            $table->foreign('attribute_group_id')->references('id')->on('tariff_attribute_groups')->onDelete('set null');
             $table->foreign('attribute_id')->references('id')->on('tariff_attributes')->onDelete('set null');
         });
     }
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tariff_attribute_mappings');
+        Schema::dropIfExists('tariff_attribute_group_mappings');
     }
 };

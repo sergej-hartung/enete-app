@@ -9,13 +9,13 @@
           <ng-template ngbNavContent>
             <app-generic-table 
               class="table-responsive"
-              [columns]="parnerColumns"
+              [columns]="tariffColumns"
               [total]="false"
               [isExpandable]="false"
               [dataService]="tariffGroupService"
               [rowSelectionMode]="'parent'"
               [isLoading]="isLoading"
-              (rowSelected)="selectedRow($event)"
+              (rowSelected)="selectedTariffRow($event)"
               #genericTable 
             ></app-generic-table>                   
           </ng-template>

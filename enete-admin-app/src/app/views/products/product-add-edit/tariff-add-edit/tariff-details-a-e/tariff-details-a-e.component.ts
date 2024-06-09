@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { ProviderService } from '../../../../../services/product/tariff/provider/provider.service';
+import { NetworkOperatorService } from '../../../../../services/product/tariff/network-operator/network-operator.service';
+import { StatusService } from '../../../../../services/product/tariff/status/status.service';
+import { FormService } from '../../../../../services/form.service';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-tariff-details-a-e',
@@ -19,6 +25,55 @@ export class TariffDetailsAEComponent {
     // { id: 4, label: 'VVL', checked: false }
   ];
 
+  tariffFormGroup: FormGroup
+  tariffStatuses: any = []
+  tariffProviders: any = []
+  tariffNetworkOperators: any = []
+
+  private unsubscribe$ = new Subject<void>();
+
+  constructor(
+    private tariffStatusService: StatusService,
+    private tariffProviderService: ProviderService,
+    private tariffNetworkOperatorService: NetworkOperatorService,
+    private formService: FormService
+  ) {
+    this.tariffFormGroup = this.formService.initTariffFormGroup()
+  }
+
+  ngOnInit() {
+      this.tariffStatusService.data$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(data => { 
+          if(data && data["data"]){
+            this.tariffStatuses =  data.data
+          }else{
+            this.tariffStatuses = []
+          }   
+      });
+
+      this.tariffProviderService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {  
+        if(data && data["data"]){
+          this.tariffProviders =  data.data
+        }else{
+          this.tariffProviders = []
+        }   
+      });
+
+      this.tariffNetworkOperatorService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {  
+        if(data && data["data"]){
+          this.tariffNetworkOperators =  data.data
+        }else{
+          this.tariffNetworkOperators = []
+        }   
+      });
+
+  }
+
   updateSelectedItems() {
     this.combiHardware = this.combiHardware.map(option => {
       option.checked = !!option.checked;
@@ -36,5 +91,10 @@ export class TariffDetailsAEComponent {
 
   get selectedTariffCategorys() {
     return this.tariffCategorys.filter(option => option.checked);
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
