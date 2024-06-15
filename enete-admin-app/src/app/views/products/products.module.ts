@@ -35,6 +35,9 @@ import {
   CdkDrag,
   CdkDropList,
 } from '@angular/cdk/drag-drop';
+import { FileManagerComponent } from './file-manager/file-manager.component';
+import { TreeNodeComponent } from './file-manager/tree-node/tree-node.component';
+import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
 
 
 @NgModule({
@@ -53,6 +56,9 @@ import {
     TariffPromoComponent,
     TariffCalcMatrixComponent,
     TariffViewTemplateComponent,
+    FileManagerComponent,
+    TreeNodeComponent,
+    //FileSizePipe,
   ],
   imports: [
     CommonModule,

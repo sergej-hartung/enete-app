@@ -1,4 +1,4 @@
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, EventEmitter, Input, Output, SimpleChanges, TemplateRef } from '@angular/core';
 import { Tablecolumn } from '../../../models/tablecolumn';
 import { IDataService } from '../../../models/data-interface';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
@@ -32,8 +32,10 @@ export class GenericTableComponent<T> {
   @Input() isLoading: boolean = false;  // если идет загрузка данных в mode parent блокируеться выбор selectRow
   @Input() sortMode: 'service'|'parent' = 'service';
   @Input() filterMode: 'service'|'parent' = 'service';
+  @Input() dataMode: 'service'|'parent' = 'service';
   @Input() isExpandable?: boolean = false;
   @Input() filters?: FilterOption[] = []
+  @Input() dataArr?: any[] = []
   @Input() dataService?: IDataService<T>;
   @Input() total: boolean = true;
   @Output() rowSelected = new EventEmitter<T>();
@@ -58,7 +60,7 @@ export class GenericTableComponent<T> {
     onFilterChange: this.onFilterChange.bind(this)  // Привязываем метод к контексту компонента
   };
     
-  constructor() {
+  constructor(private cdr: ChangeDetectorRef) {
     this.textFilterSubject
       .pipe(takeUntil(this.unsubscribe$))
       .pipe(debounceTime(300)) // задержка для текстового ввода
@@ -71,15 +73,27 @@ export class GenericTableComponent<T> {
   }
 
   ngOnInit() {
-    if(this.dataService){
+    if(this.dataService && this.dataMode == 'service'){
       this.dataService.data$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(data => {  
           if(data){
+            console.log('data service')
             this.setData(data["data"]) 
             this.isLoaded = true
           }    
         });
+    }else if(this.dataMode == 'parent' && this.dataArr){
+      console.log('data parent')
+      this.setData(this.dataArr) 
+      this.isLoaded = true
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes["dataArr"] && !changes["dataArr"].isFirstChange()) {
+      this.setData(changes["dataArr"].currentValue);
+      this.cdr.detectChanges();
     }
   }
 
@@ -194,7 +208,6 @@ export class GenericTableComponent<T> {
     // для обработки в родительском компоненте, или сделать что-то еще, 
     // соответствующее вашим требованиям.
 
-    this.dataService?.confirmAction('selectRow', () => {
       if (row.selected) {
         return;
       }
@@ -214,7 +227,6 @@ export class GenericTableComponent<T> {
       }
 
       this.rowSelected.emit(row);
-    })
     
   }
 

@@ -29,11 +29,27 @@
                   <!-- <i class="bi bi-file-earmark-text"></i> Partner -->
               </a>
             </li>
-            <li class="nav-item" routerLinkActive="active">
+            <!-- <li class="nav-item" routerLinkActive="active">
               <a class="nav-link" routerLink="/products">
                   <i class="fa-solid fa-box"></i> Produkte
-                  <!-- <i class="bi bi-file-earmark-text"></i>Produkte -->
+                  
               </a>
+            </li> --><!-- <i class="bi bi-file-earmark-text"></i>Produkte -->
+            <li ngbDropdown class="nav-item" role="presentation" routerLinkActive="active">
+              <button type="button" class="nav-link" ngbDropdownToggle> <i class="fa-solid fa-box"></i> Produkte</button>
+              <div ngbDropdownMenu>
+                <li>
+                  <a class="dropdown-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/products">Produkte</a>
+                </li>
+                <li>
+                  <a class="dropdown-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" routerLink="/products/document-manager">Dokumentenmanager</a>
+                </li>
+                <!-- <button ngbDropdownItem routerLink="/partner" >Action</button> -->
+                <!-- <button ngbDropdownItem>Another action</button>
+                <button ngbDropdownItem>Something else here</button>
+                <div class="dropdown-divider"></div>
+                <button ngbDropdownItem>Separated link</button> -->
+              </div>
             </li>
             <li ngbDropdown class="nav-item" role="presentation" routerLinkActive="active">
               <button type="button" class="nav-link" ngbDropdownToggle> <i class="fa-solid fa-gears"></i> Verwaltung</button>

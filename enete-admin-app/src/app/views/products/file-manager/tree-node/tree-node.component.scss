@@ -1,0 +1,44 @@
+// ul {
+//     list-style: none;
+//     padding-left: 20px;
+//   }
+  
+//   li {
+//     padding: 5px;
+//     cursor: pointer;
+//   }
+  
+//   li:hover {
+//     background-color: #e0e0e0;
+//   }
+
+
+
+// .tree-node{
+//   cursor: pointer;
+//   padding-left: 20px;
+//   color: #6c757d;
+  
+//   // &:hover{
+//   //   background-color: #f0f0f0;
+//   // }
+//   &.selected:not(.tree-node-action) {
+//     i{
+//       //color:#7D1120;
+//       color: rgba(0, 0, 0, .8);
+//     }
+
+//     color: rgba(0, 0, 0, .8);
+//     font-weight: 500;
+//     .tree-node-action{
+//       color: #6c757d;
+//       //color:#7D1120;
+//       //color: rgba(0, 0, 0, .8);
+//     }
+//     //color:#7D1120;
+//   }
+// }
+// .tree-node-action{
+//   margin-left: -20px;
+//   padding-right: 10px;
+// }

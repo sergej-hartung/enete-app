@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from '../common/layout/layout.component';
 import { ProductsComponent } from './products.component';
+import { FileManagerComponent } from './file-manager/file-manager.component';
 
 const routes: Routes = [
   {
@@ -10,7 +11,12 @@ const routes: Routes = [
     children:[
       {
         path: '', 
-        component: ProductsComponent}
+        component: ProductsComponent
+      },
+      {
+        path: 'document-manager', 
+        component: FileManagerComponent
+      }
     ]
   }
 ];

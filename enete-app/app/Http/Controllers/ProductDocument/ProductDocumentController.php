@@ -24,7 +24,7 @@ class ProductDocumentController extends Controller
     public function uploadFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:jpeg,jpg,png,gif,pdf|max:5120'
+            'file' => 'required|mimes:jpeg,jpg,png,gif,pdf'
         ]);
 
         $file = $request->file('file');
@@ -57,15 +57,16 @@ class ProductDocumentController extends Controller
 
         foreach ($files as $file) {
             $relativePath = Str::after($file, 'products/');
-            $fileRecord = ProductDocuments::where('path', $relativePath)->first();
+            $fileRecord = ProductDocuments::where('path', $file)->first();
 
             if ($fileRecord) {
                 $fileInfo[] = [
                     'id' => $fileRecord->id,
                     'name' => Str::afterLast($relativePath, '/'),
                     'path' => $relativePath,
-                    'size' => $fileRecord->size,
-                    'type' => $fileRecord->mime_type,
+                    'type' => 'file', 
+                    'mime_type' => $fileRecord->mime_type, 
+                    'size' => $fileRecord->size, 
                 ];
             }
         }
@@ -214,6 +215,8 @@ class ProductDocumentController extends Controller
     {
         $directories = Storage::allDirectories($dir);
         $files = Storage::allFiles($dir);
+        sort($directories);
+        sort($files); 
 
         $result = [];
 
@@ -255,6 +258,9 @@ class ProductDocumentController extends Controller
                     'children' => []
                 ];
                 $current[] = $newDir;
+
+                usort($current, fn($a, $b) => $a['name'] <=> $b['name']);
+
                 $current = &$newDir['children'];
             }
         }
@@ -266,13 +272,16 @@ class ProductDocumentController extends Controller
         $fileRecord = ProductDocuments::where('path', $absolutePath)->first();
 
         foreach ($parts as $index => $part) {
+
             if ($index === count($parts) - 1 && $fileRecord) {
                 // Добавляем файл, если это последний элемент в пути и запись найдена
                 $current[] = [
                     'id' => $fileRecord->id,
                     'name' => $part,
                     'path' => $relativePath,
-                    'type' => 'file'
+                    'type' => 'file',
+                    'mime_type' => $fileRecord->mime_type,  // Добавлено
+                    'size' => $fileRecord->size  // Добавлено
                 ];
             } else {
                 // Продолжаем искать папку
@@ -295,6 +304,9 @@ class ProductDocumentController extends Controller
                         'children' => []
                     ];
                     $current[] = $newDir;
+
+                    usort($current, fn($a, $b) => $a['name'] <=> $b['name']);
+
                     $current = &$newDir['children'];
                 }
             }

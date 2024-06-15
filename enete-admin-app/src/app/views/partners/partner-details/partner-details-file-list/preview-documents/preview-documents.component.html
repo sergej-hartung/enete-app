@@ -5,7 +5,7 @@
     [textLayer]="true"
     [showHandToolButton]="true">
 </ngx-extended-pdf-viewer> -->
-<ngx-extended-pdf-viewer 
+<!-- <ngx-extended-pdf-viewer 
     *ngIf="file && file['type'] === 'application/pdf'" 
     backgroundColor="#ffffff" 
     [src]="file" 
@@ -31,7 +31,8 @@
     [showScrollingButton]="true"
     [showSpreadButton]="true"
     [showPropertiesButton]="true"
-></ngx-extended-pdf-viewer>
+></ngx-extended-pdf-viewer> -->
+<iframe *ngIf="file && file['type'] === 'application/pdf'" [src]="pdfSrc" width="100%" height="100%" ></iframe>
 <div class="img-view" *ngIf="file && isImage">
     <img *ngIf="fileUrl" [src]="fileUrl" alt="Image preview" style="max-width: 100%; height: auto;">
 </div>

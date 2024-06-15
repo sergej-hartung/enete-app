@@ -3,6 +3,7 @@ import { NgbDatepickerModule, NgbOffcanvas, OffcanvasDismissReasons } from '@ng-
 import { pdfDefaultOptions } from 'ngx-extended-pdf-viewer';
 import { PartnerService } from "../../../../../services/partner/partner.service";
 import { DocumentService } from "../../../../../services/partner/documents/documents.service";
+import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
     selector: 'app-preview-documents',
@@ -14,8 +15,8 @@ export class PreviewDocumentsComponent {
 
     isImage: boolean = false;
     fileUrl: string = ''
-    
-    constructor() {
+    pdfSrc: any = null
+    constructor(private sanitizer: DomSanitizer) {
         pdfDefaultOptions.assetsFolder = 'bleeding-edge';
     }
 
@@ -27,8 +28,11 @@ export class PreviewDocumentsComponent {
         this.isImage = fileType.startsWith('image/');
           
         if(this.isImage){
-          this.getImageSrc()
+          this.fileUrl = this.getImageSrc()
             
+        }else{
+          this.pdfSrc = this.getPdfSrc()
+          console.log(this.pdfSrc)
         }
       }
     }
@@ -41,9 +45,18 @@ export class PreviewDocumentsComponent {
           
         if(this.isImage){
           this.fileUrl = this.getImageSrc()
-            
+        }else{
+          this.pdfSrc = this.getPdfSrc()
         }
       }
+    }
+
+    getPdfSrc(){
+      if(this.file instanceof File || this.file instanceof Blob){
+        const url = URL.createObjectURL(this.file) + '#view=FitV';
+        return this.sanitizer.bypassSecurityTrustResourceUrl(url) 
+      }
+      return ''
     }
 
     getImageSrc(): string {

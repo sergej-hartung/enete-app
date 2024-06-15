@@ -1,0 +1,67 @@
+<section class="main-content">
+  <div class="container-fluid p-0">
+    <div class="row no-gutters documenten-manager-row">
+      <div class="col-3 folders">
+        <!-- <div></div> -->
+        <ul class="nav custom-small-nav">
+          <li class="nav-item">
+            <button class="nav-link" (click)="createFolder()"><i class="fa-solid fa-plus"></i> Neu</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" (click)="editFolder()" [disabled]="!selectedNode"><i class="far fa-edit"></i> Bearbeiten</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" (click)="deleteFolder(selectedNode?.path)" [disabled]="!selectedNode"><i class="fa-solid fa-xmark"></i> Löschen</button>
+          </li>
+        </ul>
+        <div class="file-manager">
+          <ul class="list-group">
+            <li *ngFor="let node of tree" class="list-group-item">
+              <app-tree-node [node]="node" (selectNode)="selectNode($event)" (createNewFolder)="saveNewFolder($event)" (saveEditedFolder)="saveEditedFolder($event)">
+              </app-tree-node>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div>
+          <app-generic-table 
+            class="table-responsive"
+            [columns]="fileColumns"
+            [filters]="filters"
+            [filterMode]="'parent'"
+            [dataArr]="selectedFiles"
+            [dataMode]="'parent'"
+            [isExpandable]="false"
+            [rowSelectionMode]="'parent'"
+            [isLoading]="isLoading"
+            (rowSelected)="onFileSelected($event)"
+            #genericTable 
+          ></app-generic-table>
+        </div>
+        <ng-template #noFiles>
+          <p class="text-muted">Выберите папку для отображения файлов.</p>
+        </ng-template>
+      </div>
+      <div class="col-5 file-view">
+        <div class="title-view-documents">Dokumenten Vorschau</div>
+        <ng-container *ngIf="fileContent">
+          <ng-container *ngIf="isImage">
+            <!-- Отображение изображения по центру -->
+            <div class="image-container">
+              <img [src]="fileContent" alt="Selected Image">
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isImage">
+            <!-- Отображение PDF в iframe -->
+            <iframe [src]="fileContent" width="100%" height="100%" frameborder="0"></iframe>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="!fileContent && !isFileLoading">
+          <p class="text-muted">Выберите файл для отображения содержимого.</p>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</section>
