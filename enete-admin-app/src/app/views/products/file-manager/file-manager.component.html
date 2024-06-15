@@ -5,13 +5,22 @@
         <!-- <div></div> -->
         <ul class="nav custom-small-nav">
           <li class="nav-item">
-            <button class="nav-link" (click)="createFolder()"><i class="fa-solid fa-plus"></i> Neu</button>
+            <button class="nav-link" (click)="createFolder()">
+              <i class="fa-solid fa-plus"></i>
+              <span class="nav-link-text">Neu</span>
+            </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link" (click)="editFolder()" [disabled]="!selectedNode"><i class="far fa-edit"></i> Bearbeiten</button>
+            <button class="nav-link" (click)="editFolder()" [disabled]="!selectedNode">
+              <i class="far fa-edit"></i>
+              <span class="nav-link-text">Bearbeiten</span>
+            </button>
           </li>
           <li class="nav-item">
-            <button class="nav-link" (click)="deleteFolder(selectedNode?.path)" [disabled]="!selectedNode"><i class="fa-solid fa-xmark"></i> Löschen</button>
+            <button class="nav-link" (click)="deleteFolder(selectedNode?.path)" [disabled]="!selectedNode">
+              <i class="fa-solid fa-xmark"></i>
+              <span class="nav-link-text">Löschen</span>
+            </button>
           </li>
         </ul>
         <div class="file-manager">
@@ -35,7 +44,9 @@
             [dataMode]="'parent'"
             [isExpandable]="false"
             [rowSelectionMode]="'parent'"
-            [isLoading]="isLoading"
+            [isLoading]="isFileLoading"
+            [isLoaded]="isLoaded"
+            [buttons]="buttons"
             (rowSelected)="onFileSelected($event)"
             #genericTable 
           ></app-generic-table>

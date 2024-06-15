@@ -3,7 +3,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ProductDocumentService } from '../../../services/product/product-document.service';
 import { Subject, takeUntil } from 'rxjs';
 import { Tablecolumn } from '../../../models/tablecolumn';
-import { FilterOption } from '../../../shared/components/generic-table/generic-table.component';
+import { Buttons, FilterOption } from '../../../shared/components/generic-table/generic-table.component';
 
 interface FileData {
   id: number;
@@ -42,6 +42,7 @@ export class FileManagerComponent implements OnInit {
   isFileLoading = false
   isImage = false;
   isLoading = false;
+  isLoaded= true;
   selectedFiles: FileData[] = [];
   private unsubscribe$ = new Subject<void>();
 
@@ -66,6 +67,14 @@ export class FileManagerComponent implements OnInit {
     { type: 'text', key: 'search', label: 'Search' },
   ];
 
+  buttons: Buttons[] = [
+    { name: '', icon:'fa-solid fa-upload', value: 'upload', status: false},
+    { name: '', icon:'fa-solid fa-download', value: 'download', status: false},
+    { name: 'Neu', icon:'fa-solid fa-plus', value: 'new', status: false},
+    { name: 'Bearbeiten', icon:'far fa-edit', value: 'edit', status: false},
+    { name: 'Löschen', icon:'fa-solid fa-xmark', value: 'remove', status: false},
+  ]
+
   constructor(
     private productDocumentService: ProductDocumentService,
     private sanitizer: DomSanitizer,
@@ -74,10 +83,6 @@ export class FileManagerComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTree();
-  }
-
-  selectedRow(row:any){
-    console.log(row)
   }
 
   focusNewFolderInput(): void {
@@ -134,10 +139,53 @@ export class FileManagerComponent implements OnInit {
       this.selectedNode = node;
       this.loadFiles(node.path);
       node.isSelected = true;
+      this.fileContent = null
+      this.setStatusButton('file', false)
+      this.setStatusButton('folder', true)
       //node.isOpen = true;  // Открываем папку при выборе
     } else {
+      
       this.selectedNode = null;
       this.selectedFiles = [];
+      this.fileContent = null
+
+      this.setStatusButton('all', false)
+    }
+  }
+
+  setStatusButton(type:any, status: boolean){
+    if(type == 'all'){
+      this.buttons.forEach(item => {
+        item.status = status
+      })
+    }
+    if(type == 'folder'){
+      this.buttons.forEach(item => {
+        
+        if(item.value == 'upload'){
+          item.status = status
+        }
+        if(item.value == 'new'){
+          item.status = status
+        }
+        
+      })
+      console.log(this.buttons)
+    }
+    if(type == 'file'){
+      this.buttons.forEach(item => {
+        
+        if(item.value == 'download'){
+          item.status = status
+        }
+        if(item.value == 'edit'){
+          item.status = status
+        }
+        if(item.value == 'remove'){
+          item.status = status
+        }
+      })
+      console.log(this.buttons)
     }
   }
 
@@ -164,6 +212,7 @@ export class FileManagerComponent implements OnInit {
   }
 
   loadFiles(folder: string): void {
+    this.isLoaded = false
     this.productDocumentService.getFiles(folder)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((files: FileData[]) => {
@@ -192,6 +241,8 @@ export class FileManagerComponent implements OnInit {
         this.fileContent = this.sanitizer.bypassSecurityTrustResourceUrl(url+'#view=FitH') ;
         this.isFileLoading = false
       });
+    
+      this.setStatusButton('file', true)
   }
 
   createFolder(): void {
@@ -479,6 +530,8 @@ export class FileManagerComponent implements OnInit {
       formattedSize: this.getFileSize(file.size),
       formatedType: this.getFileType(file.mime_type),
     }));
+
+    this.isLoaded = true
   }
 
   ngOnDestroy() {

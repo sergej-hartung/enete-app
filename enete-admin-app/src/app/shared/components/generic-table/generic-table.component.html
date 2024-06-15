@@ -1,4 +1,4 @@
-<div class="filter" [class.not_expanable_table]="!isExpandable" *ngIf="filters && filters.length">
+<div class="filter" [class.not_expanable_table]="!isExpandable" *ngIf="(filters && filters.length) || (buttons && buttons.length)">
     <div class="row no-gutters" [class.expandable_table]="isExpandable" >
         <ng-container *ngIf="customFilterTemplate; else builtInFilters">
             <ng-container [ngTemplateOutlet]="customFilterTemplate" [ngTemplateOutletContext]="filterContext">
@@ -48,6 +48,20 @@
                         
                 </div>
             </ng-container>
+            <div class="col" *ngIf="buttons && buttons.length">
+                <ul class="nav generic-small-nav">
+                    <ng-container *ngFor="let button of buttons">
+                        <!-- <button class="btn">Test</button> -->
+                        <li class="nav-item">
+                            <button class="nav-link" (click)="onClickButton(button.value)" [disabled]="!button.status">
+                                <i *ngIf="button?.icon" [ngClass]="[button?.icon ? button?.icon : '']"></i> 
+                                <span class="nav-link-text">{{button.name}}</span> 
+                            </button>
+                        </li>
+                    </ng-container>
+                </ul> 
+            </div>
+            
         </ng-template>
         
         <div 

@@ -11,6 +11,14 @@ export interface FilterOption {
   options?: { label: string; value: any; selected?: boolean;}[]; // опции для выбора, если это select  
 }
 
+export interface Buttons{
+  name: string,
+  icon: string,
+  value: string,
+  status: boolean,
+  class?: string
+}
+
 interface Accessible {
   accesses?: {
       status?: {
@@ -30,6 +38,7 @@ export class GenericTableComponent<T> {
   @Input() columns?: Tablecolumn[];
   @Input() rowSelectionMode: 'service'|'parent' = 'service';
   @Input() isLoading: boolean = false;  // если идет загрузка данных в mode parent блокируеться выбор selectRow
+  @Input() isLoaded: boolean = false;
   @Input() sortMode: 'service'|'parent' = 'service';
   @Input() filterMode: 'service'|'parent' = 'service';
   @Input() dataMode: 'service'|'parent' = 'service';
@@ -38,9 +47,11 @@ export class GenericTableComponent<T> {
   @Input() dataArr?: any[] = []
   @Input() dataService?: IDataService<T>;
   @Input() total: boolean = true;
+  @Input() buttons: Buttons[] = [];
   @Output() rowSelected = new EventEmitter<T>();
   @Output() filterEvent = new EventEmitter<{ [x:string]:any }>();
   @Output() sortEvent = new EventEmitter<{ sortField:string|null, sortOrder:string }>();
+  @Output() buttonEvent = new EventEmitter<string>();
 
   @ContentChild('customFilters') customFilterTemplate?: TemplateRef<any>;
 
@@ -49,7 +60,7 @@ export class GenericTableComponent<T> {
   private textFilterSubject = new Subject<{ key: string; value: any }>();
   private selectFilterSubject = new Subject<{ key: string; value: any }>();
 
-  isLoaded = false;
+  //isLoaded = false;
   isExpanded: boolean = false;
   data?: any[];
   currentSortColumn: string | null = null;
@@ -95,6 +106,11 @@ export class GenericTableComponent<T> {
       this.setData(changes["dataArr"].currentValue);
       this.cdr.detectChanges();
     }
+  }
+
+  onClickButton(value:string){
+    console.log(value)
+    this.buttonEvent.emit(value)
   }
 
   setData(data: T[]) {
