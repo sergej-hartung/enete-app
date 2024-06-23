@@ -357,13 +357,17 @@ app-partners-list{
     margin-bottom: 0;
     tr:not(.selected-custom):hover >td{
         cursor: pointer;
-        background-color: #eee;
+        //background-color: #eee;
+        background: RGB(236, 236, 236);
+        box-shadow: none;
     }
     .selected-custom{
         td{
             //box-shadow: none;
-            background: #3a3633;
-            color: #c0bbb7;
+            //background: #3a3633;
+            background: rgba(220, 220, 220, 1);
+            box-shadow: none;
+            //color: #c0bbb7;
         } 
     }
 
@@ -437,6 +441,16 @@ app-partners-list{
         &:first-child{
             padding-left: 0px;
         }
+    }
+
+    .form-control-generic-table{
+        padding: 0;
+        font-size: 0.7rem;
+        line-height: 0.7rem;
+        margin-left: 0;
+        border-radius: 3px;
+        padding-left: 5px;
+        padding-right: 5px;
     }
 }
 
@@ -1474,6 +1488,33 @@ app-tariff-add-edit{
     flex-direction: column;
     }
 
+    .files{
+        .icon-cell{
+            text-align: left;
+            width: 50px;
+        }
+
+        th:first-child{
+            width: 50px;
+        }
+
+        th:nth-last-child(1) {
+            width: 80px; /* Пример ширины */
+        }
+        th:nth-last-child(2) {
+            width: 80px; /* Пример ширины */
+        }
+
+        td:nth-last-child(1) {
+            width: 80px; /* Пример ширины */
+          }
+          
+          /* Предпоследний столбец */
+        td:nth-last-child(2) {
+        width: 80px; /* Пример ширины */
+        }
+    }
+
     .file-view{
         border-left: 1px solid rgba(0, 0, 0, 0.175);
         text-align: center;
@@ -1490,9 +1531,11 @@ app-tariff-add-edit{
             display: flex;
             align-items: start;
             justify-content: center;
-            height: 100%;
+
+            height: calc(100vh - $max-height-main-nav - $max-height-second-nav - 38px - $max-height-footer);
             //background: #f8f9fa;
-            padding-top: 20px;
+
+            padding: 20px 10px;
         }
         
         .image-container img {
@@ -1551,6 +1594,9 @@ app-tariff-add-edit{
         }
         span{
             cursor: pointer;
+        }
+        input{
+            padding: 0.1rem 0.3rem;
         }
     }
     .tree-node-action{
@@ -1628,7 +1674,7 @@ app-tariff-add-edit{
     background-color: #fff;
     font-weight: 400;
     text-wrap: nowrap;
-    justify-content: space-between;
+    //justify-content: space-between;
 
     .nav-item{
         height: 38px;

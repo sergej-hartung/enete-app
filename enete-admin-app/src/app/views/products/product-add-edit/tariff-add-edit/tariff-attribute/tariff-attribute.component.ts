@@ -7,6 +7,8 @@ import { AttributeGroupService } from '../../../../../services/product/tariff/at
 import { Subject, delay, of, takeUntil } from 'rxjs';
 import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { MainNavbarService } from '../../../../../services/main-navbar.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { EditorModalComponent } from '../../../../../shared/components/editor-modal/editor-modal.component'
 
 interface Group {
   id?: number;
@@ -41,7 +43,8 @@ export class TariffAttributeComponent {
     private attributeService: AttributeService,
     private productService: ProductService,
     private mainNavbarService: MainNavbarService,
-    private attributeGroupService: AttributeGroupService
+    private attributeGroupService: AttributeGroupService,
+    private modalService: NgbModal
   ) {
     this.newGroupForm = this.fb.group({
       groupName: ['', Validators.required]
@@ -92,6 +95,66 @@ export class TariffAttributeComponent {
   ngOnChanges(changes: SimpleChanges) {   
     this.updateConnectedDropLists();
   }
+
+  setText(){
+    console.log('set Text')
+  }
+
+  // openEditor(group: Group, index: number) {
+  //   const modalRef = this.modalService.open(EditorModalComponent, { size: 'lg' });
+  //   const attribute = group.attributes[index];
+  //   modalRef.componentInstance.initialValue = attribute?.pivot?.value_text || '';
+  //   modalRef.result.then((result: string) => {
+  //     console.log(result)
+  //     console.log(attribute.pivot)
+  //     if (result !== undefined && attribute.pivot) {
+  //       const control = (group.form.get('attributes') as FormArray).at(index);
+  //       control.patchValue({ value_text: result });
+  //       attribute.pivot.value_text = result; // Обновите атрибут в списке
+  //       console.log('Сохранено значение:', result);
+  //     }
+  //   }).catch(() => {});
+  // }
+
+  openEditor(group: Group, index: number) {
+
+    const modalRef: NgbModalRef = this.modalService.open(EditorModalComponent, { size: 'lg' });
+    const control = (group.form.get('attributes') as FormArray).at(index);
+    const attribute = group.attributes[index];
+    if(attribute.pivot){
+      modalRef.componentInstance.initialValue = attribute.pivot?.value_text || '';
+    }else{
+      const control = (group.form.get('attributes') as FormArray).at(index);
+      modalRef.componentInstance.initialValue = control.get('value_text')?.value || '';
+    }
+    
+    modalRef.componentInstance.saveText.subscribe((result: string) => {
+      if (result !== undefined ) {
+        //const control = (group.form.get('attributes') as FormArray).at(index);
+        control.patchValue({ value_text: result });
+        //attribute.pivot.value_text = result;
+        console.log('Сохранено значение:', result);
+        modalRef.close(); // Закрытие модального окна после сохранения
+        console.log(group)
+      }
+    });
+    modalRef.componentInstance.close.subscribe(() => {
+      console.log('fenster geschlossen')
+      modalRef.close(); // Закрытие модального окна при нажатии на отмену
+    });
+  }
+  // openEditor(group: Group, index: number) {
+  //   const modalRef = this.modalService.open(EditorModalComponent, { size: 'lg' });
+  //   const attribute = group.attributes[index];
+  //   modalRef.componentInstance.initialValue = attribute.value_text || '';
+  //   modalRef.result.then((result: string) => {
+  //     if (result !== undefined) {
+  //       const control = (group.form.get('attributes') as FormArray).at(index);
+  //       control.patchValue({ value_text: result });
+  //       attribute.value_text = result; // Обновите атрибут в списке
+  //     }
+  //   }).catch(() => {});
+  // }
 
   addNewGroupName() {
     this.addNewGroup = true;

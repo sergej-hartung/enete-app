@@ -123,9 +123,26 @@
                         <i [class]="row[column.key + 'Icon'].icon" [style.color]="row[column.key + 'Icon'].color"></i>
                         <!-- <i [class]="row.iconData.icon" [style.color]="row.iconData.color"></i> -->
                     </ng-container>
-                    <ng-template #textContent>{{ column.key.includes('.') ? resolveNestedPath(row, column.key) : row[column.key] }}</ng-template>
+                    <ng-template #textContent>
+                        <ng-container *ngIf="row.isEditing && column.isEditable; else normalText">
+                            <input 
+                                type="text" 
+                                [(ngModel)]="row[column.key]" 
+                                class="form-control form-control-generic-table" 
+                                placeholder="Enter text"
+                                (blur)="onEditBlur($event, row)"
+                                (keydown)="onEditKeydown($event, row)"
+                            >
+                          </ng-container>
+                          <ng-template #normalText>
+                            <!-- Обычный текст для не редактируемых колонок -->
+                            <span>{{ column.key.includes('.') ? resolveNestedPath(row, column.key) : row[column.key] }}</span>
+                          </ng-template>
+                    </ng-template>
                 </ng-template>
-                
+                <!--(click)="startEditing($event)"
+                            (blur)="onEditFolderBlur($event)"
+                            (keydown)="onEditFolderKeydown($event)"-->
                 <!-- <ng-template #textContent>{{ column.isIcon ? '' : row[column.key] }}</ng-template> -->
             </td>
         </tr>

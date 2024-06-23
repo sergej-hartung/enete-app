@@ -4,4 +4,5 @@ export interface Tablecolumn {
     sortable?: boolean;
     isIcon?: boolean;
     isDate?: boolean;
+    isEditable?: boolean;
 }

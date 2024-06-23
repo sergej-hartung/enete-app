@@ -4,6 +4,7 @@ import { ProductDocumentService } from '../../../services/product/product-docume
 import { Subject, takeUntil } from 'rxjs';
 import { Tablecolumn } from '../../../models/tablecolumn';
 import { Buttons, FilterOption } from '../../../shared/components/generic-table/generic-table.component';
+import { MainNavbarService } from '../../../services/main-navbar.service';
 
 interface FileData {
   id: number;
@@ -12,7 +13,9 @@ interface FileData {
   type: 'file';
   size: number;
   mime_type: string;
+  selected?: boolean
   icon?: string;
+  isEditing?: boolean;
   formatedType?: string;
   formattedSize?: string;
 }
@@ -44,9 +47,12 @@ export class FileManagerComponent implements OnInit {
   isLoading = false;
   isLoaded= true;
   selectedFiles: FileData[] = [];
+  selectedFile: FileData | null = null;
+  searchTerm: string = '';
   private unsubscribe$ = new Subject<void>();
 
   originalFolderName: string | null = null;
+  originalFile: any = null;
   newFolderName: string | null = null;
   editingFolder: FolderData | null = null;
   creatingFolder: FolderData | null = null;
@@ -57,10 +63,10 @@ export class FileManagerComponent implements OnInit {
   @ViewChild('editFolderInput') editFolderInput!: ElementRef<HTMLInputElement>;
 
   fileColumns: Tablecolumn[] = [
-    { key: 'icon', title: '', sortable: true, isIcon: true },
-    { key: 'name', title: 'Name', sortable: true },
-    { key: 'formatedType', title: 'Dateityp', sortable: true },
-    { key: 'formattedSize', title: 'Größe', sortable: true },
+    { key: 'icon', title: '', sortable: false, isIcon: true },
+    { key: 'name', title: 'Name', sortable: false, isEditable: true },
+    { key: 'formatedType', title: 'Dateityp', sortable: false },
+    { key: 'formattedSize', title: 'Größe', sortable: false },
   ];
 
   filters: FilterOption[] = [
@@ -70,7 +76,6 @@ export class FileManagerComponent implements OnInit {
   buttons: Buttons[] = [
     { name: '', icon:'fa-solid fa-upload', value: 'upload', status: false},
     { name: '', icon:'fa-solid fa-download', value: 'download', status: false},
-    { name: 'Neu', icon:'fa-solid fa-plus', value: 'new', status: false},
     { name: 'Bearbeiten', icon:'far fa-edit', value: 'edit', status: false},
     { name: 'Löschen', icon:'fa-solid fa-xmark', value: 'remove', status: false},
   ]
@@ -78,11 +83,140 @@ export class FileManagerComponent implements OnInit {
   constructor(
     private productDocumentService: ProductDocumentService,
     private sanitizer: DomSanitizer,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private mainNavbarService: MainNavbarService,
   ) {}
 
   ngOnInit(): void {
+    this.initIconStates();
     this.loadTree();
+  }
+
+  private initIconStates(): void {
+    this.mainNavbarService.setIconState('save', true, true);
+    this.mainNavbarService.setIconState('new', true, true);
+    this.mainNavbarService.setIconState('back', false, true);
+    this.mainNavbarService.setIconState('edit', false, true);
+  }
+
+  searchEvent(event: any){
+
+    this.searchTerm = event?.search ? event?.search : ''
+    this.searchFiles()
+
+  }
+
+  searchFiles(): void {  // Добавлен метод для поиска
+    if (this.selectedNode) {
+      this.loadFiles(this.selectedNode.path);
+    }
+  }
+
+  onClickFileEvent(event: any): void {
+    switch (event) {
+      case 'upload':
+        this.uploadFile();
+        break;
+      case 'download':
+        this.downloadFile();
+        break;
+      case 'edit':
+        this.onEditFile();
+        break;
+      case 'remove':
+        this.deleteFile();
+        break;
+    }
+  }
+
+  uploadFile(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = () => {
+      if (input.files && input.files.length > 0) {
+        const file = input.files[0];
+        if (this.selectedNode) {
+          this.productDocumentService.uploadFile({ path: this.selectedNode.path, file: file })
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+              this.loadFiles(this.selectedNode!.path);
+            });
+        }
+      }
+    };
+    input.click();
+  }
+
+  downloadFile(): void {
+    if (this.selectedFile) {  // Проверяем конкретно выбранный файл
+      this.productDocumentService.getFileContentById(this.selectedFile.id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(content => {
+          const url = window.URL.createObjectURL(content);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.selectedFile!.name;  // Используем имя конкретно выбранного файла
+          a.click();
+          window.URL.revokeObjectURL(url);
+        });
+    } else {
+      console.warn('No file selected for download');
+    }
+  }
+
+  editFile(file: FileData): void {
+    if (file) {
+      this.renameFile(this.selectedFile?.path, file.name);
+      this.setStatusButton('file', false)
+      this.fileContent = null
+    }
+  }
+
+  onEditFile(): void{
+    console.log(this.selectedFile)
+    if (this.selectedFile) {
+      console.log(this.selectedFiles)
+      this.originalFile = {...this.selectedFile}
+      this.selectedFile.isEditing = true
+    }
+  }
+
+  cancelEditFile(file: FileData | null){
+    let FileIndex = this.selectedFiles.findIndex(item => item.id == this.originalFile.id)
+    this.selectedFiles[FileIndex] = {...this.originalFile}
+    this.selectedFiles = [...this.selectedFiles]
+    this.selectedFiles[FileIndex].selected = false
+    this.selectedFile = null
+    this.setStatusButton('file', false)
+    this.fileContent = null
+  }
+
+  deleteFile(): void {
+    if (this.selectedFile && this.selectedFile.path) {
+      if (confirm(`Are you sure you want to delete file ${this.selectedFile.name}?`)) {
+        this.productDocumentService.deleteFile(this.selectedFile.path)
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe({
+            next: () => {
+              if (this.selectedNode) {
+                this.loadFiles(this.selectedNode.path);
+                this.selectedFile = null;
+                this.fileContent = null;
+                this.setStatusButton('file', false);
+              }
+            },
+            error: (error) => {
+              if (error.status === 403) {
+                alert('File cannot be deleted because it is linked to a tariff or hardware.');
+              } else {
+                alert('An error occurred while deleting the file.');
+              }
+            }
+          });
+      }
+    } else {
+      alert('No file selected for deletion.');
+    }
   }
 
   focusNewFolderInput(): void {
@@ -212,14 +346,15 @@ export class FileManagerComponent implements OnInit {
   }
 
   loadFiles(folder: string): void {
-    this.isLoaded = false
-    this.productDocumentService.getFiles(folder)
+    this.isLoaded = false;
+    this.productDocumentService.getFiles(folder, this.searchTerm) // Обновление для использования строки поиска
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((files: FileData[]) => {
         this.selectedFiles = files.filter((file: FileData) => file.type === 'file');
         this.updateFileData();
       });
   }
+
 
   viewFileById(fileId: number): void {
     this.productDocumentService.getFileContentById(fileId)
@@ -231,6 +366,8 @@ export class FileManagerComponent implements OnInit {
   }
 
   onFileSelected(file: FileData): void {
+    console.log(file)
+    this.selectedFile = file;
     this.fileContent = null
     this.isFileLoading = true
     this.isImage = file.mime_type.startsWith('image/');
@@ -265,9 +402,6 @@ export class FileManagerComponent implements OnInit {
       this.tree.push(newFolder);
     }
     this.creatingFolder = newFolder;
-    console.log(this.selectedNode)
-    console.log(this.tree)
-    console.log(this.creatingFolder)
   }
 
   expandParentFolders(path: string): void {
@@ -280,20 +414,50 @@ export class FileManagerComponent implements OnInit {
     });
   }
 
+  // saveNewFolder(folder: FolderData): void {
+  //   const parentPath = folder.path.split('/').slice(0, -1).join('/') || '';
+  //   const folderName = folder.name.trim();
+  //   if (folderName) {
+  //     this.productDocumentService.createFolder({ path: parentPath, folder_name: folderName })
+  //       .pipe(takeUntil(this.unsubscribe$))
+  //       .subscribe(() => {
+  //         this.saveOpenState(this.tree);
+  //         this.loadTree();
+  //         this.creatingFolder = null;
+  //       });
+  //   } else {
+  //     this.cancelCreateNewFolder();
+  //   }
+  // }
+
   saveNewFolder(folder: FolderData): void {
     const parentPath = folder.path.split('/').slice(0, -1).join('/') || '';
     const folderName = folder.name.trim();
-    if (folderName) {
-      this.productDocumentService.createFolder({ path: parentPath, folder_name: folderName })
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          this.saveOpenState(this.tree);
-          this.loadTree();
-          this.creatingFolder = null;
-        });
-    } else {
+  
+    if (!folderName) {
       this.cancelCreateNewFolder();
+      return;
     }
+  
+    // Check if a folder with the same name already exists in the parent path
+    const siblings = this.getFolderSiblings(parentPath);
+    const nameAlreadyExists = siblings.some(
+      sibling => sibling.type === 'folder' && sibling.name.toLowerCase() === folderName.toLowerCase()
+    );
+  
+    if (nameAlreadyExists) {
+      // alert('A folder with this name already exists.');
+      this.cancelCreateNewFolder();
+      return;
+    }
+  
+    this.productDocumentService.createFolder({ path: parentPath, folder_name: folderName })
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.saveOpenState(this.tree);
+        this.loadTree();
+        this.creatingFolder = null;
+      });
   }
 
   cancelCreateNewFolder(): void {
@@ -351,14 +515,36 @@ export class FileManagerComponent implements OnInit {
   saveEditedFolder(folder: FolderData): void {
     if (folder.name.trim() && this.editingFolder) {
       const oldPath = this.editingFolder.path;
-      const newFolderName = folder.name;
+      const newFolderName = folder.name.trim();
+      const parentPath = oldPath.split('/').slice(0, -1).join('/');
       const newPath = this.getNewFolderPath(oldPath, newFolderName);
+
+      if(oldPath == newPath) return;
+      // Проверка наличия папки с таким же именем на текущем уровне, исключая саму папку
+      const siblings = this.getFolderSiblings(parentPath).filter(
+        sibling => sibling.path !== oldPath
+      );
+      const nameAlreadyExists = siblings.some(
+        sibling => sibling.type === 'folder' && sibling.name.toLowerCase() === newFolderName.toLowerCase()
+      );
+
+      if (nameAlreadyExists) {
+        //alert('Папка с таким именем уже существует на этом уровне.');
+        folder.name = this.originalFolderName ?? folder.name;
+        folder.isEditing = false;
+        this.editingFolder = null; // Сброс текущей редактируемой папки
+        return;
+      }
+
       this.productDocumentService.renameFolder({ old_path: oldPath, new_path: newPath })
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          this.saveOpenState(this.tree);
-          this.loadTree();
-          this.editingFolder = null;
+        .subscribe({
+          next: () => {
+            this.saveOpenState(this.tree);
+            this.loadTree();
+            this.editingFolder = null;
+          },
+          error: () => alert('Произошла ошибка при переименовании папки.')
         });
     } else {
       folder.name = this.originalFolderName ?? folder.name;
@@ -368,6 +554,32 @@ export class FileManagerComponent implements OnInit {
       this.loadTree();
     }
   }
+
+  getFolderSiblings(parentPath: string): (FolderData | FileData)[] {
+    if (parentPath === '') {
+      // Если родительский путь пуст, значит это корневая папка
+      return this.tree.filter(item => item.type === 'folder');
+    } else {
+      const parentFolder = this.findFolderByPath(this.tree, parentPath);
+      return parentFolder ? parentFolder.children.filter(item => item.type === 'folder') : [];
+    }
+  }
+
+  findFolderByPath(tree: FolderData[], path: string): FolderData | null {
+    for (const folder of tree) {
+      if (folder.path === path) {
+        return folder;
+      }
+      if (folder.children) {
+        const found = this.findFolderByPath(folder.children as FolderData[], path);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  }
+
 
   onEditFolderBlur(folder: FolderData): void {
     setTimeout(() => {
@@ -397,16 +609,7 @@ export class FileManagerComponent implements OnInit {
     }
   }
 
-  uploadFile(parentPath: string, event: any): void {
-    const file: File = event.target.files[0];
-    if (parentPath && file) {
-      this.productDocumentService.uploadFile({ path: parentPath, file: file })
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          this.loadFiles(parentPath);
-        });
-    }
-  }
+  
 
   deleteFolder(path: string | undefined): void {
     if (path) {
@@ -429,42 +632,6 @@ export class FileManagerComponent implements OnInit {
     }
   }
 
-  deleteFile(file: FileData): void {
-    if (file.path) {
-      this.productDocumentService.deleteFile(file.path)
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({
-          next: () => {
-            if (this.selectedNode) {
-              this.loadFiles(this.selectedNode.path);
-            }
-          },
-          error: (error) => {
-            if (error.status === 403) {
-              alert('File cannot be deleted because it is linked to a tariff or hardware.');
-            } else {
-              alert('An error occurred while deleting the file.');
-            }
-          }
-        });
-    }
-  }
-
-  renameFolder(oldPath: string | undefined, newFolderName: string): void {
-    if (oldPath) {
-      const newPath = this.getNewFolderPath(oldPath, newFolderName);
-      this.productDocumentService.renameFolder({ old_path: oldPath, new_path: newPath })
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({
-          next: () => {
-            this.saveOpenState(this.tree);
-            this.loadTree();
-          },
-          error: () => alert('An error occurred while renaming the folder.')
-        });
-    }
-  }
-
   getNewFolderPath(oldPath: string, newFolderName: string): string {
     const segments = oldPath.split('/');
     segments.pop();
@@ -473,18 +640,27 @@ export class FileManagerComponent implements OnInit {
   }
 
   renameFile(oldPath: string | undefined, newFileName: string): void {
-    if (oldPath) {
-      const newPath = this.getNewFilePath(oldPath, newFileName);
-      this.productDocumentService.renameFile({ old_path: oldPath, new_path: newPath })
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({
-          next: () => {
-            if (this.selectedNode) {
-              this.loadFiles(this.selectedNode.path);
-            }
-          },
-          error: () => alert('An error occurred while renaming the file.')
-        });
+    if (oldPath && this.selectedNode) {
+      // Извлекаем имена всех файлов в текущей папке
+      const existingFileNames = this.selectedFiles.map(file => file.name.toLowerCase());
+  
+      // Проверяем, существует ли файл с таким же именем
+      if (existingFileNames.includes(newFileName.toLowerCase())) {
+        this.cancelEditFile(null)
+        alert('Файл с таким именем уже существует в этой папке.');
+      } else {
+        const newPath = this.getNewFilePath(oldPath, newFileName);
+        this.productDocumentService.renameFile({ old_path: oldPath, new_path: newPath })
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe({
+            next: () => {
+              if (this.selectedNode) {
+                this.loadFiles(this.selectedNode.path);
+              }
+            },
+            error: () => alert('Произошла ошибка при переименовании файла.')
+          });
+      }
     }
   }
 

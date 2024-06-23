@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -26,8 +26,13 @@ export class ProductDocumentService {
     return this.http.get(`${this.apiUrl}/products/tree`);
   }
 
-  getFiles(folder: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/products/files`, { params: { folder } });
+
+  getFiles(folder: string, search: string = ''): Observable<any> {
+    let params = new HttpParams().set('folder', folder);
+    if (search) {
+      params = params.set('search', search);
+    }
+    return this.http.get(`${this.apiUrl}/products/files`, { params });
   }
 
   getFileContent(path: string): Observable<Blob> {

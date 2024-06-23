@@ -33,7 +33,7 @@
         </div>
       </div>
 
-      <div class="col-4">
+      <div class="col-4 files">
         <div>
           <app-generic-table 
             class="table-responsive"
@@ -47,7 +47,11 @@
             [isLoading]="isFileLoading"
             [isLoaded]="isLoaded"
             [buttons]="buttons"
+            (buttonEvent)="onClickFileEvent($event)"
             (rowSelected)="onFileSelected($event)"
+            (rowEdit)="editFile($event)"
+            (rowEditCancel)="cancelEditFile($event)"
+            (filterEvent)="searchEvent($event)"
             #genericTable 
           ></app-generic-table>
         </div>

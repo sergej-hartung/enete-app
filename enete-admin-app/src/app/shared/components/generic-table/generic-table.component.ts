@@ -52,9 +52,10 @@ export class GenericTableComponent<T> {
   @Output() filterEvent = new EventEmitter<{ [x:string]:any }>();
   @Output() sortEvent = new EventEmitter<{ sortField:string|null, sortOrder:string }>();
   @Output() buttonEvent = new EventEmitter<string>();
+  @Output() rowEdit = new EventEmitter<any>();
+  @Output() rowEditCancel = new EventEmitter<any>();
 
   @ContentChild('customFilters') customFilterTemplate?: TemplateRef<any>;
-
 
   private unsubscribe$ = new Subject<void>();
   private textFilterSubject = new Subject<{ key: string; value: any }>();
@@ -95,7 +96,6 @@ export class GenericTableComponent<T> {
           }    
         });
     }else if(this.dataMode == 'parent' && this.dataArr){
-      console.log('data parent')
       this.setData(this.dataArr) 
       this.isLoaded = true
     }
@@ -105,6 +105,40 @@ export class GenericTableComponent<T> {
     if (changes["dataArr"] && !changes["dataArr"].isFirstChange()) {
       this.setData(changes["dataArr"].currentValue);
       this.cdr.detectChanges();
+    }
+  }
+
+  onEditBlur(event: FocusEvent, row:any){
+    event.stopPropagation();
+    console.log(row)
+    if(row.isEditing){
+      setTimeout(() => {
+        if (row) {
+          //this.rowEdit.emit(row)
+          this.editRow(row)
+          //this.createNewFolder.emit(this.node);
+        }
+      }, 0);
+    }
+    
+  }
+
+  editRow(row:any){
+    console.log('edit')
+    this.rowEdit.emit(row)
+    row.isEditing = false;
+  }
+
+  onEditKeydown(event: KeyboardEvent, row: any){
+    console.log(event)
+    if (event.key === 'Enter') {
+      //this.onEditBlur(new FocusEvent('blur'), row);
+      this.editRow(row)
+    } else if (event.key === 'Escape') {
+      this.rowEditCancel.emit(row)
+      this.selectRow
+      row.isEditing = false;
+      //row.selected = false
     }
   }
 
@@ -301,19 +335,18 @@ export class GenericTableComponent<T> {
   }
 
   applyFilter(filter: { key: string; value: any }) {
-    this.dataService?.confirmAction('filter', () => {
-      if(this.filterMode === 'service'){
+    if(this.filterMode === 'service'){
+      this.dataService?.confirmAction('filter', () => {
         if(this.dataService){
           this.dataService.fetchData({         
             [filter.key]: filter.value
           });
           this.dataService.resetDetailedData();
         }
-      }else{
-        this.filterEvent.emit({[filter.key]: filter.value})
-      }
-      
-    })   
+      })   
+    }else{
+      this.filterEvent.emit({[filter.key]: filter.value})
+    }   
   }
   
   resetSelectedRow() {

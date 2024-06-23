@@ -43,39 +43,41 @@
                [cdkDropListConnectedTo]="connectedDropLists" 
                class="attr-group-list" (cdkDropListDropped)="drop($event, group)">
             <div class="attr-group-box" *ngFor="let attributeCtrl of getAttributeFormArray(group).controls; let j = index" [formGroup]="getFormGroupFromArray(getAttributeFormArray(group), j)" cdkDrag [cdkDragDisabled]="group.attributes[j].isFocused">
-              <span class="attr-name col-3">{{ group.attributes[j].name }}</span>
+                <span class="attr-name col-3">{{ group.attributes[j].name }}</span>
 
-              <span class="attr-value col-3">
-                <select *ngIf="group.attributes[j].input_type === 'Dropdown'" class="form-select form-select-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                  <option *ngFor="let option of getDropdownOptions(group.attributes[j])" [value]="option.value">
-                    {{ option.label }}
-                  </option>
-                </select>
-                <input *ngIf="group.attributes[j].input_type === 'Dezimalzahlen'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                <input *ngIf="group.attributes[j].input_type === 'Ganzzahlen'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                <input *ngIf="group.attributes[j].input_type === 'Textfeld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                <textarea *ngIf="group.attributes[j].input_type === 'Textbereich'" rows="5" class="form-control form-control-sm" formControlName="value_text" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)"></textarea>
-                <input *ngIf="group.attributes[j].input_type === 'Datumfeld'" type="date" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                <input *ngIf="group.attributes[j].input_type === 'Link-Feld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                <select *ngIf="group.attributes[j].input_type === 'Boolescher Wert'" class="form-select form-select-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                  <option value="1">true</option>
-                  <option value="0">false</option>
-                </select>
-                <input *ngIf="group.attributes[j].input_type === 'Dateifeld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-              </span>
-              <span class="attr-unit col">
-                {{ group.attributes[j].unit }}
-              </span>
+                <span class="attr-value col-3">
+                  <select *ngIf="group.attributes[j].input_type === 'Dropdown'" class="form-select form-select-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                    <option *ngFor="let option of getDropdownOptions(group.attributes[j])" [value]="option.value">
+                      {{ option.label }}
+                    </option>
+                  </select>
+                  <input *ngIf="group.attributes[j].input_type === 'Dezimalzahlen'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                  <input *ngIf="group.attributes[j].input_type === 'Ganzzahlen'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                  <input *ngIf="group.attributes[j].input_type === 'Textfeld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                  <button *ngIf="group.attributes[j].input_type === 'Textbereich'" rows="5" class="form-control form-control-sm" (click)="openEditor(group, j)">Text bearbeiten</button>
+                  <input *ngIf="group.attributes[j].input_type === 'Datumfeld'" type="date" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                  <input *ngIf="group.attributes[j].input_type === 'Link-Feld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                  <select *ngIf="group.attributes[j].input_type === 'Boolescher Wert'" class="form-select form-select-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                    <option value="1">true</option>
+                    <option value="0">false</option>
+                  </select>
+                  <input *ngIf="group.attributes[j].input_type === 'Dateifeld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                </span>
+                <span class="attr-unit col">
+                  {{ group.attributes[j].unit }}
+                </span>
 
-              <span *ngIf="group.attributes[j].is_frontend_visible" class="attr-frontend_visible green">
-                <i class="far fa-eye"></i>
-              </span>
-              <span *ngIf="!group.attributes[j].is_frontend_visible" class="attr-frontend_visible red">
-                <i class="fas fa-eye-slash"></i>
-              </span>
-              <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">
-                <i class="fas fa-times"></i>
-              </button>
+                <span *ngIf="group.attributes[j].is_frontend_visible" class="attr-frontend_visible green">
+                  <i class="far fa-eye"></i>
+                </span>
+                <span *ngIf="!group.attributes[j].is_frontend_visible" class="attr-frontend_visible red">
+                  <i class="fas fa-eye-slash"></i>
+                </span>
+                <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">
+                  <i class="fas fa-times"></i>
+                </button>
+              
+              <div *ngIf="getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value" [innerHTML]="getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value"></div>
             </div>
           </div>
         </div>

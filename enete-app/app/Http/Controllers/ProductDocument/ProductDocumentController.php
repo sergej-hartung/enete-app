@@ -51,6 +51,7 @@ class ProductDocumentController extends Controller
     public function getFiles(Request $request)
     {
         $folder = $request->query('folder');
+        $search = $request->query('search', ''); // По умолчанию пустая строка
         $fullPath = 'products/' . trim($folder, '/');
         $files = Storage::files($fullPath);
         $fileInfo = [];
@@ -60,14 +61,19 @@ class ProductDocumentController extends Controller
             $fileRecord = ProductDocuments::where('path', $file)->first();
 
             if ($fileRecord) {
-                $fileInfo[] = [
-                    'id' => $fileRecord->id,
-                    'name' => Str::afterLast($relativePath, '/'),
-                    'path' => $relativePath,
-                    'type' => 'file', 
-                    'mime_type' => $fileRecord->mime_type, 
-                    'size' => $fileRecord->size, 
-                ];
+                $fileName = Str::afterLast($relativePath, '/');
+
+                // Фильтрация по вхождению строки поиска в имя файла
+                if ($search === '' || stripos($fileName, $search) !== false) {
+                    $fileInfo[] = [
+                        'id' => $fileRecord->id,
+                        'name' => $fileName,
+                        'path' => $relativePath,
+                        'type' => 'file',
+                        'mime_type' => $fileRecord->mime_type,
+                        'size' => $fileRecord->size,
+                    ];
+                }
             }
         }
 
@@ -148,6 +154,15 @@ class ProductDocumentController extends Controller
         $newPath = 'products/' . trim($request->input('new_path'), '/');
 
         if (Storage::exists($oldPath)) {
+            // Проверка наличия папки с новым именем
+            $parentPath = dirname($oldPath);
+            $newFolderName = basename($newPath);
+            $newFullPath = $parentPath . '/' . $newFolderName;
+
+            if (Storage::exists($newFullPath)) {
+                return response()->json(['message' => 'Папка с таким именем уже существует.'], 409);
+            }
+
             // Переименование папки на диске
             Storage::move($oldPath, $newPath);
 
@@ -158,10 +173,10 @@ class ProductDocumentController extends Controller
                 $file->save();
             }
 
-            return response()->json(['message' => 'Folder renamed successfully.']);
+            return response()->json(['message' => 'Папка успешно переименована.']);
         }
 
-        return response()->json(['message' => 'Folder not found.'], 404);
+        return response()->json(['message' => 'Папка не найдена.'], 404);
     }
 
     public function renameFile(Request $request)

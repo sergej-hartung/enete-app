@@ -1,0 +1,14 @@
+<div class="modal-header">
+    <h4 class="modal-title">Text bearbeiten</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeEditor()"></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editorForm">
+      <ckeditor *ngIf="editorLoaded" [editor]="Editor" formControlName="content"></ckeditor>
+      <p *ngIf="!editorLoaded">Loading editor...</p>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeEditor()">Abbrechen</button>
+    <button type="button" class="btn btn-primary" (click)="save()">Speichern</button>
+  </div>

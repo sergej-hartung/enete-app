@@ -7,6 +7,10 @@ interface FileData {
   type: 'file';
   size: number;
   mime_type: string;
+  icon?: string;
+  isEditing?: boolean;
+  formatedType?: string;
+  formattedSize?: string;
 }
 
 interface FolderData {
@@ -60,6 +64,7 @@ export class TreeNodeComponent {
   }
 
   onEditFolderBlur(event: FocusEvent) {
+    event.stopPropagation();
     setTimeout(() => {
       if (this.node.isEditing) {
         this.node.isEditing = false;
