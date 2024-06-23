@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import Editor from '../../../../../ckeditor5/build/ckeditor';
 
 @Component({
   selector: 'app-editor-modal',
@@ -14,6 +15,17 @@ export class EditorModalComponent implements OnInit {
   @Output() saveText = new EventEmitter<string>();
   @Output() close = new EventEmitter<void>();
 
+  // public editorConfig = {
+  //   toolbar: {
+  //     items: [  
+  //       'sourceEditing', '|',
+  //     ],
+  
+  //     shouldNotGroupWhenFull: true
+  //   }
+  // }
+  
+
   constructor(private fb: FormBuilder) {
     this.editorForm = this.fb.group({
       content: [this.initialValue]
@@ -23,7 +35,7 @@ export class EditorModalComponent implements OnInit {
   async ngOnInit() {
     if (typeof window !== 'undefined') { // Проверка для браузерной среды
       try {
-        const { default: ClassicEditor } = await import('@ckeditor/ckeditor5-build-classic');
+        const { default: ClassicEditor } = await import('../../../../../ckeditor5/build/ckeditor');
         this.Editor = ClassicEditor;
         this.editorLoaded = true; // Устанавливаем флаг после успешной загрузки
       } catch (error) {

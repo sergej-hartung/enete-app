@@ -4,7 +4,7 @@
   </div>
   <div class="modal-body">
     <form [formGroup]="editorForm">
-      <ckeditor *ngIf="editorLoaded" [editor]="Editor" formControlName="content"></ckeditor>
+      <ckeditor *ngIf="editorLoaded" [editor]="Editor"  formControlName="content"></ckeditor>
       <p *ngIf="!editorLoaded">Loading editor...</p>
     </form>
   </div>

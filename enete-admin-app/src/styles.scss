@@ -1726,6 +1726,18 @@ app-tariff-add-edit{
     }
 }
 
+.ckedit-modal-backdrop{
+    z-index: 10551 !important;
+}
+
+.ckedit-modal{
+    z-index: 10552 !important;
+}
+
+.ck-editor__editable_inline {
+    min-height: 227px; /* Измените значение по необходимости */
+  }
+
 //   color: #6c757d;
 //   text-decoration: none;
 //   cursor: default;

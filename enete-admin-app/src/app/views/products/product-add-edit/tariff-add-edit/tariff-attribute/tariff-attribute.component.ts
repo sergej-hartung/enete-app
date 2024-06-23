@@ -118,7 +118,14 @@ export class TariffAttributeComponent {
 
   openEditor(group: Group, index: number) {
 
-    const modalRef: NgbModalRef = this.modalService.open(EditorModalComponent, { size: 'lg' });
+    const modalRef: NgbModalRef = this.modalService.open(
+      EditorModalComponent, 
+      {
+        backdropClass: 'ckedit-modal-backdrop', 
+        windowClass: 'ckedit-modal',
+        size: 'lg' 
+      }
+    );
     const control = (group.form.get('attributes') as FormArray).at(index);
     const attribute = group.attributes[index];
     if(attribute.pivot){
