@@ -641,11 +641,20 @@ export class FileManagerComponent implements OnInit {
 
   renameFile(oldPath: string | undefined, newFileName: string): void {
     if (oldPath && this.selectedNode) {
+
+      const oldFileName = this.originalFile?.name;
+        if (oldFileName === newFileName) {
+            this.cancelEditFile(null);
+            return;
+        }
+
       // Извлекаем имена всех файлов в текущей папке
       const existingFileNames = this.selectedFiles.map(file => file.name.toLowerCase());
   
       // Проверяем, существует ли файл с таким же именем
       if (existingFileNames.includes(newFileName.toLowerCase())) {
+        console.log(existingFileNames.includes(newFileName.toLowerCase()))
+        console.log(existingFileNames)
         this.cancelEditFile(null)
         alert('Файл с таким именем уже существует в этой папке.');
       } else {

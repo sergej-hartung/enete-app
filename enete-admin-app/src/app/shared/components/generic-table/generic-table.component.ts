@@ -266,6 +266,9 @@ export class GenericTableComponent<T> {
         if (d.selected && d['originalIconColor']) {
           d['iconIcon'].color  = d.originalIconColor;
         }
+        if(d.selected && d.isEditing){
+          d.isEditing = false
+        }
         d.selected = false;
       });
   

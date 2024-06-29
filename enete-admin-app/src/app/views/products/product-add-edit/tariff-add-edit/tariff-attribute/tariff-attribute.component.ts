@@ -9,6 +9,7 @@ import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { MainNavbarService } from '../../../../../services/main-navbar.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EditorModalComponent } from '../../../../../shared/components/editor-modal/editor-modal.component'
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 interface Group {
   id?: number;
@@ -44,7 +45,8 @@ export class TariffAttributeComponent {
     private productService: ProductService,
     private mainNavbarService: MainNavbarService,
     private attributeGroupService: AttributeGroupService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private sanitizer: DomSanitizer
   ) {
     this.newGroupForm = this.fb.group({
       groupName: ['', Validators.required]
@@ -62,11 +64,6 @@ export class TariffAttributeComponent {
         if (id && this.groupId !== id) {
           this.groupId = id;
           this.attributeService.fetchDataByGroupId(this.groupId);
-          // of(null).pipe(
-          //   delay(1000)
-          // ).subscribe(() => {
-          //   this.attributeService.fetchDataByGroupId(this.groupId);
-          // });
         }
       });
 
@@ -80,15 +77,6 @@ export class TariffAttributeComponent {
         }
       });
 
-    // this.mainNavbarService.iconClicks$
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe(button => {
-    //     console.log(button)
-    //     if (button === 'edit' && this.groupId) {
-    //       this.loadAttributeGroups();
-    //     }
-    //   });
-
     this.loadAttributeGroups();
   }
 
@@ -96,25 +84,6 @@ export class TariffAttributeComponent {
     this.updateConnectedDropLists();
   }
 
-  setText(){
-    console.log('set Text')
-  }
-
-  // openEditor(group: Group, index: number) {
-  //   const modalRef = this.modalService.open(EditorModalComponent, { size: 'lg' });
-  //   const attribute = group.attributes[index];
-  //   modalRef.componentInstance.initialValue = attribute?.pivot?.value_text || '';
-  //   modalRef.result.then((result: string) => {
-  //     console.log(result)
-  //     console.log(attribute.pivot)
-  //     if (result !== undefined && attribute.pivot) {
-  //       const control = (group.form.get('attributes') as FormArray).at(index);
-  //       control.patchValue({ value_text: result });
-  //       attribute.pivot.value_text = result; // Обновите атрибут в списке
-  //       console.log('Сохранено значение:', result);
-  //     }
-  //   }).catch(() => {});
-  // }
 
   openEditor(group: Group, index: number) {
 
@@ -127,12 +96,14 @@ export class TariffAttributeComponent {
       }
     );
     const control = (group.form.get('attributes') as FormArray).at(index);
+    let text = control.get('value_text')
     const attribute = group.attributes[index];
     if(attribute.pivot){
-      modalRef.componentInstance.initialValue = attribute.pivot?.value_text || '';
+      text?.setValue(attribute.pivot?.value_text)
+      modalRef.componentInstance.initialValue = text?.value || '';
     }else{
-      const control = (group.form.get('attributes') as FormArray).at(index);
-      modalRef.componentInstance.initialValue = control.get('value_text')?.value || '';
+      //const control = (group.form.get('attributes') as FormArray).at(index);
+      modalRef.componentInstance.initialValue = text?.value || '';
     }
     
     modalRef.componentInstance.saveText.subscribe((result: string) => {
@@ -141,27 +112,17 @@ export class TariffAttributeComponent {
         control.patchValue({ value_text: result });
         //attribute.pivot.value_text = result;
         console.log('Сохранено значение:', result);
+        text?.markAsTouched()
         modalRef.close(); // Закрытие модального окна после сохранения
-        console.log(group)
       }
     });
     modalRef.componentInstance.close.subscribe(() => {
       console.log('fenster geschlossen')
+      text?.markAsTouched()
       modalRef.close(); // Закрытие модального окна при нажатии на отмену
     });
   }
-  // openEditor(group: Group, index: number) {
-  //   const modalRef = this.modalService.open(EditorModalComponent, { size: 'lg' });
-  //   const attribute = group.attributes[index];
-  //   modalRef.componentInstance.initialValue = attribute.value_text || '';
-  //   modalRef.result.then((result: string) => {
-  //     if (result !== undefined) {
-  //       const control = (group.form.get('attributes') as FormArray).at(index);
-  //       control.patchValue({ value_text: result });
-  //       attribute.value_text = result; // Обновите атрибут в списке
-  //     }
-  //   }).catch(() => {});
-  // }
+
 
   addNewGroupName() {
     this.addNewGroup = true;
@@ -226,8 +187,7 @@ export class TariffAttributeComponent {
   }
 
   drop(event: CdkDragDrop<any[]>, group?: Group) {
-    console.log(this.groups)
-    if (event.previousContainer === event.container) {
+    if (event.previousContainer === event.container && group) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.moveItemInFormArray(group!.form.get('attributes') as FormArray, event.previousIndex, event.currentIndex);
     } else {
@@ -244,18 +204,79 @@ export class TariffAttributeComponent {
           }
   
           const groupFormArray = group.form.get('attributes') as FormArray;
-          groupFormArray.insert(event.currentIndex, this.fb.group({
-            id: [attribute.id],
-            code: [attribute.code],
-            name: [attribute.name],
-            value_varchar: [null],
-            value_text: [null],
-            is_active: [attribute.is_frontend_visible]
-          }));
+          groupFormArray.insert(event.currentIndex, this.createAttributeFormControl(attribute));
+          // groupFormArray.insert(event.currentIndex, this.fb.group({
+          //   id: [attribute.id],
+          //   code: [attribute.code],
+          //   name: [attribute.name],
+          //   value_varchar: [null],
+          //   value_text: [null],
+          //   is_active: [attribute.is_frontend_visible]
+          // }));
         }
+        console.log(this.groups)
       }
     }
   }
+
+  private createAttributeFormControl(attribute: Attribute): FormGroup {
+    const valueVarcharValidators = [];
+    const valueTextValidators = [];
+
+    if (attribute.is_required) {
+        if (attribute.input_type === 'Textbereich') {
+            valueTextValidators.push(Validators.required);
+        } else {
+            valueVarcharValidators.push(Validators.required);
+        }
+    }
+
+    switch (attribute.input_type) {
+        case 'Ganzzahlen':
+            valueVarcharValidators.push(Validators.pattern(/^\d+$/)); // Только целые числа
+            break;
+        case 'Dezimalzahlen':
+            valueVarcharValidators.push(Validators.pattern(/^\d+(\.\d+)?$/)); // Десятичные числа
+            break;
+        case 'Datumfeld':
+            valueVarcharValidators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
+            break;
+        case 'Link-Feld':
+            valueVarcharValidators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)); // URL
+            break;
+        case 'Boolescher Wert':
+            valueVarcharValidators.push(Validators.pattern(/^(0|1)$/)); // Булевый (0 или 1)
+            break;
+        case 'Dateifeld':
+            // Для поля файла можно добавить валидатор на допустимые расширения файлов, если нужно
+            break;
+        case 'Dropdown':
+            // Для выпадающего списка специфические валидаторы не нужны
+            break;
+        case 'Mehrfachauswahl':
+            // Для множественного выбора специфические валидаторы не нужны
+            break;
+        case 'Textfeld':
+            // Для текстового поля специфические валидаторы не нужны
+            break;
+        case 'Textbereich':
+            // Валидаторы добавлены выше
+            break;
+        default:
+            // Для других типов данных добавьте свои валидаторы, если необходимо
+            break;
+    }
+
+    return this.fb.group({
+        id: [attribute.id],
+        code: [attribute.code],
+        name: [attribute.name],
+        value_varchar: ['', valueVarcharValidators],
+        value_text: ['', valueTextValidators],
+        is_active: [attribute.is_frontend_visible]
+    });
+}
+
 
   private moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number) {
     const item = formArray.at(fromIndex);
@@ -272,7 +293,6 @@ export class TariffAttributeComponent {
   }
 
   removeAttribute(group: Group, attribute: Attribute) {
-    console.log(attribute);
     const index = group.attributes.indexOf(attribute);
     if (index >= 0) {
       const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
@@ -334,7 +354,6 @@ export class TariffAttributeComponent {
 
             this.updateTariffAttributesStatus();
             this.updateConnectedDropLists();
-            console.log('Loaded Groups:', this.groups);
           }       
         });
     }
@@ -358,6 +377,10 @@ export class TariffAttributeComponent {
   // Метод для безопасного приведения типов и получения FormGroup
   getFormGroupFromArray(group: FormArray, index: number): FormGroup {
     return group.at(index) as FormGroup;
+  }
+
+  getSafeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   ngOnDestroy() {

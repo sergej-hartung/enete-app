@@ -1,5 +1,7 @@
+
+
 <div class="row no-gutters">
-  <div class="col left-panel pt-2">   
+  <div class="col left-panel pt-2">
     <div class="groups">
       <div class="mb-2" *ngFor="let group of groups; let i = index">
         <div *ngIf="editGroupIndex === i; else groupDisplay">
@@ -16,11 +18,11 @@
               </button>
               <button class="btn btn-outline-danger" type="button" (click)="cancelEditGroup()">
                 <i class="fa-solid fa-xmark"></i>
-              </button> 
+              </button>
             </div>
-            <div 
-                class="invalid-feedback custom-invalid-feedback"
-                *ngIf="editGroupForm.get('groupName')?.errors?.['required']"
+            <div
+              class="invalid-feedback custom-invalid-feedback"
+              *ngIf="editGroupForm.get('groupName')?.errors?.['required'] && editGroupForm.get('groupName')?.touched"
             >
               Gruppenname ist erforderlich.
             </div>
@@ -28,8 +30,10 @@
         </div>
         <ng-template #groupDisplay>
           <span class="group-name">
-            <button class="btn-text-style" (click)="toggleGroupAttributes(i)">{{ group.name }} </button>
-            <button class="btn-text-style green" (click)="editGroup(i)"><i class="fa-regular fa-pen-to-square"></i></button>
+            <button class="btn-text-style" (click)="toggleGroupAttributes(i)">{{ group.name }}</button>
+            <button class="btn-text-style green" (click)="editGroup(i)">
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
             <button class="btn-text-style red" (click)="removeGroup(i)">
               <i class="fa-regular fa-trash-can"></i>
             </button>
@@ -39,45 +43,135 @@
           </span>
         </ng-template>
         <div *ngIf="!group.hidden && group.form" [formGroup]="group.form">
-          <div cdkDropList [id]="getGroupDropListId(i)" [cdkDropListData]="group.attributes"
-               [cdkDropListConnectedTo]="connectedDropLists" 
-               class="attr-group-list" (cdkDropListDropped)="drop($event, group)">
-            <div class="attr-group-box" *ngFor="let attributeCtrl of getAttributeFormArray(group).controls; let j = index" [formGroup]="getFormGroupFromArray(getAttributeFormArray(group), j)" cdkDrag [cdkDragDisabled]="group.attributes[j].isFocused">
-                <span class="attr-name col-3">{{ group.attributes[j].name }}</span>
-
-                <span class="attr-value col-3">
-                  <select *ngIf="group.attributes[j].input_type === 'Dropdown'" class="form-select form-select-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+          <div
+            cdkDropList
+            [id]="getGroupDropListId(i)"
+            [cdkDropListData]="group.attributes"
+            [cdkDropListConnectedTo]="connectedDropLists"
+            class="attr-group-list"
+            (cdkDropListDropped)="drop($event, group)"
+          >
+            <div
+              class="attr-group-box"
+              *ngFor="let attributeCtrl of getAttributeFormArray(group).controls; let j = index"
+              [formGroup]="getFormGroupFromArray(getAttributeFormArray(group), j)"
+              cdkDrag
+              [cdkDragDisabled]="group.attributes[j].isFocused"
+            >
+              <span class="attr-name col-3">{{ group.attributes[j].name }}</span>
+              <span class="attr-value col-3">
+                <ng-container [ngSwitch]="group.attributes[j].input_type">
+                  <select
+                    *ngSwitchCase="'Dropdown'"
+                    class="form-select form-select-sm"
+                    formControlName="value_varchar"
+                    (focus)="setFocus(group, j)"
+                    (blur)="removeFocus(group, j)"
+                  >
                     <option *ngFor="let option of getDropdownOptions(group.attributes[j])" [value]="option.value">
                       {{ option.label }}
                     </option>
                   </select>
-                  <input *ngIf="group.attributes[j].input_type === 'Dezimalzahlen'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                  <input *ngIf="group.attributes[j].input_type === 'Ganzzahlen'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                  <input *ngIf="group.attributes[j].input_type === 'Textfeld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                  <button *ngIf="group.attributes[j].input_type === 'Textbereich'" rows="5" class="form-control form-control-sm" (click)="openEditor(group, j)">Text bearbeiten</button>
-                  <input *ngIf="group.attributes[j].input_type === 'Datumfeld'" type="date" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                  <input *ngIf="group.attributes[j].input_type === 'Link-Feld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                  <select *ngIf="group.attributes[j].input_type === 'Boolescher Wert'" class="form-select form-select-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
+                  <input
+                    *ngSwitchCase="'Dezimalzahlen'"
+                    type="text"
+                    class="form-control form-control-sm"
+                    formControlName="value_varchar"
+                    (focus)="setFocus(group, j)"
+                    (blur)="removeFocus(group, j)"
+                  />
+                  <input 
+                    *ngSwitchCase="'Ganzzahlen'" 
+                    type="text" 
+                    class="form-control form-control-sm" 
+                    formControlName="value_varchar" 
+                    (focus)="setFocus(group, j)" 
+                    (blur)="removeFocus(group, j)" 
+                  />
+                  <input 
+                    *ngSwitchCase="'Textfeld'" 
+                    type="text" 
+                    class="form-control form-control-sm" 
+                    formControlName="value_varchar" 
+                    (focus)="setFocus(group, j)" 
+                    (blur)="removeFocus(group, j)" 
+                  />
+                  <button 
+                    *ngSwitchCase="'Textbereich'"
+                    class="form-control form-control-sm" 
+                    (click)="openEditor(group, j)"
+                  >
+                    Text bearbeiten
+                  </button>  
+                  <input
+                    *ngSwitchCase="'Datumfeld'"
+                    type="date"
+                    class="form-control form-control-sm"
+                    formControlName="value_varchar"
+                    (focus)="setFocus(group, j)"
+                    (blur)="removeFocus(group, j)"
+                  />                     
+                  <input 
+                    *ngSwitchCase="'Link-Feld'"
+                    type="text" 
+                    class="form-control form-control-sm" 
+                    formControlName="value_varchar" 
+                    (focus)="setFocus(group, j)" 
+                    (blur)="removeFocus(group, j)"
+                  />
+                  <select 
+                    *ngSwitchCase="'Boolescher Wert'"
+                    class="form-select form-select-sm" 
+                    formControlName="value_varchar" 
+                    (focus)="setFocus(group, j)" 
+                    (blur)="removeFocus(group, j)"
+                  >
                     <option value="1">true</option>
                     <option value="0">false</option>
                   </select>
-                  <input *ngIf="group.attributes[j].input_type === 'Dateifeld'" type="text" class="form-control form-control-sm" formControlName="value_varchar" (focus)="setFocus(group, j)" (blur)="removeFocus(group, j)">
-                </span>
-                <span class="attr-unit col">
-                  {{ group.attributes[j].unit }}
-                </span>
+                  <input  
+                    *ngSwitchCase="'Dateifeld'"
+                    type="text" 
+                    class="form-control form-control-sm" 
+                    formControlName="value_varchar" 
+                    (focus)="setFocus(group, j)" 
+                    (blur)="removeFocus(group, j)" 
+                  />                  
+                </ng-container>                         
+              </span>
+              <span class="attr-unit col">{{ group.attributes[j].unit }}</span>
+              <span *ngIf="group.attributes[j].is_frontend_visible" class="attr-frontend_visible green">
+                <i class="far fa-eye"></i>
+              </span>
+              <span *ngIf="!group.attributes[j].is_frontend_visible" class="attr-frontend_visible red">
+                <i class="fas fa-eye-slash"></i>
+              </span>
+              <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">
+                <i class="fas fa-times"></i>
+              </button>
+              <div
+                class="col-12 attribute-details-accordion"
+                *ngIf="group.attributes[j].input_type === 'Textbereich' && getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value"
+                ngbAccordion
+                #accordion="ngbAccordion"
+              >
+                <div ngbAccordionItem="third" #third="ngbAccordionItem" >
+                  <div ngbAccordionHeader class="accordion-button custom-header">
+                    <button ngbAccordionToggle [disabled]="third.disabled" class="p-0 btn btn-link container-fluid text-start ps-0">
+                      Text
+                    </button>
+                  </div>
+                  <div ngbAccordionCollapse>
+                    <div class="ck-content" ngbAccordionBody [innerHTML]="getSafeHtml(getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value)">
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                <span *ngIf="group.attributes[j].is_frontend_visible" class="attr-frontend_visible green">
-                  <i class="far fa-eye"></i>
-                </span>
-                <span *ngIf="!group.attributes[j].is_frontend_visible" class="attr-frontend_visible red">
-                  <i class="fas fa-eye-slash"></i>
-                </span>
-                <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">
-                  <i class="fas fa-times"></i>
-                </button>
-              
-              <div *ngIf="getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value" [innerHTML]="getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value"></div>
+              <div *ngIf="(attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors) && attributeCtrl.get('value_text')?.touched" class="col-12 invalid-feedback custom-invalid-feedback">
+                <div *ngIf="(attributeCtrl.get('value_varchar')?.errors?.['required']) || (attributeCtrl.get('value_text')?.errors?.['required'])">Dieses Feld ist erforderlich.</div>
+                <div *ngIf="(attributeCtrl.get('value_varchar')?.errors?.['pattern']) || (attributeCtrl.get('value_text')?.errors?.['pattern'])">Ungültiges Format.</div>
+              </div> 
             </div>
           </div>
         </div>
@@ -100,9 +194,9 @@
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
-        <div 
-            class="invalid-feedback custom-invalid-feedback"
-            *ngIf="editGroupForm.get('groupName')?.errors?.['required']"
+        <div
+          class="invalid-feedback custom-invalid-feedback"
+          *ngIf="editGroupForm.get('groupName')?.errors?.['required'] && editGroupForm.get('groupName')?.touched"
         >
           Gruppenname ist erforderlich.
         </div>
@@ -113,9 +207,15 @@
     </button>
   </div>
   <div class="col-5 right-panel pt-2">
-    <div cdkDropList [id]="tariffDropListId" [cdkDropListData]="tariffAttributes"
-         [cdkDropListConnectedTo]="connectedDropLists" class="attr-group-list" 
-         (cdkDropListDropped)="drop($event)" [cdkDropListEnterPredicate]="canDropToTariffList">
+    <div
+      cdkDropList
+      [id]="tariffDropListId"
+      [cdkDropListData]="tariffAttributes"
+      [cdkDropListConnectedTo]="connectedDropLists"
+      class="attr-group-list"
+      (cdkDropListDropped)="drop($event)"
+      [cdkDropListEnterPredicate]="canDropToTariffList"
+    >
       <div class="attr-group-box" *ngFor="let attribute of tariffAttributes" cdkDrag [ngClass]="{'copied-attribute': attribute.isCopied}">
         <span class="attr-kennung col">{{attribute.code}}</span>
         <span class="attr-name col">{{attribute.name}}</span>

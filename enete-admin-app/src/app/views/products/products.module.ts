@@ -6,7 +6,7 @@ import { ProductsComponent } from './products.component';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { ProductGroupComponent } from './product-group/product-group.component';
 import { ProductListComponent } from './product-list/product-list.component';
-import { NgbCollapseModule, NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbCollapseModule, NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '../../shared/shared.module';
 import { TariffListComponent } from './product-list/tariff-list/tariff-list.component';
 import { HardwareListComponent } from './product-list/hardware-list/hardware-list.component';
@@ -76,6 +76,7 @@ import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
+    NgbAccordionModule
     // CdkDropList, CdkDrag
   ]
 })

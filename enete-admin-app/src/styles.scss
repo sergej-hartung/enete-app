@@ -4,6 +4,7 @@
 @import 'material-icons/iconfont/material-icons.css';
 @import 'material-symbols/index.css';
 @import '@fortawesome/fontawesome-free/css/all.css';
+@import 'ckeditor5/ckeditor5.css';
 //@import 'material-symbols';
 
 html, body {
@@ -1346,6 +1347,7 @@ app-tariff-add-edit{
     border-bottom: 1px solid #ccc;
     color: rgba(0, 0, 0, .87);
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -1368,6 +1370,62 @@ app-tariff-add-edit{
         padding: 0.1rem 2rem 0.1rem 0.5rem;
         font-size: 0.8rem;
         line-height: 1.5;
+    }
+
+    .attribute-details-accordion{
+        margin-top: 5px;
+        margin-left:  calc(var(--bs-gutter-x)* -0.5);
+        margin-right: calc(var(--bs-gutter-x)* -0.5);
+        flex-grow: 1;
+
+        .accordion-item{
+            border: none;
+            border-radius: 0;
+        }
+
+        .text-start{
+            font-size: 11px;         
+            text-decoration: none;
+            
+        }
+
+        .accordion-button{
+            box-shadow: none;
+            //border-top: 1px solid rgba(0, 0, 0, 0.175);
+            padding: 0px 10px;
+            
+            color: #6c757d;
+            //transition: 0.10s;
+            .btn{
+                color: #6c757d;
+
+                &:hover{
+                    color: rgba(0, 0, 0, 0.8);
+                    
+                }
+            }
+
+            &::after {
+                content: none;
+            }
+            
+        }
+        .accordion-button:not(.collapsed){
+            .btn{
+                color: #6c757d;
+                text-decoration: underline;
+            }
+            //border-bottom: 1px solid rgba(0, 0, 0, 0.175);
+            //background-color: #f2f2f2;
+            background-color: #fff;
+            color: #6c757d;
+            box-shadow: none;
+        }
+
+        // .accordion-body{
+        //     padding-left: 10px;
+        //     padding-right: 10px;
+        // }
     }
 }
 
@@ -1741,3 +1799,43 @@ app-tariff-add-edit{
 //   color: #6c757d;
 //   text-decoration: none;
 //   cursor: default;
+
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+@media print {
+	body {
+		margin: 0 !important;
+	}
+}
+
+.main-container {
+	font-family: 'Lato';
+	width: fit-content;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.ck-content {
+	font-family: 'Lato';
+	line-height: 1.6;
+	word-break: break-word;
+}
+
+.ck-body-wrapper{
+    .ck.ck-balloon-panel{
+        z-index: 10553;
+    }
+    .ck.ck-dialog-overlay{
+        z-index: 10554;
+    }
+}
+
+
+
+
+
+.editor-container_classic-editor .editor-container__editor {
+	min-width: 755px;
+	max-width: 795px;
+}
