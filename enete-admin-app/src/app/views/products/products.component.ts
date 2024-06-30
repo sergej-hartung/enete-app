@@ -4,6 +4,7 @@ import { TariffGroupService } from '../../services/product/tariff/tariff-group.s
 import { Subject, take, takeUntil } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { TariffService } from '../../services/product/tariff/tariff.service';
+import { ProductService } from '../../services/product/product.service';
 
 @Component({
   selector: 'app-products',
@@ -12,7 +13,7 @@ import { TariffService } from '../../services/product/tariff/tariff.service';
 })
 export class ProductsComponent {
 
-  addOrNewProducts = false
+  addOrEditProducts:boolean = false
 
   private unsubscribe$ = new Subject<void>();
   @ViewChild('notSaveTitleTemplate') notSaveTitleTemplate!: TemplateRef<any>;
@@ -22,7 +23,8 @@ export class ProductsComponent {
     private mainNavbarService: MainNavbarService,
     public tariffGroupService: TariffGroupService,
     public tariffService: TariffService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private productService: ProductService
   ) {}
 
   
@@ -45,8 +47,30 @@ export class ProductsComponent {
     this.mainNavbarService.iconClicks$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(button => {
-        console.log(button)
-        this.addOrNewProducts = !this.addOrNewProducts
+        if(button == 'new'){
+          this.addOrEditProducts = true
+          this.productService.setProductMode(button)
+        }
+        if(button == 'edit'){
+          this.addOrEditProducts = true
+          this.productService.setProductMode(button)
+        }
+        if(button == 'back'){
+          this.addOrEditProducts = false
+          this.productService.tariffGroupId$ 
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(id =>{
+            if(id) this.mainNavbarService.setIconState('new', true, false);
+          })
+          this.productService.tariffId$ 
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(id =>{
+            console.log(id)
+            if(id) this.mainNavbarService.setIconState('edit', true, false);
+          })
+          this.productService.resetProductMode()
+        }
+        
       })
   }
 

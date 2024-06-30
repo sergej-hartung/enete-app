@@ -66,19 +66,22 @@ export class TariffListComponent {
 
   ngOnInit() {    
 
-    this.tariffService.data$
+    
+
+    // this.productService._resetTariffData 
+    //   .pipe(takeUntil(this.unsubscribe$))
+    //   .subscribe(event =>{
+    //     console.log('reset data')
+    //     this.resetData()
+    //   })
+
+      this.tariffService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {  
         if(data){ 
           this.dataLoadedOrNew = true
         }    
       });
-
-    this.productService._resetTariffData 
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(event =>{
-        this.resetData()
-      })
 
     this.productService.tariffGroupId$ 
       .pipe(takeUntil(this.unsubscribe$))
@@ -169,18 +172,20 @@ export class TariffListComponent {
     console.log(event)
     this.tariffService.fetchDataByGroupId(this.groupId, event)
     this.mainNavbarService.setIconState('edit', true, true);
+    this.productService.resetTariffId()
   }
 
   filter(event: any){
     this.tariffService.fetchDataByGroupId(this.groupId, event)
     this.mainNavbarService.setIconState('edit', true, true);
+    this.productService.resetTariffId()
     //console.log(event)
   }
 
   selectedRow(event: any){
     console.log(event)
     if(event){
-      //this.productService.setTariffId(event.id)
+      this.productService.setTariffId(event.id)
       this.mainNavbarService.setIconState('edit', true, false);
       this.attributeGroupService.fetchData(event.id)
     }
@@ -189,10 +194,14 @@ export class TariffListComponent {
   }
 
   private resetData(){
+    console.log('reset Data')
     this.tariffService.resetData()
     this.attributeGroupService.resetData()
     this.productService.resetTariffGroupId()
     this.productService.resetTariffId()
+    this.tariffStatusService.resetData()
+    this.tariffNetworkOperatorService.resetData()
+    this.tariffProviderService.resetData()
     this.groupId = null
     this.dataLoadedOrNew = false
   }
@@ -204,9 +213,7 @@ export class TariffListComponent {
     console.log('destroy list')
 
     this.resetData()
-    this.tariffStatusService.resetData()
-    this.tariffNetworkOperatorService.resetData()
-    this.tariffProviderService.resetData()
+    
     //this.tariffService.resetData()
     //this.groupId = undefined
   }

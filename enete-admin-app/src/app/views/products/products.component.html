@@ -1,6 +1,6 @@
 <section class="main-content ">
     <div class="container-fluid p-0 "> <!--h-100-->
-        <div [class.hide-component]="addOrNewProducts" class="row no-gutters partners-row"> <!--h-100-->
+        <div [class.hide-component]="addOrEditProducts" class="row no-gutters partners-row"> <!--h-100-->
             <app-product-group 
                 class="col-2 product-group">
             </app-product-group>
@@ -14,7 +14,7 @@
         <!-- <div [class.hide-component]="!addOrNewProducts" class="row no-gutters partners-row">
             <app-product-add-edit class="p-0"></app-product-add-edit>
         </div> -->
-        <div *ngIf="addOrNewProducts" class="row no-gutters partners-row">
+        <div *ngIf="addOrEditProducts" class="row no-gutters partners-row">
             <app-product-add-edit class="p-0"></app-product-add-edit>
         </div>
     </div>

@@ -44,20 +44,22 @@ export class ProductGroupComponent {
   
 
   selectedTariffRow(event: any){
+    this.productService.resetTariffId()
     this.productService.setTariffGroupId(event.id)
-    this.tariffService.fetchDataByGroupId(event.id)
+    this.tariffService.fetchDataByGroupId(event.id)  
     this.mainNavbarService.setIconState('edit', true, true);
     this.mainNavbarService.setIconState('new', true, false);
     this.isLoading = true
   }
 
   navChange(event: any){
-    if(event['nextId'] === 2){
-      this.productService._resetTariffData.emit()
-      //this.productService.resetTariffGroupId()
-    }
+    // if(event['nextId'] === 2){
+    //   this.productService._resetTariffData.emit()
+    //   //this.productService.resetTariffGroupId()
+    // }
     this.mainNavbarService.setIconState('new', true, true);
-    this.productService.setTariffOrHardwareTabActive(event['nextId'])  
+    this.mainNavbarService.setIconState('edit', true, true);
+    this.productService.setTariffOrHardwareTabActive(event['nextId'])
   }
 
   ngOnDestroy() {

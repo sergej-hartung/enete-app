@@ -40,7 +40,9 @@ export class TariffDetailsAEComponent {
     private productService: ProductService,
     private formService: FormService
   ) {
-    this.tariffFormGroup = this.formService.initTariffFormGroup()
+    // this.tariffFormGroup = this.formService.initTariffFormGroup()
+    let tariffForm = this.formService.getTariffForm()
+    this.tariffFormGroup = tariffForm.get('tariff') as FormGroup
   }
 
   ngOnInit() {

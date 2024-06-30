@@ -1,6 +1,6 @@
 import { Component, SimpleChanges } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import { AttributeService } from '../../../../../services/product/tariff/attribute/attribute.service';
 import { ProductService } from '../../../../../services/product/product.service';
 import { AttributeGroupService } from '../../../../../services/product/tariff/attribute-group/attribute-group.service';
@@ -76,8 +76,11 @@ export class TariffAttributeComponent {
           console.log('Loaded Attributes:', data);
         }
       });
-
-    this.loadAttributeGroups();
+      this.productService.productMode$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(mode => {
+          if(mode == 'edit')  this.loadAttributeGroups();
+        })
   }
 
   ngOnChanges(changes: SimpleChanges) {   
@@ -357,6 +360,19 @@ export class TariffAttributeComponent {
           }       
         });
     }
+  }
+
+  toogleFrontentVisible(attribute:Attribute, control:any){
+    console.log(attribute)
+    let isActive = control.get('is_active')
+    if(isActive?.value){
+      control.get('is_active')?.setValue(0)
+      attribute.is_frontend_visible = 0
+    }else{
+      control.get('is_active')?.setValue(1)
+      attribute.is_frontend_visible = 1
+    }
+    console.log(control.get('is_active'))
   }
 
   private updateTariffAttributesStatus() {

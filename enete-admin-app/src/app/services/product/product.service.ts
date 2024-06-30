@@ -14,6 +14,9 @@ export class ProductService {
   private _tariffOrHardwareTabActive = new BehaviorSubject<number | null>(null);
   public tariffOrHardwareTabActive$: Observable<number | null> = this._tariffOrHardwareTabActive.asObservable();
 
+  private _productMode = new BehaviorSubject<string | null>(null); // Edit or New for Tariff or Hardware
+  public productMode$: Observable<string | null> = this._productMode.asObservable();
+
   private _tariffGroupId = new BehaviorSubject<number | null>(null);
   public tariffGroupId$: Observable<number | null> = this._tariffGroupId.asObservable();
 
@@ -45,6 +48,14 @@ export class ProductService {
 
   setTariffOrHardwareTabActive(id: number){
     this._tariffOrHardwareTabActive.next(id)
+  }
+
+  setProductMode(mode: string){
+    this._productMode.next(mode)
+  }
+
+  resetProductMode(){
+    this._productMode.next(null)
   }
 
 
