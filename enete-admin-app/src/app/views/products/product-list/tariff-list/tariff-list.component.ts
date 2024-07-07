@@ -61,7 +61,7 @@ export class TariffListComponent {
     private tariffNetworkOperatorService: NetworkOperatorService,
     private productService: ProductService,
     private mainNavbarService: MainNavbarService,
-    private attributeGroupService: AttributeGroupService
+    //private attributeGroupService: AttributeGroupService
   ) {}
 
   ngOnInit() {    
@@ -186,9 +186,10 @@ export class TariffListComponent {
     console.log(event)
     if(event){
       this.productService.setTariffId(event.id)
-      this.productService.setSelectedTariff(event)
+      //this.productService.setSelectedTariff(event)
       this.mainNavbarService.setIconState('edit', true, false);
-      this.attributeGroupService.fetchData(event.id)
+      this.tariffService.fetchDetailedDataById(event.id)
+      //this.attributeGroupService.fetchData(event.id)
     }
     
     //this.tariffService.fetchDataByGroupId(event.id)
@@ -197,7 +198,8 @@ export class TariffListComponent {
   private resetData(){
     console.log('reset Data')
     this.tariffService.resetData()
-    this.attributeGroupService.resetData()
+    this.tariffService.resetDetailedData()
+    //this.attributeGroupService.resetData()
     this.productService.resetTariffGroupId()
     this.productService.resetTariffId()
     this.productService.resetSelectedTariff()

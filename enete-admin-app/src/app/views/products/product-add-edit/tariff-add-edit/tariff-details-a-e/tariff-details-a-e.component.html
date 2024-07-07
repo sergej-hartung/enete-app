@@ -4,15 +4,16 @@
     </div>
 </div>
 <div class="tariff-add-edit-content flex-grow-1">
-    <form [formGroup]="tariffFormGroup">
+    <form [formGroup]="tariffForm">
         <div class="row">
             <div class="col-7 pe-1">
-                <div class="row">
+                <div formGroupName="tariff" class="row">
                     
                     <!-- <div class="col pe-1">
                         <label for="id-extern" class="form-label custom-label-sm">Id-Extern</label>
                         <input type="text" class="form-control form-control-sm" id="id-extern" placeholder="z.b P1234">
                     </div> -->
+                    
                     <div class="col pe-1">
                         <label for="status" class="form-label custom-label-sm">Status</label>
                         <select formControlName="status_id" class="form-select form-select-sm" id="status">
@@ -28,7 +29,7 @@
                         <label for="is-published">Web Active</label>
                     </div>
                 </div>
-                <div class="row">
+                <div formGroupName="tariff" class="row">
                     
                     <div class="col pe-1">
                         <label for="name-short" class="form-label custom-label-sm">Name kurz</label>
@@ -49,7 +50,7 @@
                         >
                     </div>
                 </div>
-                <div class="row">
+                <div formGroupName="tariff" class="row">
                     <div class="col pe-1">
                         <label for="id-extern" class="form-label custom-label-sm">Id-Extern</label>
                         <input 
@@ -87,10 +88,18 @@
                             <div card-header>Hardware Kombination</div>
                             <div card-body>
                                 <div class="form-check-card-custom-body min">
-                                    <div *ngFor="let option of combiHardware; let i = index">
-                                        <div class="form-check form-check-card-custom">
-                                            <input type="checkbox" class="form-check-input" [id]="'hardware' + option.id" [(ngModel)]="option.checked" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateSelectedItems()">
-                                            <label class="form-check-label" [for]="'hardware' + option.id">{{ option.label }}</label>
+                                    <div *ngIf="comboStatus" formArrayName="combo_status">
+                                        <!-- <div *ngFor="let option of combiHardware; let i = index">
+                                            <div class="form-check form-check-card-custom">
+                                                <input type="checkbox" class="form-check-input" [id]="'hardware' + option.id" [(ngModel)]="option.checked" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateSelectedItems()">
+                                                <label class="form-check-label" [for]="'hardware' + option.id">{{ option.name }}</label>
+                                            </div>
+                                        </div> -->
+                                        <div *ngFor="let control of comboStatus.controls; let i = index" [formGroupName]="i">
+                                            <div class="form-check form-check-card-custom">
+                                                <input type="checkbox" class="form-check-input" formControlName="checked" [id]="'hardware' + control.value.id">
+                                                <label class="form-check-label" [for]="'hardware' + control.value.id">{{ control.value.name }}</label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>                           
@@ -101,16 +110,16 @@
                         </app-card>
                     </div>
                 </div>
-                <div class="row">
+                <div formArrayName="categories" class="row">
                     <div class="col">
                         <app-card>
                             <div card-header>Kategorie</div>
                             <div card-body>
                                 <div class="form-check-card-custom-body max">
-                                    <div *ngFor="let option of tariffCategories; let i = index">
+                                    <div *ngFor="let control of categories.controls; let i = index" [formGroupName]="i">
                                         <div class="form-check form-check-card-custom">
-                                            <input type="checkbox" class="form-check-input" [id]="'category' + option.id" [(ngModel)]="option.checked" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateSelectedItems()">
-                                            <label class="form-check-label" [for]="'category' + option.id">{{ option.name }}</label>
+                                            <input type="checkbox" class="form-check-input" formControlName="checked" [id]="'category' + control.value.id">
+                                            <label class="form-check-label" [for]="'category' + control.value.id">{{ control.value.name }}</label>
                                         </div>
                                     </div>
                                 </div>                           
@@ -124,7 +133,7 @@
             </div>
             
         </div>
-        <div class="row">
+        <div formGroupName="tariff" class="row">
             <div class="col-12">
                 <label for="tariff_note" class="form-label custom-label-sm">Intern</label>
                 <textarea formControlName="note" id="tariff_note" rows="10" class="form-control form-control-sm ng-pristine ng-valid ng-touched"></textarea>

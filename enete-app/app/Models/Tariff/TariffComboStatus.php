@@ -13,6 +13,6 @@ class TariffComboStatus extends Model
 
     public function tariffs()
     {
-        return $this->belongsToMany(Tariff::class, 'combo_status_mappings', 'combo_status_id', 'tariff_id');
+        return $this->belongsToMany(Tariff::class, 'tariff_combo_status_mappings', 'combo_status_id', 'tariff_id');
     }
 }

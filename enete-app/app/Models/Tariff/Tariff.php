@@ -35,6 +35,16 @@ class Tariff extends Model
         //return $this->belongsToMany(Hardware::class,'tariff_hardware_mappings','tariff_id','hardware_id')->withPivot('purchase_price');
     }
 
+    public function comboStatus()
+    {
+        return $this->belongsToMany(TariffComboStatus::class, 'tariff_combo_status_mappings', 'tariff_id', 'combo_status_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsToMany(TariffCategory::class, 'tariff_category_mappings', 'tariff_id', 'category_id');
+    }
+
     public function provider()
     {
         return $this->belongsTo(TariffProvider::class);

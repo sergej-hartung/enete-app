@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import {DataService} from '../../data.service'
 import { BehaviorSubject, Observable, Subject, catchError, of, takeUntil } from 'rxjs';
-import { Tariff, TariffData } from '../../../models/tariff/tariff';
+import { Tariff, TariffData, TariffDetailedData } from '../../../models/tariff/tariff';
 
 
 
@@ -104,23 +104,23 @@ export class TariffService extends DataService<Tariff> {
   }
 
   fetchDetailedDataById(id: number): void {
-    // this.http.get<{'data': Partner}>(`${this.apiUrl}/user-profile/employees/${id}`)
-    //   .pipe(
-    //     takeUntil(this.destroy$),
-    //   )
-    //   .subscribe({
-    //     next: data => {
+    this.http.get<TariffDetailedData>(`${this.apiUrl}/products/tariffs/${id}`)
+      .pipe(
+        takeUntil(this.destroy$),
+      )
+      .subscribe({
+        next: data => {
             
-    //       this._detailedData.next({
-    //         data: data["data"],
-    //         requestType: 'get',
-    //         entityType: 'partner'
-    //       });
-    //     },
-    //     error: (error) => {
-    //       this.handleError(error)
-    //     }
-    //   });
+          this._detailedData.next({
+            data: data["data"],
+            requestType: 'get',
+            entityType: 'Tariff'
+          });
+        },
+        error: (error) => {
+          this.handleError(error)
+        }
+      });
   }
 
   addItem(item: FormData | any): any {

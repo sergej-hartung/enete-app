@@ -5,5 +5,6 @@ export interface ComboStatusData {
 export interface ComboStatus {
     id: number;
     name: string;
+    checked?: boolean;
 }
 

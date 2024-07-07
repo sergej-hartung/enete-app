@@ -123,6 +123,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
     // $router->get('/tariffs', 'App\Http\Controllers\Tariff\TariffIndexController')->name('tariffs.index'); 'middleware' => ['jwt.auth'], 
     // $router->get('/tariffs/{tariffId}', 'App\Http\Controllers\Tariff\TariffShowController')->name('tariffs.show');
     $router->group(['prefix' => 'tariffs'], function ($router) {
+        $router->get('/{tariffId}', 'App\Http\Controllers\Tariff\TariffShowController')->name('tariffs.show');
         $router->post('/', 'App\Http\Controllers\Tariff\TariffStoreController')->name('tariffs.store');
     });
 

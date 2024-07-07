@@ -158,10 +158,13 @@ export class FormService {
         network_operator_id: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         group_id:            ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         status_id:           ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        is_published:        ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+        is_published:        [false, [booleanValidator()]],
         note:                ['', [Validators.pattern('^[a-zA-Z0-9üÜöÖäÄß]+$')]],
         pdf_document_id:     ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+        
       }),
+      combo_status: this.fb.array([]), // New field
+      categories: this.fb.array([]),
       attribute_groups: this.fb.array([])
     })
   }

@@ -15,7 +15,7 @@ class TariffCategory extends Model
 
     public function tariffs()
     {
-        return $this->belongsToMany(Tariff::class, 'category_mappings', 'category_id', 'tariff_id');
+        return $this->belongsToMany(Tariff::class, 'tariff_category_mappings', 'category_id', 'tariff_id');
     }
 
     
