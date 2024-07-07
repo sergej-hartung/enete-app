@@ -4,6 +4,7 @@ namespace App\Models\Tariff;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\User;
 
 class TariffCategory extends Model
 {
@@ -17,11 +18,7 @@ class TariffCategory extends Model
         return $this->belongsToMany(Tariff::class, 'category_mappings', 'category_id', 'tariff_id');
     }
 
-    public function groups()
-    {
-        return $this->belongsToMany(Group::class,'group_category_mappings', 'category_id', 'group_id');
-    }
-
+    
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

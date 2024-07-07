@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormService } from '../../../../services/form.service';
 
 @Component({
   selector: 'app-tariff-add-edit',
@@ -9,6 +10,12 @@ export class TariffAddEditComponent {
 
   active = 1
 
-  
+  constructor(
+    private formService: FormService
+  ) {}
 
+  
+  ngOnDestroy() {
+    this.formService.tariffForm.reset()
+  }
 }

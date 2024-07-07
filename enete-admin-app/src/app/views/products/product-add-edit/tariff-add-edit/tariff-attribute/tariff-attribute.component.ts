@@ -10,6 +10,7 @@ import { MainNavbarService } from '../../../../../services/main-navbar.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EditorModalComponent } from '../../../../../shared/components/editor-modal/editor-modal.component'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FormService } from '../../../../../services/form.service';
 
 interface Group {
   id?: number;
@@ -31,6 +32,8 @@ export class TariffAttributeComponent {
   tariffDropListId = 'tariffDropList';
   connectedDropLists: string[] = [this.tariffDropListId];
 
+  attributsGroupForm: FormArray
+
   addNewGroup = false;
   newGroupForm: FormGroup;
   editGroupIndex: number | null = null;
@@ -46,8 +49,12 @@ export class TariffAttributeComponent {
     private mainNavbarService: MainNavbarService,
     private attributeGroupService: AttributeGroupService,
     private modalService: NgbModal,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private formService: FormService
   ) {
+    const tariffForm = this.formService.getTariffForm()
+    this.attributsGroupForm = tariffForm.get('attribute_groups') as FormArray
+
     this.newGroupForm = this.fb.group({
       groupName: ['', Validators.required]
     });
@@ -55,6 +62,7 @@ export class TariffAttributeComponent {
     this.editGroupForm = this.fb.group({
       groupName: ['', Validators.required]
     });
+
   }
 
   ngOnInit() { 
@@ -138,10 +146,13 @@ export class TariffAttributeComponent {
         name: this.newGroupForm.value.groupName,
         attributes: [],
         form: this.fb.group({
+          id: [null],
+          name: [this.newGroupForm.value.groupName],
           attributes: this.fb.array([])
         })
       };
       this.groups.push(newGroup);
+      this.attributsGroupForm.push(newGroup.form);
       this.updateConnectedDropLists();
       this.addNewGroup = false;
       this.newGroupForm.reset();
@@ -161,6 +172,8 @@ export class TariffAttributeComponent {
   saveEditedGroup() {
     if (this.editGroupForm.valid && this.editGroupIndex !== null) {
       this.groups[this.editGroupIndex].name = this.editGroupForm.value.groupName;
+      const groupForm = this.attributsGroupForm.at(this.editGroupIndex) as FormGroup;
+      groupForm.patchValue({ name: this.editGroupForm.value.groupName });
       this.editGroupIndex = null;
       this.editGroupForm.reset();
     }
@@ -173,6 +186,7 @@ export class TariffAttributeComponent {
 
   removeGroup(index: number) {
     this.groups.splice(index, 1);
+    this.attributsGroupForm.removeAt(index);
     this.updateConnectedDropLists();
     this.updateTariffAttributesStatus(); // Обновление статуса после удаления группы
   }
@@ -341,7 +355,21 @@ export class TariffAttributeComponent {
                 isCopied: true // Отметьте атрибуты как скопированные
               })),
               hidden: false,
+              // form: this.fb.group({
+              //   attributes: this.fb.array(
+              //     group.attributs.map(attr => this.fb.group({
+              //       id: [attr.id],
+              //       code: [attr.code],
+              //       name: [attr.name],
+              //       value_varchar: [attr?.pivot?.value_varchar || ''],
+              //       value_text: [attr?.pivot?.value_text || ''],
+              //       is_active: [attr?.pivot?.is_active]
+              //     }))
+              //   )
+              // })
               form: this.fb.group({
+                id: [group.id],
+                name: [group.name],
                 attributes: this.fb.array(
                   group.attributs.map(attr => this.fb.group({
                     id: [attr.id],
@@ -354,6 +382,11 @@ export class TariffAttributeComponent {
                 )
               })
             }));
+
+            this.attributsGroupForm.clear();
+            this.groups.forEach(group => {
+              this.attributsGroupForm.push(group.form);
+            });
 
             this.updateTariffAttributesStatus();
             this.updateConnectedDropLists();

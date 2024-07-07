@@ -186,6 +186,7 @@ export class TariffListComponent {
     console.log(event)
     if(event){
       this.productService.setTariffId(event.id)
+      this.productService.setSelectedTariff(event)
       this.mainNavbarService.setIconState('edit', true, false);
       this.attributeGroupService.fetchData(event.id)
     }
@@ -199,6 +200,7 @@ export class TariffListComponent {
     this.attributeGroupService.resetData()
     this.productService.resetTariffGroupId()
     this.productService.resetTariffId()
+    this.productService.resetSelectedTariff()
     this.tariffStatusService.resetData()
     this.tariffNetworkOperatorService.resetData()
     this.tariffProviderService.resetData()

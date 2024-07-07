@@ -150,6 +150,14 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
         $router->get('/{tariffId}', 'App\Http\Controllers\Tariff\TariffAttributeGroup\IndexController')->name('tariff-attribute-groups.index');
     });
 
+    $router->group(['prefix' => 'tariff-categories'], function ($router) {
+        $router->get('/', 'App\Http\Controllers\Tariff\TariffCategory\IndexController')->name('tariff-categories.index');
+    });
+
+    $router->group(['prefix' => 'tariff-combo-statuses'], function ($router) {
+        $router->get('/', 'App\Http\Controllers\Tariff\TariffComboStatuses\IndexController')->name('tariff-combo-statuses.index');
+    });
+
     // $router->get('/hardware', 'App\Http\Controllers\Hardware\HardwareIndexController')->name('hardware.index');
     // $router->get('/hardware/{hardwareId}', 'App\Http\Controllers\Hardware\HardwareShowController')->name('hardware.show');
 

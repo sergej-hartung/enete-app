@@ -45,6 +45,7 @@ export class ProductGroupComponent {
 
   selectedTariffRow(event: any){
     this.productService.resetTariffId()
+    this.productService.resetSelectedTariff()
     this.productService.setTariffGroupId(event.id)
     this.tariffService.fetchDataByGroupId(event.id)  
     this.mainNavbarService.setIconState('edit', true, true);

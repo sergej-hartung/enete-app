@@ -107,15 +107,15 @@
                             <div card-header>Kategorie</div>
                             <div card-body>
                                 <div class="form-check-card-custom-body max">
-                                    <div *ngFor="let option of tariffCategorys; let i = index">
+                                    <div *ngFor="let option of tariffCategories; let i = index">
                                         <div class="form-check form-check-card-custom">
                                             <input type="checkbox" class="form-check-input" [id]="'category' + option.id" [(ngModel)]="option.checked" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateSelectedItems()">
-                                            <label class="form-check-label" [for]="'category' + option.id">{{ option.label }}</label>
+                                            <label class="form-check-label" [for]="'category' + option.id">{{ option.name }}</label>
                                         </div>
                                     </div>
                                 </div>                           
                                 <div class="selected-info">
-                                    {{ selectedTariffCategorys.length }} selected / {{ tariffCategorys.length }} total 
+                                    {{ selectedTariffCategories.length }} selected / {{ tariffCategories.length }} total 
                                     </div>
                             </div>
                         </app-card>
