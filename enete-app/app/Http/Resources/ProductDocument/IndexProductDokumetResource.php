@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Resources\Tariff\Category;
+namespace App\Http\Resources\ProductDocument;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class IndexTariffCategoryResource extends JsonResource
+class IndexProductDokumetResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,8 +16,10 @@ class IndexTariffCategoryResource extends JsonResource
     {
         return [
             'id'               => $this->id,
-            'name'             => $this->name,
-            'is_filter_active' => $this->is_filter_active,
+            'original_name'    => $this->original_name,
+            'path'             => $this->path,
+            'mime_type'        => $this->mime_type,
+            'size'             => $this->size,
             'created_by'       => $this->created_by,
             'updated_by'       => $this->updated_by,
             'created_at'       => $this->created_at,

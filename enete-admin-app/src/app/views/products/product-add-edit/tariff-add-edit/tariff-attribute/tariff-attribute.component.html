@@ -10,6 +10,7 @@
               <input
                 id="edit-group-name"
                 class="form-control form-control-sm"
+                [ngClass]="{'is-invalid': editGroupForm.get('groupName')?.errors && editGroupForm.get('groupName')?.touched}"
                 placeholder="Gruppenname"
                 formControlName="groupName"
               />
@@ -58,12 +59,15 @@
               cdkDrag
               [cdkDragDisabled]="group.attributes[j].isFocused"
             >
-              <span class="attr-name col-3">{{ group.attributes[j].name }}</span>
+            <span class="attr-name col-3">
+              {{ group.attributes[j].name }}<span *ngIf="isRequired(getAttributeFormControl(group.form, j, 'value_varchar')) || isRequired(getAttributeFormControl(group.form, j, 'value_text'))" class="required">*</span>
+            </span>
               <span class="attr-value col-3">
                 <ng-container [ngSwitch]="group.attributes[j].input_type">
                   <select
                     *ngSwitchCase="'Dropdown'"
                     class="form-select form-select-sm"
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar"
                     (focus)="setFocus(group, j)"
                     (blur)="removeFocus(group, j)"
@@ -76,6 +80,7 @@
                     *ngSwitchCase="'Dezimalzahlen'"
                     type="text"
                     class="form-control form-control-sm"
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar"
                     (focus)="setFocus(group, j)"
                     (blur)="removeFocus(group, j)"
@@ -84,6 +89,7 @@
                     *ngSwitchCase="'Ganzzahlen'" 
                     type="text" 
                     class="form-control form-control-sm" 
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar" 
                     (focus)="setFocus(group, j)" 
                     (blur)="removeFocus(group, j)" 
@@ -92,6 +98,7 @@
                     *ngSwitchCase="'Textfeld'" 
                     type="text" 
                     class="form-control form-control-sm" 
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar" 
                     (focus)="setFocus(group, j)" 
                     (blur)="removeFocus(group, j)" 
@@ -107,6 +114,7 @@
                     *ngSwitchCase="'Datumfeld'"
                     type="date"
                     class="form-control form-control-sm"
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar"
                     (focus)="setFocus(group, j)"
                     (blur)="removeFocus(group, j)"
@@ -115,6 +123,7 @@
                     *ngSwitchCase="'Link-Feld'"
                     type="text" 
                     class="form-control form-control-sm" 
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar" 
                     (focus)="setFocus(group, j)" 
                     (blur)="removeFocus(group, j)"
@@ -122,6 +131,7 @@
                   <select 
                     *ngSwitchCase="'Boolescher Wert'"
                     class="form-select form-select-sm" 
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar" 
                     (focus)="setFocus(group, j)" 
                     (blur)="removeFocus(group, j)"
@@ -133,6 +143,7 @@
                     *ngSwitchCase="'Dateifeld'"
                     type="text" 
                     class="form-control form-control-sm" 
+                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                     formControlName="value_varchar" 
                     (focus)="setFocus(group, j)" 
                     (blur)="removeFocus(group, j)" 
@@ -168,7 +179,7 @@
                 </div>
               </div>
 
-              <div *ngIf="(attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors) && attributeCtrl.get('value_text')?.touched" class="col-12 invalid-feedback custom-invalid-feedback">
+              <div *ngIf="(attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched) " class="col-12 invalid-feedback custom-invalid-feedback">
                 <div *ngIf="(attributeCtrl.get('value_varchar')?.errors?.['required']) || (attributeCtrl.get('value_text')?.errors?.['required'])">Dieses Feld ist erforderlich.</div>
                 <div *ngIf="(attributeCtrl.get('value_varchar')?.errors?.['pattern']) || (attributeCtrl.get('value_text')?.errors?.['pattern'])">Ungültiges Format.</div>
               </div> 

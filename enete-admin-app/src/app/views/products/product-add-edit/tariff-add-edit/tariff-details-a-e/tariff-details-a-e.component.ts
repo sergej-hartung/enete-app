@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { combineLatest, of, Subject, switchMap, takeUntil } from 'rxjs';
+import { combineLatest, forkJoin, of, Subject, switchMap, takeUntil } from 'rxjs';
 import { ProviderService } from '../../../../../services/product/tariff/provider/provider.service';
 import { NetworkOperatorService } from '../../../../../services/product/tariff/network-operator/network-operator.service';
 import { StatusService } from '../../../../../services/product/tariff/status/status.service';
 import { FormService } from '../../../../../services/form.service';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { ProductService } from '../../../../../services/product/product.service';
 import { CategoryService } from '../../../../../services/product/tariff/category/category.service';
 import { Category } from '../../../../../models/tariff/category/category';
@@ -12,7 +12,9 @@ import { ComboStatusService } from '../../../../../services/product/tariff/combo
 import { ComboStatus } from '../../../../../models/tariff/comboStatus/comboStatus';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
 import { DataResponse } from '../../../../../models/data-interface';
-import { Tariff } from '../../../../../models/tariff/tariff';
+import { Tariff, TariffDocument } from '../../../../../models/tariff/tariff';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FileData, FileManagerModalComponent } from '../../../../../shared/components/file-manager-modal/file-manager-modal.component';
 
 @Component({
   selector: 'app-tariff-details-a-e',
@@ -21,7 +23,7 @@ import { Tariff } from '../../../../../models/tariff/tariff';
 })
 export class TariffDetailsAEComponent {
   
-  combiHardware: ComboStatus[] | [] = [
+  combiStatus: ComboStatus[] | [] = [
     // { id: 1, label: 'ohne Hardware', checked: false },
     // { id: 2, label: 'mit Hardware', checked: false },
   ];
@@ -36,6 +38,7 @@ export class TariffDetailsAEComponent {
   tariffStatuses: any = []
   tariffProviders: any = []
   tariffNetworkOperators: any = []
+  mimeType: string = 'application/pdf';
 
   private unsubscribe$ = new Subject<void>();
 
@@ -48,7 +51,8 @@ export class TariffDetailsAEComponent {
     private productService: ProductService,
     public tariffService: TariffService,
     private formService: FormService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: NgbModal,
   ) {
     // this.tariffFormGroup = this.formService.initTariffFormGroup()
     this.tariffForm = this.formService.getTariffForm()
@@ -56,58 +60,96 @@ export class TariffDetailsAEComponent {
   }
 
   ngOnInit() {
-       this.categoryService.fetchData()
-       this.comboStatusService.fetchData()
+    this.categoryService.fetchData();
+    this.comboStatusService.fetchData();
 
-      combineLatest([
-        this.categoryService.data$,
-        this.comboStatusService.data$,
-        this.tariffStatusService.data$,
-        this.tariffProviderService.data$,
-        this.tariffNetworkOperatorService.data$
-      ])
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        switchMap(([categoriesData, comboStatusData, statusesData, providersData, networkOperatorsData]) => {
-          console.log('test5')
-          this.tariffCategories = categoriesData?.data || [];
-          this.combiHardware = comboStatusData?.data || [];
-          this.tariffStatuses = statusesData?.data || [];
-          this.tariffProviders = providersData?.data || [];
-          this.tariffNetworkOperators = networkOperatorsData?.data || [];
-  
-          this.setCategoriesFormArray();
-          this.setHardwareComboFormArray();
-  
-          return this.productService.productMode$;
-        }),
-        switchMap(mode => {
-          if (mode === 'edit') {
-            return this.tariffService.detailedData$;
-          } else if (mode === 'new') {
-            return this.productService.tariffGroupId$;
-          } else {
-            return of(null); // Возвращаем null если режим не соответствует
-          }
-        })
-      )
-      .subscribe(result => {
-        if (result && this.isDataResponse(result) && result.entityType === 'Tariff') {
-          this.loadTariff(result as DataResponse<Tariff>);
-        } else if (typeof result === 'number') {
-          this.setTariffGroup(result);
-        }
+    combineLatest([
+      this.comboStatusService.getDataLoadedObservable(), 
+      this.categoryService.getDataLoadedObservable()
+    ]).pipe(
+      takeUntil(this.unsubscribe$),
+    )
+    .subscribe(res => {
+      this.loadData()
+    })
+  }
+
+  openModal() {
+    const modalRef = this.modalService.open(
+      FileManagerModalComponent, { 
+        windowClass: 'file-manager-modal',
+        backdropClass: 'file-manager-modal-backdrop',
+        size: 'lg' 
+      }
+    );
+
+    modalRef.componentInstance.mimeType = this.mimeType;
+    modalRef.componentInstance.fileSelected
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((selectedFile: FileData) => {
+        this.handleFileSelected(selectedFile);
       });
+  }
 
+  handleFileSelected(file: FileData) {
+    // Handle the selected file here
+    const tariff = this.tariffForm.get('tariff')
+    tariff?.patchValue({
+      file_id: file.id,
+      file_name: file.name
+    })
+  }
+
+  loadData(){
+    this.categoryService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(categoriesData => {
+        this.tariffCategories = categoriesData?.data || [];
+        this.setCategoriesFormArray();
+      })
+
+    this.comboStatusService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(comboStatusData => {
+        this.combiStatus = comboStatusData?.data || [];
+        this.setComboStatusFormArray();
+      })
+
+    this.tariffStatusService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(statusesData => {
+        this.tariffStatuses = statusesData?.data || [];
+      })
+    
+    this.tariffProviderService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(providersData => {
+        this.tariffProviders = providersData?.data || [];
+      })
+
+    this.tariffNetworkOperatorService.data$.pipe(takeUntil(this.unsubscribe$))
+      .subscribe(networkOperatorsData => {
+        this.tariffNetworkOperators = networkOperatorsData?.data || [];
+      })
+
+    this.productService.productMode$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(mode => {
+        if (mode === 'edit') {        
+          this.loadTariff();
+        } else if (mode === 'new'){
+          this.setTariffGroup()
+        } 
+      })
   }
 
   isDataResponse(result: any): result is DataResponse<Tariff> {
     return result && typeof result === 'object' && 'entityType' in result;
   }
 
-  setHardwareComboFormArray() {
+  setComboStatusFormArray() {
     const hardwareComboArray = this.tariffForm.get('combo_status') as FormArray;
-    this.combiHardware.forEach(option => {
+    this.combiStatus.forEach(option => {
       if(hardwareComboArray){
         hardwareComboArray.push(this.fb.group({
           id: [option.id],
@@ -119,8 +161,8 @@ export class TariffDetailsAEComponent {
   }
 
   setCategoriesFormArray() {
-    console.log('set categorie')
     const categoriesArray = this.tariffForm.get('categories') as FormArray;
+
     this.tariffCategories.forEach(option => {
       if(categoriesArray){
         categoriesArray.push(this.fb.group({
@@ -132,35 +174,34 @@ export class TariffDetailsAEComponent {
     });
   }
 
-  test(){
-    console.log(this.formService.getTariffForm())
-    console.log((this.tariffForm.get('combo_status') as FormArray).controls)
-  }
 
-  loadTariff(tariffData: DataResponse<any>) {
-    this.tariffFormGroup.patchValue(tariffData.data);
-    this.patchComboStatus(tariffData.data.combo_status);
-    //this.patchCategories(tariffData.data.tariff_categories);
+  loadTariff() {
+    this.tariffService.detailedData$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(tariffData => {
+        if(tariffData){
+          this.tariffFormGroup.patchValue(tariffData.data);
+          this.patchComboStatus(tariffData.data.combo_status);
+          this.patchCategories(tariffData?.data?.tariff_categories);
+          this.patchDocument(tariffData?.data?.document)
 
-    let status = tariffData.data.status;
-    let provider = tariffData.data.provider;
-    let network_operator = tariffData.data.network_operator;
+          let status = tariffData.data.status;
+          let provider = tariffData.data.provider;
+          let network_operator = tariffData.data.network_operator;
 
-    this.tariffFormGroup.patchValue({
-      status_id: status?.id,
-      provider_id: provider?.id,
-      network_operator_id: network_operator?.id
-    });
+          this.tariffFormGroup.patchValue({
+            status_id: status?.id,
+            provider_id: provider?.id,
+            network_operator_id: network_operator?.id
+          });
+        }   
+      })
   }
 
   patchComboStatus(comboStatus: ComboStatus[] | undefined) {
-    //console.log(comboStatus)
     if(comboStatus && comboStatus.length > 0){
       const hardwareComboArray = this.tariffForm.get('combo_status') as FormArray;
       comboStatus.forEach(status => {
-        // console.log(status.id)
-        // console.log(this.tariffForm.get('combo_status'))
-        // console.log(hardwareComboArray.controls.find(ctrl => ctrl.value.id === status.id))
         const control = hardwareComboArray.controls.find(ctrl => ctrl.value.id === status.id);
         if (control) {
           control.patchValue({ checked: true });
@@ -169,14 +210,44 @@ export class TariffDetailsAEComponent {
     }
   }
 
-  setTariffGroup(groupId: number) {
-    if (groupId) {
-      this.tariffFormGroup.get('group_id')?.setValue(groupId);
+  patchCategories(categories: Category[] | undefined) {
+    if (categories && categories.length > 0) {
+      const categoriesArray = this.tariffForm.get('categories') as FormArray;
+      categories.forEach(category => {
+        const control = categoriesArray.controls.find(ctrl => ctrl.value.id === category.id);
+        if (control) {
+          control.patchValue({ checked: true });
+        }
+      });
     }
   }
 
+  patchDocument(document: TariffDocument | undefined){
+    if(document){
+      const tariff = this.tariffForm.get('tariff') as FormGroup
+        if (tariff) {
+          tariff.patchValue(
+            { 
+              file_id: document.id,
+              file_name: document.original_name
+             }
+          );
+        }
+    }
+  }
+
+  setTariffGroup() {
+    this.productService.tariffGroupId$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(groupId => {
+        if (groupId) {
+          this.tariffFormGroup.get('group_id')?.setValue(groupId);
+        }
+      })
+  }
+
   updateSelectedItems() {
-    this.combiHardware = this.combiHardware.map(option => {
+    this.combiStatus = this.combiStatus.map(option => {
       option.checked = !!option.checked;
       return option;
     });
@@ -194,12 +265,24 @@ export class TariffDetailsAEComponent {
     return this.tariffForm.get('categories') as FormArray;
   }
 
-  get selectedCombiHardware() {
-    return this.combiHardware.filter(option => option.checked);
+  get selectedCombiStatus() {
+    return this.combiStatus.filter(option => option.checked);
   }
 
   get selectedTariffCategories() {
     return this.tariffCategories.filter(option => option.checked);
+  }
+
+  isRequired(control: AbstractControl | null): boolean {
+    if (control && control.validator) {
+      const validator = control.validator({} as AbstractControl);
+      return validator && validator["required"];
+    }
+    return false;
+  }
+
+  test(){
+    console.log(this.tariffForm)
   }
 
   ngOnDestroy() {
@@ -207,3 +290,18 @@ export class TariffDetailsAEComponent {
     this.unsubscribe$.complete();
   }
 }
+
+
+// private setControlRequiredStatus(group: FormGroup | FormArray, prefix: string = '') {
+//   Object.keys(group.controls).forEach(key => {
+//     const controlPath = prefix ? `${prefix}.${key}` : key;
+//     const control = group.get(key);
+//     this.requiredStatus[controlPath] = this.hasRequiredValidator(control);
+//   });
+// }
+
+// private hasRequiredValidator(control: AbstractControl | null): boolean {
+//   if (!control) return false;
+//   const validator = control.validator ? control.validator({} as AbstractControl) : null;
+//   return validator && validator["required"];
+// }

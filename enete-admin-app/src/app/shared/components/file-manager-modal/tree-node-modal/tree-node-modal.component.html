@@ -1,0 +1,31 @@
+<div class="d-flex align-items-center tree-node" [class.selected]="isSelected">
+  <i *ngIf="hasChildren()"
+    class="fa-solid tree-node-action"
+    [ngClass]="{
+      'fa-angle-down': node.isOpen,
+      'fa-angle-right': !node.isOpen
+     }"
+    (click)="toggleFolders($event, true)"></i>
+  <i *ngIf="hasChildren()"
+     [ngClass]="{
+      'fa-solid fa-folder': !node.isOpen,
+      'fa-regular fa-folder-open': node.isOpen
+     }"
+     (click)="toggleFiles($event)"
+  ></i>
+  <i *ngIf="!hasChildren()"
+    (click)="toggleFiles($event)"
+     class="fa-solid fa-folder"></i>
+  
+  <span *ngIf="!node.isEditing && !node.isNew" class="ms-2" (click)="toggleFiles($event)" >{{ node.name }}</span>
+</div>
+<ng-container *ngIf="node.isOpen">
+  <ul class="list-group ms-3">
+    <ng-container *ngFor="let child of node.children">
+      <li *ngIf="child.type === 'folder'" class="list-group-item">
+        <app-tree-node-modal [node]="child" (selectNode)="selectNode.emit($event)" ></app-tree-node-modal>
+      </li>
+    </ng-container>
+  </ul>
+</ng-container>
+

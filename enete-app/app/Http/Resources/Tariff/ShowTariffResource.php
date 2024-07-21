@@ -7,6 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Tariff\AttributeGroup\IndexTariffAttributeGroupResource;
 use App\Http\Resources\Tariff\ComboStatus\IndexTariffComboStatusResource;
 use App\Http\Resources\Tariff\Category\IndexTariffCategoryResource;
+use App\Http\Resources\ProductDocument\IndexProductDokumetResource;
 
 class ShowTariffResource extends JsonResource
 {
@@ -41,7 +42,8 @@ class ShowTariffResource extends JsonResource
             'updated_at' => $this->updated_at,
             'attribute_groups' => IndexTariffAttributeGroupResource::collection($this->attributeGroups),
             'combo_status' => IndexTariffComboStatusResource::collection($this->comboStatus),
-            'tariff_categories' => IndexTariffCategoryResource::collection($this->category)
+            'tariff_categories' => IndexTariffCategoryResource::collection($this->category),
+            'document' => new IndexProductDokumetResource($this->document)
         ];
     }
 }

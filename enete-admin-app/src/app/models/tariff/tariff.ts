@@ -20,10 +20,11 @@ export interface Tariff {
     network_operator: TariffNetworkOperator;
     status: TariffStatus;
     is_published: boolean;
-
+    file_id: number;
     attribute_groups?: AttributeGroup[];
     combo_status?: ComboStatus[];
-    tariff_categoies?: Category[];
+    tariff_categories?: Category[];
+    document?: TariffDocument;
     
     created_by: number;
     updated_by: number;
@@ -58,6 +59,18 @@ interface TariffStatus{
     name: string;
     icon: string;
     color: string;
+    created_by: number;
+    updated_by: number;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface TariffDocument{
+    id:         number,
+    original_name: string,
+    path:       string,
+    mime_type:  string
+    size:       number,
     created_by: number;
     updated_by: number;
     created_at: string;

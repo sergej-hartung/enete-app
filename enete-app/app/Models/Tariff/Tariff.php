@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Traits\Filterable;
 use App\Models\Traits\TarifSortable;
 use App\Models\User\User;
+use App\Models\ProductDocuments;
 
 class Tariff extends Model
 {
@@ -63,6 +64,11 @@ class Tariff extends Model
     public function group()
     {
         return $this->belongsTo(TariffGroup::class);
+    }
+
+    public function document()
+    {
+        return $this->belongsTo(ProductDocuments::class, 'file_id');
     }
 
     public function creator()

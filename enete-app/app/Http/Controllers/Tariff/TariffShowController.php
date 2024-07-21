@@ -26,6 +26,7 @@ class TariffShowController extends Controller
             'networkOperator', 
             'group', 
             'status',
+            'document',
             'attributeGroups', 
             'attributeGroups.attributes', 
             'attributeGroups.attributes.inputType'

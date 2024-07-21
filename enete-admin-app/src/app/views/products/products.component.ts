@@ -5,6 +5,7 @@ import { Subject, take, takeUntil } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { TariffService } from '../../services/product/tariff/tariff.service';
 import { ProductService } from '../../services/product/product.service';
+import { FormService } from '../../services/form.service';
 
 @Component({
   selector: 'app-products',
@@ -24,7 +25,8 @@ export class ProductsComponent {
     public tariffGroupService: TariffGroupService,
     public tariffService: TariffService,
     private notificationService: NotificationService,
-    private productService: ProductService
+    private productService: ProductService,
+    private formService: FormService,
   ) {}
 
   
@@ -69,6 +71,7 @@ export class ProductsComponent {
             if(id) this.mainNavbarService.setIconState('edit', true, false);
           })
           this.productService.resetProductMode()
+          this.formService.tariffForm = null
         }
         
       })
@@ -128,6 +131,12 @@ export class ProductsComponent {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+
+    this.productService.resetProductMode()
+    this.productService.resetSelectedTariff()
+    this.productService.resetTariffGroupId()
+    this.productService.resetTariffId()
+    this.formService.tariffForm = null
     console.log('destroy product component')
   }
 }

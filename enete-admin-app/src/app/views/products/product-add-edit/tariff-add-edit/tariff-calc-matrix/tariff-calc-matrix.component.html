@@ -1,1 +1,142 @@
-<p>tariff-calc-matrix works!</p>
+<div class="row no-gutters">
+    <div class="col left-panel pt-2">
+      <div class="matrixs">
+        <div class="mb-2" *ngFor="let matrix of matrixs; let i = index">
+          <div *ngIf="editMatrixIndex === i; else matrixDisplay">
+            <form [formGroup]="editMatrixForm">
+              <div class="input-group input-group-sm input-group-sm-custom mb-2">
+                <input
+                  id="edit-group-name"
+                  class="form-control form-control-sm"
+                  [ngClass]="{'is-invalid': editMatrixForm.get('name')?.errors && editMatrixForm.get('name')?.touched}"
+                  placeholder="Matrix Name"
+                  formControlName="name"
+                />
+                <button class="btn btn-outline-success" type="button" (click)="onSaveEditedMatrix()">
+                  <i class="fa-regular fa-floppy-disk"></i>
+                </button>
+                <button class="btn btn-outline-danger" type="button" (click)="onCancelEditGroup()">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+              <div
+                class="invalid-feedback custom-invalid-feedback"
+                *ngIf="editMatrixForm.get('name')?.errors?.['required'] && editMatrixForm.get('name')?.touched"
+              >
+                Matrix Name ist erforderlich.
+              </div>
+            </form>
+          </div>
+          <ng-template #matrixDisplay>
+            <span class="matrix-name">
+              <button class="btn-text-style" (click)="onToggleMatrixs(i)">{{ matrix.name }}</button>
+              <button class="btn-text-style green" (click)="onEditMatrix(i)">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+              <button class="btn-text-style red" (click)="onRemoveMatrix(i)">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+              <button class="btn-text-style blue" (click)="onToggleMatrixs(i)">
+                <i class="fa-solid" [ngClass]="matrix.hidden ? 'fa-eye-slash' : 'fa-eye'"></i>
+              </button>
+            </span>
+          </ng-template>
+          <div *ngIf="!matrix.hidden && matrix.form" [formGroup]="matrix.form">
+            <div
+              cdkDropList
+              [id]="onGetMatrixDropListId(i)"
+              [cdkDropListData]="matrix.attributes"
+              [cdkDropListConnectedTo]="connectedDropLists"
+              class="attr-group-list"
+              (cdkDropListDropped)="drop($event, matrix)"
+            >
+              <div
+                class="attr-group-box"
+                *ngFor="let attributeCtrl of getAttributeFormArray(matrix).controls; let j = index"
+                [formGroup]="getFormMatrixFromArray(getAttributeFormArray(matrix), j)"
+                cdkDrag
+                [cdkDragDisabled]="matrix.attributes[j].isFocused"
+              >
+              <span class="attr-name col-3">
+                {{ matrix.attributes[j].name }}
+              </span>
+
+                <button class="btn-text-style red" (click)="removeAttribute(matrix, matrix.attributes[j])">
+                  <i class="fas fa-times"></i>
+                </button>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <form [formGroup]="newMatrixForm" *ngIf="addNewMatrix">
+            <div class="mb-3">
+              <label class="form-label custom-label-sm" for="group-name">Matrix Name</label>
+              <div class="input-group input-group-sm input-group-sm-custom">
+                <input
+                  id="group-name"
+                  class="form-control form-control-sm"
+                  placeholder="Matrix Name"
+                  formControlName="name"
+                />
+                <button class="btn btn-outline-success" type="button" (click)="onSaveNewMatrix()">
+                  <i class="fa-regular fa-floppy-disk"></i>
+                </button>
+                <button class="btn btn-outline-danger" type="button" (click)="onCancelNewMatrix()">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+              <div
+                class="invalid-feedback custom-invalid-feedback"
+                *ngIf="editMatrixForm.get('name')?.errors?.['required'] && editMatrixForm.get('name')?.touched"
+              >
+                Gruppenname ist erforderlich.
+              </div>
+            </div>
+          </form>
+        <button class="btn-text-style new-attribute-group" (click)="onAddNewMatrix()">
+            <i class="fa-solid fa-circle-plus"></i> Neue Matrix
+        </button>
+    </div>
+    <div class="col-6 right-panel pt-2">
+      <div class="mb-2" *ngFor="let matrix of matrixs; let i = index">
+          <span class="matrix-name">
+            <button class="btn-text-style" (click)="onToggleMatrixs(i)">{{ matrix.name }}</button>
+            <button class="btn-text-style green" (click)="onEditMatrix(i)">
+              <i class="fa-regular fa-pen-to-square"></i>
+            </button>
+            <button class="btn-text-style red" (click)="onRemoveMatrix(i)">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+            <button class="btn-text-style blue" (click)="onToggleMatrixs(i)">
+              <i class="fa-solid" [ngClass]="matrix.hidden ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </span>
+
+          <div *ngIf="!matrix.hidden && matrix.form" [formGroup]="matrix.form">
+            <div
+              cdkDropList
+              [id]="tariffDropListId"
+              [cdkDropListData]="tariffAttributes"
+              [cdkDropListConnectedTo]="connectedDropLists"
+              class="attr-group-list"
+              (cdkDropListDropped)="drop($event)"
+              [cdkDropListEnterPredicate]="canDropToTariffList"
+            >
+              <!-- <div class="attr-group-box" *ngFor="let attribute of tariffAttributes" cdkDrag [ngClass]="{'copied-attribute': attribute.isCopied}">
+                <span class="attr-kennung col">{{attribute.code}}</span>
+                <span class="attr-name col">{{attribute.name}}</span>
+                <span *ngIf="attribute.is_frontend_visible" class="attr-frontend_visible green">
+                  <i class="far fa-eye"></i>
+                </span>
+                <span *ngIf="!attribute.is_frontend_visible" class="attr-frontend_visible red">
+                  <i class="fas fa-eye-slash"></i>
+                </span>
+              </div> -->
+            </div>
+          </div>
+      </div>
+      
+    </div>
+</div>

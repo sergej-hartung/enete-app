@@ -9,16 +9,22 @@
             <div class="col-7 pe-1">
                 <div formGroupName="tariff" class="row">
                     
-                    <!-- <div class="col pe-1">
-                        <label for="id-extern" class="form-label custom-label-sm">Id-Extern</label>
-                        <input type="text" class="form-control form-control-sm" id="id-extern" placeholder="z.b P1234">
-                    </div> -->
-                    
                     <div class="col pe-1">
-                        <label for="status" class="form-label custom-label-sm">Status</label>
-                        <select formControlName="status_id" class="form-select form-select-sm" id="status">
+                        <label for="status" 
+                            class="form-label custom-label-sm"
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('status_id'))}"
+                        >Status</label>
+                        <select formControlName="status_id" 
+                                class="form-select form-select-sm is-invalid" 
+                                id="status"
+                                [ngClass]="{'is-invalid': tariffFormGroup.get('status_id')?.errors && tariffFormGroup.get('status_id')?.touched}"
+                        >
                             <option *ngFor="let option of tariffStatuses" [value]="option.id">{{option.name}}</option>
                         </select>
+                        <div *ngIf="tariffFormGroup.get('status_id')?.errors && tariffFormGroup.get('status_id')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('status_id')?.errors?.['required']">Status ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('status_id')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
                     </div>
                     <div class="form_check pt-4 col ps-1" >
                         <input 
@@ -32,52 +38,106 @@
                 <div formGroupName="tariff" class="row">
                     
                     <div class="col pe-1">
-                        <label for="name-short" class="form-label custom-label-sm">Name kurz</label>
+                        <label for="name-short" 
+                            class="form-label custom-label-sm"
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('name_short'))}"
+                        >Name kurz</label>
                         <input 
                             type="text" 
                             class="form-control form-control-sm" 
+                            [ngClass]="{'is-invalid': tariffFormGroup.get('name_short')?.errors && tariffFormGroup.get('name_short')?.touched}"
                             id="name-short"
                             formControlName="name_short"
                         >
+                        <div *ngIf="tariffFormGroup.get('name_short')?.errors && tariffFormGroup.get('name_short')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('name_short')?.errors?.['required']">Name kurz ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('name_short')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
                     </div>
                     <div class="col-7 ps-1">
-                        <label for="name" class="form-label custom-label-sm">Name</label>
+                        <label for="name" 
+                            class="form-label custom-label-sm" 
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('name'))}"
+                            >Name</label>
                         <input 
                             type="text" 
                             class="form-control form-control-sm" 
+                            [ngClass]="{'is-invalid': tariffFormGroup.get('name')?.errors && tariffFormGroup.get('name')?.touched}"
                             id="name"
                             formControlName="name"
                         >
+                        <div *ngIf="tariffFormGroup.get('name')?.errors && tariffFormGroup.get('name')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
                     </div>
                 </div>
                 <div formGroupName="tariff" class="row">
                     <div class="col pe-1">
-                        <label for="id-extern" class="form-label custom-label-sm">Id-Extern</label>
+                        <label for="id-extern" 
+                            class="form-label custom-label-sm"
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('external_id'))}"
+                            >Id-Extern</label>
                         <input 
                             type="text" 
                             class="form-control form-control-sm" 
+                            [ngClass]="{'is-invalid': tariffFormGroup.get('external_id')?.errors && tariffFormGroup.get('external_id')?.touched}"
                             id="id-extern" 
                             placeholder="z.b P1234"
                             formControlName="external_id"
                         >
+                        <div *ngIf="tariffFormGroup.get('external_id')?.errors && tariffFormGroup.get('external_id')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('external_id')?.errors?.['required']">Id-Extern ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('external_id')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
                     </div>
                     <div class="col pe-1 ps-1">
-                        <label for="provieder" class="form-label custom-label-sm">Provider</label>
-                        <select formControlName="provider_id" class="form-select form-select-sm" id="provider">
+                        <label for="provieder" 
+                            class="form-label custom-label-sm"
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('provider_id'))}"
+                            >Provider</label>
+                        <select 
+                            formControlName="provider_id" 
+                            class="form-select form-select-sm" 
+                            [ngClass]="{'is-invalid': tariffFormGroup.get('provider_id')?.errors && tariffFormGroup.get('provider_id')?.touched}"
+                            id="provider"                          
+                        >
                             <option *ngFor="let option of tariffProviders" [value]="option.id">{{option.name}}</option>
                         </select>
+                        <div *ngIf="tariffFormGroup.get('provider_id')?.errors && tariffFormGroup.get('provider_id')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('provider_id')?.errors?.['required']">Provider ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('provider_id')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
                     </div>
                     <div class="col ps-1">
-                        <label for="networkoperator" class="form-label custom-label-sm">Netzbetreiber</label>
-                        <select formControlName="network_operator_id" class="form-select form-select-sm" id="networkoperator">
+                        <label for="networkoperator" 
+                            class="form-label custom-label-sm"
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('network_operator_id'))}"
+                        >Netzbetreiber</label>
+                        <select 
+                            formControlName="network_operator_id" 
+                            class="form-select form-select-sm" 
+                            [ngClass]="{'is-invalid': tariffFormGroup.get('network_operator_id')?.errors && tariffFormGroup.get('network_operator_id')?.touched}"
+                            id="networkoperator"
+                        >
                             <option *ngFor="let option of tariffNetworkOperators" [value]="option.id">{{option.name}}</option>
                         </select>
+                        <div *ngIf="tariffFormGroup.get('network_operator_id')?.errors && tariffFormGroup.get('network_operator_id')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('network_operator_id')?.errors?.['required']">Netzbetreiber ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('network_operator_id')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
                     
                     <div class="col">
-                        <button class="btn document-select">PDF Dokument</button>
+                        <button class="btn document-select" (click)="openModal()">
+                            {{ this.tariffForm.get('tariff')?.value?.file_name ? this.tariffForm.get('tariff')?.value?.file_name : 'PDF Dokument' }}
+                        </button>
+                        <div *ngIf="tariffFormGroup.get('file_id')?.errors && tariffFormGroup.get('file_id')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('file_id')?.errors?.['required']">PDF Dokument ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('file_id')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
                     </div>                       
                 </div>
             </div>
@@ -89,12 +149,6 @@
                             <div card-body>
                                 <div class="form-check-card-custom-body min">
                                     <div *ngIf="comboStatus" formArrayName="combo_status">
-                                        <!-- <div *ngFor="let option of combiHardware; let i = index">
-                                            <div class="form-check form-check-card-custom">
-                                                <input type="checkbox" class="form-check-input" [id]="'hardware' + option.id" [(ngModel)]="option.checked" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateSelectedItems()">
-                                                <label class="form-check-label" [for]="'hardware' + option.id">{{ option.name }}</label>
-                                            </div>
-                                        </div> -->
                                         <div *ngFor="let control of comboStatus.controls; let i = index" [formGroupName]="i">
                                             <div class="form-check form-check-card-custom">
                                                 <input type="checkbox" class="form-check-input" formControlName="checked" [id]="'hardware' + control.value.id">
@@ -104,7 +158,7 @@
                                     </div>
                                 </div>                           
                                 <div class="selected-info">
-                                {{ selectedCombiHardware.length }} selected / {{ combiHardware.length }} total 
+                                {{ selectedCombiStatus.length }} selected / {{ combiStatus.length }} total 
                                 </div>
                             </div>
                         </app-card>
@@ -135,8 +189,14 @@
         </div>
         <div formGroupName="tariff" class="row">
             <div class="col-12">
-                <label for="tariff_note" class="form-label custom-label-sm">Intern</label>
+                <label for="tariff_note" 
+                    class="form-label custom-label-sm"
+                    [ngClass]="{'required': isRequired(tariffFormGroup.get('note'))}"
+                >Intern</label>
                 <textarea formControlName="note" id="tariff_note" rows="10" class="form-control form-control-sm ng-pristine ng-valid ng-touched"></textarea>
+                <div *ngIf="tariffFormGroup.get('note')?.errors && tariffFormGroup.get('note')?.touched" class="invalid-feedback d-block">
+                    <div *ngIf="tariffFormGroup.get('note')?.errors?.['pattern']">Ungültiges Format.</div>
+                </div>
             </div>
         </div>
     </form>

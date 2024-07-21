@@ -16,6 +16,6 @@ export class TariffAddEditComponent {
 
   
   ngOnDestroy() {
-    this.formService.tariffForm.reset()
+    //this.formService.tariffForm.reset()
   }
 }

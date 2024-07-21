@@ -52,6 +52,7 @@ class ProductDocumentController extends Controller
     {
         $folder = $request->query('folder');
         $search = $request->query('search', ''); // По умолчанию пустая строка
+        $mimeType = $request->query('mime_type', ''); // По умолчанию пустая строка
         $fullPath = 'products/' . trim($folder, '/');
         $files = Storage::files($fullPath);
         $fileInfo = [];
@@ -64,7 +65,8 @@ class ProductDocumentController extends Controller
                 $fileName = Str::afterLast($relativePath, '/');
 
                 // Фильтрация по вхождению строки поиска в имя файла
-                if ($search === '' || stripos($fileName, $search) !== false) {
+                if (($search === '' || stripos($fileName, $search) !== false) &&
+                    ($mimeType === '' || $fileRecord->mime_type === $mimeType)){
                     $fileInfo[] = [
                         'id' => $fileRecord->id,
                         'name' => $fileName,

@@ -27,10 +27,13 @@ export class ProductDocumentService {
   }
 
 
-  getFiles(folder: string, search: string = ''): Observable<any> {
+  getFiles(folder: string, search: string = '', mime_type: string = ''): Observable<any> {
     let params = new HttpParams().set('folder', folder);
     if (search) {
       params = params.set('search', search);
+    }
+    if(mime_type){
+      params = params.set('mime_type', mime_type);
     }
     return this.http.get(`${this.apiUrl}/products/files`, { params });
   }

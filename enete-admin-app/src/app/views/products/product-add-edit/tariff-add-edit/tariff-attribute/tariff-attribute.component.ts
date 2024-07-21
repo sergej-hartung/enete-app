@@ -1,6 +1,6 @@
 import { Component, SimpleChanges } from '@angular/core';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
-import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { AttributeService } from '../../../../../services/product/tariff/attribute/attribute.service';
 import { ProductService } from '../../../../../services/product/product.service';
 import { AttributeGroupService } from '../../../../../services/product/tariff/attribute-group/attribute-group.service';
@@ -11,6 +11,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EditorModalComponent } from '../../../../../shared/components/editor-modal/editor-modal.component'
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormService } from '../../../../../services/form.service';
+import { TariffService } from '../../../../../services/product/tariff/tariff.service';
 
 interface Group {
   id?: number;
@@ -50,7 +51,8 @@ export class TariffAttributeComponent {
     private attributeGroupService: AttributeGroupService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
-    private formService: FormService
+    private formService: FormService,
+    public tariffService: TariffService,
   ) {
     const tariffForm = this.formService.getTariffForm()
     this.attributsGroupForm = tariffForm.get('attribute_groups') as FormArray
@@ -236,7 +238,7 @@ export class TariffAttributeComponent {
     }
   }
 
-  private createAttributeFormControl(attribute: Attribute): FormGroup {
+  private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
     const valueVarcharValidators = [];
     const valueTextValidators = [];
 
@@ -288,11 +290,11 @@ export class TariffAttributeComponent {
         id: [attribute.id],
         code: [attribute.code],
         name: [attribute.name],
-        value_varchar: ['', valueVarcharValidators],
-        value_text: ['', valueTextValidators],
-        is_active: [attribute.is_frontend_visible]
+        value_varchar: [valueVarchar, valueVarcharValidators],
+        value_text: [valueText, valueTextValidators],
+        is_active: [isActive !== null ? isActive : attribute.is_frontend_visible]
     });
-}
+  }
 
 
   private moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number) {
@@ -341,57 +343,48 @@ export class TariffAttributeComponent {
 
   private loadAttributeGroups() {
     if (this.groupId) {
-      this.attributeGroupService.data$
+      this.tariffService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(response => {
           if(response){
-            const groupsFromServer = response.data; // Здесь ваши группы из ответа сервера
+            const groupsFromTariff = response?.data?.attribute_groups; // Здесь ваши группы из ответа сервера
+            if(groupsFromTariff){
+              this.groups = groupsFromTariff.map(group => 
+              (
+                {
+                  id: group.id,
+                  name: group.name,
+                  attributes: group.attributs.map(attr => ({
+                    ...attr,
+                    isCopied: true // Отметьте атрибуты как скопированные
+                  })),
+                  hidden: false,
+    
+                  form: this.fb.group({
+                    id: [group.id],
+                    name: [group.name],
+                    attributes: this.fb.array(
+                      group.attributs.map(attr => this.createAttributeFormControl(
+                        attr, attr?.pivot?.value_varchar || '', 
+                        attr?.pivot?.value_text || '', 
+                        attr?.pivot?.is_active
+                      ))
+                    )
+                  })
+                }
+              ));
 
-            this.groups = groupsFromServer.map(group => ({
-              id: group.id,
-              name: group.name,
-              attributes: group.attributs.map(attr => ({
-                ...attr,
-                isCopied: true // Отметьте атрибуты как скопированные
-              })),
-              hidden: false,
-              // form: this.fb.group({
-              //   attributes: this.fb.array(
-              //     group.attributs.map(attr => this.fb.group({
-              //       id: [attr.id],
-              //       code: [attr.code],
-              //       name: [attr.name],
-              //       value_varchar: [attr?.pivot?.value_varchar || ''],
-              //       value_text: [attr?.pivot?.value_text || ''],
-              //       is_active: [attr?.pivot?.is_active]
-              //     }))
-              //   )
-              // })
-              form: this.fb.group({
-                id: [group.id],
-                name: [group.name],
-                attributes: this.fb.array(
-                  group.attributs.map(attr => this.fb.group({
-                    id: [attr.id],
-                    code: [attr.code],
-                    name: [attr.name],
-                    value_varchar: [attr?.pivot?.value_varchar || ''],
-                    value_text: [attr?.pivot?.value_text || ''],
-                    is_active: [attr?.pivot?.is_active]
-                  }))
-                )
-              })
-            }));
+              this.attributsGroupForm.clear();
+              this.groups.forEach(group => {
+                this.attributsGroupForm.push(group.form);
+              });
 
-            this.attributsGroupForm.clear();
-            this.groups.forEach(group => {
-              this.attributsGroupForm.push(group.form);
-            });
-
-            this.updateTariffAttributesStatus();
-            this.updateConnectedDropLists();
-          }       
-        });
+              this.updateTariffAttributesStatus();
+              this.updateConnectedDropLists();
+            }
+          }
+        })
+      
     }
   }
 
@@ -430,6 +423,21 @@ export class TariffAttributeComponent {
 
   getSafeHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  isRequired(control: AbstractControl | null): boolean {
+    if (control && control.validator) {
+      const validator = control.validator({} as AbstractControl);
+      return validator && validator['required'];
+    }
+    return false;
+  }
+  
+  // Метод для безопасного получения FormControl из FormArray
+  getAttributeFormControl(group: FormGroup, index: number, controlName: string): AbstractControl | null {
+    const formArray = group.get('attributes') as FormArray;
+    const formGroup = formArray.at(index) as FormGroup;
+    return formGroup.get(controlName);
   }
 
   ngOnDestroy() {

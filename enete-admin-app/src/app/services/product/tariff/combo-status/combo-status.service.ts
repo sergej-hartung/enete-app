@@ -17,6 +17,7 @@ export class ComboStatusService extends DataService<ComboStatus> {
 
   private destroy$ = new Subject<void>();
 
+  private dataLoaded$ = new Subject<void>();
 
 
   
@@ -72,6 +73,7 @@ export class ComboStatusService extends DataService<ComboStatus> {
               requestType: 'get',
               entityType: 'tariffComboStatus'
             });
+            this.dataLoaded$.next();
           }
         },
         error: error => console.error('Ошибка при получении данных:', error)
@@ -93,6 +95,10 @@ export class ComboStatusService extends DataService<ComboStatus> {
 
   deleteItem(id: number): void {
     
+  }
+
+  getDataLoadedObservable(): Observable<void> {
+    return this.dataLoaded$.asObservable();
   }
 
 

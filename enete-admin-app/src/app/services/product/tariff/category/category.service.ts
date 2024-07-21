@@ -14,6 +14,7 @@ import { Category, CategoryData } from '../../../../models/tariff/category/categ
 })
 export class CategoryService extends DataService<Category> {
 
+  private dataLoaded$ = new Subject<void>();
 
   private destroy$ = new Subject<void>();
 
@@ -72,6 +73,7 @@ export class CategoryService extends DataService<Category> {
               requestType: 'get',
               entityType: 'tariffCategory'
             });
+            this.dataLoaded$.next();
           }
         },
         error: error => console.error('Ошибка при получении данных:', error)
@@ -93,6 +95,10 @@ export class CategoryService extends DataService<Category> {
 
   deleteItem(id: number): void {
     
+  }
+
+  getDataLoadedObservable(): Observable<void> {
+    return this.dataLoaded$.asObservable();
   }
 
 

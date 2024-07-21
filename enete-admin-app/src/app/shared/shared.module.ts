@@ -5,7 +5,8 @@ import {NotificationComponent} from './components/notification/notification.comp
 import { CardComponent } from './components/card/card.component'
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { EditorModalComponent } from './components/editor-modal/editor-modal.component';
+import { FileManagerModalComponent } from './components/file-manager-modal/file-manager-modal.component';
+import { TreeNodeModalComponent } from './components/file-manager-modal/tree-node-modal/tree-node-modal.component';
 //import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 
@@ -15,7 +16,8 @@ import { EditorModalComponent } from './components/editor-modal/editor-modal.com
     GenericTableComponent, 
     CardComponent, 
     NotificationComponent, 
-    //EditorModalComponent
+    FileManagerModalComponent, 
+    TreeNodeModalComponent
   ],
   imports: [
     CommonModule,
@@ -23,7 +25,6 @@ import { EditorModalComponent } from './components/editor-modal/editor-modal.com
     NgbNavModule,
     FormsModule,
     ReactiveFormsModule,
-    //CKEditorModule,
   ],
   exports:[
     GenericTableComponent,
