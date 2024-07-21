@@ -255,7 +255,7 @@ export class TariffAttributeComponent {
             valueVarcharValidators.push(Validators.pattern(/^\d+$/)); // Только целые числа
             break;
         case 'Dezimalzahlen':
-            valueVarcharValidators.push(Validators.pattern(/^\d+(\.\d+)?$/)); // Десятичные числа
+            valueVarcharValidators.push(Validators.pattern(/^\d+(,\d+)?$/)); // Десятичные числа
             break;
         case 'Datumfeld':
             valueVarcharValidators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
@@ -285,11 +285,12 @@ export class TariffAttributeComponent {
             // Для других типов данных добавьте свои валидаторы, если необходимо
             break;
     }
-
+    //console.log(attribute)
     return this.fb.group({
         id: [attribute.id],
         code: [attribute.code],
         name: [attribute.name],
+        unit: [attribute.unit],
         value_varchar: [valueVarchar, valueVarcharValidators],
         value_text: [valueText, valueTextValidators],
         is_active: [isActive !== null ? isActive : attribute.is_frontend_visible]

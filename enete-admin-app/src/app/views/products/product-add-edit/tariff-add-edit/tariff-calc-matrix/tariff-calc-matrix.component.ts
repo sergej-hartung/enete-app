@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { FormService } from '../../../../../services/form.service';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 interface Matrix {
   id?: number;
@@ -12,13 +12,13 @@ interface Matrix {
   hidden?: boolean;
 }
 
-interface Group {
-  id?: number;
-  name: string;
-  attributes: Attribute[];
-  form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
-  hidden?: boolean;
-}
+// interface Group {
+//   id?: number;
+//   name: string;
+//   attributes: Attribute[];
+//   form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
+//   hidden?: boolean;
+// }
 
 @Component({
   selector: 'app-tariff-calc-matrix',
@@ -33,21 +33,24 @@ export class TariffCalcMatrixComponent {
 
   tariffAttributes: Attribute[] = [];
   matrixs: Matrix[] = [];
-  groups: Group[] = [];
+  hiddenGroups: boolean[] = [];
+  //groupsу: Group[] = [];
 
   editMatrixIndex: number | null = null;
 
   tariffDropListId = 'tariffDropList';
   connectedDropLists: string[] = [this.tariffDropListId];
 
+  tariffForm: FormGroup
   calcMatrixForm: FormArray
+
 
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
   ){
-    const tariffForm = this.formService.getTariffForm()
-    this.calcMatrixForm = tariffForm.get('calc_matrix') as FormArray
+    this.tariffForm = this.formService.getTariffForm()
+    this.calcMatrixForm = this.tariffForm.get('calc_matrix') as FormArray
 
     this.newMatrixForm = this.fb.group({
       name: ['', Validators.required]
@@ -60,6 +63,7 @@ export class TariffCalcMatrixComponent {
 
   ngOnInit() {
     console.log('load matrix')
+    //this.updateConnectedDropLists();
   }
 
   
@@ -77,6 +81,8 @@ export class TariffCalcMatrixComponent {
       };
       this.matrixs.push(newMatrix);
       this.calcMatrixForm.push(newMatrix.form);
+      console.log(this.matrixs)
+      this.updateConnectedDropLists()
       //this.updateConnectedDropLists();
       this.addNewMatrix = false;
       this.newMatrixForm.reset();
@@ -94,7 +100,8 @@ export class TariffCalcMatrixComponent {
   }
 
   onCancelNewMatrix(){
-
+    this.addNewMatrix = false;
+    this.newMatrixForm.reset();
   }
 
   onCancelEditGroup() {
@@ -106,6 +113,10 @@ export class TariffCalcMatrixComponent {
     this.matrixs[index].hidden = !this.matrixs[index].hidden;
   }
 
+  onToggleGroupVisibility(index: number) {
+    this.hiddenGroups[index] = !this.hiddenGroups[index];
+  }
+
   onEditMatrix(index: number) {
     this.editMatrixIndex = index;
     this.editMatrixForm.setValue({ name: this.matrixs[index].name });
@@ -114,7 +125,7 @@ export class TariffCalcMatrixComponent {
   onRemoveMatrix(index: number) {
     this.matrixs.splice(index, 1);
     this.calcMatrixForm.removeAt(index);
-    //this.updateConnectedDropLists();
+    this.updateConnectedDropLists();
     //this.updateTariffAttributesStatus(); // Обновление статуса после удаления группы
   }
 
@@ -127,16 +138,64 @@ export class TariffCalcMatrixComponent {
     this.newMatrixForm.reset();
   }
 
-  drop(event: CdkDragDrop<any[]>, matrix?: Matrix){
-    
+
+  drop(event: CdkDragDrop<any[]>, matrix?: Matrix) {
+    console.log(this.tariffForm)
+    if (event.previousContainer === event.container && matrix) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      const attribute = event.previousContainer.data[event.previousIndex];
+      if (matrix) {
+        // Проверяем, существует ли атрибут с таким же id в целевой матрице
+        const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
+        if (!attributeExists) {
+          this.addAttributeToMatrix(matrix, attribute);
+        }
+      }
+    }
+  }
+
+  addAttributeToMatrix(matrix: Matrix, attribute: Attribute) {
+    const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
+    if (!attributeExists) {
+      matrix.attributes.push(attribute);
+      const attributesFormArray = matrix.form.get('attributes') as FormArray;
+      attributesFormArray.push(this.fb.group({
+        id: [attribute.id],
+        code: [attribute.code],
+        name: [attribute.name],
+        single: [true],
+        number: [''],
+        period: [''],
+        periodeTyp: ['']
+      }));
+    }
   }
 
   canDropToTariffList = (drag: any) => {
     return drag.dropContainer.id === this.tariffDropListId;
   }
 
+  getAttributeGroupArray(): FormArray{
+    return (this.tariffForm.get('attribute_groups') as FormArray);
+  }
+
+  getAttributeGroupName(index: number): string {
+    const attributeGroup = this.getAttributeGroupArray().at(index) as FormGroup;
+    return attributeGroup.get('name')?.value;
+  }
+
   getAttributeFormArray(matrix: Matrix): FormArray {
     return matrix.form.get('attributes') as FormArray;
+  }
+
+  getAttributeGroupAttributes(index: number): FormArray {
+    const attributeGroup = this.getAttributeGroupArray().at(index) as FormGroup;
+    return attributeGroup.get('attributes') as FormArray;
+  }
+  
+  getAttributeControl(groupIndex: number, attributeIndex: number): FormGroup {
+    return this.getAttributeGroupAttributes(groupIndex).at(attributeIndex) as FormGroup;
   }
 
   getFormMatrixFromArray(matrix: FormArray, index: number): FormGroup {
@@ -160,6 +219,11 @@ export class TariffCalcMatrixComponent {
       }
     }
   }
+
+  updateConnectedDropLists() {
+    this.connectedDropLists = [this.tariffDropListId, ...this.matrixs.map((_, i) => this.onGetMatrixDropListId(i))];
+  }
+  
 
   private loadAttributeGroups() {
       
