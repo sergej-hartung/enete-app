@@ -60,59 +60,40 @@
                 <span class="attr-name col-3">
                   {{ matrix.attributes[j].name }}
                 </span>
-
-                <button class="btn-text-style red" (click)="removeAttribute(matrix, matrix.attributes[j])">
+                <div class="col-3 form-check form-switch">
+                  <label class="form-check-label" for="single-{{i}}-{{j}}">Einmalig</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="single-{{i}}-{{j}}"
+                    formControlName="single"
+                  />
+                </div>
+                <!-- <div *ngIf="attributeCtrl.value.single" class="col-2">{{ matrix.attributes[j].value_varchar }}</div> -->
+                <button class="btn-text-style red" (click)="removeAttribute(matrix, matrix.attributes[j], j)">
                   <i class="fas fa-times"></i>
                 </button>
                 <div class="col-12">
-                  <div class="form-check form-switch">
-                    <label class="form-check-label" for="single-{{i}}-{{j}}">Einmalig</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="single-{{i}}-{{j}}"
-                      formControlName="single"
-                    />
-                  </div>
-                </div>
-                <div *ngIf="!attributeCtrl.value.single">
-                  <div class="col-12">
-                    <label for="number-{{i}}-{{j}}">Anzahl</label>
-                    <input
-                      type="string"
-                      id="number-{{i}}-{{j}}"
-                      formControlName="number"
-                      class="form-control"
-                    />
-                  </div>
-                  <div class="col-12">
-                    <label for="periodeTyp-{{i}}-{{j}}">Zeitraum</label>
-                    <select id="periodeTyp-{{i}}-{{j}}" formControlName="periodeTyp" class="form-control">
-                      <option value="day">Tag</option>
-                      <option value="month">Monat</option>
-                      <option value="quarter">Quartal</option>
-                    </select>
-                  </div>
-                  <div class="col-12">
-                    <label for="period-{{i}}-{{j}}">Zeitraum Anzahl</label>
-                    <input
-                      type="number"
-                      id="period-{{i}}-{{j}}"
-                      formControlName="period"
-                      class="form-control"
-                    />
-                  </div>
-                </div>
-                <div *ngIf="attributeCtrl.value.single">
-                  <div class="col-12">
-                    <label for="number-{{i}}-{{j}}">Einmalige Anzahl</label>
-                    <input
-                      type="number"
-                      id="number-{{i}}-{{j}}"
-                      formControlName="number"
-                      class="form-control"
-                    />
+                  <div class="row">
+                    <div class="col-5" *ngIf="!attributeCtrl.value.single">
+                      <label class="form-label custom-label-sm" for="periodeTyp-{{i}}-{{j}}">Zeitraum auswählen</label>
+                      <select id="periodeTyp-{{i}}-{{j}}" formControlName="periodeTyp" class="form-select form-select-sm">
+                        <option value="day">Tag</option>
+                        <option value="month">Monat</option>
+                        <option value="quarter">Quartal</option>
+                      </select>
+                    </div>
+                    <div class="col-5" *ngIf="!attributeCtrl.value.single">
+                      <label class="form-label custom-label-sm required" for="period-{{i}}-{{j}}">Dauer</label>
+                      <input
+                        type="number"
+                        id="period-{{i}}-{{j}}"
+                        formControlName="period"
+                        class="form-control form-control-sm"
+                      />
+                    </div>
+                    <!-- <div class="col-2"> {{ matrix.attributes[j].value_varchar * matrix.attributes[j].period }} </div> -->
                   </div>
                 </div>
               </div>

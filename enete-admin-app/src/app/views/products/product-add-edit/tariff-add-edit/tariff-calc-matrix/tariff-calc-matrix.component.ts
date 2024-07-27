@@ -7,7 +7,7 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 interface Matrix {
   id?: number;
   name: string;
-  attributes: Attribute[];
+  attributes: any[];
   form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
   hidden?: boolean;
 }
@@ -140,36 +140,66 @@ export class TariffCalcMatrixComponent {
 
 
   drop(event: CdkDragDrop<any[]>, matrix?: Matrix) {
-    console.log(this.tariffForm)
+    
     if (event.previousContainer === event.container && matrix) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.moveAttributeInFormArray(matrix, event.previousIndex, event.currentIndex);
     } else {
       const attribute = event.previousContainer.data[event.previousIndex];
       if (matrix) {
         // Проверяем, существует ли атрибут с таким же id в целевой матрице
-        const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
-        if (!attributeExists) {
-          this.addAttributeToMatrix(matrix, attribute);
-        }
+        // const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
+        // if (!attributeExists) {
+        //   this.addAttributeToMatrix(matrix, attribute);
+        // }
+        this.addAttributeToMatrix(matrix, attribute);
       }
     }
+    console.log(this.tariffForm)
   }
 
-  addAttributeToMatrix(matrix: Matrix, attribute: Attribute) {
-    const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
-    if (!attributeExists) {
+  moveAttributeInFormArray(matrix: Matrix, previousIndex: number, currentIndex: number) {
+    const attributesFormArray = matrix.form.get('attributes') as FormArray;
+    const attribute = attributesFormArray.at(previousIndex);
+    attributesFormArray.removeAt(previousIndex);
+    attributesFormArray.insert(currentIndex, attribute);
+  }
+
+  addAttributeToMatrix(matrix: Matrix, attribute: any) {
+    // const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
+    // if (!attributeExists) {
+    //   matrix.attributes.push(attribute);
+    //   const attributesFormArray = matrix.form.get('attributes') as FormArray;
+    //   attributesFormArray.push(this.fb.group({
+    //     id: [null],
+    //     attribute_id: [attribute.id],
+    //     code: [attribute.code],
+    //     name: [attribute.name],
+    //     value: [attribute.value_varchar],
+    //     value_total: [0],
+    //     unit: [attribute.unit],
+    //     single: [true],
+    //     number: [''],
+    //     period: [''],
+    //     periodeTyp: ['']
+    //   }));
+    // }
+
       matrix.attributes.push(attribute);
       const attributesFormArray = matrix.form.get('attributes') as FormArray;
       attributesFormArray.push(this.fb.group({
-        id: [attribute.id],
+        id: [null],
+        attribute_id: [attribute.id],
         code: [attribute.code],
         name: [attribute.name],
+        value: [attribute.value_varchar],
+        value_total: [0],
+        unit: [attribute.unit],
         single: [true],
         number: [''],
         period: [''],
         periodeTyp: ['']
       }));
-    }
   }
 
   canDropToTariffList = (drag: any) => {
@@ -202,10 +232,12 @@ export class TariffCalcMatrixComponent {
     return matrix.at(index) as FormGroup;
   }
 
-  removeAttribute(matrix: Matrix, attribute: Attribute) {
-    const index = matrix.attributes.indexOf(attribute);
+  removeAttribute(matrix: Matrix, attribute: Attribute, index: number) {
+    //const index = //matrix.attributes.indexOf(attribute);
+
     if (index >= 0) {
-      const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
+      //const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
+      const originalAttribute = this.tariffAttributes.at(index);
       if (originalAttribute) {
         originalAttribute.isCopied = false;
       }
@@ -213,10 +245,11 @@ export class TariffCalcMatrixComponent {
 
       // Удаление FormControl для атрибута
       const attributes = matrix.form.get('attributes') as FormArray;
-      const formIndex = attributes.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
-      if (formIndex >= 0) {
-        attributes.removeAt(formIndex);
+      //const formIndex = attributes.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
+      if (index >= 0) {
+        attributes.removeAt(index);
       }
+      //this.updateConnectedDropLists();
     }
   }
 
