@@ -1427,6 +1427,24 @@ app-tariff-add-edit{
         //     padding-right: 10px;
         // }
     }
+
+    &.sub-box{
+        padding-left: 0;
+        padding-right: 14px;
+
+        .period-wrapp{
+            padding-left: 3px;
+        }
+
+        .periode-type-wrapp{
+            flex-grow: 1;
+            margin-right: 2px;
+        }
+
+        .attr-value-expand{
+            padding-top: 20px;
+        }
+    }
 }
 
 .attr-kennung {
@@ -1882,7 +1900,56 @@ app-tariff-add-edit{
 }
 
 
+.form-switch-sm{
+    font-size: 13px;
+    font-weight: 300;
+    color: #6c757d;
+    margin-bottom: 0;
+    min-height: auto;
+    padding-left: 40px;
+    //flex-grow: 1;
 
+    .form-check-input:checked {
+        background-color: green;
+        border-color: green;
+      }
+      
+      /* Add green shadow when the switch is checked */
+      .form-check-input:checked:focus {
+        box-shadow: 0 0 0 0.25rem rgba(0, 128, 0, 0.25);
+      }
+      
+      /* Change the background color of the switch when it's not checked */
+      .form-check-input {
+        background-color: #e6e6e6;
+        border-color: #adb5bd;
+      }
+      
+      /* Preserve the focus styles */
+      .form-check-input:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+      }
+      
+      /* Change the color of the switch toggle */
+      .form-check-input:checked::before {
+        background-color: white;
+        border-color: white;
+      }
+}
+
+.attr_value{
+    font-size: 11px;
+    color: gray;
+    font-weight: 300;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    span{
+        padding-left: 5px;
+    }
+}
 
 
 .editor-container_classic-editor .editor-container__editor {

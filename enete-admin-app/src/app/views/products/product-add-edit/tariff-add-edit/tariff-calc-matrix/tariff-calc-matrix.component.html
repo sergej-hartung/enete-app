@@ -57,10 +57,11 @@
                 cdkDrag
                 [cdkDragDisabled]="matrix.attributes[j].isFocused"
               >
-                <span class="attr-name col-3">
+                <span class="attr-name col-4">
                   {{ matrix.attributes[j].name }}
                 </span>
-                <div class="col-3 form-check form-switch">
+                
+                <div class="col-4 form-check form-switch form-switch-sm">
                   <label class="form-check-label" for="single-{{i}}-{{j}}">Einmalig</label>
                   <input
                     class="form-check-input"
@@ -70,13 +71,19 @@
                     formControlName="single"
                   />
                 </div>
+                <div class="col attr_value"> 
+                  <ng-container *ngIf="attributeCtrl.value.single">
+                    {{attributeCtrl?.value?.value}}<span>{{attributeCtrl?.value?.unit}}</span>
+                  </ng-container>
+                </div>
+                
                 <!-- <div *ngIf="attributeCtrl.value.single" class="col-2">{{ matrix.attributes[j].value_varchar }}</div> -->
                 <button class="btn-text-style red" (click)="removeAttribute(matrix, matrix.attributes[j], j)">
                   <i class="fas fa-times"></i>
                 </button>
                 <div class="col-12">
-                  <div class="row">
-                    <div class="col-5" *ngIf="!attributeCtrl.value.single">
+                  <div class="attr-group-box sub-box">
+                    <div class="col-4 periode-type-wrapp" *ngIf="!attributeCtrl.value.single">
                       <label class="form-label custom-label-sm" for="periodeTyp-{{i}}-{{j}}">Zeitraum auswählen</label>
                       <select id="periodeTyp-{{i}}-{{j}}" formControlName="periodeTyp" class="form-select form-select-sm">
                         <option value="day">Tag</option>
@@ -84,14 +91,19 @@
                         <option value="quarter">Quartal</option>
                       </select>
                     </div>
-                    <div class="col-5" *ngIf="!attributeCtrl.value.single">
+                    <div class="col-4 period-wrapp" *ngIf="!attributeCtrl.value.single">
                       <label class="form-label custom-label-sm required" for="period-{{i}}-{{j}}">Dauer</label>
                       <input
-                        type="number"
+                        type="text"
                         id="period-{{i}}-{{j}}"
                         formControlName="period"
                         class="form-control form-control-sm"
                       />
+                    </div>
+                    <div class="col attr_value attr-value-expand" *ngIf="!attributeCtrl.value.single">
+                      <ng-container *ngIf="attributeCtrl?.value?.value_total">
+                        {{attributeCtrl?.value?.value_total}}<span *ngIf="attributeCtrl?.value?.unit">{{attributeCtrl?.value?.unit}}</span>
+                      </ng-container>
                     </div>
                     <!-- <div class="col-2"> {{ matrix.attributes[j].value_varchar * matrix.attributes[j].period }} </div> -->
                   </div>
@@ -152,10 +164,12 @@
             >
               <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributes(i).controls; let j = index">
                 <div
-                  *ngIf="attributeCtrl.value.value_varchar"
+                  
                   class="attr-group-box"
                   cdkDrag
-                  [ngClass]="{'copied-attribute': attributeCtrl.value.isCopied}"
+                  [ngClass]="{
+                    'copied-attribute': attributeCtrl.value.isCopied,
+                  }"
                 >
                   <!-- <span class="attr-kennung col">{{attributeCtrl.value.code}}</span> -->
                   <span class="attr-name col-8">{{attributeCtrl.value.name}}</span>

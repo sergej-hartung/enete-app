@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { FormService } from '../../../../../services/form.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { Subject, takeUntil } from 'rxjs';
 
 interface Matrix {
   id?: number;
@@ -44,6 +45,7 @@ export class TariffCalcMatrixComponent {
   tariffForm: FormGroup
   calcMatrixForm: FormArray
 
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -152,7 +154,10 @@ export class TariffCalcMatrixComponent {
         // if (!attributeExists) {
         //   this.addAttributeToMatrix(matrix, attribute);
         // }
-        this.addAttributeToMatrix(matrix, attribute);
+        if(attribute?.value_varchar){
+          this.addAttributeToMatrix(matrix, attribute);
+        }
+        
       }
     }
     console.log(this.tariffForm)
@@ -184,10 +189,9 @@ export class TariffCalcMatrixComponent {
     //     periodeTyp: ['']
     //   }));
     // }
-
       matrix.attributes.push(attribute);
       const attributesFormArray = matrix.form.get('attributes') as FormArray;
-      attributesFormArray.push(this.fb.group({
+      const attributeFormGroup = this.fb.group({
         id: [null],
         attribute_id: [attribute.id],
         code: [attribute.code],
@@ -196,10 +200,62 @@ export class TariffCalcMatrixComponent {
         value_total: [0],
         unit: [attribute.unit],
         single: [true],
-        number: [''],
         period: [''],
         periodeTyp: ['']
-      }));
+      });
+  
+      attributesFormArray.push(attributeFormGroup);
+  
+      this.addFormSwitchListener(attributeFormGroup);
+  }
+
+  addFormSwitchListener(attributeFormGroup: FormGroup) {
+    const singleControl = attributeFormGroup.get('single');
+    const periodControl = attributeFormGroup.get('period');
+    const periodTypeControl = attributeFormGroup.get('periodeTyp');
+    const valueTotalControl = attributeFormGroup.get('value_total');
+
+    singleControl?.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(value => {
+      console.log(value)
+      if (!value) {
+        periodControl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
+        //valueTotalControl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
+        periodTypeControl?.setValidators([Validators.required])
+      } else {
+        periodControl?.clearValidators();
+        periodTypeControl?.clearAsyncValidators()
+        //valueTotalControl?.clearValidators();
+        valueTotalControl?.reset()
+        periodTypeControl?.reset()
+        periodControl?.reset()
+        valueTotalControl?.setValue(0);
+        periodTypeControl?.setValue('')
+        periodControl?.setValue('')
+      }
+      periodControl?.updateValueAndValidity();
+      valueTotalControl?.updateValueAndValidity();
+      periodTypeControl?.updateValueAndValidity()
+
+      console.log(valueTotalControl)
+    });
+
+    periodControl?.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.updateTotalValue(attributeFormGroup));
+  }
+
+  updateTotalValue(attributeFormGroup: FormGroup) {
+    const valueControl = attributeFormGroup.get('value');
+    const periodControl = attributeFormGroup.get('period');
+    const valueTotalControl = attributeFormGroup.get('value_total');
+
+    if (valueControl && periodControl && valueTotalControl) {
+      const value = parseFloat(valueControl.value);
+      const period = parseInt(periodControl.value, 10);
+      if (!isNaN(value) && !isNaN(period)) {
+        valueTotalControl.setValue(value * period);
+      } else {
+        valueTotalControl.setValue(0);
+      }
+    }
   }
 
   canDropToTariffList = (drag: any) => {
@@ -264,5 +320,7 @@ export class TariffCalcMatrixComponent {
 
   ngOnDestroy() {
     console.log('destroy matrix')
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }
