@@ -78,6 +78,8 @@ export class TariffCalcMatrixComponent {
         form: this.fb.group({
           id: [null],
           name: [this.newMatrixForm.value.name],
+          total_value: 0,
+          unit: [''],
           attributes: this.fb.array([])
         })
       };
@@ -171,24 +173,7 @@ export class TariffCalcMatrixComponent {
   }
 
   addAttributeToMatrix(matrix: Matrix, attribute: any) {
-    // const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
-    // if (!attributeExists) {
-    //   matrix.attributes.push(attribute);
-    //   const attributesFormArray = matrix.form.get('attributes') as FormArray;
-    //   attributesFormArray.push(this.fb.group({
-    //     id: [null],
-    //     attribute_id: [attribute.id],
-    //     code: [attribute.code],
-    //     name: [attribute.name],
-    //     value: [attribute.value_varchar],
-    //     value_total: [0],
-    //     unit: [attribute.unit],
-    //     single: [true],
-    //     number: [''],
-    //     period: [''],
-    //     periodeTyp: ['']
-    //   }));
-    // }
+
       matrix.attributes.push(attribute);
       const attributesFormArray = matrix.form.get('attributes') as FormArray;
       const attributeFormGroup = this.fb.group({
@@ -197,7 +182,7 @@ export class TariffCalcMatrixComponent {
         code: [attribute.code],
         name: [attribute.name],
         value: [attribute.value_varchar],
-        value_total: [0],
+        value_total: [parseFloat(attribute.value_varchar)],
         unit: [attribute.unit],
         single: [true],
         period: [''],
@@ -206,10 +191,11 @@ export class TariffCalcMatrixComponent {
   
       attributesFormArray.push(attributeFormGroup);
   
-      this.addFormSwitchListener(attributeFormGroup);
+      this.addFormSwitchListener(attributeFormGroup, matrix?.form);
+      this.updateTotalValueMatrix(matrix?.form)
   }
 
-  addFormSwitchListener(attributeFormGroup: FormGroup) {
+  addFormSwitchListener(attributeFormGroup: FormGroup, matrixGroup: FormGroup) {
     const singleControl = attributeFormGroup.get('single');
     const periodControl = attributeFormGroup.get('period');
     const periodTypeControl = attributeFormGroup.get('periodeTyp');
@@ -219,18 +205,13 @@ export class TariffCalcMatrixComponent {
       console.log(value)
       if (!value) {
         periodControl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
-        //valueTotalControl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
         periodTypeControl?.setValidators([Validators.required])
       } else {
         periodControl?.clearValidators();
         periodTypeControl?.clearAsyncValidators()
-        //valueTotalControl?.clearValidators();
-        valueTotalControl?.reset()
-        periodTypeControl?.reset()
-        periodControl?.reset()
-        valueTotalControl?.setValue(0);
-        periodTypeControl?.setValue('')
-        periodControl?.setValue('')
+        valueTotalControl?.reset(0, { emitEvent: false })
+        periodTypeControl?.reset('', { emitEvent: false })
+        periodControl?.reset('', { emitEvent: false })
       }
       periodControl?.updateValueAndValidity();
       valueTotalControl?.updateValueAndValidity();
@@ -239,10 +220,11 @@ export class TariffCalcMatrixComponent {
       console.log(valueTotalControl)
     });
 
-    periodControl?.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.updateTotalValue(attributeFormGroup));
+    periodControl?.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.updateTotalValue(attributeFormGroup, matrixGroup));
   }
 
-  updateTotalValue(attributeFormGroup: FormGroup) {
+  updateTotalValue(attributeFormGroup: FormGroup, matrixGroup: FormGroup) {
+    console.log('update value')
     const valueControl = attributeFormGroup.get('value');
     const periodControl = attributeFormGroup.get('period');
     const valueTotalControl = attributeFormGroup.get('value_total');
@@ -253,7 +235,46 @@ export class TariffCalcMatrixComponent {
       if (!isNaN(value) && !isNaN(period)) {
         valueTotalControl.setValue(value * period);
       } else {
-        valueTotalControl.setValue(0);
+        if(isNaN(value)){
+          valueTotalControl.setValue(0);
+        }else{
+          valueTotalControl.setValue(value);
+        }
+      }
+      this.updateTotalValueMatrix(matrixGroup)
+    }
+  }
+
+  updateTotalValueMatrix(matrix: any){
+    console.log(matrix)
+    if(matrix){
+      const Attributes = matrix?.value?.attributes 
+      let MatrixTotalValue = 0
+      let unitSet = new Set<string>();
+
+      if(Attributes){
+        Attributes.forEach((attr:any) => {
+          if (attr?.unit !== undefined) {
+              unitSet.add(attr.unit);
+          }
+          if(attr?.value_total !== undefined){
+            MatrixTotalValue += parseFloat(attr?.value_total)
+            //matrix.setValue({}).total_value += attr?.value_total
+          }
+        })
+
+        // Проверка и установка unit
+        const unit = matrix.get('unit')
+        if (unitSet.size === 1) {
+          
+            if(unit) unit.setValue(Array.from(unitSet)[0]);
+        } else {
+            // Если unit отличаются
+            if(unit) unit.setValue('');
+        }
+
+        const totalValue = matrix.get('total_value');
+        if(totalValue) totalValue.setValue(MatrixTotalValue)
       }
     }
   }
@@ -284,11 +305,33 @@ export class TariffCalcMatrixComponent {
     return this.getAttributeGroupAttributes(groupIndex).at(attributeIndex) as FormGroup;
   }
 
-  getFormMatrixFromArray(matrix: FormArray, index: number): FormGroup {
-    return matrix.at(index) as FormGroup;
+  getAttributControl(controll:any){
+    return controll as FormGroup
   }
 
-  removeAttribute(matrix: Matrix, attribute: Attribute, index: number) {
+  getFormMatrixFromArray(matrixs:any, index: number): FormGroup {
+    return matrixs.at(index).form as FormGroup;
+  }
+
+  getTotalValueMatrix(matrixs: any, MatrixIndex:number){
+    const matrix = this.getFormMatrixFromArray(matrixs, MatrixIndex)
+    if(matrix){
+      const totalValue = matrix.get('total_value')?.value
+      if(totalValue !== undefined) return totalValue
+    } 
+    return 0
+  }
+
+  getUnitMatrix(matrixs: any, MatrixIndex:number){
+    const matrix = this.getFormMatrixFromArray(matrixs, MatrixIndex)
+    if(matrix){
+      const unit = matrix.get('unit')?.value
+      if(unit !== undefined) return unit
+    } 
+    return ''
+  }
+
+  removeAttribute(matrix: Matrix, index: number) {
     //const index = //matrix.attributes.indexOf(attribute);
 
     if (index >= 0) {
@@ -307,6 +350,7 @@ export class TariffCalcMatrixComponent {
       }
       //this.updateConnectedDropLists();
     }
+    this.updateTotalValueMatrix(matrix.form)
   }
 
   updateConnectedDropLists() {
@@ -314,9 +358,6 @@ export class TariffCalcMatrixComponent {
   }
   
 
-  private loadAttributeGroups() {
-      
-  }
 
   ngOnDestroy() {
     console.log('destroy matrix')

@@ -53,7 +53,7 @@
               <div
                 class="attr-group-box"
                 *ngFor="let attributeCtrl of getAttributeFormArray(matrix).controls; let j = index"
-                [formGroup]="getFormMatrixFromArray(getAttributeFormArray(matrix), j)"
+                [formGroup]="getAttributControl(attributeCtrl)"
                 cdkDrag
                 [cdkDragDisabled]="matrix.attributes[j].isFocused"
               >
@@ -73,12 +73,12 @@
                 </div>
                 <div class="col attr_value"> 
                   <ng-container *ngIf="attributeCtrl.value.single">
-                    {{attributeCtrl?.value?.value}}<span>{{attributeCtrl?.value?.unit}}</span>
+                    {{attributeCtrl?.value?.value_total}}<span>{{attributeCtrl?.value?.unit}}</span>
                   </ng-container>
                 </div>
                 
                 <!-- <div *ngIf="attributeCtrl.value.single" class="col-2">{{ matrix.attributes[j].value_varchar }}</div> -->
-                <button class="btn-text-style red" (click)="removeAttribute(matrix, matrix.attributes[j], j)">
+                <button class="btn-text-style red" (click)="removeAttribute(matrix, j)">
                   <i class="fas fa-times"></i>
                 </button>
                 <div class="col-12">
@@ -101,12 +101,20 @@
                       />
                     </div>
                     <div class="col attr_value attr-value-expand" *ngIf="!attributeCtrl.value.single">
-                      <ng-container *ngIf="attributeCtrl?.value?.value_total">
+                      <ng-container *ngIf="!attributeCtrl.value.single">
                         {{attributeCtrl?.value?.value_total}}<span *ngIf="attributeCtrl?.value?.unit">{{attributeCtrl?.value?.unit}}</span>
                       </ng-container>
                     </div>
                     <!-- <div class="col-2"> {{ matrix.attributes[j].value_varchar * matrix.attributes[j].period }} </div> -->
                   </div>
+                </div>
+              </div>
+              <div  *ngIf="matrix.attributes.length > 0" class="attr-group-box total-value">
+                <span class="attr-name col-8">
+                  Gesamt:
+                </span>
+                <div class="col attr_value">
+                  {{ getTotalValueMatrix(matrixs, i) }}<span *ngIf="getUnitMatrix(matrixs, i)">{{getUnitMatrix(matrixs, i)}}</span>
                 </div>
               </div>
             </div>

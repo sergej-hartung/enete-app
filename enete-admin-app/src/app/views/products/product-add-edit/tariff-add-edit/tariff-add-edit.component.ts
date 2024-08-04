@@ -48,25 +48,8 @@ export class TariffAddEditComponent {
       group.attributes.forEach((attribute: any) => {
         matrices.forEach((matrix: any, matrixIndex: number) => {
           const foundAttribute = matrix.attributes.find((attr: any) => attr.attribute_id === attribute.id);
-          // console.log(attribute)
-          // console.log(matrix)
-          // console.log(foundAttribute)
-          // console.log(attribute.value_varchar)
-          // if (foundAttribute && foundAttribute.value !== attribute.value_varchar) {
-          //   console.log(attribute)
-          // console.log(matrix)
-          // console.log(foundAttribute)
-          // console.log(attribute.value_varchar)
-          //   this.updateMatrixAttribute(foundAttribute, attribute.value_varchar);
-          // }
           matrix.attributes.forEach((attr:any, attrIndex: number) => {
             if(attr.attribute_id === attribute.id && attr.value !== attribute.value_varchar){
-              console.log(matrixIndex)
-              console.log(attrIndex)
-              console.log(attribute)
-              console.log(matrix)
-              console.log(attr)
-              console.log(attribute.value_varchar)
               this.updateMatrixAttribute(matrixIndex, attrIndex, attribute.value_varchar);
             }
           })
@@ -77,20 +60,66 @@ export class TariffAddEditComponent {
 
   updateMatrixAttribute(matrixIndex:number, attrIndex: number, newValue: string) {
     let matrices = this.getCalcMatrixArray()
-    const matrix = matrices.at(matrixIndex)
+    const matrix = matrices.at(matrixIndex) as FormGroup
     const attributes = matrix.get('attributes') as FormArray
     attributes.at(attrIndex).patchValue({ value: newValue })
-    //matrices.at(index).patchValue({value: newValue})
-    //matrix.patchValue({ value: newValue })
-    // const attribute = matrix.attributes.find((attr: any) => attr.attribute_id === attributeId);
-    // if (attribute) {
-    //   attribute.value = newValue;
-    //   const attributesFormArray = matrix.form.get('attributes') as FormArray;
-    //   const formIndex = attributesFormArray.controls.findIndex(ctrl => ctrl.value.attribute_id === attributeId);
-    //   if (formIndex >= 0) {
-    //     attributesFormArray.at(formIndex).patchValue({ value: newValue });
-    //   }
-    // }
+
+    this.updateTotalValue(attributes.at(attrIndex) as FormGroup, matrix)
+  }
+
+  updateTotalValue(attributeFormGroup: FormGroup, matrix: FormGroup) {
+    const valueControl = attributeFormGroup.get('value');
+    const periodControl = attributeFormGroup.get('period');
+    const valueTotalControl = attributeFormGroup.get('value_total');
+
+    if (valueControl && periodControl && valueTotalControl) {
+      const value = parseFloat(valueControl.value);
+      const period = parseInt(periodControl.value, 10);
+      if (!isNaN(value) && !isNaN(period)) {
+        valueTotalControl.setValue(value * period);
+      } else {
+        if(isNaN(value)){
+          valueTotalControl.setValue(0);
+        }else{
+          valueTotalControl.setValue(value);
+        }
+      }
+      this.updateTotalValueMatrix(matrix)
+    }
+  }
+
+  updateTotalValueMatrix(matrix: any){
+    console.log(matrix)
+    if(matrix){
+      const Attributes = matrix?.value?.attributes 
+      let MatrixTotalValue = 0
+      let unitSet = new Set<string>();
+
+      if(Attributes){
+        Attributes.forEach((attr:any) => {
+          if (attr?.unit !== undefined) {
+              unitSet.add(attr.unit);
+          }
+          if(attr?.value_total !== undefined){
+            MatrixTotalValue += parseFloat(attr?.value_total)
+            //matrix.setValue({}).total_value += attr?.value_total
+          }
+        })
+
+        // Проверка и установка unit
+        const unit = matrix.get('unit')
+        if (unitSet.size === 1) {
+          
+            if(unit) unit.setValue(Array.from(unitSet)[0]);
+        } else {
+            // Если unit отличаются
+            if(unit) unit.setValue('');
+        }
+
+        const totalValue = matrix.get('total_value');
+        if(totalValue) totalValue.setValue(MatrixTotalValue)
+      }
+    }
   }
 
 

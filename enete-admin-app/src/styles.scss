@@ -1445,6 +1445,20 @@ app-tariff-add-edit{
             padding-top: 20px;
         }
     }
+
+    &.total-value{
+        background: #f2f2f2;
+        cursor: default;
+
+        .attr-name{
+            max-width: none;
+        }
+
+        .attr_value{
+            padding-right: 31px;
+            font-weight: 600;
+        }
+    }
 }
 
 .attr-kennung {
