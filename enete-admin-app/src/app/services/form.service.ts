@@ -167,7 +167,8 @@ export class FormService {
       combo_status: this.fb.array([]), // New field
       categories: this.fb.array([]),
       attribute_groups: this.fb.array([]),
-      calc_matrix: this.fb.array([])
+      calc_matrix: this.fb.array([]),
+      promos: this.fb.array([])
     })
   }
 

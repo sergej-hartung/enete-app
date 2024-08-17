@@ -4,6 +4,8 @@ import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { FormService } from '../../../../../services/form.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Subject, takeUntil } from 'rxjs';
+import { TariffService } from '../../../../../services/product/tariff/tariff.service';
+import { ProductService } from '../../../../../services/product/product.service';
 
 interface Matrix {
   id?: number;
@@ -50,6 +52,8 @@ export class TariffCalcMatrixComponent {
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
+    public tariffService: TariffService,
+    private productService: ProductService,
   ){
     this.tariffForm = this.formService.getTariffForm()
     this.calcMatrixForm = this.tariffForm.get('calc_matrix') as FormArray
@@ -66,6 +70,18 @@ export class TariffCalcMatrixComponent {
   ngOnInit() {
     console.log('load matrix')
     //this.updateConnectedDropLists();
+    this.productService.productMode$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(mode => {
+          if(mode == 'edit')  this.loadTariffMatrix();
+        })
+
+    this.productService.deletedTariffAttr
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(attr => {
+          this.removeAllAtributteById(attr)
+          console.log(attr)
+        })
   }
 
   
@@ -130,6 +146,7 @@ export class TariffCalcMatrixComponent {
     this.matrixs.splice(index, 1);
     this.calcMatrixForm.removeAt(index);
     this.updateConnectedDropLists();
+    this.updateTariffAttributesStatus();
     //this.updateTariffAttributesStatus(); // Обновление статуса после удаления группы
   }
 
@@ -156,6 +173,10 @@ export class TariffCalcMatrixComponent {
         // if (!attributeExists) {
         //   this.addAttributeToMatrix(matrix, attribute);
         // }
+        if (attribute) {
+          attribute.isCopied = true;
+        }
+        console.log(attribute)
         if(attribute?.value_varchar){
           this.addAttributeToMatrix(matrix, attribute);
         }
@@ -177,8 +198,7 @@ export class TariffCalcMatrixComponent {
       matrix.attributes.push(attribute);
       const attributesFormArray = matrix.form.get('attributes') as FormArray;
       const attributeFormGroup = this.fb.group({
-        id: [null],
-        attribute_id: [attribute.id],
+        id: [attribute.id],
         code: [attribute.code],
         name: [attribute.name],
         value: [attribute.value_varchar],
@@ -245,6 +265,8 @@ export class TariffCalcMatrixComponent {
     }
   }
 
+
+
   updateTotalValueMatrix(matrix: any){
     console.log(matrix)
     if(matrix){
@@ -278,6 +300,8 @@ export class TariffCalcMatrixComponent {
       }
     }
   }
+
+  
 
   canDropToTariffList = (drag: any) => {
     return drag.dropContainer.id === this.tariffDropListId;
@@ -351,13 +375,117 @@ export class TariffCalcMatrixComponent {
       //this.updateConnectedDropLists();
     }
     this.updateTotalValueMatrix(matrix.form)
+    this.updateTariffAttributesStatus();
+  }
+
+  removeAllAtributteById(attribute: Attribute){
+    this.matrixs.forEach(matrix => {
+      const index = matrix.attributes.findIndex(attr => attr.id == attribute.id)
+      console.log(index)
+      if(index >= 0){
+        this.removeAttribute(matrix, index)
+      }
+    })
   }
 
   updateConnectedDropLists() {
     this.connectedDropLists = [this.tariffDropListId, ...this.matrixs.map((_, i) => this.onGetMatrixDropListId(i))];
   }
-  
 
+  private loadTariffMatrix() {
+
+      this.tariffService.detailedData$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(response => {
+          if(response){
+            const matrixsFromTariff = response?.data?.calc_matrix; // Здесь ваши группы из ответа сервера
+            if(matrixsFromTariff){
+              this.matrixs = matrixsFromTariff.map(matrix => 
+              (
+                {
+                  id: matrix.id,
+                  tariff_id: matrix.tariff_id,
+                  name: matrix.name,
+                  total_value: matrix.total_value,
+                  unit: matrix.unit,
+                  attributes: matrix.attributs.map(attr => ({
+                    ...attr,
+                    isCopied: true // Отметьте атрибуты как скопированные
+                  })),
+                  hidden: false,
+    
+                  form: this.fb.group({
+                    id: [matrix.id],
+                    tariff_id: [matrix.tariff_id],
+                    name: [matrix.name],
+                    total_value: [matrix.total_value],
+                    unit: [matrix.unit],
+                    attributes: this.fb.array(
+
+                      matrix.attributs.map(attr => {
+                        return this.fb.group({
+                          id: [attr.id],
+                          code: [attr.code],
+                          name: [attr.name],
+                          period: [attr.period],
+                          periodeTyp: [attr.periodeTyp],
+                          single: [attr.single],
+                          unit: [attr.unit],
+                          value: [attr.value],
+                          value_total: [attr.value_total],
+                        });
+                      })
+                    )
+                  })
+                }
+              ));
+
+              this.calcMatrixForm.clear();
+              this.matrixs.forEach(matrix => {
+                this.calcMatrixForm.push(matrix.form);
+                let attributeFormGroups = matrix.form.get('attributes') as FormArray
+
+                attributeFormGroups.controls.forEach(attributeFormGroup => {
+                  let attributForm = attributeFormGroup as FormGroup
+
+                  const singleControl = attributForm.get('single');
+                  const periodControl = attributForm.get('period');
+                  const periodTypeControl = attributForm.get('periodeTyp');
+
+                  if(!singleControl?.value){
+                    periodControl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
+                    periodTypeControl?.setValidators([Validators.required])
+                  }
+
+                  this.addFormSwitchListener(attributForm, matrix?.form);
+                })
+                //console.log(attributeFormGroup)
+                //this.addFormSwitchListener(attributeFormGroup, matrix?.form);
+              });
+
+              
+              this.updateTariffAttributesStatus();
+              this.updateConnectedDropLists();
+            }
+          }
+        })
+  }
+  
+  private updateTariffAttributesStatus() {
+    // Создаем Set из всех id атрибутов, которые есть в группах
+    const copiedAttributeIds = new Set(this.matrixs.flatMap(matrix => matrix.attributes.map(attr => attr.id)));
+    console.log(this.getAttributeGroupArray())
+    // Обновляем статус `isCopied` для атрибутов в правой колонке
+    this.getAttributeGroupArray()?.value.forEach((matrix: any) => {
+      matrix.attributes.forEach((attribute: any) => {
+        console.log(copiedAttributeIds.has(attribute.id))
+        attribute.isCopied = copiedAttributeIds.has(attribute.id);
+      })
+      
+    });
+
+    console.log(this.tariffAttributes)
+  }
 
   ngOnDestroy() {
     console.log('destroy matrix')

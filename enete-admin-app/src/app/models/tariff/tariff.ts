@@ -21,6 +21,7 @@ export interface Tariff {
     status: TariffStatus;
     is_published: boolean;
     file_id: number;
+    calc_matrix?: calcMatrix[];
     attribute_groups?: AttributeGroup[];
     combo_status?: ComboStatus[];
     tariff_categories?: Category[];
@@ -32,7 +33,30 @@ export interface Tariff {
     updated_at: string;
 }
 
+interface calcMatrix{
+    id: number,
+    tariff_id: number,
+    name: string,
+    total_value: string,
+    unit: string,
+    attributs: calcMatrixAttr[]
+    created_by: number;
+    updated_by: number;
+    created_at: string;
+    updated_at: string
+}
 
+interface calcMatrixAttr{
+    id: number,
+    code: string,
+    name: string,
+    period: string,
+    periodeTyp: string,
+    single: number,
+    unit: string,
+    value: string,
+    value_total: string
+}
 
 interface Tariffprovider{
     id: number;

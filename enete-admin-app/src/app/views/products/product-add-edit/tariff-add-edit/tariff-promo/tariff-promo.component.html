@@ -1,1 +1,96 @@
-<p>tariff-promo works!</p>
+<div class="row no-gutters">
+    <div class="col tariff_promos">
+        <form [formGroup]="newPromosForm" *ngIf="addNewPromo">
+            <div class="row mb-2">
+                <div class="col-4 pe-1">
+                    <label class="form-label custom-label-sm" for="promo-title">Titel</label>
+                    <div class="input-group input-group-sm input-group-sm-custom">
+                        <input
+                            id="promo-title"
+                            class="form-control form-control-sm"
+                            placeholder="Titel"
+                            formControlName="title"
+                            [ngClass]="{'is-invalid': (newPromosForm.get('title')?.errors && newPromosForm.get('title')?.touched)}"
+                        />
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="newPromosForm.get('title')?.errors?.['required'] && newPromosForm.get('title')?.touched"
+                    >
+                        Titel ist erforderlich.
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="editPromosForm.get('title')?.errors?.['required'] && editPromosForm.get('title')?.touched"
+                    >
+                        Titel ist erforderlich.
+                    </div>
+                </div>
+                <div class="col-3 ps-1 pe-1">
+                    <label class="form-label custom-label-sm" for="promo-start-date">Start Datum</label>
+                    <div class="input-group input-group-sm input-group-sm-custom">
+                        <input
+                            type="date"
+                            id="promo-start-date"
+                            class="form-control form-control-sm"
+                            placeholder="Start Datum"
+                            formControlName="start_date"
+                            [ngClass]="{'is-invalid': (newPromosForm.get('start_date')?.errors && newPromosForm.get('start_date')?.touched)}"
+                        />
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="newPromosForm.get('start_date')?.errors?.['required'] && newPromosForm.get('start_date')?.touched"
+                    >
+                        Start Datum ist erforderlich.
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="editPromosForm.get('start_date')?.errors?.['required'] && editPromosForm.get('start_date')?.touched"
+                    >
+                        Start Datum ist erforderlich.
+                    </div>
+                </div>
+                <div class="col-3 ps-1 pe-1">
+                    <label class="form-label custom-label-sm" for="promo-end_date">Ende Datum</label>
+                    <div class="input-group input-group-sm input-group-sm-custom">
+                        <input
+                            type="date"
+                            id="promo-end_date"
+                            class="form-control form-control-sm"
+                            placeholder="Ende Datum"
+                            formControlName="end_date"
+                            [ngClass]="{'is-invalid': (newPromosForm.get('end_date')?.errors && newPromosForm.get('end_date')?.touched)}"
+                        />
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="newPromosForm.get('end_date')?.errors?.['required'] && newPromosForm.get('end_date')?.touched"
+                    >
+                        Ende Datum ist erforderlich.
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="editPromosForm.get('end_date')?.errors?.['required'] && editPromosForm.get('end_date')?.touched"
+                    >
+                        Ende Datum ist erforderlich.
+                    </div>
+                </div>
+                <div class="col-2 ps-1 default-btn-group">
+                    <div class="btn-group btn-group-sm me-2" role="group" aria-label="First group">
+                        <button class="btn btn-outline-success" type="button" (click)="onSaveNewPromo()">
+                            <i class="fa-regular fa-floppy-disk"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" type="button" (click)="onCancelNewPromo()">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <button class="btn-text-style new-promo" (click)="onAddNewPromo()">
+            <i class="fa-solid fa-circle-plus"></i> Neue Promo
+        </button>
+    </div>
+</div>
+

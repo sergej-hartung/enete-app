@@ -318,6 +318,7 @@ export class TariffAttributeComponent {
       const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
       if (originalAttribute) {
         originalAttribute.isCopied = false;
+        this.productService.deletedTariffAttr.emit(originalAttribute)
       }
       group.attributes.splice(index, 1);
 
@@ -327,6 +328,7 @@ export class TariffAttributeComponent {
       if (formIndex >= 0) {
         groupFormArray.removeAt(formIndex);
       }
+
     }
   }
 

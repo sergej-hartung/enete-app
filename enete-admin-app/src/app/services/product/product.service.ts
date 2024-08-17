@@ -26,6 +26,8 @@ export class ProductService {
   private _selectedTarif = new BehaviorSubject<any | null>(null);
   public selectedTarif$: Observable<any | null> = this._selectedTarif.asObservable();
 
+  public deletedTariffAttr = new EventEmitter
+
   private destroy$ = new Subject<void>();
 
 

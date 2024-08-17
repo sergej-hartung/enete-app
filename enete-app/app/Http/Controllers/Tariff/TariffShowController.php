@@ -27,11 +27,18 @@ class TariffShowController extends Controller
             'group', 
             'status',
             'document',
+            'clacMatrices',
+            'clacMatrices.attributes',
             'attributeGroups', 
             'attributeGroups.attributes', 
             'attributeGroups.attributes.inputType'
         )->find($tarifId);
-        //dd($tariff->category);
+        //dd($tariff);
+
+        if (!$tariff) {
+            return response()->json(['error' => 'Tariff not found'], 404);
+        }
+        
         return new ShowTariffResource($tariff);
         //return response()->json(['message' => 'Email successfully verified'], 200);
     }

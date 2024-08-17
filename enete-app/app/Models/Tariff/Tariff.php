@@ -71,6 +71,11 @@ class Tariff extends Model
         return $this->belongsTo(ProductDocuments::class, 'file_id');
     }
 
+    public function clacMatrices()
+    {
+        return $this->hasMany(TariffCalcMatrix::class, 'tariff_id');
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

@@ -36,9 +36,9 @@
               <button class="btn-text-style red" (click)="onRemoveMatrix(i)">
                 <i class="fa-regular fa-trash-can"></i>
               </button>
-              <button class="btn-text-style blue" (click)="onToggleMatrixs(i)">
+              <!-- <button class="btn-text-style blue" (click)="onToggleMatrixs(i)">
                 <i class="fa-solid" [ngClass]="matrix.hidden ? 'fa-eye-slash' : 'fa-eye'"></i>
-              </button>
+              </button> -->
             </span>
           </ng-template>
           <div *ngIf="!matrix.hidden && matrix.form" [formGroup]="matrix.form">
@@ -84,12 +84,18 @@
                 <div class="col-12">
                   <div class="attr-group-box sub-box">
                     <div class="col-4 periode-type-wrapp" *ngIf="!attributeCtrl.value.single">
-                      <label class="form-label custom-label-sm" for="periodeTyp-{{i}}-{{j}}">Zeitraum auswählen</label>
-                      <select id="periodeTyp-{{i}}-{{j}}" formControlName="periodeTyp" class="form-select form-select-sm">
+                      <label class="form-label custom-label-sm required" for="periodeTyp-{{i}}-{{j}}">Zeitraum auswählen</label>
+                      <select 
+                        id="periodeTyp-{{i}}-{{j}}" 
+                        formControlName="periodeTyp" 
+                        class="form-select form-select-sm"
+                        [ngClass]="{'is-invalid': (attributeCtrl.get('periodeTyp')?.errors && attributeCtrl.get('periodeTyp')?.touched)}"
+                      >
                         <option value="day">Tag</option>
                         <option value="month">Monat</option>
                         <option value="quarter">Quartal</option>
                       </select>
+
                     </div>
                     <div class="col-4 period-wrapp" *ngIf="!attributeCtrl.value.single">
                       <label class="form-label custom-label-sm required" for="period-{{i}}-{{j}}">Dauer</label>
@@ -97,6 +103,7 @@
                         type="text"
                         id="period-{{i}}-{{j}}"
                         formControlName="period"
+                        [ngClass]="{'is-invalid': (attributeCtrl.get('period')?.errors && attributeCtrl.get('period')?.touched)}"
                         class="form-control form-control-sm"
                       />
                     </div>
@@ -106,6 +113,14 @@
                       </ng-container>
                     </div>
                     <!-- <div class="col-2"> {{ matrix.attributes[j].value_varchar * matrix.attributes[j].period }} </div> -->
+                  </div>
+                </div>
+                <div class="col-12">
+                  <div *ngIf="(attributeCtrl.get('period')?.errors && attributeCtrl.get('period')?.touched) || (attributeCtrl.get('periodeTyp')?.errors && attributeCtrl.get('periodeTyp')?.touched)" 
+                    class="invalid-feedback custom-invalid-feedback"
+                    >
+                    <div *ngIf="(attributeCtrl.get('period')?.errors?.['required']) || (attributeCtrl.get('periodeTyp')?.errors?.['required'])">Dieses Feld ist erforderlich.</div>
+                    <div *ngIf="(attributeCtrl.get('period')?.errors?.['pattern'])">Ungültiges Format.</div>
                   </div>
                 </div>
               </div>
@@ -130,6 +145,7 @@
                   class="form-control form-control-sm"
                   placeholder="Matrix Name"
                   formControlName="name"
+                  [ngClass]="{'is-invalid': newMatrixForm.get('name')?.errors && newMatrixForm.get('name')?.touched}"
                 />
                 <button class="btn btn-outline-success" type="button" (click)="onSaveNewMatrix()">
                   <i class="fa-regular fa-floppy-disk"></i>
@@ -140,9 +156,9 @@
               </div>
               <div
                 class="invalid-feedback custom-invalid-feedback"
-                *ngIf="editMatrixForm.get('name')?.errors?.['required'] && editMatrixForm.get('name')?.touched"
+                *ngIf="newMatrixForm.get('name')?.errors?.['required'] && newMatrixForm.get('name')?.touched"
               >
-                Gruppenname ist erforderlich.
+                Matrix Name ist erforderlich.
               </div>
             </div>
           </form>
@@ -184,13 +200,7 @@
                   <span *ngIf="attributeCtrl.value.value_varchar" class="attr-name col">
                     {{attributeCtrl.value.value_varchar}}
                   </span>
-                  <span  class="attr-unit col">{{ attributeCtrl.value.unit }}</span>
-                  <!-- <span *ngIf="attributeCtrl.value.is_frontend_visible" class="attr-frontend_visible green">
-                    <i class="far fa-eye"></i>
-                  </span>
-                  <span *ngIf="!attributeCtrl.value.is_frontend_visible" class="attr-frontend_visible red">
-                    <i class="fas fa-eye-slash"></i>
-                  </span> -->           
+                  <span  class="attr-unit col">{{ attributeCtrl.value.unit }}</span>          
                 </div>
               </ng-container>
               

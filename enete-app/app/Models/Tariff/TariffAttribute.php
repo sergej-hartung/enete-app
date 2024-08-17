@@ -37,6 +37,13 @@ class TariffAttribute extends Model
                     
     }
 
+    public function clacMatrices()
+    {
+        return $this->belongsToMany(TariffCalcMatrix::class, 'calc_matrix_attribute_mappings', 'attribute_id', 'clac_matrix_id')
+            ->withPivot(['period', 'periodeTyp', 'single', 'unit', 'value', 'value_total'])
+            ->withTimestamps();
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

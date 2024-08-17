@@ -1282,7 +1282,7 @@ app-tariff-add-edit{
     }
 }
 
-.group-name{
+.group-name, .matrix-name{
     font-size: 1rem;
     color: rgba(0, 0, 0, .8); // #545b62;
 
@@ -1290,7 +1290,7 @@ app-tariff-add-edit{
         margin-left: 0.5rem;
     }
 }
-.new-attribute-group{
+.new-attribute-group, .new-promo{
     margin-bottom: 20px;
 }
 
@@ -1969,4 +1969,24 @@ app-tariff-add-edit{
 .editor-container_classic-editor .editor-container__editor {
 	min-width: 755px;
 	max-width: 795px;
+}
+
+.row{
+    &.no-gutters{
+        .tariff_promos{
+            padding-right: calc(var(--bs-gutter-x)* 0.5);
+            padding-left: calc(var(--bs-gutter-x)* 0.5);
+        }
+    }
+}
+
+.default-btn-group{
+    display: flex;
+    align-items: flex-end;
+    .btn-group{
+        flex-grow: 1;
+    }
+    .btn {
+        border-color: #dee2e6;
+    }
 }

@@ -8,6 +8,7 @@ use App\Http\Resources\Tariff\AttributeGroup\IndexTariffAttributeGroupResource;
 use App\Http\Resources\Tariff\ComboStatus\IndexTariffComboStatusResource;
 use App\Http\Resources\Tariff\Category\IndexTariffCategoryResource;
 use App\Http\Resources\ProductDocument\IndexProductDokumetResource;
+use App\Http\Resources\Tariff\CalcMatrix\IndexCalcMatrixResource;
 
 class ShowTariffResource extends JsonResource
 {
@@ -30,20 +31,22 @@ class ShowTariffResource extends JsonResource
             'group_id'            => $this->group_id,
             //'group'               => $this->group,
             //'status_id'           => $this->status_id,
-            'status'           => $this->status,
+            'status'              => $this->status,
             'has_action'          => $this->has_action,
             'action_group_id'     => $this->action_group_id,
-            'is_published'       => $this->is_published,
-            'note'       => $this->note,
-            'file_id'       => $this->file_id,
-            'created_by' => $this->created_by,
-            'updated_by' => $this->updated_by,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'attribute_groups' => IndexTariffAttributeGroupResource::collection($this->attributeGroups),
-            'combo_status' => IndexTariffComboStatusResource::collection($this->comboStatus),
-            'tariff_categories' => IndexTariffCategoryResource::collection($this->category),
-            'document' => new IndexProductDokumetResource($this->document)
+            'is_published'        => $this->is_published,
+            'note'                => $this->note,
+            'file_id'             => $this->file_id,
+            'calc_matrix'         => IndexCalcMatrixResource::collection($this->whenLoaded('clacMatrices')),
+            'created_by'          => $this->created_by,
+            'updated_by'          => $this->updated_by,
+            'created_at'          => $this->created_at,
+            'updated_at'          => $this->updated_at,
+
+            'attribute_groups'    => IndexTariffAttributeGroupResource::collection($this->whenLoaded('attributeGroups')),
+            'combo_status'        => IndexTariffComboStatusResource::collection($this->whenLoaded('comboStatus')),
+            'tariff_categories'   => IndexTariffCategoryResource::collection($this->whenLoaded('category')),
+            'document'            => new IndexProductDokumetResource($this->whenLoaded('document')),
         ];
     }
 }

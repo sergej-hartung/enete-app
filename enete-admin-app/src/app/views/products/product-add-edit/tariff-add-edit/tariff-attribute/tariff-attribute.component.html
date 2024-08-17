@@ -38,9 +38,9 @@
             <button class="btn-text-style red" (click)="removeGroup(i)">
               <i class="fa-regular fa-trash-can"></i>
             </button>
-            <button class="btn-text-style blue" (click)="toggleGroupAttributes(i)">
+            <!-- <button class="btn-text-style blue" (click)="toggleGroupAttributes(i)">
               <i class="fa-solid" [ngClass]="group.hidden ? 'fa-eye-slash' : 'fa-eye'"></i>
-            </button>
+            </button> -->
           </span>
         </ng-template>
         <div *ngIf="!group.hidden && group.form" [formGroup]="group.form">
@@ -197,6 +197,7 @@
             class="form-control form-control-sm"
             placeholder="Gruppenname"
             formControlName="groupName"
+            [ngClass]="{'is-invalid': newGroupForm.get('groupName')?.errors && newGroupForm.get('groupName')?.touched}"
           />
           <button class="btn btn-outline-success" type="button" (click)="saveNewGroup()">
             <i class="fa-regular fa-floppy-disk"></i>
@@ -207,7 +208,7 @@
         </div>
         <div
           class="invalid-feedback custom-invalid-feedback"
-          *ngIf="editGroupForm.get('groupName')?.errors?.['required'] && editGroupForm.get('groupName')?.touched"
+          *ngIf="newGroupForm.get('groupName')?.errors?.['required'] && newGroupForm.get('groupName')?.touched"
         >
           Gruppenname ist erforderlich.
         </div>
