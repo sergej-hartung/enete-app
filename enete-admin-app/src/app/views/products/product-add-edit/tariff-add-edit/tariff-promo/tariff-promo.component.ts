@@ -2,6 +2,10 @@ import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormService } from '../../../../../services/form.service';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { EditorModalComponent } from '../../../../../shared/components/editor-modal/editor-modal.component'
+import { Subject, takeUntil } from 'rxjs';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-tariff-promo',
@@ -11,22 +15,27 @@ import { TariffService } from '../../../../../services/product/tariff/tariff.ser
 export class TariffPromoComponent {
 
   addNewPromo = false
-  newPromosForm: FormGroup;
-  editPromosForm: FormGroup;
+  newPromoForm: FormGroup;
+  editPromoForm: FormGroup;
+  editPromoIndex: number | null = null
 
   tariffForm: FormGroup
   promosForm: FormArray
+
+  private unsubscribe$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
     public tariffService: TariffService,
+    private modalService: NgbModal,
+    private sanitizer: DomSanitizer,
     //private productService: ProductService,
   ){
     this.tariffForm = this.formService.getTariffForm()
     this.promosForm = this.tariffForm.get('promos') as FormArray
 
-    this.newPromosForm = this.fb.group({
+    this.newPromoForm = this.fb.group({
       title: ['', Validators.required],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
@@ -34,51 +43,131 @@ export class TariffPromoComponent {
       text_long: ['']
     });
 
-    this.editPromosForm = this.fb.group({
+    this.editPromoForm = this.fb.group({
       title: ['', Validators.required],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
-      is_active: [true],
-      text_long: ['']
     });
   }
 
   onAddNewPromo(){
     console.log('test')
     this.addNewPromo = true
-    this.newPromosForm.reset();
+    this.newPromoForm.reset();
   }
 
   onSaveNewPromo(){
+    if(this.newPromoForm.valid){
+      this.promosForm.push(
+        this.fb.group({
+          id: [null],
+          title: [this.newPromoForm?.value?.title, Validators.required],
+          start_date: [this.newPromoForm?.value?.start_date, Validators.required],
+          end_date: [this.newPromoForm?.value?.end_date, Validators.required], 
+          is_active: [true, Validators.required],
+          text_long: this.newPromoForm?.value?.text_long
+        })
+      )
 
+      this.addNewPromo = false
+      this.newPromoForm.reset()
+      console.log(this.tariffForm)
+    }
+  }
+
+  onEditPromo(index: number){
+    console.log(index)
+    this.editPromoIndex = index;
+    this.editPromoForm.setValue(
+      { 
+          title: this.promosForm.at(index)?.value?.title,
+          start_date: this.promosForm.at(index)?.value?.start_date,
+          end_date: this.promosForm.at(index)?.value?.end_date,
+          //text_long: this.promosForm.at(index)?.value?.text_long
+      }
+    );
+
+    console.log(this.editPromoForm)
+  }
+
+  onSaveEditPromo(){
+    if(this.editPromoForm.valid && this.editPromoIndex !== null){
+
+      const promoForm = this.promosForm.at(this.editPromoIndex) as FormGroup;
+      promoForm.patchValue(this.editPromoForm.value)
+
+      this.editPromoIndex = null
+      this.editPromoForm.reset()
+    }
   }
 
   onCancelNewPromo(){
     this.addNewPromo = false
-    this.newPromosForm.reset()
+    this.newPromoForm.reset()
+  }
+
+  onCancelEditPromo(){
+    this.editPromoIndex = null;
+    this.editPromoForm.reset();
+  }
+
+  removePromo(index: number){
+    this.promosForm.removeAt(index);
   }
 
 
-  // onSaveNewMatrix(){
-  //   if (this.newMatrixForm.valid) {
-  //     const newMatrix: Matrix = {
-  //       name: this.newMatrixForm.value.name,
-  //       attributes: [],
-  //       form: this.fb.group({
-  //         id: [null],
-  //         name: [this.newMatrixForm.value.name],
-  //         total_value: 0,
-  //         unit: [''],
-  //         attributes: this.fb.array([])
-  //       })
-  //     };
-  //     this.matrixs.push(newMatrix);
-  //     this.calcMatrixForm.push(newMatrix.form);
-  //     console.log(this.matrixs)
-  //     this.updateConnectedDropLists()
-  //     //this.updateConnectedDropLists();
-  //     this.addNewMatrix = false;
-  //     this.newMatrixForm.reset();
-  //   }
-  // }
+  getPromosArray(): FormArray{
+    return (this.tariffForm.get('attribute_groups') as FormArray);
+  }
+
+  getSafeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
+  }
+
+  openEditor(promo: any ) {
+    console.log('open Editor')
+    const modalRef: NgbModalRef = this.modalService.open(
+      EditorModalComponent, 
+      {
+        backdropClass: 'ckedit-modal-backdrop', 
+        windowClass: 'ckedit-modal',
+        size: 'lg' 
+      }
+    );
+
+    const control = promo as FormGroup
+    //const control = (group.form.get('attributes') as FormArray).at(index);
+    let text = control.get('text_long')
+
+    modalRef.componentInstance.initialValue = text?.value || ''
+    //const attribute = group.attributes[index];
+    // if(attribute.pivot){
+    //   text?.setValue(attribute.pivot?.value_text)
+    //   modalRef.componentInstance.initialValue = text?.value || '';
+    // }else{
+    //   //const control = (group.form.get('attributes') as FormArray).at(index);
+    //   modalRef.componentInstance.initialValue = text?.value || '';
+    // }
+    
+    modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
+      if (result !== undefined ) {
+        //const control = (group.form.get('attributes') as FormArray).at(index);
+        control.patchValue({ text_long: result });
+        //attribute.pivot.value_text = result;
+        console.log('Сохранено значение:', result);
+        text?.markAsTouched()
+        modalRef.close(); // Закрытие модального окна после сохранения
+      }
+    });
+    modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+      console.log('fenster geschlossen')
+      text?.markAsTouched()
+      modalRef.close(); // Закрытие модального окна при нажатии на отмену
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

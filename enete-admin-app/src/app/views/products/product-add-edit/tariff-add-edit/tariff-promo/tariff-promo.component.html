@@ -1,7 +1,7 @@
-<div class="row no-gutters">
-    <div class="col tariff_promos">
-        <form [formGroup]="newPromosForm" *ngIf="addNewPromo">
-            <div class="row mb-2">
+<div class="row no-gutters tariff-promo-wrapp" *ngIf="promosForm.value.length > 0">
+    <div class="tariff-promo" *ngFor="let promo of promosForm.controls; let i = index">
+        <form [formGroup]="editPromoForm" *ngIf="editPromoIndex === i; else promoDisplay">
+            <div class="edit-promo-form">
                 <div class="col-4 pe-1">
                     <label class="form-label custom-label-sm" for="promo-title">Titel</label>
                     <div class="input-group input-group-sm input-group-sm-custom">
@@ -10,21 +10,15 @@
                             class="form-control form-control-sm"
                             placeholder="Titel"
                             formControlName="title"
-                            [ngClass]="{'is-invalid': (newPromosForm.get('title')?.errors && newPromosForm.get('title')?.touched)}"
+                            [ngClass]="{'is-invalid': (editPromoForm.get('title')?.errors && editPromoForm.get('title')?.touched)}"
                         />
                     </div>
                     <div
                         class="invalid-feedback custom-invalid-feedback"
-                        *ngIf="newPromosForm.get('title')?.errors?.['required'] && newPromosForm.get('title')?.touched"
+                        *ngIf="editPromoForm.get('title')?.errors?.['required'] && editPromoForm.get('title')?.touched"
                     >
                         Titel ist erforderlich.
-                    </div>
-                    <div
-                        class="invalid-feedback custom-invalid-feedback"
-                        *ngIf="editPromosForm.get('title')?.errors?.['required'] && editPromosForm.get('title')?.touched"
-                    >
-                        Titel ist erforderlich.
-                    </div>
+                    </div>    
                 </div>
                 <div class="col-3 ps-1 pe-1">
                     <label class="form-label custom-label-sm" for="promo-start-date">Start Datum</label>
@@ -35,18 +29,12 @@
                             class="form-control form-control-sm"
                             placeholder="Start Datum"
                             formControlName="start_date"
-                            [ngClass]="{'is-invalid': (newPromosForm.get('start_date')?.errors && newPromosForm.get('start_date')?.touched)}"
+                            [ngClass]="{'is-invalid': (editPromoForm.get('start_date')?.errors && editPromoForm.get('start_date')?.touched)}"
                         />
                     </div>
                     <div
                         class="invalid-feedback custom-invalid-feedback"
-                        *ngIf="newPromosForm.get('start_date')?.errors?.['required'] && newPromosForm.get('start_date')?.touched"
-                    >
-                        Start Datum ist erforderlich.
-                    </div>
-                    <div
-                        class="invalid-feedback custom-invalid-feedback"
-                        *ngIf="editPromosForm.get('start_date')?.errors?.['required'] && editPromosForm.get('start_date')?.touched"
+                        *ngIf="editPromoForm.get('start_date')?.errors?.['required'] && editPromoForm.get('start_date')?.touched"
                     >
                         Start Datum ist erforderlich.
                     </div>
@@ -60,24 +48,155 @@
                             class="form-control form-control-sm"
                             placeholder="Ende Datum"
                             formControlName="end_date"
-                            [ngClass]="{'is-invalid': (newPromosForm.get('end_date')?.errors && newPromosForm.get('end_date')?.touched)}"
+                            [ngClass]="{'is-invalid': (editPromoForm.get('end_date')?.errors && editPromoForm.get('end_date')?.touched)}"
                         />
                     </div>
                     <div
                         class="invalid-feedback custom-invalid-feedback"
-                        *ngIf="newPromosForm.get('end_date')?.errors?.['required'] && newPromosForm.get('end_date')?.touched"
-                    >
-                        Ende Datum ist erforderlich.
-                    </div>
-                    <div
-                        class="invalid-feedback custom-invalid-feedback"
-                        *ngIf="editPromosForm.get('end_date')?.errors?.['required'] && editPromosForm.get('end_date')?.touched"
+                        *ngIf="editPromoForm.get('end_date')?.errors?.['required'] && editPromoForm.get('end_date')?.touched"
                     >
                         Ende Datum ist erforderlich.
                     </div>
                 </div>
                 <div class="col-2 ps-1 default-btn-group">
-                    <div class="btn-group btn-group-sm me-2" role="group" aria-label="First group">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="First group">
+                        <button class="btn btn-outline-success" type="button" (click)="onSaveEditPromo()">
+                            <i class="fa-regular fa-floppy-disk"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" type="button" (click)="onCancelEditPromo()">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ng-template #promoDisplay>
+            <div class="header">
+                <div class="col">
+                    <span class="name">Titel:</span><span class="value">{{promo?.value?.title}}</span>
+                </div>
+                <div class="col-2">
+                    <span class="name">von:</span><span class="value">{{promo?.value?.start_date | date: 'dd.MM.yyyy'}}</span>
+                </div>
+                <div class="col-2">
+                    <span class="name">bis:</span><span class="value">{{promo?.value?.end_date | date: 'dd.MM.yyyy'}}</span>
+                </div>
+                <button class="btn-text-style" (click)="onEditPromo(i)">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                </button>
+                <button *ngIf="promo?.value?.is_active" class="btn-text-style green" >
+                    <i class="far fa-eye"></i>
+                </button>
+                <button *ngIf="!promo?.value?.is_active" class="btn-text-style red" >
+                    <i class="fas fa-eye-slash"></i>
+                </button>
+                <button class="btn-text-style red" (click)="removePromo(i)">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </ng-template>
+        
+        
+        <div class="body">
+            <!-- (click)="openEditor(promo)" -->
+            <div
+                class="col-12 promo-details-accordion"
+                ngbAccordion
+                #accordion="ngbAccordion"
+            >
+                <div ngbAccordionItem="third" #third="ngbAccordionItem" [collapsed]="false">
+                    <div ngbAccordionHeader class="accordion-button custom-header">
+                        <button ngbAccordionToggle [disabled]="third.disabled" class="p-0 btn btn-link text-start">
+                            Promo Text
+                        </button>
+                        <button class="btn-text-style green" (click)="openEditor(promo)">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                        </button>
+                    </div>
+                    <div ngbAccordionCollapse>
+                        <div class="ck-content" *ngIf="promo.get('text_long')?.value" ngbAccordionBody [innerHTML]="getSafeHtml(promo.get('text_long')?.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div ngbAccordionHeader class="accordion-button custom-header">
+                <button ngbAccordionToggle [disabled]="third.disabled" class="p-0 btn btn-link container-fluid text-start ps-0">
+                  Text
+                </button>
+            </div>
+            <div ngbAccordionCollapse>
+                <div class="ck-content" [innerHTML]="getSafeHtml(promo.get('text_long')?.value)">
+                </div>
+            </div> -->
+            
+        </div>
+    </div>
+</div>
+
+<div class="row no-gutters">
+    <div class="col tariff_promos">
+        <form [formGroup]="newPromoForm" *ngIf="addNewPromo">
+            <div class="row mb-2">
+                <div class="col-4 pe-1">
+                    <label class="form-label custom-label-sm" for="promo-title">Titel</label>
+                    <div class="input-group input-group-sm input-group-sm-custom">
+                        <input
+                            id="promo-title"
+                            class="form-control form-control-sm"
+                            placeholder="Titel"
+                            formControlName="title"
+                            [ngClass]="{'is-invalid': (newPromoForm.get('title')?.errors && newPromoForm.get('title')?.touched)}"
+                        />
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="newPromoForm.get('title')?.errors?.['required'] && newPromoForm.get('title')?.touched"
+                    >
+                        Titel ist erforderlich.
+                    </div>
+                    
+                </div>
+                <div class="col-3 ps-1 pe-1">
+                    <label class="form-label custom-label-sm" for="promo-start-date">Start Datum</label>
+                    <div class="input-group input-group-sm input-group-sm-custom">
+                        <input
+                            type="date"
+                            id="promo-start-date"
+                            class="form-control form-control-sm"
+                            placeholder="Start Datum"
+                            formControlName="start_date"
+                            [ngClass]="{'is-invalid': (newPromoForm.get('start_date')?.errors && newPromoForm.get('start_date')?.touched)}"
+                        />
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="newPromoForm.get('start_date')?.errors?.['required'] && newPromoForm.get('start_date')?.touched"
+                    >
+                        Start Datum ist erforderlich.
+                    </div>
+                    
+                </div>
+                <div class="col-3 ps-1 pe-1">
+                    <label class="form-label custom-label-sm" for="promo-end_date">Ende Datum</label>
+                    <div class="input-group input-group-sm input-group-sm-custom">
+                        <input
+                            type="date"
+                            id="promo-end_date"
+                            class="form-control form-control-sm"
+                            placeholder="Ende Datum"
+                            formControlName="end_date"
+                            [ngClass]="{'is-invalid': (newPromoForm.get('end_date')?.errors && newPromoForm.get('end_date')?.touched)}"
+                        />
+                    </div>
+                    <div
+                        class="invalid-feedback custom-invalid-feedback"
+                        *ngIf="newPromoForm.get('end_date')?.errors?.['required'] && newPromoForm.get('end_date')?.touched"
+                    >
+                        Ende Datum ist erforderlich.
+                    </div>                  
+                </div>
+                <div class="col-2 ps-1 default-btn-group">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="First group">
                         <button class="btn btn-outline-success" type="button" (click)="onSaveNewPromo()">
                             <i class="fa-regular fa-floppy-disk"></i>
                         </button>

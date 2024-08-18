@@ -119,7 +119,7 @@ export class TariffAttributeComponent {
       modalRef.componentInstance.initialValue = text?.value || '';
     }
     
-    modalRef.componentInstance.saveText.subscribe((result: string) => {
+    modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
       if (result !== undefined ) {
         //const control = (group.form.get('attributes') as FormArray).at(index);
         control.patchValue({ value_text: result });
@@ -129,7 +129,7 @@ export class TariffAttributeComponent {
         modalRef.close(); // Закрытие модального окна после сохранения
       }
     });
-    modalRef.componentInstance.close.subscribe(() => {
+    modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       console.log('fenster geschlossen')
       text?.markAsTouched()
       modalRef.close(); // Закрытие модального окна при нажатии на отмену

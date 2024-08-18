@@ -173,12 +173,12 @@ export class TariffCalcMatrixComponent {
         // if (!attributeExists) {
         //   this.addAttributeToMatrix(matrix, attribute);
         // }
-        if (attribute) {
-          attribute.isCopied = true;
-        }
+
         console.log(attribute)
         if(attribute?.value_varchar){
           this.addAttributeToMatrix(matrix, attribute);
+          
+          attribute.isCopied = true;
         }
         
       }
