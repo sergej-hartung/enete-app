@@ -22,6 +22,7 @@ export class TariffPromoComponent {
   tariffForm: FormGroup
   promosForm: FormArray
 
+
   private unsubscribe$ = new Subject<void>();
 
   constructor(
@@ -111,6 +112,12 @@ export class TariffPromoComponent {
     this.editPromoForm.reset();
   }
 
+  onTooglePromoVisible(index: number){
+    const isActive = this.promosForm.at(index)?.value?.is_active
+    console.log(isActive)
+    this.promosForm.at(index).patchValue({is_active: !isActive})
+  }
+
   removePromo(index: number){
     this.promosForm.removeAt(index);
   }
@@ -136,24 +143,14 @@ export class TariffPromoComponent {
     );
 
     const control = promo as FormGroup
-    //const control = (group.form.get('attributes') as FormArray).at(index);
-    let text = control.get('text_long')
 
+    let text = control.get('text_long')
     modalRef.componentInstance.initialValue = text?.value || ''
-    //const attribute = group.attributes[index];
-    // if(attribute.pivot){
-    //   text?.setValue(attribute.pivot?.value_text)
-    //   modalRef.componentInstance.initialValue = text?.value || '';
-    // }else{
-    //   //const control = (group.form.get('attributes') as FormArray).at(index);
-    //   modalRef.componentInstance.initialValue = text?.value || '';
-    // }
     
     modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
       if (result !== undefined ) {
-        //const control = (group.form.get('attributes') as FormArray).at(index);
+
         control.patchValue({ text_long: result });
-        //attribute.pivot.value_text = result;
         console.log('Сохранено значение:', result);
         text?.markAsTouched()
         modalRef.close(); // Закрытие модального окна после сохранения
@@ -164,6 +161,13 @@ export class TariffPromoComponent {
       text?.markAsTouched()
       modalRef.close(); // Закрытие модального окна при нажатии на отмену
     });
+  }
+
+  isPromoExpired(endDate: string): boolean {
+    const currentDate = new Date();
+    const promoEndDate = new Date(endDate);
+
+    return promoEndDate.setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0);
   }
 
   ngOnDestroy() {

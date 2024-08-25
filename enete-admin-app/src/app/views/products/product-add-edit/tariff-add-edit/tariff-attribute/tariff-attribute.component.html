@@ -151,10 +151,20 @@
                 </ng-container>                         
               </span>
               <span class="attr-unit col">{{ group.attributes[j].unit }}</span>
-              <button *ngIf="group.attributes[j].is_frontend_visible" class="btn-text-style green" (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)">
+              <button 
+                *ngIf="group.attributes[j].is_frontend_visible" 
+                [disabled]="group.attributes[j]?.isActiveDesibled" 
+                class="btn-text-style green" 
+                (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)"
+              >
                 <i class="far fa-eye"></i>
               </button>
-              <button *ngIf="!group.attributes[j].is_frontend_visible" class="btn-text-style red" (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)">
+              <button 
+                *ngIf="!group.attributes[j].is_frontend_visible" 
+                [disabled]="group.attributes[j]?.isActiveDesibled"
+                class="btn-text-style red" 
+                (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)"
+              >
                 <i class="fas fa-eye-slash"></i>
               </button>
               <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">

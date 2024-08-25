@@ -214,9 +214,13 @@ export class TariffAttributeComponent {
         const attribute = event.previousContainer.data[event.previousIndex];
         const attributeExists = group.attributes.some(attr => attr.id === attribute.id);
         if (!attributeExists) {
-          const copiedAttribute = { ...attribute, isCopied: true, isFocused: false }; // isFocused по умолчанию false
+          let copiedAttribute = { ...attribute, isCopied: true, isFocused: false }; // isFocused по умолчанию false
+          if(!attribute.is_frontend_visible){
+            copiedAttribute = {...copiedAttribute, isActiveDesibled: true }
+          }
           group.attributes.splice(event.currentIndex, 0, copiedAttribute);
-  
+          
+          
           const originalAttribute = this.tariffAttributes.find(attr => attr.id === attribute.id);
           if (originalAttribute) {
             originalAttribute.isCopied = true;
@@ -357,10 +361,13 @@ export class TariffAttributeComponent {
                 {
                   id: group.id,
                   name: group.name,
-                  attributes: group.attributs.map(attr => ({
-                    ...attr,
-                    isCopied: true // Отметьте атрибуты как скопированные
-                  })),
+                  attributes: group.attributs.map(attr => 
+                    ({
+                      ...attr,
+                      isCopied: true, // Отметьте атрибуты как скопированные
+                      ...(attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false ? { isActiveDesibled: true } : {})
+                    })
+                  ),
                   hidden: false,
     
                   form: this.fb.group({

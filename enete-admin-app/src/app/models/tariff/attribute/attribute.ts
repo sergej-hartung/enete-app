@@ -11,11 +11,12 @@ export interface Attribute {
     unit: string | null,
     is_system: number,
     is_required: number,
-    is_frontend_visible: number,
+    is_frontend_visible: number | boolean,
     details: string | null,
     isCopied?: boolean
     pivot?: Pivot
     isFocused?: boolean;
+    isActiveDesibled?: boolean | number;
 }
 
 interface Pivot{

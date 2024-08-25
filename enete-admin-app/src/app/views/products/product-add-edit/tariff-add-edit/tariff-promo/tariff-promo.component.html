@@ -1,5 +1,9 @@
 <div class="row no-gutters tariff-promo-wrapp" *ngIf="promosForm.value.length > 0">
-    <div class="tariff-promo" *ngFor="let promo of promosForm.controls; let i = index">
+    <div 
+        class="tariff-promo" 
+        *ngFor="let promo of promosForm.controls; let i = index"
+        [ngClass]="{'expired': isPromoExpired(promo.value.end_date)}"
+    >
         <form [formGroup]="editPromoForm" *ngIf="editPromoIndex === i; else promoDisplay">
             <div class="edit-promo-form">
                 <div class="col-4 pe-1">
@@ -59,7 +63,7 @@
                     </div>
                 </div>
                 <div class="col-2 ps-1 default-btn-group">
-                    <div class="btn-group btn-group-sm" role="group" aria-label="First group">
+                    <div class="btn-group btn-group-sm" >
                         <button class="btn btn-outline-success" type="button" (click)="onSaveEditPromo()">
                             <i class="fa-regular fa-floppy-disk"></i>
                         </button>
@@ -84,10 +88,10 @@
                 <button class="btn-text-style" (click)="onEditPromo(i)">
                     <i class="fa-regular fa-pen-to-square"></i>
                 </button>
-                <button *ngIf="promo?.value?.is_active" class="btn-text-style green" >
+                <button *ngIf="promo?.value?.is_active" class="btn-text-style green" (click)="onTooglePromoVisible(i)">
                     <i class="far fa-eye"></i>
                 </button>
-                <button *ngIf="!promo?.value?.is_active" class="btn-text-style red" >
+                <button *ngIf="!promo?.value?.is_active" class="btn-text-style red" (click)="onTooglePromoVisible(i)">
                     <i class="fas fa-eye-slash"></i>
                 </button>
                 <button class="btn-text-style red" (click)="removePromo(i)">
@@ -104,7 +108,7 @@
                 ngbAccordion
                 #accordion="ngbAccordion"
             >
-                <div ngbAccordionItem="third" #third="ngbAccordionItem" [collapsed]="false">
+                <div ngbAccordionItem="third" #third="ngbAccordionItem" [collapsed]="isPromoExpired(promo.value.end_date)">
                     <div ngbAccordionHeader class="accordion-button custom-header">
                         <button ngbAccordionToggle [disabled]="third.disabled" class="p-0 btn btn-link text-start">
                             Promo Text
@@ -134,7 +138,7 @@
 </div>
 
 <div class="row no-gutters">
-    <div class="col tariff_promos">
+    <div class="col tariff_new_promo">
         <form [formGroup]="newPromoForm" *ngIf="addNewPromo">
             <div class="row mb-2">
                 <div class="col-4 pe-1">
@@ -196,7 +200,7 @@
                     </div>                  
                 </div>
                 <div class="col-2 ps-1 default-btn-group">
-                    <div class="btn-group btn-group-sm" role="group" aria-label="First group">
+                    <div class="btn-group btn-group-sm" >
                         <button class="btn btn-outline-success" type="button" (click)="onSaveNewPromo()">
                             <i class="fa-regular fa-floppy-disk"></i>
                         </button>

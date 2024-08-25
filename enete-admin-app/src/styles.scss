@@ -1204,6 +1204,24 @@ app-tariff-add-edit{
     }
 }
 
+.expired{
+    *:not(.custom-label-sm, .form-control-sm, .btn-outline-success, .fa-floppy-disk, .btn-outline-danger, .fa-xmark){
+        color: #ccc !important;
+    }
+    // .edit-promo-form,
+    // .edit-promo-form * {
+    //     color: initial !important;
+    // }
+
+    // .btn-outline-success i {
+    //     color: #28a745 !important;
+    // }
+
+    // .btn-outline-success:hover i {
+    //     color: #ffffff !important;
+    // }
+}
+
 .btn-text-style{
     padding: 0;
     min-width: 21px;
@@ -1246,6 +1264,17 @@ app-tariff-add-edit{
         }
         &:active{
             color: #146c43;
+        }
+    }
+    &:disabled{
+        color: #ccc;
+        cursor: default;
+
+        &:hover{
+            color: #ccc;
+        }
+        &:active{
+            color: #ccc;
         }
     }
 }
@@ -1979,7 +2008,7 @@ app-tariff-add-edit{
 
 .row{
     &.no-gutters{
-        .tariff_promos{
+        .tariff_new_promo{
             padding-right: calc(var(--bs-gutter-x)* 0.5);
             padding-left: calc(var(--bs-gutter-x)* 0.5);
         }
@@ -1997,6 +2026,7 @@ app-tariff-add-edit{
     }
 }
 
+
 .tariff-promo-wrapp{
     padding-top: 0.5rem;
     padding-right: calc(var(--bs-gutter-x)* 0.5) ;
@@ -2004,9 +2034,13 @@ app-tariff-add-edit{
 }
 
 .tariff-promo:not(:first-child){
-    margin-top: 3px;
+    //margin-top: 3px;
+    margin-top: 0.7rem;
 }
 
+.tariff_new_promo{
+    padding-top: 0.5rem;
+}
 
 .tariff-promo{
     
@@ -2014,7 +2048,7 @@ app-tariff-add-edit{
     border-radius: 4px;
     padding: 0;
 
-    margin-bottom: 0.5rem;
+    //margin-bottom: 0.5rem;
 
     .edit-promo-form{
         display: flex;
@@ -2090,9 +2124,9 @@ app-tariff-add-edit{
                 }
                 
             }
-            .accordion-collapse{
-                margin-top: 10px;
-            }
+            // .accordion-collapse{
+            //     margin-top: 10px;
+            // }
 
             .accordion-button:not(.collapsed){
                 .btn{
