@@ -8,7 +8,6 @@
                     <div class="field_name">Feldname: <span *ngIf="tpl[0]?.attribut?.name">{{tpl[0].attribut.name}}</span></div>
                     <div
                         cdkDropList
-                        
                         [cdkDropListData]="tpl"
                         [cdkDropListConnectedTo]="connectedDropLists"
                         class="attr-group-list"

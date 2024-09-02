@@ -22,30 +22,30 @@ export class TariffViewTemplateComponent {
   isCollapsed = true;
 
   tpl: any[] = [
-    // {
-    //   'id': 1,
-    //   'fildNameAsAttrName': true,
-    //   'customFildName': '',
-    //   'attrValue': true,
-    //   'customValue': '',
-    //   'unitVisible' : true,
-    //   'valueVisible': true,
-    //   'fildNameVisible': true,
-    //   'position': 1,
-    //   'icon': '',
-    //   'attribut': {
-    //     'id': 10,
-    //     'value': '15',
-    //     // 'code': "regulaerer_basispreis",
-    //     // 'input_type': "Dezimalzahlen",
-    //     // 'input_type_id': 3,
-    //     'is_frontend_visible':  1,
-    //     // 'is_required': 1,
-    //     // 'is_system': 0,
-    //     'name': "Regulärer Basispreis",
-    //     'unit': "EUR"
-    //   }
-    // }
+    {
+      'id': 1,
+      'fildNameAsAttrName': true,
+      'customFildName': '',
+      'attrValue': true,
+      'customValue': '',
+      'unitVisible' : true,
+      'valueVisible': true,
+      'fildNameVisible': true,
+      'position': 1,
+      'icon': '',
+      'attribut': {
+        'id': 10,
+        'value': '15',
+        // 'code': "regulaerer_basispreis",
+        // 'input_type': "Dezimalzahlen",
+        // 'input_type_id': 3,
+        'is_frontend_visible':  1,
+        // 'is_required': 1,
+        // 'is_system': 0,
+        'name': "Regulärer Basispreis",
+        'unit': "EUR"
+      }
+    }
   ]
 
   constructor(
