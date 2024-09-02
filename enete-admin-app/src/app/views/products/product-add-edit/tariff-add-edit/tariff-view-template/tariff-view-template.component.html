@@ -1,30 +1,101 @@
 
 <div class="row no-gutters">
     <div class="col-7 left-panel pt-2">
-        <div class="row">
-            <div class="col">
-                <div>logo</div>
-                <div>Tarif Name</div>
-                <div>Laufzei ???</div>
+        <app-card>
+            <div card-header>Linke Block</div>
+            <div card-body>
+                <div class="form-check-card-custom-body">
+                    <div class="field_name">Feldname: <span *ngIf="tpl[0]?.attribut?.name">{{tpl[0].attribut.name}}</span></div>
+                    <div
+                        cdkDropList
+                        
+                        [cdkDropListData]="tpl"
+                        [cdkDropListConnectedTo]="connectedDropLists"
+                        class="attr-group-list"
+                        (cdkDropListDropped)="drop($event)"
+                    >
+                        <div
+                            class="attr-group-box"
+                            cdkDrag
+                            
+                        >
+                            <span class="attr-name col-8 mw-100" >
+                                <ng-container *ngIf="tpl[0]?.attribut?.name">{{ tpl[0].attribut.name }}</ng-container>
+                            </span>
+                            <span class="attr-name col" >
+                                <ng-container *ngIf="tpl[0]?.attribut?.value">{{tpl[0].attribut.value}}</ng-container>
+                            </span>
+                            <span  class="attr-unit col" >
+                                <ng-container *ngIf="tpl[0]?.attribut?.unit">{{ tpl[0].attribut.unit }}</ng-container>
+                            </span> 
+                            <button  class="btn btn-link attr-action col " (click)="isCollapsed = !isCollapsed">
+                                <i class="fa-solid fa-ellipsis-vertical"></i>
+                            </button>
+                            
+                            <div class="col-12" [ngbCollapse]="isCollapsed" >
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>                           
             </div>
-            <div class="col">
-                <div class="row">
-                    <div class="col">Opt1</div>
-                    <div class="col">Opt2</div>
-                    <div class="col">Opt3</div>
-                </div>
-                <div class="row">
-                    <div class="col">Tarif beschreibung ser langer tesx ganz langer text um zu testen davfasdv asdasd jhadsgffsda jhsdfhsadf hsakdfaskj</div>
-                </div>
+        </app-card>
+        <app-card>
+            <div card-header>Mittlere Block</div>
+            <div card-body>
+                <div class="form-check-card-custom-body min">
+                    <div>
+                        
+                    </div>
+                </div>                           
             </div>
-            <div class="col">
-                <div>Preis Monatlich</div>
-                <div>Anschlusspreis</div>
-                <div>Gesamtpreis</div>
+        </app-card>
+        <app-card>
+            <div card-header>Rechte Block</div>
+            <div card-body>
+                <div class="form-check-card-custom-body min">
+                    <div>
+                        
+                    </div>
+                </div>                           
             </div>
-        </div>
+        </app-card>
     </div>
     <div class="col-5 right-panel pt-2">
-        test2
+        <div class="mb-2" *ngFor="let attributeGroup of getAttributeGroupArray().controls; let i = index">
+            <span class="group-name">
+              <button class="btn-text-style" (click)="onToggleGroupVisibility(i)">{{ getAttributeGroupName(i) }}</button>
+            </span>
+  
+            <div *ngIf="!hiddenGroups[i]">
+              <div
+                cdkDropList
+                [id]="tariffDropListId"
+                [cdkDropListData]="getAttributeGroupAttributes(i).value"
+                [cdkDropListConnectedTo]="connectedDropLists"
+                class="attr-group-list"
+                (cdkDropListDropped)="drop($event)"
+                [cdkDropListEnterPredicate]="canDropToTariffList"
+              >
+                <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributes(i).controls; let j = index">
+                  <div
+                    
+                    class="attr-group-box"
+                    cdkDrag
+                    [ngClass]="{
+                      'copied-attribute': attributeCtrl.value.isCopied,
+                    }"
+                  >
+                    <span class="attr-name col-8">{{attributeCtrl.value.name}}</span>
+                    <span *ngIf="attributeCtrl.value.value_varchar" class="attr-name col">
+                      {{attributeCtrl.value.value_varchar}}
+                    </span>
+                    <span  class="attr-unit col">{{ attributeCtrl.value.unit }}</span>          
+                  </div>
+                </ng-container>
+                
+              </div>
+            </div>
+        </div>
     </div>
 </div>

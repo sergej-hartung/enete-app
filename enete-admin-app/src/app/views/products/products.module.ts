@@ -76,7 +76,8 @@ import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    NgbAccordionModule
+    NgbAccordionModule,
+    
     // CdkDropList, CdkDrag
   ]
 })

@@ -1360,7 +1360,7 @@ app-tariff-add-edit{
 //   }
 .attr-group-list{
     border: 1px solid #ccc;
-    min-height: 30px;
+    min-height: 28px;
     background: #fff;
     border-radius: 4px;
     overflow: hidden;
@@ -1533,6 +1533,21 @@ app-tariff-add-edit{
     flex-grow: 1;
 }
 
+.attr-action{
+    align-items: end;
+    display: flex;
+    justify-content: end;
+    max-width: 15px;
+    padding: 0 0 0 10px;
+    text-decoration: none;
+    color: gray;
+    cursor: pointer;
+
+    &:hover{
+        color: rgba(0, 0, 0, 0.8);
+    }
+}
+
 .attr-kennung, .attr-name {
     max-width: 50%;
 }
@@ -1545,6 +1560,16 @@ app-tariff-add-edit{
     }
     &.red {
         color: #ab0400;
+    }
+}
+
+.field_name{
+    font-size: 11px;
+    color: gray;
+
+    span{
+        color: rgba(0, 0, 0, 0.87);
+        font-weight: 600;
     }
 }
 
