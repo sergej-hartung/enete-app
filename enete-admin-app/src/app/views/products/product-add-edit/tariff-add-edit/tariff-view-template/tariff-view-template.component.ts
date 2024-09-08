@@ -198,7 +198,6 @@ export class TariffViewTemplateComponent {
         showIcon:        true,
         icon:            '',
       })
-      console.log(tpl)
     }
   }
 

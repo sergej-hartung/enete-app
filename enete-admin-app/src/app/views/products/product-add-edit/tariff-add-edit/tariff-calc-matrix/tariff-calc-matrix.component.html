@@ -57,40 +57,51 @@
                 cdkDrag
                 [cdkDragDisabled]="matrix.attributes[j].isFocused"
               >
-                <span class="attr-name col-4">
-                  {{ matrix.attributes[j].name }}
-                </span>
-                
-                <div class="col form-check form-switch form-switch-sm">
-                  <label class="form-check-label" for="single-{{i}}-{{j}}">Einmalig</label>
-                  <input
-                    class="form-check-input"
-                    type="checkbox"
-                    role="switch"
-                    id="single-{{i}}-{{j}}"
-                    formControlName="single"
-                  />
-                </div>
-                <div class="col-3 attr_value"> 
-                  <ng-container *ngIf="attributeCtrl.value.single">
-                    <ng-container *ngIf="attributeCtrl?.value?.value_total">
-                      <ng-container *ngIf="isNumeric(attributeCtrl?.value?.value_total); else nonNumericTemplate">
-                        {{ attributeCtrl?.value?.value_total | number:'1.2-2' }}<span>{{attributeCtrl?.value?.unit}}</span>
+                <div class="attr-group">
+                  <span class="attr-name col">
+                    {{ matrix.attributes[j].name }}
+                  </span>
+                  <div class="col-3 form-check form-switch form-switch-sm">
+                    <label class="form-check-label" for="single-{{i}}-{{j}}">Einmalig</label>
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="single-{{i}}-{{j}}"
+                      formControlName="single"
+                    />
+                  </div>
+                  <div class="col attr_value"> 
+                    <ng-container *ngIf="attributeCtrl.value.single">
+                      <ng-container *ngIf="attributeCtrl?.value?.value_total">
+                        <ng-container *ngIf="isNumeric(attributeCtrl?.value?.value_total); else nonNumericTemplate">
+                          {{ attributeCtrl?.value?.value_total | number:'1.2-2' }}
+                        </ng-container>
+                        <ng-template #nonNumericTemplate>
+                          {{ attributeCtrl?.value?.value_total }}
+                        </ng-template>
                       </ng-container>
-                      <ng-template #nonNumericTemplate>
-                        {{ attributeCtrl?.value?.value_total }}<span>{{attributeCtrl?.value?.unit}}</span>
-                      </ng-template>
                     </ng-container>
-                  </ng-container>
+                  </div>
+                  <span class="attr-unit col">
+                    <ng-container *ngIf="attributeCtrl.value.single">
+                      {{attributeCtrl?.value?.unit}}
+                    </ng-container>
+                  </span>
+                  <button class="btn-text-style red" (click)="removeAttribute(matrix, j)">
+                    <i class="fas fa-times"></i>
+                  </button>
                 </div>
+                
+                
+                
+                
                 
                 <!-- <div *ngIf="attributeCtrl.value.single" class="col-2">{{ matrix.attributes[j].value_varchar }}</div> -->
-                <button class="btn-text-style red" (click)="removeAttribute(matrix, j)">
-                  <i class="fas fa-times"></i>
-                </button>
-                <div class="col-12">
-                  <div class="attr-group-box sub-box">
-                    <div class="col-4 periode-type-wrapp" *ngIf="!attributeCtrl.value.single">
+                
+                <div class="col-12" *ngIf="!attributeCtrl.value.single">
+                  <div class="attr-group sub-box">
+                    <div class="col periode-type-wrapp pe-1" >
                       <label class="form-label custom-label-sm required" for="periodeTyp-{{i}}-{{j}}">Zeitraum auswählen</label>
                       <select 
                         id="periodeTyp-{{i}}-{{j}}" 
@@ -105,7 +116,7 @@
                       </select>
 
                     </div>
-                    <div class="col period-wrapp" *ngIf="!attributeCtrl.value.single">
+                    <div class="col-3 period-wrapp ps-1" *ngIf="!attributeCtrl.value.single">
                       <label class="form-label custom-label-sm required" for="period-{{i}}-{{j}}">Dauer</label>
                       <input
                         type="text"
@@ -115,16 +126,21 @@
                         class="form-control form-control-sm"
                       />
                     </div>
-                    <div class="col-3 attr_value attr-value-expand" *ngIf="!attributeCtrl.value.single">
+                    <div class="col attr_value attr-value-expand"> 
                       <ng-container *ngIf="!attributeCtrl.value.single">
                         <ng-container *ngIf="isNumeric(attributeCtrl?.value?.value_total); else nonNumericTemplate">
-                          {{ attributeCtrl?.value?.value_total | number:'1.2-2' }}<span *ngIf="attributeCtrl?.value?.unit">{{attributeCtrl?.value?.unit}}</span>
+                          {{ attributeCtrl?.value?.value_total | number:'1.2-2' }}
                         </ng-container>
                         <ng-template #nonNumericTemplate>
-                          {{ attributeCtrl?.value?.value_total }}<span *ngIf="attributeCtrl?.value?.unit">{{attributeCtrl?.value?.unit}}</span>
+                          {{ attributeCtrl?.value?.value_total }}
                         </ng-template>
                       </ng-container>
                     </div>
+                    <span class="attr-unit attr-unit-expand col">
+                      <ng-container *ngIf="!attributeCtrl.value.single">
+                        {{attributeCtrl?.value?.unit}}
+                      </ng-container>
+                    </span>
                     <div class="attr-plazeholder"></div>
                     <!-- <div class="col-2"> {{ matrix.attributes[j].value_varchar * matrix.attributes[j].period }} </div> -->
                   </div>
@@ -138,7 +154,7 @@
                   </div>
                 </div>
               </div>
-              <div  *ngIf="matrix.attributes.length > 0" class="attr-group-box total-value">
+              <div  *ngIf="matrix.attributes.length > 0" class="attr-group total-value">
                 <span class="attr-name col">
                   Gesamt:
                 </span>
@@ -190,10 +206,6 @@
       <div class="mb-2" *ngFor="let attributeGroup of getAttributeGroupArray().controls; let i = index">
           <span class="group-name">
             <button class="btn-text-style" (click)="onToggleGroupVisibility(i)">{{ getAttributeGroupName(i) }}</button>
-
-            <!-- <button class="btn-text-style blue" (click)="onToggleMatrixs(i)">
-              <i class="fa-solid" [ngClass]="matrix.hidden ? 'fa-eye-slash' : 'fa-eye'"></i>
-            </button> -->
           </span>
 
           <div *ngIf="!hiddenGroups[i]">
@@ -215,18 +227,19 @@
                     'copied-attribute': copiedAttributes.has(attributeCtrl.value.id),
                   }"
                 >
-                  <!-- <span class="attr-kennung col">{{attributeCtrl.value.code}}</span> -->
-                  <span class="attr-name col-8">{{attributeCtrl.value.name}}</span>
-                  <span *ngIf="attributeCtrl.value.value_varchar" class="attr_value col">
-                    <!-- {{attributeCtrl.value.value_varchar}} -->
-                    <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
-                      {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
-                    </ng-container>
-                    <ng-template #nonNumericTemplate>
-                      {{ attributeCtrl.value.value_varchar }}
-                    </ng-template>
-                  </span>
-                  <span  class="attr-unit col">{{ attributeCtrl.value.unit }}</span>          
+                  <div class="attr-group">
+                    <span class="attr-name col-8">{{attributeCtrl.value.name}}</span>
+                    <span *ngIf="attributeCtrl.value.value_varchar" class="attr_value col">
+                      <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
+                        {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
+                      </ng-container>
+                      <ng-template #nonNumericTemplate>
+                        {{ attributeCtrl.value.value_varchar }}
+                      </ng-template>
+                    </span>
+                    <span  class="attr-unit col">{{ attributeCtrl.value.unit }}</span> 
+                  </div>
+                           
                 </div>
               </ng-container>
               

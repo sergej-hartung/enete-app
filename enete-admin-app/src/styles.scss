@@ -1381,6 +1381,7 @@ app-tariff-add-edit{
     color: rgba(0, 0, 0, .87);
     display: flex;
     flex-wrap: wrap;
+    //flex-wrap: nowrap;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
@@ -1390,6 +1391,10 @@ app-tariff-add-edit{
     font-size: 14px;
     &:last-child{
         border-bottom: none;
+    }
+
+    &.matrix-bg{
+        background: rgba(211, 211, 249, 0.5);
     }
 
     .form-control-sm {
@@ -1501,25 +1506,78 @@ app-tariff-add-edit{
     }
 }
 
+.attr-group{
+    display: flex;
+    flex-grow: 1;
+    max-width: 100%;
+
+    &.sub-box{
+        padding: 15px 0 10px;
+    }
+
+    &.total-value{
+        background: #f2f2f2;
+        padding: 3px 10px;
+        cursor: default;
+    
+        .attr-name{
+            max-width: none;
+        }
+    
+        .attr_value{
+            font-weight: 600;
+        }
+    }
+
+    
+}
+
 .attr-kennung {
     font-size: 11px;
     color: gray;
-    display: flex;
+    //display: flex;
+    width: 100%;
+    flex: 1 1 auto;
+    padding-right: 15px;
+
+    align-content: center;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     //flex-grow: 1;
 }
 
 .attr-icon{
-    font-size: 11px;
+    font-size: 13px;
     min-width: 25px;
     color: gray;
+    align-content: center;
+}
+
+.icon-placeholder{
+    width: 16px;
+    height: 16px;
+    border: 1px dashed #ccc;
+    display: block;
+    border-radius: 3px;
 }
 
 .attr-name {
     font-size: 13px;
     font-weight: 500;
     font-family: Roboto, "Helvetica Neue", sans-serif;
-    display: flex;
+    //display: flex;
     //flex-grow: 1;
+
+    width: 100%;
+    flex: 1 1 auto;
+    align-content: center;
+
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
     .required{
         color: red;
@@ -1532,8 +1590,19 @@ app-tariff-add-edit{
 .attr-unit{
     font-size: 11px;
     color: gray;
-    display: flex;
-    flex-grow: 1;
+    //display: flex;
+    //flex-grow: 1;
+    min-width: 50px;
+    max-width: 50px;
+    align-content: center;
+    overflow: hidden;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &.attr-unit-expand{
+        padding-top: 17px;
+    }
 }
 
 .attr-value{
@@ -1544,9 +1613,35 @@ app-tariff-add-edit{
     flex-grow: 1;
 }
 
-.attr-plazeholder{
-    width: 21px;
+.attr_value{
+    font-size: 11px;
+    color: gray;
+    font-weight: 300;
+    padding-left: 10px;
+    padding-right: 10px;
+    min-width: 50px;
+    align-content: center;
+
+    span{
+        padding-left: 5px;
+    }
+
+    &.attr-value-expand{
+        padding-top: 17px;
+    }
 }
+
+.attr-plazeholder{
+    min-width: 21px;
+    flex: 1 0 0;
+}
+
+.periode-type-wrapp{
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+
 
 .attr-action{
     align-items: end;
@@ -1573,8 +1668,9 @@ app-tariff-add-edit{
 }
 
 .attr-frontend_visible {
-    width: 21px;
+    width: 25px;
     text-align: center;
+    padding-left: 10px;
     &.green {
         color: #69b548;
     }
@@ -2007,6 +2103,9 @@ app-tariff-add-edit{
     padding-left: 40px;
     //flex-grow: 1;
 
+    display: flex;
+    position: relative;
+
     .form-check-input:checked {
         background-color: green;
         border-color: green;
@@ -2021,6 +2120,7 @@ app-tariff-add-edit{
       .form-check-input {
         background-color: #e6e6e6;
         border-color: #adb5bd;
+        position: absolute;
       }
       
       /* Preserve the focus styles */
@@ -2035,19 +2135,20 @@ app-tariff-add-edit{
         background-color: white;
         border-color: white;
       }
+
+      .form-check-label{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        max-width: 100%;
+        font-size: 11px;
+        font-weight: 400;
+        align-content: center;
+      }
 }
 
-.attr_value{
-    font-size: 11px;
-    color: gray;
-    font-weight: 300;
-    padding-left: 10px;
-    padding-right: 10px;
 
-    span{
-        padding-left: 5px;
-    }
-}
 
 
 .editor-container_classic-editor .editor-container__editor {
@@ -2193,38 +2294,6 @@ app-tariff-add-edit{
             //     padding-left: 10px;
             //     padding-right: 10px;
             // }
-        }
-    
-        &.sub-box{
-            padding-left: 0;
-            padding-right: 14px;
-    
-            .period-wrapp{
-                padding-left: 3px;
-            }
-    
-            .periode-type-wrapp{
-                flex-grow: 1;
-                margin-right: 2px;
-            }
-    
-            .attr-value-expand{
-                padding-top: 20px;
-            }
-        }
-    
-        &.total-value{
-            background: #f2f2f2;
-            cursor: default;
-    
-            .attr-name{
-                max-width: none;
-            }
-    
-            .attr_value{
-                padding-right: 31px;
-                font-weight: 600;
-            }
         }
     }
 }

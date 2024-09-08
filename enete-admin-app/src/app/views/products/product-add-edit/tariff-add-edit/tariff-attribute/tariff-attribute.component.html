@@ -59,117 +59,125 @@
               cdkDrag
               [cdkDragDisabled]="group.attributes[j].isFocused"
             >
-            <span class="attr-name col-3">
-              {{ group.attributes[j].name }}<span *ngIf="isRequired(getAttributeFormControl(group.form, j, 'value_varchar')) || isRequired(getAttributeFormControl(group.form, j, 'value_text'))" class="required">*</span>
-            </span>
-              <span class="attr-value col-3">
-                <ng-container [ngSwitch]="group.attributes[j].input_type">
-                  <select
-                    *ngSwitchCase="'Dropdown'"
-                    class="form-select form-select-sm"
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar"
-                    (focus)="setFocus(group, j)"
-                    (blur)="removeFocus(group, j)"
-                  >
-                    <option *ngFor="let option of getDropdownOptions(group.attributes[j])" [value]="option.value">
-                      {{ option.label }}
-                    </option>
-                  </select>
-                  <input
-                    *ngSwitchCase="'Dezimalzahlen'"
-                    type="text"
-                    class="form-control form-control-sm"
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar"
-                    (focus)="setFocus(group, j)"
-                    (blur)="removeFocus(group, j)"
-                  />
-                  <input 
-                    *ngSwitchCase="'Ganzzahlen'" 
-                    type="text" 
-                    class="form-control form-control-sm" 
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar" 
-                    (focus)="setFocus(group, j)" 
-                    (blur)="removeFocus(group, j)" 
-                  />
-                  <input 
-                    *ngSwitchCase="'Textfeld'" 
-                    type="text" 
-                    class="form-control form-control-sm" 
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar" 
-                    (focus)="setFocus(group, j)" 
-                    (blur)="removeFocus(group, j)" 
-                  />
-                  <button 
-                    *ngSwitchCase="'Textbereich'"
-                    class="form-control form-control-sm" 
-                    (click)="openEditor(group, j)"
-                  >
-                    Text bearbeiten
-                  </button>  
-                  <input
-                    *ngSwitchCase="'Datumfeld'"
-                    type="date"
-                    class="form-control form-control-sm"
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar"
-                    (focus)="setFocus(group, j)"
-                    (blur)="removeFocus(group, j)"
-                  />                     
-                  <input 
-                    *ngSwitchCase="'Link-Feld'"
-                    type="text" 
-                    class="form-control form-control-sm" 
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar" 
-                    (focus)="setFocus(group, j)" 
-                    (blur)="removeFocus(group, j)"
-                  />
-                  <select 
-                    *ngSwitchCase="'Boolescher Wert'"
-                    class="form-select form-select-sm" 
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar" 
-                    (focus)="setFocus(group, j)" 
-                    (blur)="removeFocus(group, j)"
-                  >
-                    <option value="1">true</option>
-                    <option value="0">false</option>
-                  </select>
-                  <input  
-                    *ngSwitchCase="'Dateifeld'"
-                    type="text" 
-                    class="form-control form-control-sm" 
-                    [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
-                    formControlName="value_varchar" 
-                    (focus)="setFocus(group, j)" 
-                    (blur)="removeFocus(group, j)" 
-                  />                  
-                </ng-container>                         
-              </span>
-              <span class="attr-unit col">{{ group.attributes[j].unit }}</span>
-              <button 
-                *ngIf="group.attributes[j].is_frontend_visible" 
-                [disabled]="group.attributes[j]?.isActiveDesibled" 
-                class="btn-text-style green" 
-                (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)"
-              >
-                <i class="far fa-eye"></i>
-              </button>
-              <button 
-                *ngIf="!group.attributes[j].is_frontend_visible" 
-                [disabled]="group.attributes[j]?.isActiveDesibled"
-                class="btn-text-style red" 
-                (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)"
-              >
-                <i class="fas fa-eye-slash"></i>
-              </button>
-              <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">
-                <i class="fas fa-times"></i>
-              </button>
+              <div class="attr-group">
+                <span class="attr-name col">
+                  {{ group.attributes[j].name }}<span *ngIf="isRequired(getAttributeFormControl(group.form, j, 'value_varchar')) || isRequired(getAttributeFormControl(group.form, j, 'value_text'))" class="required">*</span>
+                </span>
+                <span class="attr-value col-4">
+                  <ng-container [ngSwitch]="group.attributes[j].input_type">
+                    <select
+                      *ngSwitchCase="'Dropdown'"
+                      class="form-select form-select-sm"
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar"
+                      (focus)="setFocus(group, j)"
+                      (blur)="removeFocus(group, j)"
+                    >
+                      <option *ngFor="let option of getDropdownOptions(group.attributes[j])" [value]="option.value">
+                        {{ option.label }}
+                      </option>
+                    </select>
+                    <input
+                      *ngSwitchCase="'Dezimalzahlen'"
+                      type="text"
+                      class="form-control form-control-sm"
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar"
+                      (focus)="setFocus(group, j)"
+                      (blur)="removeFocus(group, j)"
+                    />
+                    <input 
+                      *ngSwitchCase="'Ganzzahlen'" 
+                      type="text" 
+                      class="form-control form-control-sm" 
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar" 
+                      (focus)="setFocus(group, j)" 
+                      (blur)="removeFocus(group, j)" 
+                    />
+                    <input 
+                      *ngSwitchCase="'Textfeld'" 
+                      type="text" 
+                      class="form-control form-control-sm" 
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar" 
+                      (focus)="setFocus(group, j)" 
+                      (blur)="removeFocus(group, j)" 
+                    />
+                    <button 
+                      *ngSwitchCase="'Textbereich'"
+                      class="form-control form-control-sm" 
+                      (click)="openEditor(group, j)"
+                    >
+                      Text bearbeiten
+                    </button>  
+                    <input
+                      *ngSwitchCase="'Datumfeld'"
+                      type="date"
+                      class="form-control form-control-sm"
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar"
+                      (focus)="setFocus(group, j)"
+                      (blur)="removeFocus(group, j)"
+                    />                     
+                    <input 
+                      *ngSwitchCase="'Link-Feld'"
+                      type="text" 
+                      class="form-control form-control-sm" 
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar" 
+                      (focus)="setFocus(group, j)" 
+                      (blur)="removeFocus(group, j)"
+                    />
+                    <select 
+                      *ngSwitchCase="'Boolescher Wert'"
+                      class="form-select form-select-sm" 
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar" 
+                      (focus)="setFocus(group, j)" 
+                      (blur)="removeFocus(group, j)"
+                    >
+                      <option value="1">true</option>
+                      <option value="0">false</option>
+                    </select>
+                    <input  
+                      *ngSwitchCase="'Dateifeld'"
+                      type="text" 
+                      class="form-control form-control-sm" 
+                      [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
+                      formControlName="value_varchar" 
+                      (focus)="setFocus(group, j)" 
+                      (blur)="removeFocus(group, j)" 
+                    />                  
+                  </ng-container>                         
+                </span>
+                <span class="attr-unit col">{{ group.attributes[j].unit }}</span>
+                <button 
+                  *ngIf="group.attributes[j].is_frontend_visible" 
+                  [disabled]="group.attributes[j]?.isActiveDesibled" 
+                  class="btn-text-style green" 
+                  (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)"
+                >
+                  <i class="far fa-eye"></i>
+                </button>
+                <button 
+                  *ngIf="!group.attributes[j].is_frontend_visible" 
+                  [disabled]="group.attributes[j]?.isActiveDesibled"
+                  class="btn-text-style red" 
+                  (click)="toogleFrontentVisible(group.attributes[j], attributeCtrl)"
+                >
+                  <i class="fas fa-eye-slash"></i>
+                </button>
+                <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            
+              
+              
+              
+              
+              
               <div
                 class="col-12 attribute-details-accordion"
                 *ngIf="group.attributes[j].input_type === 'Textbereich' && getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value"
@@ -239,14 +247,16 @@
       [cdkDropListEnterPredicate]="canDropToTariffList"
     >
       <div class="attr-group-box" *ngFor="let attribute of tariffAttributes" cdkDrag [ngClass]="{'copied-attribute': attribute.isCopied}">
-        <span class="attr-kennung col">{{attribute.code}}</span>
-        <span class="attr-name col">{{attribute.name}}</span>
-        <span *ngIf="attribute.is_frontend_visible" class="attr-frontend_visible green">
-          <i class="far fa-eye"></i>
-        </span>
-        <span *ngIf="!attribute.is_frontend_visible" class="attr-frontend_visible red">
-          <i class="fas fa-eye-slash"></i>
-        </span>
+        <div class="attr-group">
+          <span class="attr-kennung col">{{attribute.code}}</span>
+          <span class="attr-name col-5">{{attribute.name}}</span>
+          <span *ngIf="attribute.is_frontend_visible" class="attr-frontend_visible green">
+            <i class="far fa-eye"></i>
+          </span>
+          <span *ngIf="!attribute.is_frontend_visible" class="attr-frontend_visible red">
+            <i class="fas fa-eye-slash"></i>
+          </span>
+        </div>
       </div>
     </div>
   </div>

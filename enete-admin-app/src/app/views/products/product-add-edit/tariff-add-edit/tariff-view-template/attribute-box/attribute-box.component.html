@@ -1,8 +1,25 @@
-<div class="attr-group-box">
+<div 
+  class="attr-group-box"
+  [ngClass]="{'matrix-bg': isMatrix}"
+  >
+  <div class="attr-group">
     <span class="attr-icon">
-      <i class="fa-solid fa-signal"></i>
+      <ng-container *ngIf="control.get('showIcon')?.value; else notShowIcon">
+        <ng-container *ngIf="control.get('icon')?.value; else notIcon">
+          <i 
+            [ngClass]="control.get('icon')?.value"
+          ></i>
+        </ng-container>
+        <ng-template #notIcon>
+          <span class="icon-placeholder"></span>
+        </ng-template>
+        
+      </ng-container>
+      <ng-template #notShowIcon>
+        <i class="fas fa-eye-slash"></i>
+      </ng-template>
     </span>
-    <span class="attr-name col-8 mw-100">
+    <span class="attr-name col">
       <ng-container *ngIf="!isMatrix && control.get('attribute')?.value?.name">
         {{ control.get('attribute')?.value?.name }}
       </ng-container>
@@ -70,16 +87,21 @@
       <ng-template #notShowUnit>
         <i class="fas fa-eye-slash"></i>
       </ng-template>
-      
-      
     </span>
+    <button 
+      class="btn-text-style red" 
+      *ngIf="isMatrix || control.get('attribute')?.value?.id || control.get('customFild')?.value"
+      (click)="removeControl(control)"
+    >
+      <i  class="fas fa-times"></i>
+    </button>
     <button class="btn btn-link attr-action col" (click)="toggleCollapse()">
       <i class="fa-solid fa-ellipsis-vertical"></i>
     </button>
-  
+  </div>
     <div class="col-12 tpl-setting-wrapp" [ngbCollapse]="isCollapsed">
         <form [formGroup]="control">
-            <div *ngIf="!control.get('attribute')?.value?.id && !control.get('matrix')?.value?.id" class="form-check form-switch form-switch-sm">
+            <div *ngIf="!control.get('attribute')?.value?.id && !isMatrix" class="form-check form-switch form-switch-sm">
                 <label class="form-check-label" for="customFild-{{blockIndex}}-{{controlIndex}}">Benutzerdefiniert</label>
                 <input
                   class="form-check-input"
@@ -89,7 +111,7 @@
                   formControlName="customFild"
                 />
             </div>
-            <ng-container *ngIf="control.get('attribute')?.value?.id || control.get('matrix')?.value?.id || control.get('customFild')?.value">
+            <ng-container *ngIf="control.get('attribute')?.value?.id || isMatrix || control.get('customFild')?.value">
               <!-- Einstellungen Icon -->
               <div class="row tpl-setting">
                 <div class="tpl-setting-title">

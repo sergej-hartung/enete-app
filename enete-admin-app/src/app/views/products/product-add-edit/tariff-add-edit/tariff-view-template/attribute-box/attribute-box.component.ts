@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -13,6 +13,7 @@ export class AttributeBoxComponent {
   @Input() blockIndex: number = 0;
   @Input() controlIndex: number = 0;
   @Input() isCollapsed: boolean = true;
+  @Output() removeTpl = new EventEmitter<any>();
 
   private unsubscribe$ = new Subject<void>();
 
@@ -116,6 +117,10 @@ export class AttributeBoxComponent {
         manualUnit: ''
       })
     })
+  }
+
+  removeControl(control: any){
+    this.removeTpl.emit(control)
   }
 
   ngOnDestroy() {

@@ -41,6 +41,7 @@
                                 [blockIndex]="1"
                                 [controlIndex]="i"
                                 [isCollapsed]="isCollapsedArray[1][i]"
+                                (removeTpl)="resetTplForm($event)"
                             ></app-attribute-box>
                         </div>
                     </ng-container>
@@ -87,6 +88,7 @@
                                 [blockIndex]="1"
                                 [controlIndex]="i"
                                 [isCollapsed]="isCollapsedArray[1][i]"
+                                (removeTpl)="resetTplForm($event)"
                             ></app-attribute-box>
                         </div>
                     </ng-container>
@@ -133,6 +135,7 @@
                                 [blockIndex]="2"
                                 [controlIndex]="i"
                                 [isCollapsed]="isCollapsedArray[2][i]"
+                                (removeTpl)="resetTplForm($event)"
                             ></app-attribute-box>
                         </div>
                     </ng-container>
@@ -160,24 +163,29 @@
                     class="attr-group-box"
                     cdkDrag
                   >
-                  <!-- [ngClass]="{
-                    'copied-attribute': attributeCtrl.value.isCopied,
-                  }" -->
-                    <span class="attr-name col-8">
-                        <ng-container *ngIf="matrix?.value?.name">
-                            {{matrix.value.name}}
-                        </ng-container>
-                    </span>
-                    <span class="attr_value col">
-                        <ng-container *ngIf="matrix?.value?.total_value">
-                            {{matrix.value.total_value}}
-                        </ng-container>
-                    </span>
-                    <span  class="attr-unit col">
-                        <ng-container *ngIf="matrix?.value?.unit">
-                            {{ matrix.value.unit }}
-                        </ng-container>
-                    </span>          
+                    <div class="attr-group ">
+                        <span class="attr-name col-8">
+                            <ng-container *ngIf="matrix?.value?.name">
+                                {{matrix.value.name}}
+                            </ng-container>
+                        </span>
+                        <span class="attr_value col">
+                            <ng-container *ngIf="matrix?.value?.total_value">
+                                <ng-container *ngIf="isNumeric(matrix?.value?.total_value); else nonNumericTemplate">
+                                    {{ matrix?.value?.total_value | number:'1.2-2' }}
+                                </ng-container>
+                                <ng-template #nonNumericTemplate>
+                                    {{ matrix?.value?.total_value }}
+                                </ng-template>
+                            </ng-container>
+                        </span>
+                        <span  class="attr-unit col">
+                            <ng-container *ngIf="matrix?.value?.unit">
+                                {{ matrix.value.unit }}
+                            </ng-container>
+                        </span> 
+                    </div>
+                             
                   </div>
                 </ng-container>
                 
@@ -207,20 +215,25 @@
                       'copied-attribute': attributeCtrl.value.isCopied,
                     }"
                   >
-                    <span class="attr-name col-8">
-                        {{attributeCtrl.value.name}}
-                    </span>
-                    <span *ngIf="attributeCtrl.value.value_varchar" class="attr_value col">
-                        <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
-                            {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
-                          </ng-container>
-                          <ng-template #nonNumericTemplate>
-                            {{ attributeCtrl.value.value_varchar }}
-                          </ng-template>
-                    </span>
-                    <span  class="attr-unit col">
-                        {{ attributeCtrl.value.unit }}
-                    </span>          
+                    <div class="attr-group">
+                        <span class="attr-name col-8">
+                            {{attributeCtrl.value.name}}
+                        </span>
+                        <span  class="attr_value col">
+                            <ng-container *ngIf="attributeCtrl.value.value_varchar">
+                                <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
+                                    {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
+                                </ng-container>
+                                <ng-template #nonNumericTemplate>
+                                    {{ attributeCtrl.value.value_varchar }}
+                                </ng-template>
+                            </ng-container>
+                            
+                        </span>
+                        <span  class="attr-unit col">
+                            {{ attributeCtrl.value.unit }}
+                        </span>  
+                    </div>          
                   </div>
                 </ng-container>
                 
