@@ -1,66 +1,189 @@
 
 <div class="row no-gutters">
     <div class="col-7 left-panel pt-2">
+        <!-- Left Block -->
         <app-card>
             <div card-header>Linke Block</div>
             <div card-body>
-                <div class="form-check-card-custom-body">
-                    <div class="field_name">Feldname: <span *ngIf="tpl[0]?.attribut?.name">{{tpl[0].attribut.name}}</span></div>
-                    <div
-                        cdkDropList
-                        [cdkDropListData]="tpl"
-                        [cdkDropListConnectedTo]="connectedDropLists"
-                        class="attr-group-list"
-                        (cdkDropListDropped)="drop($event)"
-                    >
-                        <div
-                            class="attr-group-box"
-                            cdkDrag
-                            
-                        >
-                            <span class="attr-name col-8 mw-100" >
-                                <ng-container *ngIf="tpl[0]?.attribut?.name">{{ tpl[0].attribut.name }}</ng-container>
-                            </span>
-                            <span class="attr-name col" >
-                                <ng-container *ngIf="tpl[0]?.attribut?.value">{{tpl[0].attribut.value}}</ng-container>
-                            </span>
-                            <span  class="attr-unit col" >
-                                <ng-container *ngIf="tpl[0]?.attribut?.unit">{{ tpl[0].attribut.unit }}</ng-container>
-                            </span> 
-                            <button  class="btn btn-link attr-action col " (click)="isCollapsed = !isCollapsed">
-                                <i class="fa-solid fa-ellipsis-vertical"></i>
-                            </button>
-                            
-                            <div class="col-12" [ngbCollapse]="isCollapsed" >
-                                
-                            </div>
+                <div class="custom-body">
+                    <ng-container *ngFor="let control of getTplForBlock(0); let i = index">
+                        <div class="field_name">Feldname: 
+                            <ng-container *ngIf="control.get('showFieldName')?.value; else notShowFieldName">
+                                <ng-container *ngIf="control.get('autoFieldName')?.value; else manualFieldName">
+                                    <ng-container *ngIf="!control.get('isMatrix')?.value && control.get('attribute')?.value?.name">
+                                        <span>{{control.get('attribute')?.value?.name}}</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="control.get('isMatrix')?.value && control.get('matrix')?.value?.name">
+                                        <span>{{ control.get('matrix')?.value?.name }}</span>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #manualFieldName>
+                                    <span>{{ control.get('manualFieldName')?.value }}</span>
+                                </ng-template>
+                            </ng-container>
+                            <ng-template #notShowFieldName>
+                                <i class="fas fa-eye-slash"></i>
+                            </ng-template>
                         </div>
-                    </div>
+                        <div
+                            cdkDropList
+                            [id]="'tplDropList-0-' + i"
+                            [cdkDropListData]="getTplForBlock(0)"
+                            [cdkDropListConnectedTo]="[tariffDropListId]"
+                            class="attr-group-list"
+                            (cdkDropListDropped)="drop($event, control)"
+
+                            >
+                            
+                            <app-attribute-box
+                                [control]="control"
+                                [isMatrix]="control?.value?.isMatrix"
+                                [blockIndex]="1"
+                                [controlIndex]="i"
+                                [isCollapsed]="isCollapsedArray[1][i]"
+                            ></app-attribute-box>
+                        </div>
+                    </ng-container>
                 </div>                           
             </div>
         </app-card>
+        
+        <!-- Middle Block -->
         <app-card>
             <div card-header>Mittlere Block</div>
             <div card-body>
-                <div class="form-check-card-custom-body min">
-                    <div>
-                        
-                    </div>
+                <div class="custom-body">
+                    <ng-container *ngFor="let control of getTplForBlock(1); let i = index">
+                        <div class="field_name">Feldname: 
+                            <ng-container *ngIf="control.get('showFieldName')?.value; else notShowFieldName">
+                                <ng-container *ngIf="control.get('autoFieldName')?.value; else manualFieldName">
+                                    <ng-container *ngIf="!control.get('isMatrix')?.value && control.get('attribute')?.value?.name">
+                                        <span>{{control.get('attribute')?.value?.name}}</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="control.get('isMatrix')?.value && control.get('matrix')?.value?.name">
+                                        <span>{{ control.get('matrix')?.value?.name }}</span>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #manualFieldName>
+                                    <span>{{ control.get('manualFieldName')?.value }}</span>
+                                </ng-template>
+                            </ng-container>
+                            <ng-template #notShowFieldName>
+                                <i class="fas fa-eye-slash"></i>
+                            </ng-template>
+                        </div>
+                        <div
+                            cdkDropList
+                            [id]="'tplDropList-1-' + i"
+                            [cdkDropListData]="getTplForBlock(1)"
+                            [cdkDropListConnectedTo]="[tariffDropListId]"
+                            class="attr-group-list"
+                            (cdkDropListDropped)="drop($event, control)"
+                        >
+                            
+                            <app-attribute-box
+                                [control]="control"
+                                [isMatrix]="control?.value?.isMatrix"
+                                [blockIndex]="1"
+                                [controlIndex]="i"
+                                [isCollapsed]="isCollapsedArray[1][i]"
+                            ></app-attribute-box>
+                        </div>
+                    </ng-container>
                 </div>                           
             </div>
         </app-card>
+
+        <!-- Right Block -->
         <app-card>
             <div card-header>Rechte Block</div>
             <div card-body>
-                <div class="form-check-card-custom-body min">
-                    <div>
-                        
-                    </div>
+                <div class="custom-body">
+                    <ng-container *ngFor="let control of getTplForBlock(2); let i = index">
+                        <div class="field_name">Feldname: 
+                            <ng-container *ngIf="control.get('showFieldName')?.value; else notShowFieldName">
+                                <ng-container *ngIf="control.get('autoFieldName')?.value; else manualFieldName">
+                                    <ng-container *ngIf="!control.get('isMatrix')?.value && control.get('attribute')?.value?.name">
+                                        <span>{{control.get('attribute')?.value?.name}}</span>
+                                    </ng-container>
+                                    <ng-container *ngIf="control.get('isMatrix')?.value && control.get('matrix')?.value?.name">
+                                        <span>{{ control.get('matrix')?.value?.name }}</span>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #manualFieldName>
+                                    <span>{{ control.get('manualFieldName')?.value }}</span>
+                                </ng-template>
+                            </ng-container>
+                            <ng-template #notShowFieldName>
+                                <i class="fas fa-eye-slash"></i>
+                            </ng-template>
+                        </div>
+                        <div
+                            cdkDropList
+                            [id]="'tplDropList-2-' + i"
+                            [cdkDropListData]="getTplForBlock(2)"
+                            [cdkDropListConnectedTo]="[tariffDropListId]"
+                            class="attr-group-list"
+                            (cdkDropListDropped)="drop($event, control)"
+                        >
+                            
+                            <app-attribute-box
+                                [control]="control"
+                                [isMatrix]="control?.value?.isMatrix"
+                                [blockIndex]="2"
+                                [controlIndex]="i"
+                                [isCollapsed]="isCollapsedArray[2][i]"
+                            ></app-attribute-box>
+                        </div>
+                    </ng-container>
                 </div>                           
             </div>
         </app-card>
     </div>
     <div class="col-5 right-panel pt-2">
+        <div class="mb-2" *ngIf="calcMatrixForm.length > 0">
+            <span class="group-name">
+              <button class="btn-text-style" (click)="onToggleMatrices()">Matrizen <i class="fa-solid fa-calculator"></i></button>
+            </span>
+  
+            <div *ngIf="!hiddenMatrices">
+              <div
+                cdkDropList
+                [id]="tariffMatrixDropListId"
+                [cdkDropListData]="calcMatrixForm?.value"
+                [cdkDropListConnectedTo]="connectedDropLists"
+                class="attr-group-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container *ngFor="let matrix of calcMatrixForm?.controls; let i = index">
+                  <div
+                    class="attr-group-box"
+                    cdkDrag
+                  >
+                  <!-- [ngClass]="{
+                    'copied-attribute': attributeCtrl.value.isCopied,
+                  }" -->
+                    <span class="attr-name col-8">
+                        <ng-container *ngIf="matrix?.value?.name">
+                            {{matrix.value.name}}
+                        </ng-container>
+                    </span>
+                    <span class="attr_value col">
+                        <ng-container *ngIf="matrix?.value?.total_value">
+                            {{matrix.value.total_value}}
+                        </ng-container>
+                    </span>
+                    <span  class="attr-unit col">
+                        <ng-container *ngIf="matrix?.value?.unit">
+                            {{ matrix.value.unit }}
+                        </ng-container>
+                    </span>          
+                  </div>
+                </ng-container>
+                
+              </div>
+            </div>
+        </div>
         <div class="mb-2" *ngFor="let attributeGroup of getAttributeGroupArray().controls; let i = index">
             <span class="group-name">
               <button class="btn-text-style" (click)="onToggleGroupVisibility(i)">{{ getAttributeGroupName(i) }}</button>
@@ -74,7 +197,6 @@
                 [cdkDropListConnectedTo]="connectedDropLists"
                 class="attr-group-list"
                 (cdkDropListDropped)="drop($event)"
-                [cdkDropListEnterPredicate]="canDropToTariffList"
               >
                 <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributes(i).controls; let j = index">
                   <div
@@ -85,11 +207,20 @@
                       'copied-attribute': attributeCtrl.value.isCopied,
                     }"
                   >
-                    <span class="attr-name col-8">{{attributeCtrl.value.name}}</span>
-                    <span *ngIf="attributeCtrl.value.value_varchar" class="attr-name col">
-                      {{attributeCtrl.value.value_varchar}}
+                    <span class="attr-name col-8">
+                        {{attributeCtrl.value.name}}
                     </span>
-                    <span  class="attr-unit col">{{ attributeCtrl.value.unit }}</span>          
+                    <span *ngIf="attributeCtrl.value.value_varchar" class="attr_value col">
+                        <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
+                            {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
+                          </ng-container>
+                          <ng-template #nonNumericTemplate>
+                            {{ attributeCtrl.value.value_varchar }}
+                          </ng-template>
+                    </span>
+                    <span  class="attr-unit col">
+                        {{ attributeCtrl.value.unit }}
+                    </span>          
                   </div>
                 </ng-container>
                 

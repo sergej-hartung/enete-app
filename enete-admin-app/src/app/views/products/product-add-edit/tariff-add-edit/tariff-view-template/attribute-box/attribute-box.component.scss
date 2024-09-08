@@ -1,0 +1,52 @@
+.tpl-setting-wrapp{
+    .form-check-label {
+        white-space: nowrap;         /* Запрещает перенос текста на новую строку */
+        overflow: hidden;            /* Скрывает текст, выходящий за границы */
+        text-overflow: ellipsis;     /* Добавляет троеточие, если текст не помещается */
+        display: inline-block;       /* Позволяет элементу соблюдать ограничения ширины */
+        max-width: 100%;             /* Максимальная ширина для обрезания */
+        font-size: 11px;
+        font-weight: 400;
+        align-content: center;
+      }
+    .form-switch-sm{
+        padding-left: 33px;
+        display: flex;
+        position: relative;
+        min-height: 24.38px;
+        .form-check-input{
+            position: absolute;
+            top: 3px;
+        }
+        //align-items: center;
+    }
+}
+
+.tpl-setting{
+    .custom-label-sm{
+        white-space: nowrap;         /* Запрещает перенос текста на новую строку */
+        overflow: hidden;            /* Скрывает текст, выходящий за границы */
+        text-overflow: ellipsis;     /* Добавляет троеточие, если текст не помещается */
+        //display: inline-block;       /* Позволяет элементу соблюдать ограничения ширины */
+        max-width: 100%;   
+        margin-bottom: -4.8px;
+    }
+
+    &:last-child{
+        padding-bottom: 7px;
+    }
+
+    .tpl-setting-title{
+        max-width: 33.33333333%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+    }
+}
+
+// .attr_value{
+//     i{
+//         color: #ccc;
+//     }
+// }

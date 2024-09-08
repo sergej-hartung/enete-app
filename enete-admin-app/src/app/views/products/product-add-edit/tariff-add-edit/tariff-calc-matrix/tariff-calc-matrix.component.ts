@@ -30,6 +30,8 @@ interface Matrix {
 })
 export class TariffCalcMatrixComponent {
 
+  copiedAttributes: Set<number> = new Set(); // Хранит ID скопированных атрибутов
+
   addNewMatrix = false;
   newMatrixForm: FormGroup;
   editMatrixForm: FormGroup;
@@ -56,6 +58,7 @@ export class TariffCalcMatrixComponent {
     private productService: ProductService,
   ){
     this.tariffForm = this.formService.getTariffForm()
+
     this.calcMatrixForm = this.tariffForm.get('calc_matrix') as FormArray
 
     this.newMatrixForm = this.fb.group({
@@ -178,11 +181,13 @@ export class TariffCalcMatrixComponent {
         if(attribute?.value_varchar){
           this.addAttributeToMatrix(matrix, attribute);
           
-          attribute.isCopied = true;
+          //attribute.isCopied = true;
+          this.copiedAttributes.add(attribute.id);
         }
         
       }
     }
+    console.log(this.copiedAttributes)
     console.log(this.tariffForm)
   }
 
@@ -202,7 +207,7 @@ export class TariffCalcMatrixComponent {
         code: [attribute.code],
         name: [attribute.name],
         value: [attribute.value_varchar],
-        value_total: [parseFloat(attribute.value_varchar)],
+        value_total: [parseFloat(attribute.value_varchar.replace(',', '.'))],
         unit: [attribute.unit],
         single: [true],
         period: [''],
@@ -250,7 +255,7 @@ export class TariffCalcMatrixComponent {
     const valueTotalControl = attributeFormGroup.get('value_total');
 
     if (valueControl && periodControl && valueTotalControl) {
-      const value = parseFloat(valueControl.value);
+      const value = parseFloat(valueControl.value.replace(',', '.'));
       const period = parseInt(periodControl.value, 10);
       if (!isNaN(value) && !isNaN(period)) {
         valueTotalControl.setValue(value * period);
@@ -311,6 +316,8 @@ export class TariffCalcMatrixComponent {
     return (this.tariffForm.get('attribute_groups') as FormArray);
   }
 
+
+
   getAttributeGroupName(index: number): string {
     const attributeGroup = this.getAttributeGroupArray().at(index) as FormGroup;
     return attributeGroup.get('name')?.value;
@@ -362,8 +369,10 @@ export class TariffCalcMatrixComponent {
       //const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
       const originalAttribute = this.tariffAttributes.at(index);
       if (originalAttribute) {
-        originalAttribute.isCopied = false;
+        this.copiedAttributes.delete(originalAttribute.id);
+        //originalAttribute.isCopied = false;
       }
+      
       matrix.attributes.splice(index, 1);
 
       // Удаление FormControl для атрибута
@@ -470,19 +479,25 @@ export class TariffCalcMatrixComponent {
           }
         })
   }
+
+  isNumeric(value: any): boolean {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+  }
   
   private updateTariffAttributesStatus() {
     // Создаем Set из всех id атрибутов, которые есть в группах
-    const copiedAttributeIds = new Set(this.matrixs.flatMap(matrix => matrix.attributes.map(attr => attr.id)));
+    //const copiedAttributeIds = new Set(this.matrixs.flatMap(matrix => matrix.attributes.map(attr => attr.id)));
+    this.copiedAttributes = new Set(this.matrixs.flatMap(matrix => matrix.attributes.map(attr => attr.id)));
+    console.log(this.copiedAttributes)
     console.log(this.getAttributeGroupArray())
     // Обновляем статус `isCopied` для атрибутов в правой колонке
-    this.getAttributeGroupArray()?.value.forEach((matrix: any) => {
-      matrix.attributes.forEach((attribute: any) => {
-        console.log(copiedAttributeIds.has(attribute.id))
-        attribute.isCopied = copiedAttributeIds.has(attribute.id);
-      })
+    // this.getAttributeGroupArray()?.value.forEach((matrix: any) => {
+    //   matrix.attributes.forEach((attribute: any) => {
+    //     console.log(copiedAttributeIds.has(attribute.id))
+    //     attribute.isCopied = copiedAttributeIds.has(attribute.id);
+    //   })
       
-    });
+    // });
 
     console.log(this.tariffAttributes)
   }

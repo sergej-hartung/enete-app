@@ -1,0 +1,48 @@
+.attr-name{
+    //line-height: 22px;
+}
+.attr-value{
+    //line-height: 22px;
+    font-size: 11px;
+    color: gray;
+    font-weight: 300;
+}
+.attr-unit{
+    //line-height: 22px;
+}
+.attr-action{
+    line-height: 22px;
+}
+
+.field_name{
+    margin-top: 5px;
+}
+
+.custom-body{
+    margin: 0;
+}
+
+.custom-body{
+    .attr-group-list{
+        position: relative;
+    }
+    .cdk-drag-placeholder {
+        position: absolute;
+        top: 0px;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+        opacity: 1;
+        z-index: 1;
+        transition: all 0.3;
+
+        span{
+            // content: '';
+           // color: transparent !important;
+           display: none;
+        }
+    }
+    .attr-group-box{
+        border: none;
+        min-height: 28px;
+    }
+}

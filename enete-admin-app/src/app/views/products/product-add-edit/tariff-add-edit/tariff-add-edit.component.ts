@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormService } from '../../../../services/form.service';
 import { FormArray, FormGroup } from '@angular/forms';
 import { Attribute } from '../../../../models/tariff/attribute/attribute';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-tariff-add-edit',
@@ -12,6 +13,8 @@ export class TariffAddEditComponent {
 
   active = 1
   tariffForm: FormGroup
+
+  private unsubscribe$ = new Subject<void>();
 
   
   constructor(
@@ -34,7 +37,9 @@ export class TariffAddEditComponent {
     //   });
     // });
 
-    this.tariffForm.get('attribute_groups')?.valueChanges.subscribe((value) => {
+    this.tariffForm.get('attribute_groups')?.valueChanges
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((value) => {
       console.log('Name field changes:', value);
       this.checkAndSyncAttributes()
     });
@@ -47,9 +52,9 @@ export class TariffAddEditComponent {
     attributeGroups.forEach((group: any) => {
       group.attributes.forEach((attribute: any) => {
         matrices.forEach((matrix: any, matrixIndex: number) => {
-          const foundAttribute = matrix.attributes.find((attr: any) => attr.attribute_id === attribute.id);
+          //const foundAttribute = matrix.attributes.find((attr: any) => attr.attribute_id === attribute.id);
           matrix.attributes.forEach((attr:any, attrIndex: number) => {
-            if(attr.attribute_id === attribute.id && attr.value !== attribute.value_varchar){
+            if(attr.id === attribute.id && attr.value !== attribute.value_varchar){
               this.updateMatrixAttribute(matrixIndex, attrIndex, attribute.value_varchar);
             }
           })
@@ -73,7 +78,7 @@ export class TariffAddEditComponent {
     const valueTotalControl = attributeFormGroup.get('value_total');
 
     if (valueControl && periodControl && valueTotalControl) {
-      const value = parseFloat(valueControl.value);
+      const value = parseFloat(valueControl.value.replace(',', '.'));
       const period = parseInt(periodControl.value, 10);
       if (!isNaN(value) && !isNaN(period)) {
         valueTotalControl.setValue(value * period);
@@ -130,10 +135,9 @@ export class TariffAddEditComponent {
   getCalcMatrixArray(): FormArray {
     return this.tariffForm.get('calc_matrix') as FormArray;
   }
-  
+
   ngOnDestroy() {
-    
-    //this.formService.tariffForm.reset()
-    
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

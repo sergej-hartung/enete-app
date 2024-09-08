@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import {dateValidator } from '../shared/validators/date-validator';
 import {booleanValidator } from '../shared/validators/boolean-validator'
 import {matchPasswordValidator } from '../shared/validators/password-validator'
@@ -168,9 +168,41 @@ export class FormService {
       categories: this.fb.array([]),
       attribute_groups: this.fb.array([]),
       calc_matrix: this.fb.array([]),
-      promos: this.fb.array([])
+      promos: this.fb.array([]),
+      tpl: this.createTplFormArray()
     })
   }
+
+  createTplFormArray(){
+    let tplArr = this.fb.array([]) as FormArray
+
+    for (let i = 0; i < 8; i++){
+      tplArr.push(this.createTplFormGroup(i+1))
+    }
+    
+    return tplArr
+  }
+
+  createTplFormGroup(pos: number){
+    return this.fb.group({
+      id: [],
+      customFild:       [false, [booleanValidator()]],
+      isMatrix:         [false, [booleanValidator()]],
+      autoFieldName:    [true, [booleanValidator()]],
+      manualFieldName:  ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+      autoValueSource: [true, [booleanValidator()]],
+      manualValue:     ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+      autoUnit:         [true, [booleanValidator()]],
+      manualUnit:       ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+      showUnit:         [true, [booleanValidator()]],
+      showValue:       [true, [booleanValidator()]],
+      showFieldName:    [true, [booleanValidator()]],
+      showIcon:         [true, [booleanValidator()]],
+      position:         [pos, [Validators.pattern('^[0-9]+$')]],
+      icon:             ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+    })
+  }
+
 
   getTariffForm(){
     if(this.tariffForm){
@@ -180,4 +212,39 @@ export class FormService {
       return this.tariffForm as FormGroup
     }
   }
+
+  public cloneTariffFormGroup(originalForm: FormGroup): FormGroup {
+    // Создаем новую форму, используя initTariffFormGroup для получения структуры
+    const clonedForm = this.initTariffFormGroup();
+  
+    // Рекурсивно копируем значения и состояния контролов
+    this.copyFormGroupValues(originalForm, clonedForm);
+  
+    return clonedForm;
+  }
+
+  private copyFormGroupValues(original: FormGroup, clone: FormGroup): void {
+    Object.keys(original.controls).forEach(key => {
+      const originalControl = original.get(key);
+      const cloneControl = clone.get(key);
+  
+      if (originalControl instanceof FormGroup && cloneControl instanceof FormGroup) {
+        // Рекурсивно копируем вложенные FormGroup
+        this.copyFormGroupValues(originalControl, cloneControl);
+      } else if (originalControl instanceof FormArray && cloneControl instanceof FormArray) {
+        // Копируем FormArray
+        originalControl.controls.forEach((ctrl, index) => {
+          const clonedCtrl = this.fb.control(ctrl.value, ctrl.validator || null, ctrl.asyncValidator || null);
+          cloneControl.push(clonedCtrl);
+        });
+      } else {
+        // Копируем значение и валидаторы
+        cloneControl?.setValue(originalControl?.value);
+        cloneControl?.setValidators(originalControl?.validator || null);
+        cloneControl?.setAsyncValidators(originalControl?.asyncValidator || null);
+        cloneControl?.updateValueAndValidity();
+      }
+    });
+  }
+  
 }

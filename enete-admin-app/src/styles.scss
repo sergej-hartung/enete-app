@@ -1177,6 +1177,10 @@ app-tariff-add-edit{
     }
 }
 
+.custom-body{
+    margin: 0.42rem 0;
+}
+
 .form-check-card-custom{
     //font-size: 0.9rem;
     //color: #6c757d;
@@ -1465,14 +1469,15 @@ app-tariff-add-edit{
 
     &.sub-box{
         padding-left: 0;
-        padding-right: 14px;
+        padding-right: 0;
+        //padding-right: 14px;
 
         .period-wrapp{
             padding-left: 3px;
         }
 
         .periode-type-wrapp{
-            flex-grow: 1;
+            //flex-grow: 1;
             margin-right: 2px;
         }
 
@@ -1490,7 +1495,7 @@ app-tariff-add-edit{
         }
 
         .attr_value{
-            padding-right: 31px;
+            //padding-right: 31px;
             font-weight: 600;
         }
     }
@@ -1500,7 +1505,13 @@ app-tariff-add-edit{
     font-size: 11px;
     color: gray;
     display: flex;
-    flex-grow: 1;
+    //flex-grow: 1;
+}
+
+.attr-icon{
+    font-size: 11px;
+    min-width: 25px;
+    color: gray;
 }
 
 .attr-name {
@@ -1508,7 +1519,7 @@ app-tariff-add-edit{
     font-weight: 500;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     display: flex;
-    flex-grow: 1;
+    //flex-grow: 1;
 
     .required{
         color: red;
@@ -1533,6 +1544,10 @@ app-tariff-add-edit{
     flex-grow: 1;
 }
 
+.attr-plazeholder{
+    width: 21px;
+}
+
 .attr-action{
     align-items: end;
     display: flex;
@@ -1542,14 +1557,19 @@ app-tariff-add-edit{
     text-decoration: none;
     color: gray;
     cursor: pointer;
+    min-height: 20px;
 
     &:hover{
         color: rgba(0, 0, 0, 0.8);
     }
+
+    i{
+        line-height: 18px;
+    }
 }
 
 .attr-kennung, .attr-name {
-    max-width: 50%;
+    //max-width: 50%;
 }
 
 .attr-frontend_visible {
@@ -1571,6 +1591,10 @@ app-tariff-add-edit{
         color: rgba(0, 0, 0, 0.87);
         font-weight: 600;
     }
+
+    // i{
+    //     color: #ccc;
+    // }
 }
 
 
@@ -2203,4 +2227,24 @@ app-tariff-add-edit{
             }
         }
     }
+}
+
+.tpl-setting{
+    margin-top: 10px;
+    position: relative;
+
+    .tpl-setting-title{
+        position: absolute;
+        font-size: 11px;
+        color: rgba(0, 0, 0, 0.8);
+        top: 3px;
+        font-weight: 600;
+        //margin-bottom: -16.8px;
+    }
+    .tpl-switch{
+        padding-top: 21px;
+        //display: flex;
+        align-content: center;
+    }
+
 }

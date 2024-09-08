@@ -228,14 +228,7 @@ export class TariffAttributeComponent {
   
           const groupFormArray = group.form.get('attributes') as FormArray;
           groupFormArray.insert(event.currentIndex, this.createAttributeFormControl(attribute));
-          // groupFormArray.insert(event.currentIndex, this.fb.group({
-          //   id: [attribute.id],
-          //   code: [attribute.code],
-          //   name: [attribute.name],
-          //   value_varchar: [null],
-          //   value_text: [null],
-          //   is_active: [attribute.is_frontend_visible]
-          // }));
+          
         }
         console.log(this.groups)
       }
@@ -245,7 +238,6 @@ export class TariffAttributeComponent {
   private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
     const valueVarcharValidators = [];
     const valueTextValidators = [];
-
     if (attribute.is_required) {
         if (attribute.input_type === 'Textbereich') {
             valueTextValidators.push(Validators.required);
@@ -290,6 +282,7 @@ export class TariffAttributeComponent {
             break;
     }
     //console.log(attribute)
+    
     return this.fb.group({
         id: [attribute.id],
         code: [attribute.code],
