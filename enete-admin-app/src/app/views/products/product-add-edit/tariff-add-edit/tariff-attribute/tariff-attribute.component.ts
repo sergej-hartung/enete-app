@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormArray, Validators, FormControl, AbstractCon
 import { AttributeService } from '../../../../../services/product/tariff/attribute/attribute.service';
 import { ProductService } from '../../../../../services/product/product.service';
 import { AttributeGroupService } from '../../../../../services/product/tariff/attribute-group/attribute-group.service';
-import { Subject, delay, of, takeUntil } from 'rxjs';
+import { Observable, Subject, delay, of, takeUntil } from 'rxjs';
 import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { MainNavbarService } from '../../../../../services/main-navbar.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -29,11 +29,9 @@ interface Group {
 export class TariffAttributeComponent {
   tariffAttributes: Attribute[] = [];
   groups: Group[] = [];
-
   tariffDropListId = 'tariffDropList';
   connectedDropLists: string[] = [this.tariffDropListId];
-
-  attributsGroupForm: FormArray
+  attributeGroupsForm: FormArray;
 
   addNewGroup = false;
   newGroupForm: FormGroup;
@@ -54,8 +52,8 @@ export class TariffAttributeComponent {
     private formService: FormService,
     public tariffService: TariffService,
   ) {
-    const tariffForm = this.formService.getTariffForm()
-    this.attributsGroupForm = tariffForm.get('attribute_groups') as FormArray
+    const tariffForm = this.formService.getTariffForm();
+    this.attributeGroupsForm = tariffForm.get('attribute_groups') as FormArray;
 
     this.newGroupForm = this.fb.group({
       groupName: ['', Validators.required]
@@ -64,78 +62,112 @@ export class TariffAttributeComponent {
     this.editGroupForm = this.fb.group({
       groupName: ['', Validators.required]
     });
-
   }
 
   ngOnInit() { 
-    this.productService.tariffGroupId$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(id => {
-        if (id && this.groupId !== id) {
-          this.groupId = id;
-          this.attributeService.fetchDataByGroupId(this.groupId);
-        }
-      });
+    this.subscribeWithUnsubscribe(this.productService.tariffGroupId$, id => {
+      if (id && this.groupId !== id) {
+        this.groupId = id;
+        this.attributeService.fetchDataByGroupId(this.groupId);
+      }
+    });
 
-    this.attributeService.data$
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(data => {  
-        if (data && data.entityType === 'tariffAttributesByGroup') {
-          this.tariffAttributes = data.data;
-          this.updateTariffAttributesStatus(); // Обновление статуса после получения атрибутов
-          console.log('Loaded Attributes:', data);
-        }
-      });
-      this.productService.productMode$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(mode => {
-          if(mode == 'edit')  this.loadAttributeGroups();
-        })
+    this.subscribeWithUnsubscribe(this.attributeService.data$, data => {
+      if (data && data.entityType === 'tariffAttributesByGroup') {
+        this.tariffAttributes = data.data;
+        this.updateTariffAttributesStatus();
+      }
+    });
+
+    this.subscribeWithUnsubscribe(this.productService.productMode$, mode => {
+      if (mode === 'edit') this.loadAttributeGroups();
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {   
     this.updateConnectedDropLists();
   }
 
+  private subscribeWithUnsubscribe<T>(observable: Observable<T>, callback: (value: T) => void): void {
+    observable.pipe(takeUntil(this.unsubscribe$)).subscribe(callback);
+  }
 
-  openEditor(group: Group, index: number) {
 
-    const modalRef: NgbModalRef = this.modalService.open(
-      EditorModalComponent, 
-      {
-        backdropClass: 'ckedit-modal-backdrop', 
-        windowClass: 'ckedit-modal',
-        size: 'lg' 
-      }
-    );
-    const control = (group.form.get('attributes') as FormArray).at(index);
-    let text = control.get('value_text')
-    const attribute = group.attributes[index];
-    if(attribute.pivot){
-      text?.setValue(attribute.pivot?.value_text)
-      modalRef.componentInstance.initialValue = text?.value || '';
-    }else{
-      //const control = (group.form.get('attributes') as FormArray).at(index);
-      modalRef.componentInstance.initialValue = text?.value || '';
-    }
+  // openEditor(event: Event, group: Group, index: number) {
+  //   event.preventDefault();
+  //   (event.target as HTMLElement).blur();
+  //   const modalRef: NgbModalRef = this.modalService.open(
+  //     EditorModalComponent, 
+  //     {
+  //       backdropClass: 'ckedit-modal-backdrop', 
+  //       windowClass: 'ckedit-modal',
+  //       size: 'lg' 
+  //     }
+  //   );
+  //   const control = (group.form.get('attributes') as FormArray).at(index);
+  //   let text = control.get('value_text')
+  //   const attribute = group.attributes[index];
+  //   if(attribute.pivot){
+  //     text?.setValue(attribute.pivot?.value_text)
+  //     modalRef.componentInstance.initialValue = text?.value || '';
+  //   }else{
+  //     //const control = (group.form.get('attributes') as FormArray).at(index);
+  //     modalRef.componentInstance.initialValue = text?.value || '';
+  //   }
     
-    modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
-      if (result !== undefined ) {
-        //const control = (group.form.get('attributes') as FormArray).at(index);
-        control.patchValue({ value_text: result });
-        //attribute.pivot.value_text = result;
-        console.log('Сохранено значение:', result);
-        text?.markAsTouched()
-        modalRef.close(); // Закрытие модального окна после сохранения
-      }
-    });
-    modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      console.log('fenster geschlossen')
-      text?.markAsTouched()
-      modalRef.close(); // Закрытие модального окна при нажатии на отмену
+  //   modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
+  //     if (result !== undefined ) {
+  //       //const control = (group.form.get('attributes') as FormArray).at(index);
+  //       control.patchValue({ value_text: result });
+  //       //attribute.pivot.value_text = result;
+  //       text?.markAsTouched()
+  //       modalRef.close(); // Закрытие модального окна после сохранения
+  //     }
+  //   });
+  //   modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+  //     text?.markAsTouched()
+  //     modalRef.close(); // Закрытие модального окна при нажатии на отмену
+  //   });
+  // }
+
+  openEditor(event: Event, group: Group, index: number) {
+    event.preventDefault();
+   (event.target as HTMLElement).blur();
+
+    const modalRef = this.openModal();
+    const control = this.getAttributeFormArray(group).at(index) as FormGroup;
+    const textControl = control.get('value_text');
+    const attribute = group.attributes[index];
+    
+    textControl?.setValue(attribute.pivot?.value_text || textControl?.value || '');
+    modalRef.componentInstance.initialValue = textControl?.value || '';
+
+    this.handleModalSaveClose(modalRef, control, textControl);
+  }
+
+  private openModal(): NgbModalRef {
+    return this.modalService.open(EditorModalComponent, {
+      backdropClass: 'ckedit-modal-backdrop',
+      windowClass: 'ckedit-modal',
+      size: 'lg'
     });
   }
 
+  private handleModalSaveClose(modalRef: NgbModalRef, control: AbstractControl, textControl: AbstractControl | null): void {
+    const markAsTouchedAndClose = () => {
+      textControl?.markAsTouched();
+      modalRef.close();
+    };
+
+    modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: any) => {
+      if (result !== undefined) {
+        control.patchValue({ value_text: result });
+        markAsTouchedAndClose();
+      }
+    });
+
+    modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(markAsTouchedAndClose);
+  }
 
   addNewGroupName() {
     this.addNewGroup = true;
@@ -147,14 +179,15 @@ export class TariffAttributeComponent {
       const newGroup: Group = {
         name: this.newGroupForm.value.groupName,
         attributes: [],
-        form: this.fb.group({
-          id: [null],
-          name: [this.newGroupForm.value.groupName],
-          attributes: this.fb.array([])
-        })
+        form: this.createGroupForm(this.newGroupForm.value.groupName)
+        // form: this.fb.group({
+        //   id: [null],
+        //   name: [this.newGroupForm.value.groupName],
+        //   attributes: this.fb.array([])
+        // })
       };
       this.groups.push(newGroup);
-      this.attributsGroupForm.push(newGroup.form);
+      this.attributeGroupsForm.push(newGroup.form);
       this.updateConnectedDropLists();
       this.addNewGroup = false;
       this.newGroupForm.reset();
@@ -173,9 +206,9 @@ export class TariffAttributeComponent {
 
   saveEditedGroup() {
     if (this.editGroupForm.valid && this.editGroupIndex !== null) {
-      this.groups[this.editGroupIndex].name = this.editGroupForm.value.groupName;
-      const groupForm = this.attributsGroupForm.at(this.editGroupIndex) as FormGroup;
-      groupForm.patchValue({ name: this.editGroupForm.value.groupName });
+      const group = this.groups[this.editGroupIndex];
+      group.name = this.editGroupForm.value?.groupName;
+      (this.attributeGroupsForm.at(this.editGroupIndex) as FormGroup).patchValue({ name: this.editGroupForm.value?.groupName });
       this.editGroupIndex = null;
       this.editGroupForm.reset();
     }
@@ -188,9 +221,9 @@ export class TariffAttributeComponent {
 
   removeGroup(index: number) {
     this.groups.splice(index, 1);
-    this.attributsGroupForm.removeAt(index);
+    this.attributeGroupsForm.removeAt(index);
     this.updateConnectedDropLists();
-    this.updateTariffAttributesStatus(); // Обновление статуса после удаления группы
+    this.updateTariffAttributesStatus();
   }
 
   toggleGroupAttributes(index: number) {
@@ -205,64 +238,171 @@ export class TariffAttributeComponent {
     this.connectedDropLists = [this.tariffDropListId, ...this.groups.map((_, index) => this.getGroupDropListId(index))];
   }
 
-  drop(event: CdkDragDrop<any[]>, group?: Group) {
-    if (event.previousContainer === event.container && group) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.moveItemInFormArray(group!.form.get('attributes') as FormArray, event.previousIndex, event.currentIndex);
-    } else {
-      if (group) {
-        const attribute = event.previousContainer.data[event.previousIndex];
-        const attributeExists = group.attributes.some(attr => attr.id === attribute.id);
-        if (!attributeExists) {
-          let copiedAttribute = { ...attribute, isCopied: true, isFocused: false }; // isFocused по умолчанию false
-          if(!attribute.is_frontend_visible){
-            copiedAttribute = {...copiedAttribute, isActiveDesibled: true }
-          }
-          group.attributes.splice(event.currentIndex, 0, copiedAttribute);
+  // drop(event: CdkDragDrop<any[]>, group?: Group) {
+  //   if (event.previousContainer === event.container && group) {
+  //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+  //     this.moveItemInFormArray(group!.form.get('attributes') as FormArray, event.previousIndex, event.currentIndex);
+  //   } else {
+  //     if (group) {
+  //       const attribute = event.previousContainer.data[event.previousIndex];
+  //       const attributeExists = group.attributes.some(attr => attr.id === attribute.id);
+  //       if (!attributeExists) {
+  //         let copiedAttribute = { ...attribute, isCopied: true, isFocused: false }; // isFocused по умолчанию false
+  //         if(!attribute.is_frontend_visible){
+  //           copiedAttribute = {...copiedAttribute, isActiveDesibled: true }
+  //         }
+  //         group.attributes.splice(event.currentIndex, 0, copiedAttribute);
           
           
-          const originalAttribute = this.tariffAttributes.find(attr => attr.id === attribute.id);
-          if (originalAttribute) {
-            originalAttribute.isCopied = true;
-          }
+  //         const originalAttribute = this.tariffAttributes.find(attr => attr.id === attribute.id);
+  //         if (originalAttribute) {
+  //           originalAttribute.isCopied = true;
+  //         }
   
-          const groupFormArray = group.form.get('attributes') as FormArray;
-          groupFormArray.insert(event.currentIndex, this.createAttributeFormControl(attribute));
+  //         const groupFormArray = group.form.get('attributes') as FormArray;
+  //         groupFormArray.insert(event.currentIndex, this.createAttributeFormControl(attribute));
           
-        }
-        console.log(this.groups)
+  //       }
+  //       console.log(this.groups)
+  //     }
+  //   }
+  // }
+
+  drop(event: CdkDragDrop<any[]>, group?: Group) {
+    if (!group) return;
+
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.moveControlInFormArray(group.form.get('attributes') as FormArray, event.previousIndex, event.currentIndex);
+    } else {
+      const attribute = event.previousContainer.data[event.previousIndex];
+      if (!this.attributeExistsInGroup(group, attribute)) {
+        const copiedAttribute = this.copyAttribute(attribute);
+        group.attributes.splice(event.currentIndex, 0, copiedAttribute);
+        this.addControlToFormArray(group.form.get('attributes') as FormArray, this.createAttributeFormControl(attribute), event.currentIndex);
+
+        const originalAttribute = this.findOriginalAttribute(attribute);
+        if (originalAttribute) originalAttribute.isCopied = true;
       }
     }
   }
 
+  private copyAttribute(attribute: Attribute): Attribute {
+    return { 
+      ...attribute, 
+      isCopied: true, 
+      isFocused: false, 
+      isActiveDesibled: !attribute.is_frontend_visible 
+    };
+  }
+
+  private createGroupForm(name: string, attributes: Attribute[] = []): FormGroup {
+    return this.fb.group({
+      id: [null],
+      name: [name],
+      attributes: this.fb.array(
+        attributes.map(attr => this.createAttributeFormControl(attr))
+      )
+    });
+  }
+
+  // private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
+  //   const valueVarcharValidators = [];
+  //   const valueTextValidators = [];
+  //   if (attribute.is_required) {
+  //       if (attribute.input_type === 'Textbereich') {
+  //           valueTextValidators.push(Validators.required);
+  //       } else {
+  //           valueVarcharValidators.push(Validators.required);
+  //       }
+  //   }
+
+  //   switch (attribute.input_type) {
+  //       case 'Ganzzahlen':
+  //           valueVarcharValidators.push(Validators.pattern(/^\d+$/)); // Только целые числа
+  //           break;
+  //       case 'Dezimalzahlen':
+  //           valueVarcharValidators.push(Validators.pattern(/^\d+(,\d+)?$/)); // Десятичные числа
+  //           break;
+  //       case 'Datumfeld':
+  //           valueVarcharValidators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
+  //           break;
+  //       case 'Link-Feld':
+  //           valueVarcharValidators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)); // URL
+  //           break;
+  //       case 'Boolescher Wert':
+  //           valueVarcharValidators.push(Validators.pattern(/^(0|1)$/)); // Булевый (0 или 1)
+  //           break;
+  //       case 'Dateifeld':
+  //           // Для поля файла можно добавить валидатор на допустимые расширения файлов, если нужно
+  //           break;
+  //       case 'Dropdown':
+  //           // Для выпадающего списка специфические валидаторы не нужны
+  //           break;
+  //       case 'Mehrfachauswahl':
+  //           // Для множественного выбора специфические валидаторы не нужны
+  //           break;
+  //       case 'Textfeld':
+  //           // Для текстового поля специфические валидаторы не нужны
+  //           break;
+  //       case 'Textbereich':
+  //           // Валидаторы добавлены выше
+  //           break;
+  //       default:
+  //           // Для других типов данных добавьте свои валидаторы, если необходимо
+  //           break;
+  //   }
+    
+  //   return this.fb.group({
+  //       id: [attribute.id],
+  //       code: [attribute.code],
+  //       name: [attribute.name],
+  //       unit: [attribute.unit],
+  //       value_varchar: [valueVarchar, valueVarcharValidators],
+  //       value_text: [valueText, valueTextValidators],
+  //       is_active: [isActive !== null ? isActive : attribute.is_frontend_visible]
+  //   });
+  // }
+
   private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
-    const valueVarcharValidators = [];
-    const valueTextValidators = [];
+    const valueVarcharValidators = this.getValidatorsForType(attribute, valueVarchar);
+    const valueTextValidators = this.getValidatorsForType(attribute, valueText, true);
+
+    return this.fb.group({
+      id: [attribute.id],
+      code: [attribute.code],
+      name: [attribute.name],
+      unit: [attribute.unit],
+      value_varchar: [valueVarchar, valueVarcharValidators],
+      value_text: [valueText, valueTextValidators],
+      is_active: [isActive !== null ? isActive : attribute.is_frontend_visible]
+    });
+  }
+
+  private getValidatorsForType(attribute: Attribute, value: string, isText = false): any[] {
+    const validators = [];
     if (attribute.is_required) {
-        if (attribute.input_type === 'Textbereich') {
-            valueTextValidators.push(Validators.required);
-        } else {
-            valueVarcharValidators.push(Validators.required);
-        }
+      validators.push(Validators.required);
     }
 
-    switch (attribute.input_type) {
+    if (!isText) {
+      switch (attribute.input_type) {
         case 'Ganzzahlen':
-            valueVarcharValidators.push(Validators.pattern(/^\d+$/)); // Только целые числа
-            break;
+          validators.push(Validators.pattern(/^\d+$/)); // Только целые числа
+          break;
         case 'Dezimalzahlen':
-            valueVarcharValidators.push(Validators.pattern(/^\d+(,\d+)?$/)); // Десятичные числа
-            break;
+          validators.push(Validators.pattern(/^\d+(,\d+)?$/)); // Десятичные числа
+          break;
         case 'Datumfeld':
-            valueVarcharValidators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
-            break;
+          validators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
+          break;
         case 'Link-Feld':
-            valueVarcharValidators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)); // URL
-            break;
+          validators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)); // URL
+          break;
         case 'Boolescher Wert':
-            valueVarcharValidators.push(Validators.pattern(/^(0|1)$/)); // Булевый (0 или 1)
-            break;
-        case 'Dateifeld':
+          validators.push(Validators.pattern(/^(0|1)$/)); // Булевый (0 или 1)
+          break;
+          case 'Dateifeld':
             // Для поля файла можно добавить валидатор на допустимые расширения файлов, если нужно
             break;
         case 'Dropdown':
@@ -280,20 +420,38 @@ export class TariffAttributeComponent {
         default:
             // Для других типов данных добавьте свои валидаторы, если необходимо
             break;
+      }
     }
-    //console.log(attribute)
-    
-    return this.fb.group({
-        id: [attribute.id],
-        code: [attribute.code],
-        name: [attribute.name],
-        unit: [attribute.unit],
-        value_varchar: [valueVarchar, valueVarcharValidators],
-        value_text: [valueText, valueTextValidators],
-        is_active: [isActive !== null ? isActive : attribute.is_frontend_visible]
-    });
+
+    return validators;
   }
 
+  private addControlToFormArray(formArray: FormArray, control: AbstractControl, index?: number): void {
+    if (index !== undefined) {
+      formArray.insert(index, control);
+    } else {
+      formArray.push(control);
+    }
+  }
+
+  private removeControlFromFormArray(formArray: FormArray, index: number): void {
+    formArray.removeAt(index);
+  }
+
+
+  private moveControlInFormArray(formArray: FormArray, fromIndex: number, toIndex: number): void {
+    const control = formArray.at(fromIndex);
+    formArray.removeAt(fromIndex);
+    formArray.insert(toIndex, control);
+  }
+
+  private attributeExistsInGroup(group: Group, attribute: Attribute): boolean {
+    return group.attributes.some(attr => attr.id === attribute.id);
+  }
+
+  private findOriginalAttribute(attribute: Attribute): Attribute | undefined {
+    return this.tariffAttributes.find(attr => attr.id === attribute.id);
+  }
 
   private moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number) {
     const item = formArray.at(fromIndex);
@@ -312,20 +470,18 @@ export class TariffAttributeComponent {
   removeAttribute(group: Group, attribute: Attribute) {
     const index = group.attributes.indexOf(attribute);
     if (index >= 0) {
-      const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
+      const originalAttribute = this.findOriginalAttribute(attribute);
       if (originalAttribute) {
         originalAttribute.isCopied = false;
-        this.productService.deletedTariffAttr.emit(originalAttribute)
+        this.productService.deletedTariffAttr.emit(originalAttribute);
       }
       group.attributes.splice(index, 1);
 
-      // Удаление FormControl для атрибута
-      const groupFormArray = group.form.get('attributes') as FormArray;
+      const groupFormArray = this.getAttributeFormArray(group);
       const formIndex = groupFormArray.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
       if (formIndex >= 0) {
-        groupFormArray.removeAt(formIndex);
+        this.removeControlFromFormArray(groupFormArray, formIndex);
       }
-
     }
   }
 
@@ -337,33 +493,80 @@ export class TariffAttributeComponent {
     group.attributes[index].isFocused = false;
   }
 
+
   canDropToTariffList = (drag: any) => {
     return drag.dropContainer.id === this.tariffDropListId;
   }
+
+  // private loadAttributeGroups() {
+  //   if (this.groupId) {
+  //     this.tariffService.detailedData$
+  //       .pipe(takeUntil(this.unsubscribe$))
+  //       .subscribe(response => {
+  //         if(response){
+  //           const groupsFromTariff = response?.data?.attribute_groups; // Здесь ваши группы из ответа сервера
+  //           if(groupsFromTariff){
+  //             this.groups = groupsFromTariff.map(group => 
+  //             (
+  //               {
+  //                 id: group.id,
+  //                 name: group.name,
+  //                 attributes: group.attributs.map(attr => 
+  //                   ({
+  //                     ...attr,
+  //                     isCopied: true, // Отметьте атрибуты как скопированные
+  //                     ...(attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false ? { isActiveDesibled: true } : {})
+  //                   })
+  //                 ),
+  //                 hidden: false,
+    
+  //                 form: this.fb.group({
+  //                   id: [group.id],
+  //                   name: [group.name],
+  //                   attributes: this.fb.array(
+  //                     group.attributs.map(attr => this.createAttributeFormControl(
+  //                       attr, attr?.pivot?.value_varchar || '', 
+  //                       attr?.pivot?.value_text || '', 
+  //                       attr?.pivot?.is_active
+  //                     ))
+  //                   )
+  //                 })
+  //               }
+  //             ));
+
+  //             this.attributeGroupsForm.clear();
+  //             this.groups.forEach(group => {
+  //               this.attributeGroupsForm.push(group.form);
+  //             });
+
+  //             this.updateTariffAttributesStatus();
+  //             this.updateConnectedDropLists();
+  //           }
+  //         }
+  //       })
+      
+  //   }
+  // }
+
 
   private loadAttributeGroups() {
     if (this.groupId) {
       this.tariffService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(response => {
-          if(response){
-            const groupsFromTariff = response?.data?.attribute_groups; // Здесь ваши группы из ответа сервера
-            if(groupsFromTariff){
-              this.groups = groupsFromTariff.map(group => 
-              (
-                {
-                  id: group.id,
-                  name: group.name,
-                  attributes: group.attributs.map(attr => 
-                    ({
-                      ...attr,
-                      isCopied: true, // Отметьте атрибуты как скопированные
-                      ...(attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false ? { isActiveDesibled: true } : {})
-                    })
-                  ),
-                  hidden: false,
-    
-                  form: this.fb.group({
+          if (response) {
+            const groupsFromTariff = response?.data?.attribute_groups;
+            if (groupsFromTariff) {
+              this.groups = groupsFromTariff.map(group => ({
+                id: group.id,
+                name: group.name,
+                attributes: group.attributs.map(attr => ({
+                  ...attr,
+                  isCopied: true,
+                  ...(attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false ? { isActiveDesibled: true } : {})
+                })),
+                hidden: false,
+                form: this.fb.group({
                     id: [group.id],
                     name: [group.name],
                     attributes: this.fb.array(
@@ -374,41 +577,30 @@ export class TariffAttributeComponent {
                       ))
                     )
                   })
-                }
-              ));
+              }));
 
-              this.attributsGroupForm.clear();
+              this.attributeGroupsForm.clear();
               this.groups.forEach(group => {
-                this.attributsGroupForm.push(group.form);
+                this.attributeGroupsForm.push(group.form);
               });
 
               this.updateTariffAttributesStatus();
               this.updateConnectedDropLists();
             }
           }
-        })
-      
+        });
     }
   }
 
-  toogleFrontentVisible(attribute:Attribute, control:any){
-    console.log(attribute)
-    let isActive = control.get('is_active')
-    if(isActive?.value){
-      control.get('is_active')?.setValue(0)
-      attribute.is_frontend_visible = 0
-    }else{
-      control.get('is_active')?.setValue(1)
-      attribute.is_frontend_visible = 1
-    }
-    console.log(control.get('is_active'))
+  toggleFrontendVisible(attribute: Attribute, control: any) {
+    const isActive = control.get('is_active');
+
+    attribute.is_frontend_visible = isActive?.value ? 0 : 1;
+    control.get('is_active')?.setValue(isActive?.value ? 0 : 1);
   }
 
   private updateTariffAttributesStatus() {
-    // Создаем Set из всех id атрибутов, которые есть в группах
     const copiedAttributeIds = new Set(this.groups.flatMap(group => group.attributes.map(attr => attr.id)));
-
-    // Обновляем статус `isCopied` для атрибутов в правой колонке
     this.tariffAttributes.forEach(attribute => {
       attribute.isCopied = copiedAttributeIds.has(attribute.id);
     });
@@ -438,9 +630,7 @@ export class TariffAttributeComponent {
   
   // Метод для безопасного получения FormControl из FormArray
   getAttributeFormControl(group: FormGroup, index: number, controlName: string): AbstractControl | null {
-    const formArray = group.get('attributes') as FormArray;
-    const formGroup = formArray.at(index) as FormGroup;
-    return formGroup.get(controlName);
+    return (group.get('attributes') as FormArray).at(index).get(controlName);
   }
 
   ngOnDestroy() {

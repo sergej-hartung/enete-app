@@ -29,7 +29,6 @@ export class AttributeBoxComponent {
     this.control.get('customFild')?.valueChanges
     .pipe(takeUntil(this.unsubscribe$))
     .subscribe((value: any) => {
-      console.log(value)
       if(value){
         this.control.patchValue({
           autoFieldName: false,

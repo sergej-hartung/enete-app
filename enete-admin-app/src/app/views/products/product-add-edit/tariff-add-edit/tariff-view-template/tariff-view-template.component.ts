@@ -36,7 +36,6 @@ export class TariffViewTemplateComponent {
     this.tariffForm = this.formService.getTariffForm()
     this.tpl = this.tariffForm.get('tpl') as FormArray
     this.calcMatrixForm = this.tariffForm.get('calc_matrix') as FormArray
-    console.log(this.tariffForm)
 
   }
 
@@ -57,14 +56,7 @@ export class TariffViewTemplateComponent {
       const blockControls = this.getTplForBlock(blockIndex);
       this.isCollapsedArray[blockIndex] = Array(blockControls.length).fill(true);
     });
-    console.log(this.isCollapsedArray)
   }
-
-  // toggleCollapse(blockIndex: number, index: number): void {
-  //   this.isCollapsedArray[blockIndex][index] = !this.isCollapsedArray[blockIndex][index];
-  //   console.log(this.tariffForm)
-  // }
-
 
   drop(event: CdkDragDrop<any[]>, control?: any) {
     if (event.previousContainer.id === this.tariffDropListId){
@@ -74,16 +66,18 @@ export class TariffViewTemplateComponent {
         this.resetTplForm(control)
         if (!control.contains('attribute')){
           control.addControl('attribute', this.fb.group({
-            id:            [attribute?.id],
-            name:          [attribute?.name],
-            code:          [attribute?.code],
-            is_active:     [attribute?.is_active],
-            value_text:    [attribute?.value_text],
-            value_varchar: [attribute?.value_varchar],
-            unit:          [attribute?.unit]
-          })
-        )
+              id:            [attribute?.id],
+              name:          [attribute?.name],
+              code:          [attribute?.code],
+              is_active:     [attribute?.is_active],
+              value_text:    [attribute?.value_text],
+              value_varchar: [attribute?.value_varchar],
+              unit:          [attribute?.unit]
+            })
+          )
+          this.copiedAttributes.add(attribute.id);
         }else{
+          this.copiedAttributes.add(attribute.id);
           control.get('attribute').patchValue(attribute)
         }
       }
@@ -97,6 +91,7 @@ export class TariffViewTemplateComponent {
         if (!control.contains('matrix')){
           control.addControl('matrix', this.fb.group({
             id:          [matrix?.id],
+            uniqueId:    [matrix?.uniqueId],
             name:        [matrix?.name],
             total_value: [matrix?.total_value],
             unit:        [matrix?.unit]
@@ -107,7 +102,6 @@ export class TariffViewTemplateComponent {
         }
       }
     }
-    console.log(this.tariffForm)
   }
 
   onGetTplDropListId(index: number): string {
@@ -140,33 +134,11 @@ export class TariffViewTemplateComponent {
     return attributeGroup.get('attributes') as FormArray;
   }
 
-  // getTplForBlock(blockIndex: number): FormArray {
-  //   return this.tpl.controls.filter((control) => {
-  //     const position = control.get('position').value;
-  //     return (blockIndex === 0 && position === 1) || 
-  //            (blockIndex === 1 && position >= 2 && position <= 5) || 
-  //            (blockIndex === 2 && position >= 6 && position <= 8);
-  //   }) as FormArray;
-  // }
-
   isNumeric(value: any): boolean {
     return !isNaN(parseFloat(value)) && isFinite(value);
   }
 
   getTplForBlock(blockIndex: number) {
-     //const formArray = this.fb.array([]) as FormArray;
-  
-    // this.tpl.controls.forEach((control) => {
-    //   const position = control.get('position')?.value;
-    //   if (
-    //     (blockIndex === 0 && position === 1) || 
-    //     (blockIndex === 1 && position >= 2 && position <= 5) || 
-    //     (blockIndex === 2 && position >= 6 && position <= 8)
-    //   ) {
-    //     formArray.push(control);
-    //   }
-    // });
-  
     // return formArray;
     let formArray = this.tpl.controls.filter((control) => {
       const position = control.get('position')?.value;
@@ -175,8 +147,22 @@ export class TariffViewTemplateComponent {
              (blockIndex === 2 && position >= 6 && position <= 8);
     }) 
 
-    //console.log(formArray)
     return formArray;
+  }
+
+  deleteTpl(tpl: any){
+    this.resetTplForm(tpl)
+    this.updateTariffAttributesStatus()
+  }
+
+  private updateTariffAttributesStatus() {
+    const ids = this.tpl?.value.reduce((acc: number[], t: any) => {
+      if (t?.attribute?.id) {
+        acc.push(t.attribute.id);  // Если id существует, добавляем его в массив
+      }
+      return acc;
+    }, []);
+    this.copiedAttributes = new Set(ids);
   }
 
   resetTplForm(tpl:any){

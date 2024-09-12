@@ -19,12 +19,17 @@
         <i class="fas fa-eye-slash"></i>
       </ng-template>
     </span>
-    <span class="attr-name col">
+    <span class="attr-name col"
+      [ngClass]="{'red': control.get('customFild')?.value}"
+    >
       <ng-container *ngIf="!isMatrix && control.get('attribute')?.value?.name">
         {{ control.get('attribute')?.value?.name }}
       </ng-container>
       <ng-container *ngIf="isMatrix && control.get('matrix')?.value?.name">
         {{ control.get('matrix')?.value?.name }}
+      </ng-container>
+      <ng-container *ngIf="control.get('customFild')?.value">
+        Benutzerdefiniert
       </ng-container>
     </span>
     <span class="attr_value col">

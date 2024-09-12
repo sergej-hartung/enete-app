@@ -33,7 +33,6 @@ export class ProductAddEditComponent {
           this.productType = 'hardware'
         }
       })
-    console.log('test')
     this.initIconStates()
   }
 

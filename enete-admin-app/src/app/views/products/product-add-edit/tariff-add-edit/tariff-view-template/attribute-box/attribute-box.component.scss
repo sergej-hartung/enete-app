@@ -48,6 +48,10 @@
 .attr-name {
     color: grey;
     font-weight: 300;
+
+    &.red{
+        color:#ab0400;
+    }
 }
 
 // .attr_value{

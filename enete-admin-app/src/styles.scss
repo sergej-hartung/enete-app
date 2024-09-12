@@ -1585,6 +1585,10 @@ app-tariff-add-edit{
         font-weight: 400;
         font-size: 0.7rem;
     }
+
+    &.red{
+        color: #ab0400;
+    }
 }
 
 .attr-unit{
@@ -1619,7 +1623,7 @@ app-tariff-add-edit{
     font-weight: 300;
     padding-left: 10px;
     padding-right: 10px;
-    min-width: 50px;
+    min-width: 70px;
     align-content: center;
 
     span{

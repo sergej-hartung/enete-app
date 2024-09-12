@@ -1,3 +1,4 @@
+import { Attribute } from "./attribute/attribute";
 import { AttributeGroup } from "./attributeGroup/attributeGroup";
 import { Category } from "./category/category";
 import { ComboStatus } from "./comboStatus/comboStatus";
@@ -21,11 +22,12 @@ export interface Tariff {
     status: TariffStatus;
     is_published: boolean;
     file_id: number;
-    calc_matrix?: calcMatrix[];
+    calc_matrix?: CalcMatrix[];
     attribute_groups?: AttributeGroup[];
     combo_status?: ComboStatus[];
     tariff_categories?: Category[];
     document?: TariffDocument;
+    tpl?: Template[]
     
     created_by: number;
     updated_by: number;
@@ -33,20 +35,44 @@ export interface Tariff {
     updated_at: string;
 }
 
-interface calcMatrix{
+export interface Template{
+    id:              number | null;
+    customFild:      boolean | number;
+    isMatrix:        boolean | number;
+    position:        number;
+    icon:            string;
+
+    autoFieldName:   boolean | number;
+    autoUnit:        boolean | number;
+    autoValueSource: boolean | number;
+
+    manualFieldName: string;
+    manualUnit:      string;
+    manualValue:     string;
+    
+    showFieldName:   boolean | number;
+    showIcon:        boolean | number;
+    showUnit:        boolean | number;
+    showValue:       boolean | number;
+
+    attribute?:      Attribute
+}
+
+export interface CalcMatrix{
     id: number,
+    uniqueId: string
     tariff_id: number,
     name: string,
     total_value: string,
     unit: string,
-    attributs: calcMatrixAttr[]
+    attributes: calcMatrixAttr[]
     created_by: number;
     updated_by: number;
     created_at: string;
     updated_at: string
 }
 
-interface calcMatrixAttr{
+export interface calcMatrixAttr{
     id: number,
     code: string,
     name: string,

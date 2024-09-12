@@ -3,6 +3,7 @@ import { FormService } from '../../../../services/form.service';
 import { FormArray, FormGroup } from '@angular/forms';
 import { Attribute } from '../../../../models/tariff/attribute/attribute';
 import { Subject, takeUntil } from 'rxjs';
+import { CalcMatrix, calcMatrixAttr, Template } from '../../../../models/tariff/tariff';
 
 @Component({
   selector: 'app-tariff-add-edit',
@@ -24,52 +25,112 @@ export class TariffAddEditComponent {
   }
 
   ngOnInit() {
-    this.subscribeToAttributeGroupChanges();
+    this.subscribeToFormChanges();
   }
 
-  subscribeToAttributeGroupChanges() {
-    // this.getAttributeGroupArray().controls.forEach((control, index) => {
-    //   console.log(control)
-    //   const group = control as FormGroup; // Cast AbstractControl to FormGroup
-    //   group.valueChanges.subscribe(() => {
-    //     console.log('changes')
-    //     this.checkAndSyncAttributes();
-    //   });
-    // });
+  subscribeToFormChanges() {
+    const attributeGroupsControl = this.tariffForm.get('attribute_groups');
+    const calcMatrixControl = this.tariffForm.get('calc_matrix');
+  
+    attributeGroupsControl?.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.syncAttributesWithTemplate();
+        this.syncCalcMatrix();
+      });
+  
+    calcMatrixControl?.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        this.syncCalcMatrix();
+      });
+  }
 
-    this.tariffForm.get('attribute_groups')?.valueChanges
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe((value) => {
-      console.log('Name field changes:', value);
-      this.checkAndSyncAttributes()
+  syncCalcMatrix() {
+    const calcMatrixArray = this.calcMatrixControl;
+    calcMatrixArray.controls.forEach((matrix, matrixIndex) => {
+      this.updateTplMatrix(matrix as FormGroup);
+    });
+  }
+
+  syncAttributesWithTemplate() {
+    const attributeGroups = this.attributeGroupsControl?.value;
+    const calcMatrices = this.calcMatrixControl?.value;
+    const templateArray = this.tplArrayControl?.value;
+  
+    attributeGroups.forEach((group: any) => {
+      if(group?.attributes){
+        group.attributes.forEach((attribute: any) => {
+          this.syncAttribute(attribute, calcMatrices, templateArray);
+        });
+      }
     });
   }
   
-  checkAndSyncAttributes() {
-    const attributeGroups = this.getAttributeGroupArray().value;
-    const matrices = this.getCalcMatrixArray().value;
+  
+  syncAttribute(attribute: Attribute, calcMatrices: CalcMatrix[], templateArray: Template[]) {
+    this.syncAttributeWithMatrix(attribute, calcMatrices);
+    this.syncAttributeWithTemplate(attribute, templateArray);
+  }
 
-    attributeGroups.forEach((group: any) => {
-      group.attributes.forEach((attribute: any) => {
-        matrices.forEach((matrix: any, matrixIndex: number) => {
-          //const foundAttribute = matrix.attributes.find((attr: any) => attr.attribute_id === attribute.id);
-          matrix.attributes.forEach((attr:any, attrIndex: number) => {
-            if(attr.id === attribute.id && attr.value !== attribute.value_varchar){
-              this.updateMatrixAttribute(matrixIndex, attrIndex, attribute.value_varchar);
-            }
-          })
-        });
+  syncAttributeWithMatrix(attribute: Attribute, calcMatrices: CalcMatrix[]) {
+    calcMatrices.forEach((matrix, matrixIndex) => {
+      matrix.attributes.forEach((attr, attrIndex) => {
+        if (this.shouldUpdateMatrixAttribute(attr, attribute)) {
+          this.updateMatrixAttribute(matrixIndex, attrIndex, attribute?.value_varchar);
+        }
       });
     });
   }
 
-  updateMatrixAttribute(matrixIndex:number, attrIndex: number, newValue: string) {
-    let matrices = this.getCalcMatrixArray()
-    const matrix = matrices.at(matrixIndex) as FormGroup
-    const attributes = matrix.get('attributes') as FormArray
-    attributes.at(attrIndex).patchValue({ value: newValue })
+  shouldUpdateMatrixAttribute(attr: calcMatrixAttr, attribute: Attribute ): boolean {
+    return attr.id === attribute.id && attr.value !== attribute.value_varchar;
+  }
 
-    this.updateTotalValue(attributes.at(attrIndex) as FormGroup, matrix)
+  syncAttributeWithTemplate(attribute: Attribute, templates: Template[]) {
+    templates.forEach((template, templateIndex) => {
+      const templateAttr = template.attribute; 
+      if (templateAttr && this.shouldUpdateTemplateAttribute(templateAttr, attribute)) {
+        this.updateTemplateAttribute(templateIndex, attribute);
+      }
+    });
+  }
+  
+
+  shouldUpdateTemplateAttribute(templateAttr: Attribute, attribute: Attribute): boolean {
+    return templateAttr?.id === attribute.id &&
+      (templateAttr?.value_varchar !== attribute?.value_varchar || templateAttr?.value_text !== attribute?.value_text);
+  }
+
+  updateMatrixAttribute(matrixIndex: number, attrIndex: number, newValue: string | undefined) {
+    const matrices = this.calcMatrixControl;
+    const matrix = matrices.at(matrixIndex) as FormGroup;
+    const attributes = matrix.get('attributes') as FormArray;
+    attributes.at(attrIndex).patchValue({ value: newValue });
+
+    this.updateTotalValue(attributes.at(attrIndex) as FormGroup, matrix);
+    this.updateTplMatrix(matrix);
+  }
+
+  updateTplMatrix(matrix: FormGroup) {
+    const tplsForm = this.tplArrayControl;
+    const tpls = tplsForm?.value;
+
+    tpls.forEach((tpl: any, tplIndex: number) => {
+      if (this.isSameMatrix(tpl.matrix, matrix)) {
+        const template = tplsForm.at(tplIndex) as FormGroup;
+        template.get('matrix')?.patchValue(matrix.value);
+      }
+    });
+  }
+
+  isSameMatrix(tplMatrix: any, formMatrix: FormGroup): boolean {
+    return tplMatrix?.id === formMatrix.get('id')?.value || tplMatrix?.uniqueId === formMatrix.get('uniqueId')?.value;
+  }
+
+  updateTemplateAttribute(index: number, attribute: any) {
+    const tpl = this.tplArrayControl.at(index);
+    tpl.get('attribute')?.patchValue(attribute);
   }
 
   updateTotalValue(attributeFormGroup: FormGroup, matrix: FormGroup) {
@@ -80,60 +141,35 @@ export class TariffAddEditComponent {
     if (valueControl && periodControl && valueTotalControl) {
       const value = parseFloat(valueControl.value.replace(',', '.'));
       const period = parseInt(periodControl.value, 10);
-      if (!isNaN(value) && !isNaN(period)) {
-        valueTotalControl.setValue(value * period);
-      } else {
-        if(isNaN(value)){
-          valueTotalControl.setValue(0);
-        }else{
-          valueTotalControl.setValue(value);
-        }
-      }
-      this.updateTotalValueMatrix(matrix)
+      valueTotalControl.setValue(!isNaN(value) && !isNaN(period) ? value * period : isNaN(value) ? 0 : value);
+      this.updateTotalValueMatrix(matrix);
     }
   }
 
-  updateTotalValueMatrix(matrix: any){
-    console.log(matrix)
-    if(matrix){
-      const Attributes = matrix?.value?.attributes 
-      let MatrixTotalValue = 0
-      let unitSet = new Set<string>();
+  updateTotalValueMatrix(matrix: FormGroup) {
+    const attributes = matrix.get('attributes')?.value || [];
+    let totalValue = 0;
+    let units = new Set<string>();
 
-      if(Attributes){
-        Attributes.forEach((attr:any) => {
-          if (attr?.unit !== undefined) {
-              unitSet.add(attr.unit);
-          }
-          if(attr?.value_total !== undefined){
-            MatrixTotalValue += parseFloat(attr?.value_total)
-            //matrix.setValue({}).total_value += attr?.value_total
-          }
-        })
+    attributes.forEach((attr: any) => {
+      if (attr?.unit) units.add(attr.unit);
+      totalValue += parseFloat(attr?.value_total || 0);
+    });
 
-        // Проверка и установка unit
-        const unit = matrix.get('unit')
-        if (unitSet.size === 1) {
-          
-            if(unit) unit.setValue(Array.from(unitSet)[0]);
-        } else {
-            // Если unit отличаются
-            if(unit) unit.setValue('');
-        }
-
-        const totalValue = matrix.get('total_value');
-        if(totalValue) totalValue.setValue(MatrixTotalValue)
-      }
-    }
+    matrix.get('unit')?.setValue(units.size === 1 ? Array.from(units)[0] : '');
+    matrix.get('total_value')?.setValue(totalValue);
   }
 
-
-  getAttributeGroupArray(): FormArray {
+  get attributeGroupsControl() {
     return this.tariffForm.get('attribute_groups') as FormArray;
   }
 
-  getCalcMatrixArray(): FormArray {
+  get calcMatrixControl() {
     return this.tariffForm.get('calc_matrix') as FormArray;
+  }
+
+  get tplArrayControl(): FormArray {
+    return this.tariffForm.get('tpl') as FormArray;
   }
 
   ngOnDestroy() {

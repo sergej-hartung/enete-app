@@ -38,10 +38,10 @@
                             <app-attribute-box
                                 [control]="control"
                                 [isMatrix]="control?.value?.isMatrix"
-                                [blockIndex]="1"
+                                [blockIndex]="0"
                                 [controlIndex]="i"
                                 [isCollapsed]="isCollapsedArray[1][i]"
-                                (removeTpl)="resetTplForm($event)"
+                                (removeTpl)="deleteTpl($event)"
                             ></app-attribute-box>
                         </div>
                     </ng-container>
@@ -88,7 +88,7 @@
                                 [blockIndex]="1"
                                 [controlIndex]="i"
                                 [isCollapsed]="isCollapsedArray[1][i]"
-                                (removeTpl)="resetTplForm($event)"
+                                (removeTpl)="deleteTpl($event)"
                             ></app-attribute-box>
                         </div>
                     </ng-container>
@@ -135,7 +135,7 @@
                                 [blockIndex]="2"
                                 [controlIndex]="i"
                                 [isCollapsed]="isCollapsedArray[2][i]"
-                                (removeTpl)="resetTplForm($event)"
+                                (removeTpl)="deleteTpl($event)"
                             ></app-attribute-box>
                         </div>
                     </ng-container>
@@ -160,7 +160,8 @@
               >
                 <ng-container *ngFor="let matrix of calcMatrixForm?.controls; let i = index">
                   <div
-                    class="attr-group-box"
+                    class="attr-group-box matrix-bg"
+
                     cdkDrag
                   >
                     <div class="attr-group ">
@@ -211,9 +212,10 @@
                     
                     class="attr-group-box"
                     cdkDrag
+
                     [ngClass]="{
-                      'copied-attribute': attributeCtrl.value.isCopied,
-                    }"
+                        'copied-attribute': copiedAttributes.has(attributeCtrl.value.id),
+                      }"
                   >
                     <div class="attr-group">
                         <span class="attr-name col-8">

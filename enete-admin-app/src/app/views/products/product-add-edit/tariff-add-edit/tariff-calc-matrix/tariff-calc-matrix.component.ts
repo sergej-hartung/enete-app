@@ -8,7 +8,8 @@ import { TariffService } from '../../../../../services/product/tariff/tariff.ser
 import { ProductService } from '../../../../../services/product/product.service';
 
 interface Matrix {
-  id?: number;
+  id?: number | null;
+  uniqueId?: string,
   name: string;
   attributes: any[];
   form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
@@ -71,8 +72,6 @@ export class TariffCalcMatrixComponent {
   }
 
   ngOnInit() {
-    console.log('load matrix')
-    //this.updateConnectedDropLists();
     this.productService.productMode$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(mode => {
@@ -83,7 +82,6 @@ export class TariffCalcMatrixComponent {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(attr => {
           this.removeAllAtributteById(attr)
-          console.log(attr)
         })
   }
 
@@ -96,6 +94,7 @@ export class TariffCalcMatrixComponent {
         attributes: [],
         form: this.fb.group({
           id: [null],
+          uniqueId: [this.generateUniqueIdWithTimestamp()],
           name: [this.newMatrixForm.value.name],
           total_value: 0,
           unit: [''],
@@ -104,7 +103,6 @@ export class TariffCalcMatrixComponent {
       };
       this.matrixs.push(newMatrix);
       this.calcMatrixForm.push(newMatrix.form);
-      console.log(this.matrixs)
       this.updateConnectedDropLists()
       //this.updateConnectedDropLists();
       this.addNewMatrix = false;
@@ -171,24 +169,13 @@ export class TariffCalcMatrixComponent {
     } else {
       const attribute = event.previousContainer.data[event.previousIndex];
       if (matrix) {
-        // Проверяем, существует ли атрибут с таким же id в целевой матрице
-        // const attributeExists = matrix.attributes.some(attr => attr.id === attribute.id);
-        // if (!attributeExists) {
-        //   this.addAttributeToMatrix(matrix, attribute);
-        // }
-
-        console.log(attribute)
         if(attribute?.value_varchar){
           this.addAttributeToMatrix(matrix, attribute);
-          
-          //attribute.isCopied = true;
           this.copiedAttributes.add(attribute.id);
         }
         
       }
     }
-    console.log(this.copiedAttributes)
-    console.log(this.tariffForm)
   }
 
   moveAttributeInFormArray(matrix: Matrix, previousIndex: number, currentIndex: number) {
@@ -227,7 +214,6 @@ export class TariffCalcMatrixComponent {
     const valueTotalControl = attributeFormGroup.get('value_total');
 
     singleControl?.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(value => {
-      console.log(value)
       if (!value) {
         periodControl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
         periodTypeControl?.setValidators([Validators.required])
@@ -241,15 +227,12 @@ export class TariffCalcMatrixComponent {
       periodControl?.updateValueAndValidity();
       valueTotalControl?.updateValueAndValidity();
       periodTypeControl?.updateValueAndValidity()
-
-      console.log(valueTotalControl)
     });
 
     periodControl?.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.updateTotalValue(attributeFormGroup, matrixGroup));
   }
 
   updateTotalValue(attributeFormGroup: FormGroup, matrixGroup: FormGroup) {
-    console.log('update value')
     const valueControl = attributeFormGroup.get('value');
     const periodControl = attributeFormGroup.get('period');
     const valueTotalControl = attributeFormGroup.get('value_total');
@@ -273,7 +256,6 @@ export class TariffCalcMatrixComponent {
 
 
   updateTotalValueMatrix(matrix: any){
-    console.log(matrix)
     if(matrix){
       const Attributes = matrix?.value?.attributes 
       let MatrixTotalValue = 0
@@ -390,7 +372,6 @@ export class TariffCalcMatrixComponent {
   removeAllAtributteById(attribute: Attribute){
     this.matrixs.forEach(matrix => {
       const index = matrix.attributes.findIndex(attr => attr.id == attribute.id)
-      console.log(index)
       if(index >= 0){
         this.removeAttribute(matrix, index)
       }
@@ -413,11 +394,12 @@ export class TariffCalcMatrixComponent {
               (
                 {
                   id: matrix.id,
+                  uniqueId: matrix.uniqueId,
                   tariff_id: matrix.tariff_id,
                   name: matrix.name,
                   total_value: matrix.total_value,
                   unit: matrix.unit,
-                  attributes: matrix.attributs.map(attr => ({
+                  attributes: matrix.attributes.map(attr => ({
                     ...attr,
                     isCopied: true // Отметьте атрибуты как скопированные
                   })),
@@ -425,13 +407,14 @@ export class TariffCalcMatrixComponent {
     
                   form: this.fb.group({
                     id: [matrix.id],
+                    uniqueId: [matrix.uniqueId],
                     tariff_id: [matrix.tariff_id],
                     name: [matrix.name],
                     total_value: [matrix.total_value],
                     unit: [matrix.unit],
                     attributes: this.fb.array(
 
-                      matrix.attributs.map(attr => {
+                      matrix.attributes.map(attr => {
                         return this.fb.group({
                           id: [attr.id],
                           code: [attr.code],
@@ -468,8 +451,6 @@ export class TariffCalcMatrixComponent {
 
                   this.addFormSwitchListener(attributForm, matrix?.form);
                 })
-                //console.log(attributeFormGroup)
-                //this.addFormSwitchListener(attributeFormGroup, matrix?.form);
               });
 
               
@@ -485,25 +466,14 @@ export class TariffCalcMatrixComponent {
   }
   
   private updateTariffAttributesStatus() {
-    // Создаем Set из всех id атрибутов, которые есть в группах
-    //const copiedAttributeIds = new Set(this.matrixs.flatMap(matrix => matrix.attributes.map(attr => attr.id)));
     this.copiedAttributes = new Set(this.matrixs.flatMap(matrix => matrix.attributes.map(attr => attr.id)));
-    console.log(this.copiedAttributes)
-    console.log(this.getAttributeGroupArray())
-    // Обновляем статус `isCopied` для атрибутов в правой колонке
-    // this.getAttributeGroupArray()?.value.forEach((matrix: any) => {
-    //   matrix.attributes.forEach((attribute: any) => {
-    //     console.log(copiedAttributeIds.has(attribute.id))
-    //     attribute.isCopied = copiedAttributeIds.has(attribute.id);
-    //   })
-      
-    // });
+  }
 
-    console.log(this.tariffAttributes)
+  private generateUniqueIdWithTimestamp(): string {
+    return `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   }
 
   ngOnDestroy() {
-    console.log('destroy matrix')
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

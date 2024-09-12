@@ -158,14 +158,19 @@
                 <span class="attr-name col">
                   Gesamt:
                 </span>
-                <div class="col-3 attr_value">
+                <div class="col attr_value">
                   <ng-container *ngIf="isNumeric(getTotalValueMatrix(matrixs, i)); else nonNumericTemplate">
-                    {{ getTotalValueMatrix(matrixs, i) | number:'1.2-2' }}<span *ngIf="getUnitMatrix(matrixs, i)">{{getUnitMatrix(matrixs, i)}}</span>
+                    {{ getTotalValueMatrix(matrixs, i) | number:'1.2-2' }}
                   </ng-container>
                   <ng-template #nonNumericTemplate>
-                    {{ getTotalValueMatrix(matrixs, i) }} <span *ngIf="getUnitMatrix(matrixs, i)">{{getUnitMatrix(matrixs, i)}}</span>
+                    {{ getTotalValueMatrix(matrixs, i) }} 
                   </ng-template>
                 </div>
+                <span class="attr-unit col">
+                  <ng-container *ngIf="getUnitMatrix(matrixs, i)">
+                    {{getUnitMatrix(matrixs, i)}}
+                  </ng-container>
+                </span>
                 <div class="attr-plazeholder"></div>
               </div>
             </div>

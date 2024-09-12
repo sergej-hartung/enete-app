@@ -52,7 +52,6 @@ export class TariffPromoComponent {
   }
 
   onAddNewPromo(){
-    console.log('test')
     this.addNewPromo = true
     this.newPromoForm.reset();
   }
@@ -72,12 +71,10 @@ export class TariffPromoComponent {
 
       this.addNewPromo = false
       this.newPromoForm.reset()
-      console.log(this.tariffForm)
     }
   }
 
   onEditPromo(index: number){
-    console.log(index)
     this.editPromoIndex = index;
     this.editPromoForm.setValue(
       { 
@@ -87,8 +84,6 @@ export class TariffPromoComponent {
           //text_long: this.promosForm.at(index)?.value?.text_long
       }
     );
-
-    console.log(this.editPromoForm)
   }
 
   onSaveEditPromo(){
@@ -114,7 +109,6 @@ export class TariffPromoComponent {
 
   onTooglePromoVisible(index: number){
     const isActive = this.promosForm.at(index)?.value?.is_active
-    console.log(isActive)
     this.promosForm.at(index).patchValue({is_active: !isActive})
   }
 
@@ -132,7 +126,6 @@ export class TariffPromoComponent {
   }
 
   openEditor(promo: any ) {
-    console.log('open Editor')
     const modalRef: NgbModalRef = this.modalService.open(
       EditorModalComponent, 
       {
@@ -151,13 +144,11 @@ export class TariffPromoComponent {
       if (result !== undefined ) {
 
         control.patchValue({ text_long: result });
-        console.log('Сохранено значение:', result);
         text?.markAsTouched()
         modalRef.close(); // Закрытие модального окна после сохранения
       }
     });
     modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-      console.log('fenster geschlossen')
       text?.markAsTouched()
       modalRef.close(); // Закрытие модального окна при нажатии на отмену
     });
