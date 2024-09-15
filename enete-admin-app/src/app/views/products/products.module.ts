@@ -39,6 +39,7 @@ import { FileManagerComponent } from './file-manager/file-manager.component';
 import { TreeNodeComponent } from './file-manager/tree-node/tree-node.component';
 import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
 import { AttributeBoxComponent } from './product-add-edit/tariff-add-edit/tariff-view-template/attribute-box/attribute-box.component';
+import { TariffDetailsTplComponent } from './product-add-edit/tariff-add-edit/tariff-details-tpl/tariff-details-tpl.component';
 
 
 @NgModule({
@@ -60,6 +61,7 @@ import { AttributeBoxComponent } from './product-add-edit/tariff-add-edit/tariff
     FileManagerComponent,
     TreeNodeComponent,
     AttributeBoxComponent,
+    TariffDetailsTplComponent,
     //FileSizePipe,
   ],
   imports: [

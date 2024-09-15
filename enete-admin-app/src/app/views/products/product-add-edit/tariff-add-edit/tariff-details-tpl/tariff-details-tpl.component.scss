@@ -1,0 +1,33 @@
+
+    ::ng-deep .cdk-drag-preview {
+        /* Важно: не убирайте transform, Angular CDK управляет перемещением через это свойство */
+        background-color: rgba(255, 255, 255, 0.9); /* Полупрозрачный фон */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+        border-radius: 4px; /* Скругление */
+        //padding: 8px; /* Отступы внутри превью */
+        opacity: 1; /* Полупрозрачность */
+        border: 1px solid #ccc;
+    
+        ::ng-deep .custom-card-header{
+            display: none;
+        }
+    
+        ::ng-deep .custom-card{
+            margin: 0;
+            border:none;
+        }
+      }
+
+    ::ng-deep .right-panel{
+        .custom-card{
+           cursor: move;
+       }
+    }
+
+
+
+//   .tariff-details-drag-preview {
+//     /* Ваши собственные стили для контента внутри превью */
+//     margin-top: 10px; /* Смещение на 10px вниз от курсора */
+//   margin-left: 10px;
+//   }

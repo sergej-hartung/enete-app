@@ -125,7 +125,9 @@ export class TariffPromoComponent {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
-  openEditor(promo: any ) {
+  openEditor(event: Event, promo: any ) {
+    (event.currentTarget as HTMLElement).blur();
+    event.preventDefault();
     const modalRef: NgbModalRef = this.modalService.open(
       EditorModalComponent, 
       {

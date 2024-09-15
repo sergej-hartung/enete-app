@@ -5,6 +5,7 @@
 @import 'material-symbols/index.css';
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import 'ckeditor5/ckeditor5.css';
+@import 'assets/scss/notification.scss';
 //@import 'material-symbols';
 
 html, body {
@@ -2320,4 +2321,16 @@ app-tariff-add-edit{
         align-content: center;
     }
 
+}
+
+
+.tarifd-details{
+    .btn-text-style{
+        text-decoration: none;
+    }
+}
+
+.tariff-details-drag-preview{
+    padding: 10px;
+    background: #fff;
 }

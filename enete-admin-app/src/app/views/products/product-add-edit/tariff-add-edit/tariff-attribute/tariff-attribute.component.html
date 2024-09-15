@@ -154,7 +154,7 @@
                 <span class="attr-unit col">{{ group.attributes[j].unit }}</span>
                 <button 
                   *ngIf="group.attributes[j].is_frontend_visible" 
-                  [disabled]="group.attributes[j]?.isActiveDesibled" 
+                  [disabled]="group.attributes[j].isActiveDesibled" 
                   class="btn-text-style green" 
                   (click)="toggleFrontendVisible(group.attributes[j], attributeCtrl)"
                 >
@@ -162,7 +162,7 @@
                 </button>
                 <button 
                   *ngIf="!group.attributes[j].is_frontend_visible" 
-                  [disabled]="group.attributes[j]?.isActiveDesibled"
+                  [disabled]="group.attributes[j].isActiveDesibled"
                   class="btn-text-style red" 
                   (click)="toggleFrontendVisible(group.attributes[j], attributeCtrl)"
                 >

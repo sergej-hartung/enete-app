@@ -33,6 +33,12 @@
                 <app-tariff-view-template></app-tariff-view-template>                 
             </ng-template>
         </li>
+        <li [ngbNavItem]="5">
+            <button ngbNavLink>Tarifdetails</button>
+            <ng-template ngbNavContent> 
+                <app-tariff-details-tpl></app-tariff-details-tpl>            
+            </ng-template>
+        </li>
     </ul>
     <div [ngbNavOutlet]="nav" class="pe-0 ps-0"></div>
 </div>
