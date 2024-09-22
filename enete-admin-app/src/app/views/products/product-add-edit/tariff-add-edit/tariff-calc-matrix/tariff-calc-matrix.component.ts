@@ -11,7 +11,7 @@ interface Matrix {
   id?: number | null;
   uniqueId?: string,
   name: string;
-  attributes: any[];
+  attributs: any[];
   form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
   hidden?: boolean;
 }
@@ -31,13 +31,13 @@ interface Matrix {
 })
 export class TariffCalcMatrixComponent {
 
-  copiedAttributes: Set<number> = new Set(); // Хранит ID скопированных атрибутов
+  copiedAttributs: Set<number> = new Set(); // Хранит ID скопированных атрибутов
 
   addNewMatrix = false;
   newMatrixForm: FormGroup;
   editMatrixForm: FormGroup;
 
-  tariffAttributes: Attribute[] = [];
+  tariffAttributs: Attribute[] = [];
   matrixs: Matrix[] = [];
   hiddenGroups: boolean[] = [];
   //groupsу: Group[] = [];
@@ -91,14 +91,14 @@ export class TariffCalcMatrixComponent {
     if (this.newMatrixForm.valid) {
       const newMatrix: Matrix = {
         name: this.newMatrixForm.value.name,
-        attributes: [],
+        attributs: [],
         form: this.fb.group({
           id: [null],
           uniqueId: [this.generateUniqueIdWithTimestamp()],
           name: [this.newMatrixForm.value.name],
           total_value: 0,
           unit: [''],
-          attributes: this.fb.array([])
+          attributs: this.fb.array([])
         })
       };
       this.matrixs.push(newMatrix);
@@ -147,7 +147,7 @@ export class TariffCalcMatrixComponent {
     this.matrixs.splice(index, 1);
     this.calcMatrixForm.removeAt(index);
     this.updateConnectedDropLists();
-    this.updateTariffAttributesStatus();
+    this.updateTariffAttributsStatus();
     //this.updateTariffAttributesStatus(); // Обновление статуса после удаления группы
   }
 
@@ -171,7 +171,7 @@ export class TariffCalcMatrixComponent {
       if (matrix) {
         if(attribute?.value_varchar){
           this.addAttributeToMatrix(matrix, attribute);
-          this.copiedAttributes.add(attribute.id);
+          this.copiedAttributs.add(attribute.id);
         }
         
       }
@@ -179,16 +179,16 @@ export class TariffCalcMatrixComponent {
   }
 
   moveAttributeInFormArray(matrix: Matrix, previousIndex: number, currentIndex: number) {
-    const attributesFormArray = matrix.form.get('attributes') as FormArray;
-    const attribute = attributesFormArray.at(previousIndex);
-    attributesFormArray.removeAt(previousIndex);
-    attributesFormArray.insert(currentIndex, attribute);
+    const attributsFormArray = matrix.form.get('attributs') as FormArray;
+    const attribute = attributsFormArray.at(previousIndex);
+    attributsFormArray.removeAt(previousIndex);
+    attributsFormArray.insert(currentIndex, attribute);
   }
 
   addAttributeToMatrix(matrix: Matrix, attribute: any) {
 
-      matrix.attributes.push(attribute);
-      const attributesFormArray = matrix.form.get('attributes') as FormArray;
+      matrix.attributs.push(attribute);
+      const attributsFormArray = matrix.form.get('attributs') as FormArray;
       const attributeFormGroup = this.fb.group({
         id: [attribute.id],
         code: [attribute.code],
@@ -201,7 +201,7 @@ export class TariffCalcMatrixComponent {
         periodeTyp: ['']
       });
   
-      attributesFormArray.push(attributeFormGroup);
+      attributsFormArray.push(attributeFormGroup);
   
       this.addFormSwitchListener(attributeFormGroup, matrix?.form);
       this.updateTotalValueMatrix(matrix?.form)
@@ -257,12 +257,12 @@ export class TariffCalcMatrixComponent {
 
   updateTotalValueMatrix(matrix: any){
     if(matrix){
-      const Attributes = matrix?.value?.attributes 
+      const Attributs = matrix?.value?.attributs 
       let MatrixTotalValue = 0
       let unitSet = new Set<string>();
 
-      if(Attributes){
-        Attributes.forEach((attr:any) => {
+      if(Attributs){
+        Attributs.forEach((attr:any) => {
           if (attr?.unit !== undefined) {
               unitSet.add(attr.unit);
           }
@@ -306,16 +306,16 @@ export class TariffCalcMatrixComponent {
   }
 
   getAttributeFormArray(matrix: Matrix): FormArray {
-    return matrix.form.get('attributes') as FormArray;
+    return matrix.form.get('attributs') as FormArray;
   }
 
-  getAttributeGroupAttributes(index: number): FormArray {
+  getAttributeGroupAttributs(index: number): FormArray {
     const attributeGroup = this.getAttributeGroupArray().at(index) as FormGroup;
-    return attributeGroup.get('attributes') as FormArray;
+    return attributeGroup.get('attributs') as FormArray;
   }
   
   getAttributeControl(groupIndex: number, attributeIndex: number): FormGroup {
-    return this.getAttributeGroupAttributes(groupIndex).at(attributeIndex) as FormGroup;
+    return this.getAttributeGroupAttributs(groupIndex).at(attributeIndex) as FormGroup;
   }
 
   getAttributControl(controll:any){
@@ -349,29 +349,29 @@ export class TariffCalcMatrixComponent {
 
     if (index >= 0) {
       //const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
-      const originalAttribute = this.tariffAttributes.at(index);
+      const originalAttribute = this.tariffAttributs.at(index);
       if (originalAttribute) {
-        this.copiedAttributes.delete(originalAttribute.id);
+        this.copiedAttributs.delete(originalAttribute.id);
         //originalAttribute.isCopied = false;
       }
       
-      matrix.attributes.splice(index, 1);
+      matrix.attributs.splice(index, 1);
 
       // Удаление FormControl для атрибута
-      const attributes = matrix.form.get('attributes') as FormArray;
+      const attributs = matrix.form.get('attributs') as FormArray;
       //const formIndex = attributes.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
       if (index >= 0) {
-        attributes.removeAt(index);
+        attributs.removeAt(index);
       }
       //this.updateConnectedDropLists();
     }
     this.updateTotalValueMatrix(matrix.form)
-    this.updateTariffAttributesStatus();
+    this.updateTariffAttributsStatus();
   }
 
   removeAllAtributteById(attribute: Attribute){
     this.matrixs.forEach(matrix => {
-      const index = matrix.attributes.findIndex(attr => attr.id == attribute.id)
+      const index = matrix.attributs.findIndex(attr => attr.id == attribute.id)
       if(index >= 0){
         this.removeAttribute(matrix, index)
       }
@@ -399,7 +399,7 @@ export class TariffCalcMatrixComponent {
                   name: matrix.name,
                   total_value: matrix.total_value,
                   unit: matrix.unit,
-                  attributes: matrix.attributes.map(attr => ({
+                  attributs: matrix.attributs.map(attr => ({
                     ...attr,
                     isCopied: true // Отметьте атрибуты как скопированные
                   })),
@@ -412,9 +412,9 @@ export class TariffCalcMatrixComponent {
                     name: [matrix.name],
                     total_value: [matrix.total_value],
                     unit: [matrix.unit],
-                    attributes: this.fb.array(
+                    attributs: this.fb.array(
 
-                      matrix.attributes.map(attr => {
+                      matrix.attributs.map(attr => {
                         return this.fb.group({
                           id: [attr.id],
                           code: [attr.code],
@@ -435,7 +435,7 @@ export class TariffCalcMatrixComponent {
               this.calcMatrixForm.clear();
               this.matrixs.forEach(matrix => {
                 this.calcMatrixForm.push(matrix.form);
-                let attributeFormGroups = matrix.form.get('attributes') as FormArray
+                let attributeFormGroups = matrix.form.get('attributs') as FormArray
 
                 attributeFormGroups.controls.forEach(attributeFormGroup => {
                   let attributForm = attributeFormGroup as FormGroup
@@ -454,7 +454,7 @@ export class TariffCalcMatrixComponent {
               });
 
               
-              this.updateTariffAttributesStatus();
+              this.updateTariffAttributsStatus();
               this.updateConnectedDropLists();
             }
           }
@@ -465,8 +465,8 @@ export class TariffCalcMatrixComponent {
     return !isNaN(parseFloat(value)) && isFinite(value);
   }
   
-  private updateTariffAttributesStatus() {
-    this.copiedAttributes = new Set(this.matrixs.flatMap(matrix => matrix.attributes.map(attr => attr.id)));
+  private updateTariffAttributsStatus() {
+    this.copiedAttributs = new Set(this.matrixs.flatMap(matrix => matrix.attributs.map(attr => attr.id)));
   }
 
   private generateUniqueIdWithTimestamp(): string {

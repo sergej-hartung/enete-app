@@ -28,10 +28,10 @@ class TariffShowController extends Controller
             'status',
             'document',
             'clacMatrices',
-            'clacMatrices.attributes',
+            'clacMatrices.attributs',
             'attributeGroups', 
-            'attributeGroups.attributes', 
-            'attributeGroups.attributes.inputType'
+            'attributeGroups.attributs', 
+            'attributeGroups.attributs.inputType'
         )->find($tarifId);
         //dd($tariff);
 

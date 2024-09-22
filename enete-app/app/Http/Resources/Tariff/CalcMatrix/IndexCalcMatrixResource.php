@@ -23,7 +23,7 @@ class IndexCalcMatrixResource extends JsonResource
             'total_value' => $this->total_value,
             'unit'        => $this->unit,
             //'position' => $this->position,
-            'attributes'   => IndexTariffAttributeForCalcMatrixResource::collection($this->attributes),
+            'attributs'   => IndexTariffAttributeForCalcMatrixResource::collection($this->attributs),
             'created_by'  => $this->created_by,
             'updated_by'  => $this->updated_by,
             'created_at'  => $this->created_at,

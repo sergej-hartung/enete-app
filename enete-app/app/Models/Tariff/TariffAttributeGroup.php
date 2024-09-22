@@ -16,7 +16,7 @@ class TariffAttributeGroup extends Model
         return $this->belongsTo(Tariff::class);
     }
 
-    public function attributes()
+    public function attributs()
     {
         return $this->belongsToMany(TariffAttribute::class, 'tariff_attribute_group_mappings', 'attribute_group_id', 'attribute_id')
                     ->withPivot('value_varchar', 'value_text', 'is_active', 'position')

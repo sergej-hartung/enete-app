@@ -202,19 +202,19 @@
               <div
                 cdkDropList
                 [id]="tariffDropListId"
-                [cdkDropListData]="getAttributeGroupAttributes(i).value"
+                [cdkDropListData]="getAttributeGroupAttributs(i).value"
                 [cdkDropListConnectedTo]="connectedDropLists"
                 class="attr-group-list"
                 (cdkDropListDropped)="drop($event)"
               >
-                <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributes(i).controls; let j = index">
+                <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributs(i).controls; let j = index">
                   <div
                     
                     class="attr-group-box"
                     cdkDrag
 
                     [ngClass]="{
-                        'copied-attribute': copiedAttributes.has(attributeCtrl.value.id),
+                        'copied-attribute': copiedAttributs.has(attributeCtrl.value.id),
                       }"
                   >
                     <div class="attr-group">

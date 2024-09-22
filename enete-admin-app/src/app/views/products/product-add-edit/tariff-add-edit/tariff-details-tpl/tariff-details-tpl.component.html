@@ -6,19 +6,55 @@
             <div card-body>
                 <div class="custom-body">
                     <div
-                        class="attr-group-list"
                         cdkDropList
                         [id]="tariffDropListId"
                         [cdkDropListData]="tariffdetails.value"
-                        [cdkDropListConnectedTo]="rightDropLists" 
-                        (cdkDropListDropped)="drop($event)"
+                        [cdkDropListConnectedTo]="connectedDropLists" 
+                        (cdkDropListDropped)="drop($event); logEvent($event)"
                     >
-                    <div *ngFor="let item of tariffdetails.controls" cdkDrag>
-                        <app-card>
-                          <div card-header>{{ item.value.name }}</div>
-                          <div card-body>{{ item.value.value_varchar }}</div>
+                        <div 
+                            cdkDrag
+                            *ngFor="let item of tariffdetails.controls; let i = index"
+                        >
+                            <div>{{ item.value?.name }}</div>
+                            <div *ngFor="let attributeCtrl of getTariffDetailsAttributs(item).controls; let j = index">
+                                <div class="d-flex">
+                                    <div class="attr-name col-7">
+                                        {{attributeCtrl.value.name}}
+                                    </div>
+                                    <div class="attr_value col">
+                                        {{ attributeCtrl.value.value_varchar }}
+                                    </div>
+                                    <div class="attr-unit col">
+                                        {{ attributeCtrl.value.unit }}
+                                    </div>
+                                </div>   
+                            </div>
+                        </div>
+                        <app-card 
+                            cdkDrag
+                            *ngFor="let item of tariffdetails.controls; let i = index"
+                        >
+                            <div card-header>{{ item.value?.name }}</div>
+                            <div card-body>
+                                <div class="custom-body">
+                                    <ng-container *ngFor="let attributeCtrl of getTariffDetailsAttributs(item).controls; let j = index">
+                                        <div class="d-flex">
+                                            <div class="attr-name col-7">
+                                                {{attributeCtrl.value.name}}
+                                            </div>
+                                            <div class="attr_value col">
+                                                {{ attributeCtrl.value.value_varchar }}
+                                            </div>
+                                            <div class="attr-unit col">
+                                                {{ attributeCtrl.value.unit }}
+                                            </div>
+                                        </div>                          
+                                    </ng-container>
+                                </div>  
+                            </div>
+                            
                         </app-card>
-                      </div>
                     </div>
                 </div>                           
             </div>
@@ -27,21 +63,21 @@
     <div class="col-5 right-panel pt-2">
         <div 
             class="mb-2 tarifd-details" 
-            *ngFor="let attributeGroup of attributeGroupsControl.controls; let i = index"
+            
             cdkDropList
-            [id]="onGetTariffdetailsDropListId(i)"
-            [cdkDropListData]="getAttributeGroupAttributes(i).value"
-            [cdkDropListConnectedTo]="[tariffDropListId]" 
-            (cdkDropListDropped)="drop($event)"
+            [id]="tariffGroupDropListId"
+            [cdkDropListConnectedTo]="connectedDropLists"
+            [cdkDropListData]="attributeGroupsControl.value"
         >
 
             <app-card 
                 cdkDrag
+                *ngFor="let attributeGroup of attributeGroupsControl.controls; let i = index"
             >
                 <div card-header>{{ getAttributeGroupName(i) }}</div>
                 <div card-body>
                     <div class="custom-body">
-                        <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributes(i).controls; let j = index">
+                        <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributs(i).controls; let j = index">
                             <div class="d-flex">
                                 <div class="attr-name col-7">
                                     {{attributeCtrl.value.name}}
@@ -54,7 +90,7 @@
                                 </div>
                             </div>                          
                         </ng-container>
-                    </div>                           
+                    </div>  
                 </div>
                 
             </app-card>

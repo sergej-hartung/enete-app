@@ -11,7 +11,7 @@ class TariffAttributeType extends Model
 
     protected $fillable = ['name', 'created_by', 'updated_by'];
 
-    public function attributes()
+    public function attributs()
     {
         return $this->hasMany(Attribute::class);
     }

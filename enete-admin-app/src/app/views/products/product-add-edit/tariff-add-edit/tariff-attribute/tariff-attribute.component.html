@@ -31,7 +31,7 @@
         </div>
         <ng-template #groupDisplay>
           <span class="group-name">
-            <button class="btn-text-style" (click)="toggleGroupAttributes(i)">{{ group.name }}</button>
+            <button class="btn-text-style" (click)="toggleGroupAttributs(i)">{{ group.name }}</button>
             <button class="btn-text-style green" (click)="editGroup(i)">
               <i class="fa-regular fa-pen-to-square"></i>
             </button>
@@ -47,7 +47,7 @@
           <div
             cdkDropList
             [id]="getGroupDropListId(i)"
-            [cdkDropListData]="group.attributes"
+            [cdkDropListData]="group.attributs"
             [cdkDropListConnectedTo]="connectedDropLists"
             class="attr-group-list"
             (cdkDropListDropped)="drop($event, group)"
@@ -57,14 +57,14 @@
               *ngFor="let attributeCtrl of getAttributeFormArray(group).controls; let j = index"
               [formGroup]="getFormGroupFromArray(getAttributeFormArray(group), j)"
               cdkDrag
-              [cdkDragDisabled]="group.attributes[j].isFocused"
+              [cdkDragDisabled]="group.attributs[j].isFocused"
             >
               <div class="attr-group">
                 <span class="attr-name col">
-                  {{ group.attributes[j].name }}<span *ngIf="isRequired(getAttributeFormControl(group.form, j, 'value_varchar')) || isRequired(getAttributeFormControl(group.form, j, 'value_text'))" class="required">*</span>
+                  {{ group.attributs[j].name }}<span *ngIf="isRequired(getAttributeFormControl(group.form, j, 'value_varchar')) || isRequired(getAttributeFormControl(group.form, j, 'value_text'))" class="required">*</span>
                 </span>
                 <span class="attr-value col-4">
-                  <ng-container [ngSwitch]="group.attributes[j].input_type">
+                  <ng-container [ngSwitch]="group.attributs[j].input_type">
                     <select
                       *ngSwitchCase="'Dropdown'"
                       class="form-select form-select-sm"
@@ -73,7 +73,7 @@
                       (focus)="setFocus(group, j)"
                       (blur)="removeFocus(group, j)"
                     >
-                      <option *ngFor="let option of getDropdownOptions(group.attributes[j])" [value]="option.value">
+                      <option *ngFor="let option of getDropdownOptions(group.attributs[j])" [value]="option.value">
                         {{ option.label }}
                       </option>
                     </select>
@@ -151,24 +151,24 @@
                     />                  
                   </ng-container>                         
                 </span>
-                <span class="attr-unit col">{{ group.attributes[j].unit }}</span>
+                <span class="attr-unit col">{{ group.attributs[j].unit }}</span>
                 <button 
-                  *ngIf="group.attributes[j].is_frontend_visible" 
-                  [disabled]="group.attributes[j].isActiveDesibled" 
+                  *ngIf="group.attributs[j].is_frontend_visible" 
+                  [disabled]="group.attributs[j].isActiveDesibled" 
                   class="btn-text-style green" 
-                  (click)="toggleFrontendVisible(group.attributes[j], attributeCtrl)"
+                  (click)="toggleFrontendVisible(group.attributs[j], attributeCtrl)"
                 >
                   <i class="far fa-eye"></i>
                 </button>
                 <button 
-                  *ngIf="!group.attributes[j].is_frontend_visible" 
-                  [disabled]="group.attributes[j].isActiveDesibled"
+                  *ngIf="!group.attributs[j].is_frontend_visible" 
+                  [disabled]="group.attributs[j].isActiveDesibled"
                   class="btn-text-style red" 
-                  (click)="toggleFrontendVisible(group.attributes[j], attributeCtrl)"
+                  (click)="toggleFrontendVisible(group.attributs[j], attributeCtrl)"
                 >
                   <i class="fas fa-eye-slash"></i>
                 </button>
-                <button class="btn-text-style red" (click)="removeAttribute(group, group.attributes[j])">
+                <button class="btn-text-style red" (click)="removeAttribute(group, group.attributs[j])">
                   <i class="fas fa-times"></i>
                 </button>
               </div>
@@ -180,7 +180,7 @@
               
               <div
                 class="col-12 attribute-details-accordion"
-                *ngIf="group.attributes[j].input_type === 'Textbereich' && getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value"
+                *ngIf="group.attributs[j].input_type === 'Textbereich' && getFormGroupFromArray(getAttributeFormArray(group), j).get('value_text')?.value"
                 ngbAccordion
                 #accordion="ngbAccordion"
               >
@@ -240,13 +240,13 @@
     <div
       cdkDropList
       [id]="tariffDropListId"
-      [cdkDropListData]="tariffAttributes"
+      [cdkDropListData]="tariffAttributs"
       [cdkDropListConnectedTo]="connectedDropLists"
       class="attr-group-list"
       (cdkDropListDropped)="drop($event)"
       [cdkDropListEnterPredicate]="canDropToTariffList"
     >
-      <div class="attr-group-box" *ngFor="let attribute of tariffAttributes" cdkDrag [ngClass]="{'copied-attribute': attribute.isCopied}">
+      <div class="attr-group-box" *ngFor="let attribute of tariffAttributs" cdkDrag [ngClass]="{'copied-attribute': attribute.isCopied}">
         <div class="attr-group">
           <span class="attr-kennung col">{{attribute.code}}</span>
           <span class="attr-name col-5">{{attribute.name}}</span>

@@ -15,7 +15,7 @@ class IndexController extends Controller
     public function __invoke($tarifId)
     {
 
-        $tariff = Tariff::with('attributeGroups', 'attributeGroups.attributes', 'attributeGroups.attributes.inputType')->find($tarifId);
+        $tariff = Tariff::with('attributeGroups', 'attributeGroups.attributs', 'attributeGroups.attributs.inputType')->find($tarifId);
         //dd($tariff->attributeGroups);
         return IndexTariffAttributeGroupResource::collection($tariff->attributeGroups);
     }

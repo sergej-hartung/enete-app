@@ -45,7 +45,7 @@
             <div
               cdkDropList
               [id]="onGetMatrixDropListId(i)"
-              [cdkDropListData]="matrix.attributes"
+              [cdkDropListData]="matrix.attributs"
               [cdkDropListConnectedTo]="connectedDropLists"
               class="attr-group-list"
               (cdkDropListDropped)="drop($event, matrix)"
@@ -55,11 +55,11 @@
                 *ngFor="let attributeCtrl of getAttributeFormArray(matrix).controls; let j = index"
                 [formGroup]="getAttributControl(attributeCtrl)"
                 cdkDrag
-                [cdkDragDisabled]="matrix.attributes[j].isFocused"
+                [cdkDragDisabled]="matrix.attributs[j].isFocused"
               >
                 <div class="attr-group">
                   <span class="attr-name col">
-                    {{ matrix.attributes[j].name }}
+                    {{ matrix.attributs[j].name }}
                   </span>
                   <div class="col-3 form-check form-switch form-switch-sm">
                     <label class="form-check-label" for="single-{{i}}-{{j}}">Einmalig</label>
@@ -154,7 +154,7 @@
                   </div>
                 </div>
               </div>
-              <div  *ngIf="matrix.attributes.length > 0" class="attr-group total-value">
+              <div  *ngIf="matrix.attributs.length > 0" class="attr-group total-value">
                 <span class="attr-name col">
                   Gesamt:
                 </span>
@@ -217,19 +217,19 @@
             <div
               cdkDropList
               [id]="tariffDropListId"
-              [cdkDropListData]="getAttributeGroupAttributes(i).value"
+              [cdkDropListData]="getAttributeGroupAttributs(i).value"
               [cdkDropListConnectedTo]="connectedDropLists"
               class="attr-group-list"
               (cdkDropListDropped)="drop($event)"
               [cdkDropListEnterPredicate]="canDropToTariffList"
             >
-              <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributes(i).controls; let j = index">
+              <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributs(i).controls; let j = index">
                 <div
                   
                   class="attr-group-box"
                   cdkDrag
                   [ngClass]="{
-                    'copied-attribute': copiedAttributes.has(attributeCtrl.value.id),
+                    'copied-attribute': copiedAttributs.has(attributeCtrl.value.id),
                   }"
                 >
                   <div class="attr-group">

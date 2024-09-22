@@ -132,7 +132,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
         $router->get('/{groupId}/tariffs', 'App\Http\Controllers\Tariff\Group\TariffByGroupController')->name('tariff-groups.tariffs');
         $router->get('/{groupId}/providers', 'App\Http\Controllers\Tariff\Group\ProviderByGroupController')->name('tariff-groups.providers');
         $router->get('/{groupId}/network-operators', 'App\Http\Controllers\Tariff\Group\NetworkOperatorByGroupController')->name('tariff-groups.network-operators');
-        $router->get('/{groupId}/attributes', 'App\Http\Controllers\Tariff\Group\AttributeByGroupController')->name('tariff-groups.attributes');
+        $router->get('/{groupId}/attributs', 'App\Http\Controllers\Tariff\Group\AttributeByGroupController')->name('tariff-groups.attributs');
     });
     
     $router->group(['prefix' => 'tariff-statuses'], function ($router) {

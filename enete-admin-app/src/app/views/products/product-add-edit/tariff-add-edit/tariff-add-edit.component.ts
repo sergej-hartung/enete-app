@@ -35,7 +35,7 @@ export class TariffAddEditComponent {
     attributeGroupsControl?.valueChanges
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {
-        this.syncAttributesWithTemplate();
+        this.syncAttributsWithTemplate();
         this.syncCalcMatrix();
       });
   
@@ -53,14 +53,14 @@ export class TariffAddEditComponent {
     });
   }
 
-  syncAttributesWithTemplate() {
+  syncAttributsWithTemplate() {
     const attributeGroups = this.attributeGroupsControl?.value;
     const calcMatrices = this.calcMatrixControl?.value;
     const templateArray = this.tplArrayControl?.value;
   
     attributeGroups.forEach((group: any) => {
-      if(group?.attributes){
-        group.attributes.forEach((attribute: any) => {
+      if(group?.attributs){
+        group.attributs.forEach((attribute: any) => {
           this.syncAttribute(attribute, calcMatrices, templateArray);
         });
       }
@@ -75,7 +75,7 @@ export class TariffAddEditComponent {
 
   syncAttributeWithMatrix(attribute: Attribute, calcMatrices: CalcMatrix[]) {
     calcMatrices.forEach((matrix, matrixIndex) => {
-      matrix.attributes.forEach((attr, attrIndex) => {
+      matrix.attributs.forEach((attr, attrIndex) => {
         if (this.shouldUpdateMatrixAttribute(attr, attribute)) {
           this.updateMatrixAttribute(matrixIndex, attrIndex, attribute?.value_varchar);
         }
@@ -105,10 +105,10 @@ export class TariffAddEditComponent {
   updateMatrixAttribute(matrixIndex: number, attrIndex: number, newValue: string | undefined) {
     const matrices = this.calcMatrixControl;
     const matrix = matrices.at(matrixIndex) as FormGroup;
-    const attributes = matrix.get('attributes') as FormArray;
-    attributes.at(attrIndex).patchValue({ value: newValue });
+    const attributs = matrix.get('attributs') as FormArray;
+    attributs.at(attrIndex).patchValue({ value: newValue });
 
-    this.updateTotalValue(attributes.at(attrIndex) as FormGroup, matrix);
+    this.updateTotalValue(attributs.at(attrIndex) as FormGroup, matrix);
     this.updateTplMatrix(matrix);
   }
 
@@ -147,11 +147,11 @@ export class TariffAddEditComponent {
   }
 
   updateTotalValueMatrix(matrix: FormGroup) {
-    const attributes = matrix.get('attributes')?.value || [];
+    const attributs = matrix.get('attributs')?.value || [];
     let totalValue = 0;
     let units = new Set<string>();
 
-    attributes.forEach((attr: any) => {
+    attributs.forEach((attr: any) => {
       if (attr?.unit) units.add(attr.unit);
       totalValue += parseFloat(attr?.value_total || 0);
     });

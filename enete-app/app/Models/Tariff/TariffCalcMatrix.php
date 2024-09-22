@@ -17,7 +17,7 @@ class TariffCalcMatrix extends Model
         'position',
     ];
 
-    public function attributes()
+    public function attributs()
     {
         return $this->belongsToMany(TariffAttribute::class, 'calc_matrix_attribute_mappings', 'calc_matrix_id', 'attribute_id')
             ->withPivot(['period', 'periodeTyp', 'single', 'unit', 'value', 'value_total'])

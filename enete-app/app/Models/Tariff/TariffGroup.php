@@ -12,7 +12,7 @@ class TariffGroup extends Model
 
     protected $fillable = ['name', 'icon', 'created_by', 'updated_by'];
 
-    public function attributes()
+    public function attributs()
     {
         return $this->belongsToMany(TariffAttribute::class, 'tariff_group_attribute_mappings', 'group_id', 'attribute_id');
     }

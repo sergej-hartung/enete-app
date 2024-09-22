@@ -15,7 +15,7 @@ class AttributeByGroupController extends Controller
     public function __invoke($id)
     {
 
-        $group = TariffGroup::with('attributes', 'attributes.inputType')->find($id);
-        return IndexTariffAttributeResource::collection($group->attributes);
+        $group = TariffGroup::with('attributs', 'attributs.inputType')->find($id);
+        return IndexTariffAttributeResource::collection($group->attributs);
     }
 }

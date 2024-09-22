@@ -12,7 +12,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 })
 export class TariffViewTemplateComponent {
 
-  copiedAttributes: Set<number> = new Set(); // Хранит ID скопированных атрибутов
+  copiedAttributs: Set<number> = new Set(); // Хранит ID скопированных атрибутов
   tariffForm: FormGroup
 
   tariffDropListId = 'tariffDropList';
@@ -75,9 +75,9 @@ export class TariffViewTemplateComponent {
               unit:          [attribute?.unit]
             })
           )
-          this.copiedAttributes.add(attribute.id);
+          this.copiedAttributs.add(attribute.id);
         }else{
-          this.copiedAttributes.add(attribute.id);
+          this.copiedAttributs.add(attribute.id);
           control.get('attribute').patchValue(attribute)
         }
       }
@@ -129,9 +129,9 @@ export class TariffViewTemplateComponent {
     return attributeGroup.get('name')?.value;
   }
 
-  getAttributeGroupAttributes(index: number): FormArray {
+  getAttributeGroupAttributs(index: number): FormArray {
     const attributeGroup = this.getAttributeGroupArray().at(index) as FormGroup;
-    return attributeGroup.get('attributes') as FormArray;
+    return attributeGroup.get('attributs') as FormArray;
   }
 
   isNumeric(value: any): boolean {
@@ -152,17 +152,17 @@ export class TariffViewTemplateComponent {
 
   deleteTpl(tpl: any){
     this.resetTplForm(tpl)
-    this.updateTariffAttributesStatus()
+    this.updateTariffAttributsStatus()
   }
 
-  private updateTariffAttributesStatus() {
+  private updateTariffAttributsStatus() {
     const ids = this.tpl?.value.reduce((acc: number[], t: any) => {
       if (t?.attribute?.id) {
         acc.push(t.attribute.id);  // Если id существует, добавляем его в массив
       }
       return acc;
     }, []);
-    this.copiedAttributes = new Set(ids);
+    this.copiedAttributs = new Set(ids);
   }
 
   resetTplForm(tpl:any){

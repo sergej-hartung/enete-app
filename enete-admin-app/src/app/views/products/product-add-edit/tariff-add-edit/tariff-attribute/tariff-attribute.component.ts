@@ -16,7 +16,7 @@ import { TariffService } from '../../../../../services/product/tariff/tariff.ser
 interface Group {
   id?: number;
   name: string;
-  attributes: Attribute[];
+  attributs: Attribute[];
   form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
   hidden?: boolean;
 }
@@ -27,7 +27,7 @@ interface Group {
   styleUrls: ['./tariff-attribute.component.scss']
 })
 export class TariffAttributeComponent {
-  tariffAttributes: Attribute[] = [];
+  tariffAttributs: Attribute[] = [];
   groups: Group[] = [];
   tariffDropListId = 'tariffDropList';
   connectedDropLists: string[] = [this.tariffDropListId];
@@ -73,9 +73,9 @@ export class TariffAttributeComponent {
     });
 
     this.subscribeWithUnsubscribe(this.attributeService.data$, data => {
-      if (data && data.entityType === 'tariffAttributesByGroup') {
-        this.tariffAttributes = data.data;
-        this.updateTariffAttributesStatus();
+      if (data && data.entityType === 'tariffAttributsByGroup') {
+        this.tariffAttributs = data.data;
+        this.updateTariffAttributsStatus();
       }
     });
 
@@ -137,7 +137,7 @@ export class TariffAttributeComponent {
     const modalRef = this.openModal();
     const control = this.getAttributeFormArray(group).at(index) as FormGroup;
     const textControl = control.get('value_text');
-    const attribute = group.attributes[index];
+    const attribute = group.attributs[index];
     
     textControl?.setValue(attribute.pivot?.value_text || textControl?.value || '');
     modalRef.componentInstance.initialValue = textControl?.value || '';
@@ -178,7 +178,7 @@ export class TariffAttributeComponent {
     if (this.newGroupForm.valid) {
       const newGroup: Group = {
         name: this.newGroupForm.value.groupName,
-        attributes: [],
+        attributs: [],
         form: this.createGroupForm(this.newGroupForm.value.groupName)
         // form: this.fb.group({
         //   id: [null],
@@ -223,10 +223,10 @@ export class TariffAttributeComponent {
     this.groups.splice(index, 1);
     this.attributeGroupsForm.removeAt(index);
     this.updateConnectedDropLists();
-    this.updateTariffAttributesStatus();
+    this.updateTariffAttributsStatus();
   }
 
-  toggleGroupAttributes(index: number) {
+  toggleGroupAttributs(index: number) {
     this.groups[index].hidden = !this.groups[index].hidden;
   }
 
@@ -273,13 +273,13 @@ export class TariffAttributeComponent {
 
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      this.moveControlInFormArray(group.form.get('attributes') as FormArray, event.previousIndex, event.currentIndex);
+      this.moveControlInFormArray(group.form.get('attributs') as FormArray, event.previousIndex, event.currentIndex);
     } else {
       const attribute = event.previousContainer.data[event.previousIndex];
       if (!this.attributeExistsInGroup(group, attribute)) {
         const copiedAttribute = this.copyAttribute(attribute);
-        group.attributes.splice(event.currentIndex, 0, copiedAttribute);
-        this.addControlToFormArray(group.form.get('attributes') as FormArray, this.createAttributeFormControl(attribute), event.currentIndex);
+        group.attributs.splice(event.currentIndex, 0, copiedAttribute);
+        this.addControlToFormArray(group.form.get('attributs') as FormArray, this.createAttributeFormControl(attribute), event.currentIndex);
 
         const originalAttribute = this.findOriginalAttribute(attribute);
         if (originalAttribute) originalAttribute.isCopied = true;
@@ -296,12 +296,13 @@ export class TariffAttributeComponent {
     };
   }
 
-  private createGroupForm(name: string, attributes: Attribute[] = []): FormGroup {
+  private createGroupForm(name: string, attributs: Attribute[] = []): FormGroup {
     return this.fb.group({
       id: [null],
       name: [name],
-      attributes: this.fb.array(
-        attributes.map(attr => this.createAttributeFormControl(attr))
+      uniqueId: [this.generateUniqueIdWithTimestamp()],
+      attributs: this.fb.array(
+        attributs.map(attr => this.createAttributeFormControl(attr))
       )
     });
   }
@@ -446,11 +447,11 @@ export class TariffAttributeComponent {
   }
 
   private attributeExistsInGroup(group: Group, attribute: Attribute): boolean {
-    return group.attributes.some(attr => attr.id === attribute.id);
+    return group.attributs.some(attr => attr.id === attribute.id);
   }
 
   private findOriginalAttribute(attribute: Attribute): Attribute | undefined {
-    return this.tariffAttributes.find(attr => attr.id === attribute.id);
+    return this.tariffAttributs.find(attr => attr.id === attribute.id);
   }
 
   private moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number) {
@@ -468,14 +469,14 @@ export class TariffAttributeComponent {
   }
 
   removeAttribute(group: Group, attribute: Attribute) {
-    const index = group.attributes.indexOf(attribute);
+    const index = group.attributs.indexOf(attribute);
     if (index >= 0) {
       const originalAttribute = this.findOriginalAttribute(attribute);
       if (originalAttribute) {
         originalAttribute.isCopied = false;
         this.productService.deletedTariffAttr.emit(originalAttribute);
       }
-      group.attributes.splice(index, 1);
+      group.attributs.splice(index, 1);
 
       const groupFormArray = this.getAttributeFormArray(group);
       const formIndex = groupFormArray.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
@@ -486,11 +487,11 @@ export class TariffAttributeComponent {
   }
 
   setFocus(group: Group, index: number) {
-    group.attributes[index].isFocused = true;
+    group.attributs[index].isFocused = true;
   }
 
   removeFocus(group: Group, index: number) {
-    group.attributes[index].isFocused = false;
+    group.attributs[index].isFocused = false;
   }
 
 
@@ -560,7 +561,7 @@ export class TariffAttributeComponent {
               this.groups = groupsFromTariff.map(group => ({
                 id: group.id,
                 name: group.name,
-                attributes: group.attributs.map(attr => ({
+                attributs: group.attributs.map(attr => ({
                   ...attr,
                   isCopied: true,
                   ...(attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false ? { isActiveDesibled: true } : {})
@@ -569,7 +570,7 @@ export class TariffAttributeComponent {
                 form: this.fb.group({
                     id: [group.id],
                     name: [group.name],
-                    attributes: this.fb.array(
+                    attributs: this.fb.array(
                       group.attributs.map(attr => this.createAttributeFormControl(
                         attr, attr?.pivot?.value_varchar || '', 
                         attr?.pivot?.value_text || '', 
@@ -584,7 +585,7 @@ export class TariffAttributeComponent {
                 this.attributeGroupsForm.push(group.form);
               });
 
-              this.updateTariffAttributesStatus();
+              this.updateTariffAttributsStatus();
               this.updateConnectedDropLists();
             }
           }
@@ -599,16 +600,16 @@ export class TariffAttributeComponent {
     control.get('is_active')?.setValue(isActive?.value ? 0 : 1);
   }
 
-  private updateTariffAttributesStatus() {
-    const copiedAttributeIds = new Set(this.groups.flatMap(group => group.attributes.map(attr => attr.id)));
-    this.tariffAttributes.forEach(attribute => {
+  private updateTariffAttributsStatus() {
+    const copiedAttributeIds = new Set(this.groups.flatMap(group => group.attributs.map(attr => attr.id)));
+    this.tariffAttributs.forEach(attribute => {
       attribute.isCopied = copiedAttributeIds.has(attribute.id);
     });
   }
 
   // Метод для безопасного приведения типов и получения FormArray
   getAttributeFormArray(group: Group): FormArray {
-    return group.form.get('attributes') as FormArray;
+    return group.form.get('attributs') as FormArray;
   }
 
   // Метод для безопасного приведения типов и получения FormGroup
@@ -627,10 +628,14 @@ export class TariffAttributeComponent {
     }
     return false;
   }
+
+  private generateUniqueIdWithTimestamp(): string {
+    return `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
+  }
   
   // Метод для безопасного получения FormControl из FormArray
   getAttributeFormControl(group: FormGroup, index: number, controlName: string): AbstractControl | null {
-    return (group.get('attributes') as FormArray).at(index).get(controlName);
+    return (group.get('attributs') as FormArray).at(index).get(controlName);
   }
 
   ngOnDestroy() {

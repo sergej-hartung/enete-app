@@ -65,7 +65,7 @@ export interface CalcMatrix{
     name: string,
     total_value: string,
     unit: string,
-    attributes: calcMatrixAttr[]
+    attributs: calcMatrixAttr[]
     created_by: number;
     updated_by: number;
     created_at: string;

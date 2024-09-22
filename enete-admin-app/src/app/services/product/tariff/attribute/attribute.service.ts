@@ -31,7 +31,7 @@ export class AttributeService extends DataService<Attribute> {
   // }
 
   fetchDataByGroupId(id: any): void{
-    this.http.get<AttributeData>(`${this.apiUrl}/products/tariff-groups/${id}/attributes`)
+    this.http.get<AttributeData>(`${this.apiUrl}/products/tariff-groups/${id}/attributs`)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
@@ -45,7 +45,7 @@ export class AttributeService extends DataService<Attribute> {
             this._data.next({
               data: data["data"],
               requestType: 'get',
-              entityType: 'tariffAttributesByGroup'
+              entityType: 'tariffAttributsByGroup'
             });
           }
         },
@@ -70,7 +70,7 @@ export class AttributeService extends DataService<Attribute> {
             this._data.next({
               data: data["data"],
               requestType: 'get',
-              entityType: 'tariffAttributes'
+              entityType: 'tariffAttributs'
             });
           }
         },
