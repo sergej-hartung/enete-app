@@ -1,5 +1,5 @@
 <div class="row no-gutters">
-    <div class="col left-panel pt-2">
+    <div class="col left-panel">
       <div class="matrixs">
         <div class="mb-2" *ngFor="let matrix of matrixs; let i = index">
           <div *ngIf="editMatrixIndex === i; else matrixDisplay">
@@ -203,11 +203,11 @@
               </div>
             </div>
           </form>
-        <button class="btn-text-style new-attribute-group" (click)="onAddNewMatrix()">
+        <button class="btn-text-style new-attribute-group pt-2" (click)="onAddNewMatrix()">
             <i class="fa-solid fa-circle-plus"></i> Neue Matrix
         </button>
     </div>
-    <div class="col-5 right-panel pt-2">
+    <div class="col-5 right-panel">
       <div class="mb-2" *ngFor="let attributeGroup of getAttributeGroupArray().controls; let i = index">
           <span class="group-name">
             <button class="btn-text-style" (click)="onToggleGroupVisibility(i)">{{ getAttributeGroupName(i) }}</button>

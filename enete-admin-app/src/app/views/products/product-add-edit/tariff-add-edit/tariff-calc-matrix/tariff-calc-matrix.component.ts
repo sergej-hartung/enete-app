@@ -360,9 +360,9 @@ export class TariffCalcMatrixComponent {
       // Удаление FormControl для атрибута
       const attributs = matrix.form.get('attributs') as FormArray;
       //const formIndex = attributes.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
-      if (index >= 0) {
-        attributs.removeAt(index);
-      }
+
+      attributs.removeAt(index);
+
       //this.updateConnectedDropLists();
     }
     this.updateTotalValueMatrix(matrix.form)

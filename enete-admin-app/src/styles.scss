@@ -2067,6 +2067,84 @@ app-tariff-add-edit{
 //   text-decoration: none;
 //   cursor: default;
 
+.tariff-details-tpl-wtapp{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.2rem 0.5rem;
+
+    &:not(:last-child){
+        margin-bottom: 0.75rem;
+    }
+
+    .tariff-details-title{
+        margin-left: -0.5rem;
+        margin-right: -0.5rem;
+        margin-bottom: 0.5rem;
+        padding: 0 0.5rem;
+        border-bottom: 1px solid #ccc;
+        font-size: 13px;
+        font-weight: 500;
+        display: flex;
+
+        span{
+            flex: 1;
+        }
+    }
+
+    .attr-name{
+        font-weight: 300;
+        font-size: 11px;
+    }
+}
+
+.tariff-details-attr-group{
+    min-height: 20px;
+}
+
+.attr-group-title-tpl{
+    .btn-text-style{
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+}
+.attr-group-tpl-wrapp{
+    padding: 3px 10px;
+    border: 1px solid rgb(204, 204, 204);
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.87);
+    cursor: move;
+
+    .attr-group-tpl:not(:last-child){
+        padding-bottom: 3px;
+    }
+
+    .attr-group-tpl{
+        &.attr-not-active{
+            .attr-name{
+                color: #ccc;
+                font-weight: 300;
+            }
+            .attr_value{
+                color: #ccc;
+                font-weight: 300;
+            }
+            .attr-unit{
+                color: #ccc;
+                font-weight: 300;
+            }
+            .attr-visible{
+                color: #ccc;
+                font-weight: 300;
+            }
+        }
+    }
+
+    .attr-visible{
+        font-size: 14px;
+    }
+}
+
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
@@ -2183,7 +2261,7 @@ app-tariff-add-edit{
 
 
 .tariff-promo-wrapp{
-    padding-top: 0.5rem;
+    padding-top: 0.6rem;
     padding-right: calc(var(--bs-gutter-x)* 0.5) ;
     padding-left: calc(var(--bs-gutter-x)* 0.5) ;
 }

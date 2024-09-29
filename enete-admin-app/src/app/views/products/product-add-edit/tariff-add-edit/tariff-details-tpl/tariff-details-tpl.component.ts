@@ -24,6 +24,9 @@ export class TariffDetailsTplComponent {
 
   private unsubscribe$ = new Subject<void>();
 
+  copiedAttributsGroup: Set<number> = new Set();
+  AttributsGroupHidden: Set<number> = new Set();
+
 
   constructor(
     private fb: FormBuilder,
@@ -52,8 +55,17 @@ export class TariffDetailsTplComponent {
       this.tariffdetails.push(this.setTariffDeailsItem(movedItem))
       console.log(this.setTariffDeailsItem(movedItem))
       console.log(this.tariffdetails)
+    }else{
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.moveTariffDetailsInFormArray(event.previousIndex, event.currentIndex);
     }
+  }
+
+  moveTariffDetailsInFormArray(previousIndex: number, currentIndex: number) {
     
+    const AttrGroupItem = this.tariffdetails.at(previousIndex);
+    this.tariffdetails.removeAt(previousIndex);
+    this.tariffdetails.insert(currentIndex, AttrGroupItem);
   }
 
   setTariffDeailsItem(tariffGroup: AttributeGroup){
@@ -68,6 +80,12 @@ export class TariffDetailsTplComponent {
     }); 
   }
 
+  removeTariffDetailsItem(item: any, index: number){
+    if (index >= 0) {
+      this.tariffdetails.removeAt(index)
+    }
+  }
+
   createAttributeFormControl(attr: Attribute){
     return this.fb.group({
       id: [attr.id],
@@ -78,6 +96,15 @@ export class TariffDetailsTplComponent {
       value_text: [attr?.value_text],
       is_active: [attr?.is_active]
     });
+  }
+
+  onToggleAttrGroup(index: number){
+    if(this.AttributsGroupHidden.has(index)){
+      this.AttributsGroupHidden.delete(index)
+    }else{
+      this.AttributsGroupHidden.add(index)
+    }
+    
   }
 
   // updateConnectedDropLists() {
@@ -109,6 +136,10 @@ export class TariffDetailsTplComponent {
   getAttributeGroupAttributs(index: number): FormArray {
     const attributeGroup = this.attributeGroupsControl.at(index) as FormGroup;
     return attributeGroup.get('attributs') as FormArray;
+  }
+
+  isNumeric(value: any): boolean {
+    return !isNaN(parseFloat(value)) && isFinite(value);
   }
 
   ngOnDestroy() {

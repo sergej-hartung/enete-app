@@ -4,6 +4,7 @@ import { FormArray, FormGroup } from '@angular/forms';
 import { Attribute } from '../../../../models/tariff/attribute/attribute';
 import { Subject, takeUntil } from 'rxjs';
 import { CalcMatrix, calcMatrixAttr, Template } from '../../../../models/tariff/tariff';
+import { AttributeGroup } from '../../../../models/tariff/attributeGroup/attributeGroup';
 
 @Component({
   selector: 'app-tariff-add-edit',
@@ -57,20 +58,22 @@ export class TariffAddEditComponent {
     const attributeGroups = this.attributeGroupsControl?.value;
     const calcMatrices = this.calcMatrixControl?.value;
     const templateArray = this.tplArrayControl?.value;
+    const tariffDetails = this.tariffDetails?.value;
   
     attributeGroups.forEach((group: any) => {
       if(group?.attributs){
         group.attributs.forEach((attribute: any) => {
-          this.syncAttribute(attribute, calcMatrices, templateArray);
+          this.syncAttribute(attribute, calcMatrices, templateArray, tariffDetails);
         });
       }
     });
   }
   
   
-  syncAttribute(attribute: Attribute, calcMatrices: CalcMatrix[], templateArray: Template[]) {
+  syncAttribute(attribute: Attribute, calcMatrices: CalcMatrix[], templateArray: Template[], tariffDetails: AttributeGroup[]) {
     this.syncAttributeWithMatrix(attribute, calcMatrices);
     this.syncAttributeWithTemplate(attribute, templateArray);
+    this.syncAttributeWithTariffDetails(attribute, tariffDetails)
   }
 
   syncAttributeWithMatrix(attribute: Attribute, calcMatrices: CalcMatrix[]) {
@@ -94,6 +97,36 @@ export class TariffAddEditComponent {
         this.updateTemplateAttribute(templateIndex, attribute);
       }
     });
+  }
+
+  shouldUpdateTariffDetailsAttribute(attr:Attribute ,attribute: Attribute){
+    return attr.id === attribute.id && (attr.value_varchar !== attribute.value_varchar || attr.value_text !== attribute.value_text)
+  }
+
+  syncAttributeWithTariffDetails(attribute: Attribute, tariffDetails: AttributeGroup[]){
+    console.log('sync tarifdetails')
+    tariffDetails.forEach((item, index) => {
+      item.attributs.forEach((attr, attrIndex) => {
+        if(this.shouldUpdateTariffDetailsAttribute(attr, attribute)){
+          this.updateTariffDetailsAttribute(index, attrIndex, attribute)
+        }
+      })
+
+    })
+  }
+
+  updateTariffDetailsAttribute(AttrGroupIndex: number , attrIndex: number, attribute: Attribute){
+    console.log('update tarifdetails')
+    const tariffDetailsGroup = this.tariffDetails
+    const tariffDetails = tariffDetailsGroup.at(AttrGroupIndex) as FormGroup
+    const attrs = tariffDetails.get('attributs') as FormArray 
+    const attrValue = attrs.at(attrIndex)?.value
+    if(attrValue.value_varchar !== attribute.value_varchar){
+      attrs.at(attrIndex)?.patchValue({value_varchar: attribute.value_varchar})
+    }
+    if(attrValue.value_text !== attribute.value_text){
+      attrs.at(attrIndex)?.patchValue({value_text: attribute.value_text})
+    }
   }
   
 
@@ -170,6 +203,10 @@ export class TariffAddEditComponent {
 
   get tplArrayControl(): FormArray {
     return this.tariffForm.get('tpl') as FormArray;
+  }
+
+  get tariffDetails(): FormArray{
+    return this.tariffForm.get('tariffdetails') as FormArray
   }
 
   ngOnDestroy() {

@@ -1,7 +1,7 @@
 
 
 <div class="row no-gutters">
-  <div class="col left-panel pt-2">
+  <div class="col left-panel">
     <div class="groups">
       <div class="mb-2" *ngFor="let group of groups; let i = index">
         <div *ngIf="editGroupIndex === i; else groupDisplay">
@@ -232,7 +232,7 @@
         </div>
       </div>
     </form>
-    <button class="btn-text-style new-attribute-group" (click)="addNewGroupName()">
+    <button class="btn-text-style new-attribute-group pt-2" (click)="addNewGroupName()">
       <i class="fa-solid fa-circle-plus"></i> Neue Gruppe
     </button>
   </div>
