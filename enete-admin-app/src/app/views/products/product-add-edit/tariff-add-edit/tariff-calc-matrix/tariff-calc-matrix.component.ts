@@ -81,7 +81,10 @@ export class TariffCalcMatrixComponent {
     this.productService.deletedTariffAttr
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(attr => {
-          this.removeAllAtributteById(attr)
+          console.log(attr)
+          console.log(parseInt(attr))
+          this.copiedAttributs.delete(attr?.id);
+          console.log(this.copiedAttributs)
         })
   }
 
@@ -369,14 +372,16 @@ export class TariffCalcMatrixComponent {
     this.updateTariffAttributsStatus();
   }
 
-  removeAllAtributteById(attribute: Attribute){
-    this.matrixs.forEach(matrix => {
-      const index = matrix.attributs.findIndex(attr => attr.id == attribute.id)
-      if(index >= 0){
-        this.removeAttribute(matrix, index)
-      }
-    })
-  }
+  // removeAllAtributteById(attribute: Attribute){
+  //   // this.matrixs.forEach(matrix => {
+  //   //   const index = matrix.attributs.findIndex(attr => attr.id == attribute.id)
+  //   //   if(index >= 0){
+  //   //     this.removeAttribute(matrix, index)
+  //   //   }
+  //   // })
+
+  //   this.updateTariffAttributsStatus();
+  // }
 
   updateConnectedDropLists() {
     this.connectedDropLists = [this.tariffDropListId, ...this.matrixs.map((_, i) => this.onGetMatrixDropListId(i))];

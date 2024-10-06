@@ -442,7 +442,7 @@ export class TariffAttributeComponent {
 
   private moveControlInFormArray(formArray: FormArray, fromIndex: number, toIndex: number): void {
     const control = formArray.at(fromIndex);
-    formArray.removeAt(fromIndex);
+    formArray.removeAt(fromIndex, {emitEvent:false});
     formArray.insert(toIndex, control);
   }
 
