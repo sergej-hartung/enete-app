@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { FormService } from '../../../../../services/form.service';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Subject, takeUntil } from 'rxjs';
+import { merge, Subject, takeUntil } from 'rxjs';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
 import { ProductService } from '../../../../../services/product/product.service';
 
@@ -51,6 +51,8 @@ export class TariffCalcMatrixComponent {
   calcMatrixForm: FormArray
 
   private unsubscribe$ = new Subject<void>();
+  private attributeCounts = new Map<number, number>();
+  private subscriptions: Map<string, any> = new Map(); // Храним подписки, чтобы легко отписываться
 
   constructor(
     private fb: FormBuilder,
@@ -78,6 +80,8 @@ export class TariffCalcMatrixComponent {
           if(mode == 'edit')  this.loadTariffMatrix();
         })
 
+    this.subscribeToFormChanges()
+
     this.productService.deletedTariffAttr
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(attr => {
@@ -88,6 +92,120 @@ export class TariffCalcMatrixComponent {
         })
   }
 
+  subscribeToFormChanges() {
+    const attributeGroupsControl = this.tariffForm.get('attribute_groups') as FormArray;
+
+    if (attributeGroupsControl) {
+      // Начальная подписка на изменение количества атрибутов в каждой группе
+      this.subscribeToNewAttributes(attributeGroupsControl);
+
+      // Подписка на изменение количества групп в FormArray
+      attributeGroupsControl.valueChanges
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(() => {
+          this.subscribeToNewAttributes(attributeGroupsControl);
+        });
+    }
+  }
+
+  subscribeToNewAttributes(attributeGroupsControl: FormArray) {
+    attributeGroupsControl.controls.forEach((groupControl: AbstractControl, groupIndex: number) => {
+      const attributsArray = groupControl.get('attributs') as FormArray;
+  
+      if (!attributsArray) {
+        return;
+      }
+  
+      const currentCount = this.attributeCounts.get(groupIndex) || 0;
+      console.log(attributsArray.length)
+      console.log(currentCount)
+      console.log(attributsArray.length < currentCount)
+      if (attributsArray.length < currentCount) {
+        // Отписываемся от всех удаленных атрибутов
+        console.log("otpisivaemsa")
+        for (let i = attributsArray.length; i < currentCount; i++) {
+          const subscriptionKey = `${groupIndex}-${i}`;
+          const subscription = this.subscriptions.get(subscriptionKey);
+          if (subscription) {
+            subscription.unsubscribe();
+            this.subscriptions.delete(subscriptionKey);
+          }
+        }
+      }
+  
+      if (attributsArray.length > currentCount) {
+        console.log('test')
+        for (let attributeIndex = currentCount; attributeIndex < attributsArray.length; attributeIndex++) {
+          console.log('for')
+          const attributeControl = attributsArray.at(attributeIndex);
+          const subscriptionKey = `${groupIndex}-${attributeIndex}`;
+          
+          const subscription = attributeControl.valueChanges
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((value) => {
+              console.log(`Изменение произошло в группе с индексом: ${groupIndex}, атрибут с индексом: ${attributeIndex}`);
+              console.log(`Новое значение атрибута:`, value);
+            });
+
+          this.subscriptions.set(subscriptionKey, subscription);
+        }
+  
+        this.attributeCounts.set(groupIndex, attributsArray.length);
+        console.log( this.attributeCounts)
+      }
+    });
+  }
+
+  // subscribeToNewAttributes(attributeGroupsControl: FormArray) {
+  //   // Перебираем все группы атрибутов
+  //   attributeGroupsControl.controls.forEach((groupControl: AbstractControl, groupIndex: number) => {
+  //     const attributsArray = groupControl.get('attributs') as FormArray;
+  
+  //     if (!attributsArray) {
+  //       return;
+  //     }
+  
+  //     // Получаем текущий сохраненный счетчик атрибутов для этой группы
+  //     const currentCount = this.attributeCounts.get(groupIndex) || 0;
+  
+  //     // Если текущий размер массива атрибутов меньше сохраненного - атрибуты были удалены
+  //     if (attributsArray.length < currentCount) {
+  //       // Отписываемся от всех удаленных атрибутов
+  //       console.log('otpisivaemsa')
+  //       for (let i = attributsArray.length; i < currentCount; i++) {
+  //         const subscriptionKey = `${groupIndex}-${i}`;
+  //         const subscription = this.subscriptions.get(subscriptionKey);
+  //         if (subscription) {
+  //           subscription.unsubscribe();
+  //           this.subscriptions.delete(subscriptionKey);
+  //         }
+  //       }
+  //     }
+  
+  //     // Если новые атрибуты были добавлены, подписываемся на них
+  //     if (attributsArray.length > currentCount) {
+  //       for (let attributeIndex = currentCount; attributeIndex < attributsArray.length; attributeIndex++) {
+  //         const attributeControl = attributsArray.at(attributeIndex);
+  //         const subscriptionKey = `${groupIndex}-${attributeIndex}`;
+  //         console.log('podpisivaemsa')
+  //         // Подписываемся на изменения и сохраняем подписку в Map
+  //         const subscription = attributeControl.valueChanges
+  //           .pipe(takeUntil(this.unsubscribe$))
+  //           .subscribe((value) => {
+  //             console.log(`Изменение произошло в группе с индексом: ${groupIndex}, атрибут с индексом: ${attributeIndex}`);
+  //             console.log(`Новое значение атрибута:`, value);
+  //           });
+  
+  //         this.subscriptions.set(subscriptionKey, subscription);
+  //       }
+  //     }
+  
+  //     // Обновляем количество атрибутов для текущей группы в attributeCounts
+  //     this.attributeCounts.set(groupIndex, attributsArray.length);
+  //     console.log(this.attributeCounts)
+  //     console.log(this.subscriptions)
+  //   });
+  // }
   
 
   onSaveNewMatrix(){

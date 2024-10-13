@@ -56,6 +56,7 @@ export interface Template{
     showValue:       boolean | number;
 
     attribute?:      Attribute
+    matrix?:      CalcMatrix
 }
 
 export interface CalcMatrix{

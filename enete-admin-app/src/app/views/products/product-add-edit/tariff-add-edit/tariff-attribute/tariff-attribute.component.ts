@@ -93,42 +93,7 @@ export class TariffAttributeComponent {
   }
 
 
-  // openEditor(event: Event, group: Group, index: number) {
-  //   event.preventDefault();
-  //   (event.target as HTMLElement).blur();
-  //   const modalRef: NgbModalRef = this.modalService.open(
-  //     EditorModalComponent, 
-  //     {
-  //       backdropClass: 'ckedit-modal-backdrop', 
-  //       windowClass: 'ckedit-modal',
-  //       size: 'lg' 
-  //     }
-  //   );
-  //   const control = (group.form.get('attributes') as FormArray).at(index);
-  //   let text = control.get('value_text')
-  //   const attribute = group.attributes[index];
-  //   if(attribute.pivot){
-  //     text?.setValue(attribute.pivot?.value_text)
-  //     modalRef.componentInstance.initialValue = text?.value || '';
-  //   }else{
-  //     //const control = (group.form.get('attributes') as FormArray).at(index);
-  //     modalRef.componentInstance.initialValue = text?.value || '';
-  //   }
-    
-  //   modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: string) => {
-  //     if (result !== undefined ) {
-  //       //const control = (group.form.get('attributes') as FormArray).at(index);
-  //       control.patchValue({ value_text: result });
-  //       //attribute.pivot.value_text = result;
-  //       text?.markAsTouched()
-  //       modalRef.close(); // Закрытие модального окна после сохранения
-  //     }
-  //   });
-  //   modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
-  //     text?.markAsTouched()
-  //     modalRef.close(); // Закрытие модального окна при нажатии на отмену
-  //   });
-  // }
+
 
   openEditor(event: Event, group: Group, index: number) {
     event.preventDefault();
@@ -238,35 +203,7 @@ export class TariffAttributeComponent {
     this.connectedDropLists = [this.tariffDropListId, ...this.groups.map((_, index) => this.getGroupDropListId(index))];
   }
 
-  // drop(event: CdkDragDrop<any[]>, group?: Group) {
-  //   if (event.previousContainer === event.container && group) {
-  //     moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-  //     this.moveItemInFormArray(group!.form.get('attributes') as FormArray, event.previousIndex, event.currentIndex);
-  //   } else {
-  //     if (group) {
-  //       const attribute = event.previousContainer.data[event.previousIndex];
-  //       const attributeExists = group.attributes.some(attr => attr.id === attribute.id);
-  //       if (!attributeExists) {
-  //         let copiedAttribute = { ...attribute, isCopied: true, isFocused: false }; // isFocused по умолчанию false
-  //         if(!attribute.is_frontend_visible){
-  //           copiedAttribute = {...copiedAttribute, isActiveDesibled: true }
-  //         }
-  //         group.attributes.splice(event.currentIndex, 0, copiedAttribute);
-          
-          
-  //         const originalAttribute = this.tariffAttributes.find(attr => attr.id === attribute.id);
-  //         if (originalAttribute) {
-  //           originalAttribute.isCopied = true;
-  //         }
-  
-  //         const groupFormArray = group.form.get('attributes') as FormArray;
-  //         groupFormArray.insert(event.currentIndex, this.createAttributeFormControl(attribute));
-          
-  //       }
-  //       console.log(this.groups)
-  //     }
-  //   }
-  // }
+
 
   drop(event: CdkDragDrop<any[]>, group?: Group) {
     if (!group) return;
@@ -307,63 +244,7 @@ export class TariffAttributeComponent {
     });
   }
 
-  // private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
-  //   const valueVarcharValidators = [];
-  //   const valueTextValidators = [];
-  //   if (attribute.is_required) {
-  //       if (attribute.input_type === 'Textbereich') {
-  //           valueTextValidators.push(Validators.required);
-  //       } else {
-  //           valueVarcharValidators.push(Validators.required);
-  //       }
-  //   }
-
-  //   switch (attribute.input_type) {
-  //       case 'Ganzzahlen':
-  //           valueVarcharValidators.push(Validators.pattern(/^\d+$/)); // Только целые числа
-  //           break;
-  //       case 'Dezimalzahlen':
-  //           valueVarcharValidators.push(Validators.pattern(/^\d+(,\d+)?$/)); // Десятичные числа
-  //           break;
-  //       case 'Datumfeld':
-  //           valueVarcharValidators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
-  //           break;
-  //       case 'Link-Feld':
-  //           valueVarcharValidators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)); // URL
-  //           break;
-  //       case 'Boolescher Wert':
-  //           valueVarcharValidators.push(Validators.pattern(/^(0|1)$/)); // Булевый (0 или 1)
-  //           break;
-  //       case 'Dateifeld':
-  //           // Для поля файла можно добавить валидатор на допустимые расширения файлов, если нужно
-  //           break;
-  //       case 'Dropdown':
-  //           // Для выпадающего списка специфические валидаторы не нужны
-  //           break;
-  //       case 'Mehrfachauswahl':
-  //           // Для множественного выбора специфические валидаторы не нужны
-  //           break;
-  //       case 'Textfeld':
-  //           // Для текстового поля специфические валидаторы не нужны
-  //           break;
-  //       case 'Textbereich':
-  //           // Валидаторы добавлены выше
-  //           break;
-  //       default:
-  //           // Для других типов данных добавьте свои валидаторы, если необходимо
-  //           break;
-  //   }
-    
-  //   return this.fb.group({
-  //       id: [attribute.id],
-  //       code: [attribute.code],
-  //       name: [attribute.name],
-  //       unit: [attribute.unit],
-  //       value_varchar: [valueVarchar, valueVarcharValidators],
-  //       value_text: [valueText, valueTextValidators],
-  //       is_active: [isActive !== null ? isActive : attribute.is_frontend_visible]
-  //   });
-  // }
+ 
 
   private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
     const valueVarcharValidators = this.getValidatorsForType(attribute, valueVarchar);
@@ -499,55 +380,6 @@ export class TariffAttributeComponent {
     return drag.dropContainer.id === this.tariffDropListId;
   }
 
-  // private loadAttributeGroups() {
-  //   if (this.groupId) {
-  //     this.tariffService.detailedData$
-  //       .pipe(takeUntil(this.unsubscribe$))
-  //       .subscribe(response => {
-  //         if(response){
-  //           const groupsFromTariff = response?.data?.attribute_groups; // Здесь ваши группы из ответа сервера
-  //           if(groupsFromTariff){
-  //             this.groups = groupsFromTariff.map(group => 
-  //             (
-  //               {
-  //                 id: group.id,
-  //                 name: group.name,
-  //                 attributes: group.attributs.map(attr => 
-  //                   ({
-  //                     ...attr,
-  //                     isCopied: true, // Отметьте атрибуты как скопированные
-  //                     ...(attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false ? { isActiveDesibled: true } : {})
-  //                   })
-  //                 ),
-  //                 hidden: false,
-    
-  //                 form: this.fb.group({
-  //                   id: [group.id],
-  //                   name: [group.name],
-  //                   attributes: this.fb.array(
-  //                     group.attributs.map(attr => this.createAttributeFormControl(
-  //                       attr, attr?.pivot?.value_varchar || '', 
-  //                       attr?.pivot?.value_text || '', 
-  //                       attr?.pivot?.is_active
-  //                     ))
-  //                   )
-  //                 })
-  //               }
-  //             ));
-
-  //             this.attributeGroupsForm.clear();
-  //             this.groups.forEach(group => {
-  //               this.attributeGroupsForm.push(group.form);
-  //             });
-
-  //             this.updateTariffAttributesStatus();
-  //             this.updateConnectedDropLists();
-  //           }
-  //         }
-  //       })
-      
-  //   }
-  // }
 
 
   private loadAttributeGroups() {
