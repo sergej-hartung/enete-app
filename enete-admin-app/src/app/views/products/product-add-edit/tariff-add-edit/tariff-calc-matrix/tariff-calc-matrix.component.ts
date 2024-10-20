@@ -51,8 +51,8 @@ export class TariffCalcMatrixComponent {
   calcMatrixForm: FormArray
 
   private unsubscribe$ = new Subject<void>();
-  private attributeCounts = new Map<number, number>();
-  private subscriptions: Map<string, any> = new Map(); // Храним подписки, чтобы легко отписываться
+
+  private subscriptions: Map<number, any> = new Map(); // Храним подписки, чтобы легко отписываться
 
   constructor(
     private fb: FormBuilder,
@@ -80,132 +80,27 @@ export class TariffCalcMatrixComponent {
           if(mode == 'edit')  this.loadTariffMatrix();
         })
 
-    this.subscribeToFormChanges()
 
     this.productService.deletedTariffAttr
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(attr => {
-          console.log(attr)
-          console.log(parseInt(attr))
-          this.copiedAttributs.delete(attr?.id);
-          console.log(this.copiedAttributs)
+          this.removeAllAtributteById(attr)
+          this.unsubscribeToFormCanges(attr.id)
+        })
+
+    this.productService.deletedTariffAttrGroup
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(group => {
+          console.log(group)
+          if(group && 'attributs' in group){
+            group.attributs.forEach((attr: any) => {
+              this.removeAllAtributteById(attr)
+              this.unsubscribeToFormCanges(attr.id)
+            })
+          }
         })
   }
 
-  subscribeToFormChanges() {
-    const attributeGroupsControl = this.tariffForm.get('attribute_groups') as FormArray;
-
-    if (attributeGroupsControl) {
-      // Начальная подписка на изменение количества атрибутов в каждой группе
-      this.subscribeToNewAttributes(attributeGroupsControl);
-
-      // Подписка на изменение количества групп в FormArray
-      attributeGroupsControl.valueChanges
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(() => {
-          this.subscribeToNewAttributes(attributeGroupsControl);
-        });
-    }
-  }
-
-  subscribeToNewAttributes(attributeGroupsControl: FormArray) {
-    attributeGroupsControl.controls.forEach((groupControl: AbstractControl, groupIndex: number) => {
-      const attributsArray = groupControl.get('attributs') as FormArray;
-  
-      if (!attributsArray) {
-        return;
-      }
-  
-      const currentCount = this.attributeCounts.get(groupIndex) || 0;
-      console.log(attributsArray.length)
-      console.log(currentCount)
-      console.log(attributsArray.length < currentCount)
-      if (attributsArray.length < currentCount) {
-        // Отписываемся от всех удаленных атрибутов
-        console.log("otpisivaemsa")
-        for (let i = attributsArray.length; i < currentCount; i++) {
-          const subscriptionKey = `${groupIndex}-${i}`;
-          const subscription = this.subscriptions.get(subscriptionKey);
-          if (subscription) {
-            subscription.unsubscribe();
-            this.subscriptions.delete(subscriptionKey);
-          }
-        }
-      }
-  
-      if (attributsArray.length > currentCount) {
-        console.log('test')
-        for (let attributeIndex = currentCount; attributeIndex < attributsArray.length; attributeIndex++) {
-          console.log('for')
-          const attributeControl = attributsArray.at(attributeIndex);
-          const subscriptionKey = `${groupIndex}-${attributeIndex}`;
-          
-          const subscription = attributeControl.valueChanges
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((value) => {
-              console.log(`Изменение произошло в группе с индексом: ${groupIndex}, атрибут с индексом: ${attributeIndex}`);
-              console.log(`Новое значение атрибута:`, value);
-            });
-
-          this.subscriptions.set(subscriptionKey, subscription);
-        }
-  
-        this.attributeCounts.set(groupIndex, attributsArray.length);
-        console.log( this.attributeCounts)
-      }
-    });
-  }
-
-  // subscribeToNewAttributes(attributeGroupsControl: FormArray) {
-  //   // Перебираем все группы атрибутов
-  //   attributeGroupsControl.controls.forEach((groupControl: AbstractControl, groupIndex: number) => {
-  //     const attributsArray = groupControl.get('attributs') as FormArray;
-  
-  //     if (!attributsArray) {
-  //       return;
-  //     }
-  
-  //     // Получаем текущий сохраненный счетчик атрибутов для этой группы
-  //     const currentCount = this.attributeCounts.get(groupIndex) || 0;
-  
-  //     // Если текущий размер массива атрибутов меньше сохраненного - атрибуты были удалены
-  //     if (attributsArray.length < currentCount) {
-  //       // Отписываемся от всех удаленных атрибутов
-  //       console.log('otpisivaemsa')
-  //       for (let i = attributsArray.length; i < currentCount; i++) {
-  //         const subscriptionKey = `${groupIndex}-${i}`;
-  //         const subscription = this.subscriptions.get(subscriptionKey);
-  //         if (subscription) {
-  //           subscription.unsubscribe();
-  //           this.subscriptions.delete(subscriptionKey);
-  //         }
-  //       }
-  //     }
-  
-  //     // Если новые атрибуты были добавлены, подписываемся на них
-  //     if (attributsArray.length > currentCount) {
-  //       for (let attributeIndex = currentCount; attributeIndex < attributsArray.length; attributeIndex++) {
-  //         const attributeControl = attributsArray.at(attributeIndex);
-  //         const subscriptionKey = `${groupIndex}-${attributeIndex}`;
-  //         console.log('podpisivaemsa')
-  //         // Подписываемся на изменения и сохраняем подписку в Map
-  //         const subscription = attributeControl.valueChanges
-  //           .pipe(takeUntil(this.unsubscribe$))
-  //           .subscribe((value) => {
-  //             console.log(`Изменение произошло в группе с индексом: ${groupIndex}, атрибут с индексом: ${attributeIndex}`);
-  //             console.log(`Новое значение атрибута:`, value);
-  //           });
-  
-  //         this.subscriptions.set(subscriptionKey, subscription);
-  //       }
-  //     }
-  
-  //     // Обновляем количество атрибутов для текущей группы в attributeCounts
-  //     this.attributeCounts.set(groupIndex, attributsArray.length);
-  //     console.log(this.attributeCounts)
-  //     console.log(this.subscriptions)
-  //   });
-  // }
   
 
   onSaveNewMatrix(){
@@ -269,7 +164,6 @@ export class TariffCalcMatrixComponent {
     this.calcMatrixForm.removeAt(index);
     this.updateConnectedDropLists();
     this.updateTariffAttributsStatus();
-    //this.updateTariffAttributesStatus(); // Обновление статуса после удаления группы
   }
 
   onGetMatrixDropListId(index: number): string {
@@ -292,10 +186,47 @@ export class TariffCalcMatrixComponent {
       if (matrix) {
         if(attribute?.value_varchar){
           this.addAttributeToMatrix(matrix, attribute);
+          this.subscribeToFormChanges(attribute.id)
           this.copiedAttributs.add(attribute.id);
         }
         
       }
+    }
+  }
+
+  unsubscribeToFormCanges(id: number){
+    if(this.subscriptions.has(id)){
+      const subscription = this.subscriptions.get(id);
+      if (subscription) {
+        subscription.unsubscribe();
+        this.subscriptions.delete(id);
+      }
+    }
+    
+  }
+
+  subscribeToFormChanges(id: number){
+    if(!this.subscriptions.has(id)){
+      let tariffForm = this.getAttributeGroupArray()
+      
+      tariffForm.controls.forEach((formGroup) => {
+        const attributs = formGroup.value?.attributs || [];
+
+        const attrIndex = attributs.findIndex((attribute: any) => attribute.id === id);
+
+        if (attrIndex > -1) {
+
+          const attributsArr = formGroup.get('attributs') as FormArray
+          const attrControl = attributsArr?.at(attrIndex)
+          if(attrControl){
+            
+              const subscription = attrControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(attr => {
+                this.updateValueMatrix(attr)
+              })
+              this.subscriptions.set(id, subscription);
+          }
+        }
+      });
     }
   }
 
@@ -326,6 +257,7 @@ export class TariffCalcMatrixComponent {
   
       this.addFormSwitchListener(attributeFormGroup, matrix?.form);
       this.updateTotalValueMatrix(matrix?.form)
+      console.log(this.calcMatrixForm)
   }
 
   addFormSwitchListener(attributeFormGroup: FormGroup, matrixGroup: FormGroup) {
@@ -351,6 +283,22 @@ export class TariffCalcMatrixComponent {
     });
 
     periodControl?.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.updateTotalValue(attributeFormGroup, matrixGroup));
+  }
+
+  updateValueMatrix(attr: any){
+    this.matrixs.forEach(matrix => {
+      let matrixAttribut = matrix?.attributs?.find(matrixAttr => matrixAttr.id == attr.id)
+      let matrixAttributsForm = matrix?.form?.get('attributs') as FormArray
+      let matrixAttributsFormVal = matrixAttributsForm?.value
+      let matrixAttrIndex = matrixAttributsFormVal.findIndex((matrixAttr: any) => matrixAttr.id == attr.id)
+      let mattrixAttrForm = matrixAttrIndex > -1 ? matrixAttributsForm?.at(matrixAttrIndex) as FormGroup : false
+
+      if(matrixAttribut && mattrixAttrForm){
+        matrixAttribut.value_varchar = attr.value_varchar
+        mattrixAttrForm.patchValue({value: attr.value_varchar})
+        this.updateTotalValue(mattrixAttrForm, matrix?.form)
+      }
+    })
   }
 
   updateTotalValue(attributeFormGroup: FormGroup, matrixGroup: FormGroup) {
@@ -389,7 +337,6 @@ export class TariffCalcMatrixComponent {
           }
           if(attr?.value_total !== undefined){
             MatrixTotalValue += parseFloat(attr?.value_total)
-            //matrix.setValue({}).total_value += attr?.value_total
           }
         })
 
@@ -469,44 +416,37 @@ export class TariffCalcMatrixComponent {
     //const index = //matrix.attributes.indexOf(attribute);
 
     if (index >= 0) {
-      //const originalAttribute = this.tariffAttributes.find(attr => attr.code === attribute.code);
       const originalAttribute = this.tariffAttributs.at(index);
       if (originalAttribute) {
         this.copiedAttributs.delete(originalAttribute.id);
-        //originalAttribute.isCopied = false;
       }
       
       matrix.attributs.splice(index, 1);
 
       // Удаление FormControl для атрибута
       const attributs = matrix.form.get('attributs') as FormArray;
-      //const formIndex = attributes.controls.findIndex(ctrl => ctrl.value.id === attribute.id);
 
       attributs.removeAt(index);
-
-      //this.updateConnectedDropLists();
     }
     this.updateTotalValueMatrix(matrix.form)
     this.updateTariffAttributsStatus();
   }
 
-  // removeAllAtributteById(attribute: Attribute){
-  //   // this.matrixs.forEach(matrix => {
-  //   //   const index = matrix.attributs.findIndex(attr => attr.id == attribute.id)
-  //   //   if(index >= 0){
-  //   //     this.removeAttribute(matrix, index)
-  //   //   }
-  //   // })
-
-  //   this.updateTariffAttributsStatus();
-  // }
+  removeAllAtributteById(attribute: Attribute){
+    this.matrixs.forEach(matrix => {
+      const index = matrix.attributs.findIndex(attr => attr.id == attribute.id)
+      if(index >= 0){
+        this.removeAttribute(matrix, index)
+      }
+    })
+  }
 
   updateConnectedDropLists() {
     this.connectedDropLists = [this.tariffDropListId, ...this.matrixs.map((_, i) => this.onGetMatrixDropListId(i))];
   }
 
   private loadTariffMatrix() {
-
+      // add subscription Attr 
       this.tariffService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(response => {

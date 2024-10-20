@@ -185,6 +185,7 @@ export class TariffAttributeComponent {
   }
 
   removeGroup(index: number) {
+    this.productService.deletedTariffAttrGroup.emit(this.groups.at(index));
     this.groups.splice(index, 1);
     this.attributeGroupsForm.removeAt(index);
     this.updateConnectedDropLists();
@@ -247,9 +248,9 @@ export class TariffAttributeComponent {
  
 
   private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
-    const valueVarcharValidators = this.getValidatorsForType(attribute, valueVarchar);
-    const valueTextValidators = this.getValidatorsForType(attribute, valueText, true);
-
+    const valueVarcharValidators = attribute.input_type != 'Textbereich' ? this.getValidatorsForType(attribute, valueVarchar) : '';
+    const valueTextValidators = attribute.input_type == 'Textbereich'? this.getValidatorsForType(attribute, valueText) : '';
+    //console.log(attribute)
     return this.fb.group({
       id: [attribute.id],
       code: [attribute.code],
@@ -261,51 +262,62 @@ export class TariffAttributeComponent {
     });
   }
 
-  private getValidatorsForType(attribute: Attribute, value: string, isText = false): any[] {
-    const validators = [];
-    if (attribute.is_required) {
-      validators.push(Validators.required);
-    }
-
-    if (!isText) {
+  private getValidatorsForType(attribute: Attribute, value: string): any[] {
+    const validators:any = [];   
       switch (attribute.input_type) {
         case 'Ganzzahlen':
           validators.push(Validators.pattern(/^\d+$/)); // Только целые числа
+          this.setRequired(attribute, validators)
           break;
         case 'Dezimalzahlen':
           validators.push(Validators.pattern(/^\d+(,\d+)?$/)); // Десятичные числа
+          this.setRequired(attribute, validators)
           break;
         case 'Datumfeld':
           validators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
+          this.setRequired(attribute, validators)
           break;
         case 'Link-Feld':
           validators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)); // URL
+          this.setRequired(attribute, validators)
           break;
         case 'Boolescher Wert':
           validators.push(Validators.pattern(/^(0|1)$/)); // Булевый (0 или 1)
+          this.setRequired(attribute, validators)
           break;
           case 'Dateifeld':
             // Для поля файла можно добавить валидатор на допустимые расширения файлов, если нужно
+            this.setRequired(attribute, validators)
             break;
         case 'Dropdown':
             // Для выпадающего списка специфические валидаторы не нужны
+            this.setRequired(attribute, validators)
             break;
         case 'Mehrfachauswahl':
             // Для множественного выбора специфические валидаторы не нужны
+            this.setRequired(attribute, validators)
             break;
         case 'Textfeld':
             // Для текстового поля специфические валидаторы не нужны
+            this.setRequired(attribute, validators)
             break;
         case 'Textbereich':
             // Валидаторы добавлены выше
+            this.setRequired(attribute, validators)
             break;
         default:
             // Для других типов данных добавьте свои валидаторы, если необходимо
             break;
       }
-    }
+
 
     return validators;
+  }
+
+  private setRequired(attribute: any, validators: any){
+    if (attribute.is_required) {
+      validators.push(Validators.required);
+    }
   }
 
   private addControlToFormArray(formArray: FormArray, control: AbstractControl, index?: number): void {

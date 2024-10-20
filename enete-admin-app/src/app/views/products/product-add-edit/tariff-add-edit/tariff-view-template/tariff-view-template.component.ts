@@ -4,6 +4,7 @@ import { FormService } from '../../../../../services/form.service';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
 import { ProductService } from '../../../../../services/product/product.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-tariff-view-template',
@@ -27,6 +28,9 @@ export class TariffViewTemplateComponent {
   tpl: FormArray
   calcMatrixForm: FormArray
 
+  private unsubscribe$ = new Subject<void>();
+  private subscriptions: Map<number|string, any> = new Map();
+
   constructor(
     private fb: FormBuilder,
     private formService: FormService,
@@ -49,6 +53,27 @@ export class TariffViewTemplateComponent {
     ];
 
     this.initCollapseArrays();
+
+    this.productService.deletedTariffAttr
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(attr => {
+          
+          this.deleteTpl()
+          // this.removeAllAtributteById(attr)
+          // this.unsubscribeToFormCanges(attr.id)
+        })
+
+    this.productService.deletedTariffAttrGroup
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(group => {
+          console.log(group)
+          if(group && 'attributs' in group){
+            group.attributs.forEach((attr: any) => {
+              // this.removeAllAtributteById(attr)
+              // this.unsubscribeToFormCanges(attr.id)
+            })
+          }
+        })
   }
 
   initCollapseArrays(): void {
@@ -80,6 +105,8 @@ export class TariffViewTemplateComponent {
           this.copiedAttributs.add(attribute.id);
           control.get('attribute').patchValue(attribute)
         }
+
+        this.subscribeToFormChanges(attribute?.id, control)
       }
     }
     if(event.previousContainer.id === this.tariffMatrixDropListId){
@@ -100,7 +127,54 @@ export class TariffViewTemplateComponent {
         }else{
           control.get('matrix').patchValue(matrix)
         }
+
+        this.subscribeToMatrixChanges(matrix?.uniqueId, control)
       }
+    }
+  }
+
+  subscribeToFormChanges(id: number, control: FormGroup){
+    if(id && !this.subscriptions.has(id)){
+      let tariffForm = this.getAttributeGroupArray()
+      
+      tariffForm.controls.forEach((formGroup) => {
+        const attributs = formGroup.value?.attributs || [];
+
+        const attrIndex = attributs.findIndex((attribute: any) => attribute.id === id);
+
+        if (attrIndex > -1) {
+
+          const attributsArr = formGroup.get('attributs') as FormArray
+          const attrControl = attributsArr?.at(attrIndex)
+          if(attrControl){
+            
+              const subscription = attrControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(attr => {
+                control.get('attribute')?.patchValue(attr)
+              })
+              this.subscriptions.set(id, subscription);
+          }
+        }
+      });
+    }
+  }
+
+  subscribeToMatrixChanges(uniqueId: string, control: FormGroup){
+    if(uniqueId && !this.subscriptions.has(uniqueId)){
+      const matrices = this.calcMatrixForm.value
+
+      const matrixIndex = matrices.findIndex((matrix: any) => matrix.uniqueId == uniqueId)
+      if(matrixIndex > -1){
+        const matrixControl = this.calcMatrixForm.at(matrixIndex)
+
+        const subscription = matrixControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(matrix => {
+          //control.patchValue(attr)
+          control.get('matrix')?.patchValue(matrix)
+          console.log(matrix)
+          console.log(control)
+        })
+        this.subscriptions.set(uniqueId, subscription);
+      }
+      
     }
   }
 
@@ -185,6 +259,11 @@ export class TariffViewTemplateComponent {
         icon:            '',
       })
     }
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
 }
