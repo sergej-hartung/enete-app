@@ -54,24 +54,46 @@ export class TariffViewTemplateComponent {
 
     this.initCollapseArrays();
 
+    // Delete Tariff Attribut Group
     this.productService.deletedTariffAttr
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(attr => {
-          
-          this.deleteTpl()
-          // this.removeAllAtributteById(attr)
-          // this.unsubscribeToFormCanges(attr.id)
+          const tpl = this.getTplByAttrId(attr.id)
+
+          if(tpl){
+            this.deleteTpl(tpl)
+          }
         })
 
+    // Delete Tariff Group
     this.productService.deletedTariffAttrGroup
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(group => {
           console.log(group)
           if(group && 'attributs' in group){
             group.attributs.forEach((attr: any) => {
-              // this.removeAllAtributteById(attr)
-              // this.unsubscribeToFormCanges(attr.id)
+              const tpl = this.getTplByAttrId(attr.id)
+              if(tpl){
+                this.deleteTpl(tpl)
+              }
             })
+          }
+        })
+
+    this.productService.deletedTariffMatrix
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(matrixObj => {
+          const matrix = matrixObj?.form.value
+          if(matrix && matrix.id){
+            const tpl = this.getTplByMatrixId(matrix.id)
+            if(tpl){
+              this.deleteTpl(tpl)
+            }
+          }else if(matrix && matrix.uniqueId){
+            const tpl = this.getTmlByMatrixUniqueId(matrix.uniqueId)
+            if(tpl){
+              this.deleteTpl(tpl)
+            }
           }
         })
   }
@@ -169,8 +191,6 @@ export class TariffViewTemplateComponent {
         const subscription = matrixControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(matrix => {
           //control.patchValue(attr)
           control.get('matrix')?.patchValue(matrix)
-          console.log(matrix)
-          console.log(control)
         })
         this.subscriptions.set(uniqueId, subscription);
       }
@@ -180,6 +200,50 @@ export class TariffViewTemplateComponent {
 
   onGetTplDropListId(index: number): string {
     return `tplDropList-${index}`;
+  }
+
+  getTplByMatrixId(id: number){
+    const tpl = this.tpl.controls.find(control => {
+      const controlVal = control.value
+      if("matrix" in controlVal){
+        if(id == controlVal.matrix.id){
+          return true
+        }
+      }
+      return false
+    })
+
+    return tpl
+  }
+
+  getTmlByMatrixUniqueId(uniqueId: string){
+    console.log(uniqueId)
+    console.log(this.tpl)
+    const tpl = this.tpl.controls.find(control => {
+      const controlVal = control.value
+      if("matrix" in controlVal){
+        if(uniqueId == controlVal.matrix.uniqueId){
+          return true
+        }
+      }
+      return false
+    })
+
+    return tpl
+  }
+
+  getTplByAttrId(id: number){
+    const tpl = this.tpl.controls.find(control => {
+      const controlVal = control.value
+      if("attribute" in controlVal){
+        if(id == controlVal.attribute.id){
+          return true
+        }
+      }
+      return false
+    })
+
+    return tpl
   }
 
   canDropToTariffList = (drag: any) => {

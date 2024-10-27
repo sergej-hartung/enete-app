@@ -27,6 +27,8 @@ export class TariffDetailsTplComponent {
   copiedAttributsGroup: Set<number> = new Set();
   AttributsGroupHidden: Set<number> = new Set();
 
+  private subscriptions: Map<number|string, any> = new Map();
+
 
   constructor(
     private fb: FormBuilder,
@@ -39,25 +41,72 @@ export class TariffDetailsTplComponent {
   }
 
   ngOnInit() {
-    // this.updateConnectedDropLists();
-
-    // this.attributeGroupsControl.valueChanges
-    //   .pipe(takeUntil(this.unsubscribe$))
-    //   .subscribe(() => {
-    //     this.updateConnectedDropLists();
-    //   });
+    
   }
 
   drop(event: CdkDragDrop<AttributeGroup[]>){
     if (event.previousContainer.id !== this.tariffDropListId){
-      console.log(event)
+
       const movedItem = event.previousContainer.data[event.previousIndex];
+
       this.tariffdetails.push(this.setTariffDeailsItem(movedItem))
-      console.log(this.setTariffDeailsItem(movedItem))
-      console.log(this.tariffdetails)
+
+      this.subscribeToFormGroupChanges(movedItem)
     }else{
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.moveTariffDetailsInFormArray(event.previousIndex, event.currentIndex);
+    }
+  }
+
+  subscribeToFormGroupChanges(item: any){
+    if(item && !this.subscriptions.has(item.uniqueId)){
+      const attributGroups = this.attributeGroupsControl
+      if(attributGroups){
+        const control = attributGroups.controls.find(groupObj => {
+          const group = groupObj.value;
+          return group && ((group.id && item.id === group.id) || (group.uniqueId && item.uniqueId === group.uniqueId));
+        });
+
+        if(control){
+          const subscription = control.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe((group: AttributeGroup) => {
+            if(group && group?.id){
+              let tariffDetail = this.getTariffDetailById(group.id)
+              if(tariffDetail){
+                let attributs = tariffDetail.get('attributs') as FormArray
+                attributs.clear()
+
+                let newAttributs = group.attributs.map(attr => this.createAttributeFormControl(attr))
+                newAttributs.forEach(elements => {
+                  attributs.push(elements)
+                })
+                
+              }
+            }else if(group && group?.uniqueId){
+              let tariffDetail = this.getTariffDetailByUniqueId(group.uniqueId)
+              if(tariffDetail){
+                let attributs = tariffDetail.get('attributs') as FormArray
+                attributs.clear()
+
+                tariffDetail.patchValue({
+                  id: group.id,
+                  name: group.name,
+                  uniqueId: group?.uniqueId,
+                })
+
+                let newAttributs = group.attributs.map(attr => this.createAttributeFormControl(attr))
+                newAttributs.forEach(elements => {
+                  attributs.push(elements)
+                })
+                
+              }
+            }
+          })
+
+          const uniqueId = item.uniqueId
+
+          this.subscriptions.set(uniqueId, subscription);
+        }
+      }
     }
   }
 
@@ -107,17 +156,25 @@ export class TariffDetailsTplComponent {
     
   }
 
-  // updateConnectedDropLists() {
-  //   // Генерация списка идентификаторов правых контейнеров
-  //   const rightDropLists = this.attributeGroupsControl.controls.map((_, i: number) => this.onGetTariffdetailsDropListId(i));
-    
-  //   // Объединяем левый контейнер с правыми
-  //   this.connectedDropLists = [this.tariffDropListId, ...rightDropLists];
-  // }
+  getTariffDetailById(id: number){
+    return this.tariffdetails.controls.find(controlObj => {
+      const control = controlObj.value
 
-  // onGetTariffdetailsDropListId(): string {
-  //   return `tariffDetailsGroupId`;
-  // }
+      if(control && control.id == id) return true
+
+      return false
+    })
+  }
+
+  getTariffDetailByUniqueId(uniqueId: string){
+    return this.tariffdetails.controls.find(controlObj => {
+      const control = controlObj.value
+
+      if(control && control.uniqueId == uniqueId) return true
+
+      return false
+    })
+  }
 
 
   get attributeGroupsControl() {
@@ -147,9 +204,7 @@ export class TariffDetailsTplComponent {
     this.unsubscribe$.complete();
   }
 
-  logEvent(event: CdkDragDrop<any[]>) {
-    console.log('Drop Event Triggered:', event);
-  }
+
 }
 
 

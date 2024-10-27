@@ -28,6 +28,7 @@ export class ProductService {
 
   public deletedTariffAttr = new EventEmitter
   public deletedTariffAttrGroup = new EventEmitter
+  public deletedTariffMatrix = new EventEmitter
 
   private destroy$ = new Subject<void>();
 

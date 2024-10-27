@@ -11,7 +11,7 @@
                         [id]="tariffDropListId"
                         [cdkDropListData]="tariffdetails.value"
                         [cdkDropListConnectedTo]="connectedDropLists" 
-                        (cdkDropListDropped)="drop($event); logEvent($event)"
+                        (cdkDropListDropped)="drop($event)"
                     >
                         <div 
                             cdkDrag
@@ -25,7 +25,7 @@
                                 </button>
                             </div>
                             <div *ngFor="let attributeCtrl of getTariffDetailsAttributs(item).controls; let j = index">
-                                <div class="d-flex" *ngIf="attributeCtrl.value.is_active">
+                                <div class="d-flex" *ngIf="attributeCtrl?.value?.is_active">
                                     <div class="attr-name col-7">
                                         {{attributeCtrl.value.name}}
                                     </div>

@@ -160,6 +160,7 @@ export class TariffCalcMatrixComponent {
   }
 
   onRemoveMatrix(index: number) {
+    this.productService.deletedTariffMatrix.emit(this.matrixs.at(index));
     this.matrixs.splice(index, 1);
     this.calcMatrixForm.removeAt(index);
     this.updateConnectedDropLists();
