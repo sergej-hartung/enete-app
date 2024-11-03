@@ -1,10 +1,10 @@
-import { Component, SimpleChanges } from '@angular/core';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, OnDestroy, SimpleChanges } from '@angular/core';
+import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormBuilder, FormGroup, FormArray, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { AttributeService } from '../../../../../services/product/tariff/attribute/attribute.service';
 import { ProductService } from '../../../../../services/product/product.service';
 import { AttributeGroupService } from '../../../../../services/product/tariff/attribute-group/attribute-group.service';
-import { Observable, Subject, delay, of, takeUntil } from 'rxjs';
+import { Observable, Subject, delay, of, take, takeUntil } from 'rxjs';
 import { Attribute } from '../../../../../models/tariff/attribute/attribute';
 import { MainNavbarService } from '../../../../../services/main-navbar.service';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -17,7 +17,7 @@ interface Group {
   id?: number;
   name: string;
   attributs: Attribute[];
-  form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
+  form: FormGroup;
   hidden?: boolean;
 }
 
@@ -26,7 +26,7 @@ interface Group {
   templateUrl: './tariff-attribute.component.html',
   styleUrls: ['./tariff-attribute.component.scss']
 })
-export class TariffAttributeComponent {
+export class TariffAttributeComponent implements OnDestroy {
   tariffAttributs: Attribute[] = [];
   groups: Group[] = [];
   tariffDropListId = 'tariffDropList';
@@ -40,13 +40,14 @@ export class TariffAttributeComponent {
   groupId: number | null = null;
 
   private unsubscribe$ = new Subject<void>();
+  private detailedDataSubscription: any;
 
   constructor(
     private fb: FormBuilder,
     private attributeService: AttributeService,
     private productService: ProductService,
-    private mainNavbarService: MainNavbarService,
-    private attributeGroupService: AttributeGroupService,
+    // private mainNavbarService: MainNavbarService,
+    // private attributeGroupService: AttributeGroupService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
     private formService: FormService,
@@ -62,48 +63,48 @@ export class TariffAttributeComponent {
     this.editGroupForm = this.fb.group({
       groupName: ['', Validators.required]
     });
-  }
 
-  ngOnInit() { 
-    this.subscribeWithUnsubscribe(this.productService.tariffGroupId$, id => {
-      if (id && this.groupId !== id) {
-        this.groupId = id;
-        this.attributeService.fetchDataByGroupId(this.groupId);
-      }
-    });
-
-    this.subscribeWithUnsubscribe(this.attributeService.data$, data => {
-      if (data && data.entityType === 'tariffAttributsByGroup') {
-        this.tariffAttributs = data.data;
-        this.updateTariffAttributsStatus();
-      }
-    });
-
-    this.subscribeWithUnsubscribe(this.productService.productMode$, mode => {
-      if (mode === 'edit') this.loadAttributeGroups();
-    });
-  }
-
-  ngOnChanges(changes: SimpleChanges) {   
-    this.updateConnectedDropLists();
-  }
-
-  private subscribeWithUnsubscribe<T>(observable: Observable<T>, callback: (value: T) => void): void {
-    observable.pipe(takeUntil(this.unsubscribe$)).subscribe(callback);
+    this.initializeSubscriptions();
   }
 
 
+
+  private initializeSubscriptions() {
+    this.productService.tariffGroupId$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(id => {
+        if (id && this.groupId !== id) {
+          this.groupId = id;
+          this.attributeService.fetchDataByGroupId(this.groupId);
+        }
+      });
+
+    this.attributeService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => {
+        if (data && data.entityType === 'tariffAttributsByGroup') {
+          this.tariffAttributs = data.data;
+          this.updateTariffAttributsStatus();
+        }
+      });
+
+    this.productService.productMode$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(mode => {
+        if (mode === 'edit') this.loadAttributeGroups();
+      });
+  }
 
 
   openEditor(event: Event, group: Group, index: number) {
     event.preventDefault();
-   (event.target as HTMLElement).blur();
+    (event.target as HTMLElement).blur();
 
     const modalRef = this.openModal();
     const control = this.getAttributeFormArray(group).at(index) as FormGroup;
     const textControl = control.get('value_text');
     const attribute = group.attributs[index];
-    
+
     textControl?.setValue(attribute.pivot?.value_text || textControl?.value || '');
     modalRef.componentInstance.initialValue = textControl?.value || '';
 
@@ -124,14 +125,14 @@ export class TariffAttributeComponent {
       modalRef.close();
     };
 
-    modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$)).subscribe((result: any) => {
+    modalRef.componentInstance.saveText.pipe(take(1)).subscribe((result: any) => {
       if (result !== undefined) {
         control.patchValue({ value_text: result });
         markAsTouchedAndClose();
       }
     });
 
-    modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$)).subscribe(markAsTouchedAndClose);
+    modalRef.componentInstance.close.pipe(take(1)).subscribe(markAsTouchedAndClose);
   }
 
   addNewGroupName() {
@@ -145,11 +146,6 @@ export class TariffAttributeComponent {
         name: this.newGroupForm.value.groupName,
         attributs: [],
         form: this.createGroupForm(this.newGroupForm.value.groupName)
-        // form: this.fb.group({
-        //   id: [null],
-        //   name: [this.newGroupForm.value.groupName],
-        //   attributes: this.fb.array([])
-        // })
       };
       this.groups.push(newGroup);
       this.attributeGroupsForm.push(newGroup.form);
@@ -226,11 +222,11 @@ export class TariffAttributeComponent {
   }
 
   private copyAttribute(attribute: Attribute): Attribute {
-    return { 
-      ...attribute, 
-      isCopied: true, 
-      isFocused: false, 
-      isActiveDesibled: !attribute.is_frontend_visible 
+    return {
+      ...attribute,
+      isCopied: true,
+      isFocused: false,
+      isActiveDisabled: !attribute.is_frontend_visible
     };
   }
 
@@ -248,9 +244,9 @@ export class TariffAttributeComponent {
  
 
   private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
-    const valueVarcharValidators = attribute.input_type != 'Textbereich' ? this.getValidatorsForType(attribute, valueVarchar) : '';
-    const valueTextValidators = attribute.input_type == 'Textbereich'? this.getValidatorsForType(attribute, valueText) : '';
-    //console.log(attribute)
+    const valueVarcharValidators = attribute.input_type !== 'Textbereich' ? this.getValidatorsForType(attribute) : [];
+    const valueTextValidators = attribute.input_type === 'Textbereich' ? this.getValidatorsForType(attribute) : [];
+
     return this.fb.group({
       id: [attribute.id],
       code: [attribute.code],
@@ -262,63 +258,49 @@ export class TariffAttributeComponent {
     });
   }
 
-  private getValidatorsForType(attribute: Attribute, value: string): any[] {
-    const validators:any = [];   
-      switch (attribute.input_type) {
-        case 'Ganzzahlen':
-          validators.push(Validators.pattern(/^\d+$/)); // Только целые числа
-          this.setRequired(attribute, validators)
-          break;
-        case 'Dezimalzahlen':
-          validators.push(Validators.pattern(/^\d+(,\d+)?$/)); // Десятичные числа
-          this.setRequired(attribute, validators)
-          break;
-        case 'Datumfeld':
-          validators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)); // Дата в формате ГГГГ-ММ-ДД
-          this.setRequired(attribute, validators)
-          break;
-        case 'Link-Feld':
-          validators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/)); // URL
-          this.setRequired(attribute, validators)
-          break;
-        case 'Boolescher Wert':
-          validators.push(Validators.pattern(/^(0|1)$/)); // Булевый (0 или 1)
-          this.setRequired(attribute, validators)
-          break;
-          case 'Dateifeld':
-            // Для поля файла можно добавить валидатор на допустимые расширения файлов, если нужно
-            this.setRequired(attribute, validators)
-            break;
-        case 'Dropdown':
-            // Для выпадающего списка специфические валидаторы не нужны
-            this.setRequired(attribute, validators)
-            break;
-        case 'Mehrfachauswahl':
-            // Для множественного выбора специфические валидаторы не нужны
-            this.setRequired(attribute, validators)
-            break;
-        case 'Textfeld':
-            // Для текстового поля специфические валидаторы не нужны
-            this.setRequired(attribute, validators)
-            break;
-        case 'Textbereich':
-            // Валидаторы добавлены выше
-            this.setRequired(attribute, validators)
-            break;
-        default:
-            // Для других типов данных добавьте свои валидаторы, если необходимо
-            break;
-      }
 
-
-    return validators;
-  }
-
-  private setRequired(attribute: any, validators: any){
+  private getValidatorsForType(attribute: Attribute): any[] {
+    const validators: any[] = [];
+    switch (attribute.input_type) {
+      case 'Ganzzahlen':
+        validators.push(Validators.pattern(/^\d+$/));
+        break;
+      case 'Dezimalzahlen':
+        validators.push(Validators.pattern(/^\d+(,\d+)?$/));
+        break;
+      case 'Datumfeld':
+        validators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/));
+        break;
+      case 'Link-Feld':
+        validators.push(Validators.pattern(/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/));
+        break;
+      case 'Boolescher Wert':
+        validators.push(Validators.pattern(/^(0|1)$/));
+        break;
+        case 'Dateifeld':
+          // Для поля файла можно добавить валидатор на допустимые расширения файлов, если нужно
+          break;
+      case 'Dropdown':
+          // Для выпадающего списка специфические валидаторы не нужны
+          break;
+      case 'Mehrfachauswahl':
+          // Для множественного выбора специфические валидаторы не нужны
+          break;
+      case 'Textfeld':
+          // Для текстового поля специфические валидаторы не нужны
+          break;
+      case 'Textbereich':
+          // Валидаторы добавлены выше
+          break;
+      default:
+        break;
+    }
     if (attribute.is_required) {
       validators.push(Validators.required);
     }
+    return validators;
   }
+
 
   private addControlToFormArray(formArray: FormArray, control: AbstractControl, index?: number): void {
     if (index !== undefined) {
@@ -335,7 +317,7 @@ export class TariffAttributeComponent {
 
   private moveControlInFormArray(formArray: FormArray, fromIndex: number, toIndex: number): void {
     const control = formArray.at(fromIndex);
-    formArray.removeAt(fromIndex, {emitEvent:false});
+    formArray.removeAt(fromIndex);
     formArray.insert(toIndex, control);
   }
 
@@ -347,22 +329,22 @@ export class TariffAttributeComponent {
     return this.tariffAttributs.find(attr => attr.id === attribute.id);
   }
 
-  private moveItemInFormArray(formArray: FormArray, fromIndex: number, toIndex: number) {
-    const item = formArray.at(fromIndex);
-    formArray.removeAt(fromIndex);
-    formArray.insert(toIndex, item);
-  }
 
   getDropdownOptions(attribute: Attribute) {
     if (attribute.input_type === 'Dropdown' && attribute.details) {
-      const details = JSON.parse(attribute.details);
-      return details.options || [];
+      try {
+        const details = JSON.parse(attribute.details);
+        return details.options || [];
+      } catch (error) {
+        console.error('Ошибка парсинга JSON деталей атрибута', error);
+        return [];
+      }
     }
     return [];
   }
 
   removeAttribute(group: Group, attribute: Attribute) {
-    const index = group.attributs.indexOf(attribute);
+    const index = group.attributs.findIndex(attr => attr.id === attribute.id);
     if (index >= 0) {
       const originalAttribute = this.findOriginalAttribute(attribute);
       if (originalAttribute) {
@@ -388,15 +370,21 @@ export class TariffAttributeComponent {
   }
 
 
-  canDropToTariffList = (drag: any) => {
-    return drag.dropContainer.id === this.tariffDropListId;
-  }
+  // canDropToTariffList = (drag: any) => {
+  //   return drag.dropContainer.id === this.tariffDropListId;
+  // }
 
+  canDropToTariffList = (drag: CdkDrag, drop: CdkDropList) => {
+    return drop.id === this.tariffDropListId;
+  }
 
 
   private loadAttributeGroups() {
     if (this.groupId) {
-      this.tariffService.detailedData$
+      if (this.detailedDataSubscription) {
+        this.detailedDataSubscription.unsubscribe();
+      }
+      this.detailedDataSubscription = this.tariffService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(response => {
           if (response) {
@@ -408,20 +396,21 @@ export class TariffAttributeComponent {
                 attributs: group.attributs.map(attr => ({
                   ...attr,
                   isCopied: true,
-                  ...(attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false ? { isActiveDesibled: true } : {})
+                  isActiveDisabled: attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false
                 })),
                 hidden: false,
                 form: this.fb.group({
-                    id: [group.id],
-                    name: [group.name],
-                    attributs: this.fb.array(
-                      group.attributs.map(attr => this.createAttributeFormControl(
-                        attr, attr?.pivot?.value_varchar || '', 
-                        attr?.pivot?.value_text || '', 
-                        attr?.pivot?.is_active
-                      ))
-                    )
-                  })
+                  id: [group.id],
+                  name: [group.name],
+                  attributs: this.fb.array(
+                    group.attributs.map(attr => this.createAttributeFormControl(
+                      attr,
+                      attr?.pivot?.value_varchar || '',
+                      attr?.pivot?.value_text || '',
+                      attr?.pivot?.is_active
+                    ))
+                  )
+                })
               }));
 
               this.attributeGroupsForm.clear();
@@ -440,8 +429,9 @@ export class TariffAttributeComponent {
   toggleFrontendVisible(attribute: Attribute, control: any) {
     const isActive = control.get('is_active');
 
-    attribute.is_frontend_visible = isActive?.value ? 0 : 1;
-    control.get('is_active')?.setValue(isActive?.value ? 0 : 1);
+    const newValue = isActive?.value ? 0 : 1;
+    attribute.is_frontend_visible = newValue;
+    control.get('is_active')?.setValue(newValue);
   }
 
   private updateTariffAttributsStatus() {
@@ -485,6 +475,9 @@ export class TariffAttributeComponent {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+    if (this.detailedDataSubscription) {
+      this.detailedDataSubscription.unsubscribe();
+    }
   }
 }
 

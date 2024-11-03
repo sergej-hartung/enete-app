@@ -41,7 +41,21 @@ export class TariffDetailsTplComponent {
   }
 
   ngOnInit() {
-    
+    // Delete Tariff Group
+    this.productService.deletedTariffAttrGroup
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(group => {
+          console.log(group)
+          const tariffGroup = group?.form.value
+          const tariffDetails = this.tariffdetails.value
+          if(tariffGroup && tariffGroup.uniqueId){
+            const index = tariffDetails.findIndex((item: any) => item.uniqueId == tariffGroup.uniqueId)
+            if (index >= 0) {
+              this.removeTariffDetailsItem(index)
+              this.unsubscribeToFormCanges(tariffGroup.uniqueId)
+            }
+          }
+        })
   }
 
   drop(event: CdkDragDrop<AttributeGroup[]>){
@@ -74,6 +88,12 @@ export class TariffDetailsTplComponent {
               if(tariffDetail){
                 let attributs = tariffDetail.get('attributs') as FormArray
                 attributs.clear()
+
+                tariffDetail.patchValue({
+                  id: group.id,
+                  name: group.name,
+                  uniqueId: group?.uniqueId,
+                })
 
                 let newAttributs = group.attributs.map(attr => this.createAttributeFormControl(attr))
                 newAttributs.forEach(elements => {
@@ -129,7 +149,7 @@ export class TariffDetailsTplComponent {
     }); 
   }
 
-  removeTariffDetailsItem(item: any, index: number){
+  removeTariffDetailsItem(index: number){
     if (index >= 0) {
       this.tariffdetails.removeAt(index)
     }
@@ -174,6 +194,17 @@ export class TariffDetailsTplComponent {
 
       return false
     })
+  }
+
+  unsubscribeToFormCanges(uniqueId: string){
+    if(this.subscriptions.has(uniqueId)){
+      const subscription = this.subscriptions.get(uniqueId);
+      if (subscription) {
+        subscription.unsubscribe();
+        this.subscriptions.delete(uniqueId);
+      }
+    }
+    
   }
 
 

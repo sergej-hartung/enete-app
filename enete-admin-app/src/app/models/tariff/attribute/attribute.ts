@@ -16,7 +16,7 @@ export interface Attribute {
     isCopied?: boolean
     pivot?: Pivot
     isFocused?: boolean;
-    isActiveDesibled?: boolean | number;
+    isActiveDisabled?: boolean | number;
     value_varchar?: string | undefined
     value_text?: string | undefined
     is_active?: number | boolean

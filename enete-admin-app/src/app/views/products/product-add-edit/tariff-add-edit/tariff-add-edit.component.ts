@@ -28,47 +28,31 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    //this.subscribeToFormChanges();
+    this.tariffForm.valueChanges
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(() => {
+          console.log(this.tariffForm.valid)
+        });
   }
 
   // subscribeToFormChanges() {
-  //   const attributeGroupsControl = this.tariffForm.get('attribute_groups');
-  //   const calcMatrixControl = this.tariffForm.get('calc_matrix');
-  
-  //   attributeGroupsControl?.valueChanges
+  //   const attributeGroupsControl = this.attributeGroupsControl;
+  //   const calcMatrixControl = this.calcMatrixControl;
+
+  //   attributeGroupsControl.valueChanges
   //     .pipe(takeUntil(this.unsubscribe$))
-  //     .subscribe((test) => {
+  //     .subscribe(() => {
   //       this.syncCalcMatrix();
-  //       this.syncAttributsWithTemplate();        
-  //       this.syncTariffDetails()
+  //       this.syncAttributesWithTemplate();
+  //       this.syncTariffDetails();
   //     });
-  
-  //   calcMatrixControl?.valueChanges
+
+  //   calcMatrixControl.valueChanges
   //     .pipe(takeUntil(this.unsubscribe$))
-  //     .subscribe(newCalcMatrix => {
-  //       console.log(newCalcMatrix)
+  //     .subscribe((newCalcMatrix: CalcMatrix[]) => {
   //       this.syncTplArrayWithMatrix(newCalcMatrix);
   //     });
   // }
-
-  subscribeToFormChanges() {
-    const attributeGroupsControl = this.attributeGroupsControl;
-    const calcMatrixControl = this.calcMatrixControl;
-
-    attributeGroupsControl.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe(() => {
-        this.syncCalcMatrix();
-        this.syncAttributesWithTemplate();
-        this.syncTariffDetails();
-      });
-
-    calcMatrixControl.valueChanges
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((newCalcMatrix: CalcMatrix[]) => {
-        this.syncTplArrayWithMatrix(newCalcMatrix);
-      });
-  }
 
   // syncCalcMatrix() {
   //   const calcMatrices = this.calcMatrixControl?.value;
@@ -125,39 +109,39 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   //   this.updateTplMatrix(matrix as FormGroup);
   //   // });
   // }
-  syncCalcMatrix() {
-    const calcMatrices = this.calcMatrixControl.value as CalcMatrix[];
-    const attributeGroups = this.attributeGroupsControl.value as AttributeGroup[];
+  // syncCalcMatrix() {
+  //   const calcMatrices = this.calcMatrixControl.value as CalcMatrix[];
+  //   const attributeGroups = this.attributeGroupsControl.value as AttributeGroup[];
 
-    calcMatrices.forEach((matrix, index) => {
-      if (matrix.attributs) {
-        matrix.attributs.forEach((matrixAttr, matrixAttrIndex) => {
-          let attrExists = false;
+  //   calcMatrices.forEach((matrix, index) => {
+  //     if (matrix.attributs) {
+  //       matrix.attributs.forEach((matrixAttr, matrixAttrIndex) => {
+  //         let attrExists = false;
 
-          attributeGroups.forEach((group) => {
-            if (group.attributs) {
-              const attributeIndex = group.attributs.findIndex(
-                (attr) => attr.id === matrixAttr.id
-              );
+  //         attributeGroups.forEach((group) => {
+  //           if (group.attributs) {
+  //             const attributeIndex = group.attributs.findIndex(
+  //               (attr) => attr.id === matrixAttr.id
+  //             );
 
-              if (attributeIndex !== -1) {
-                attrExists = true;
-                const attribute = group.attributs[attributeIndex];
+  //             if (attributeIndex !== -1) {
+  //               attrExists = true;
+  //               const attribute = group.attributs[attributeIndex];
 
-                if (this.shouldUpdateMatrixAttribute(matrixAttr, attribute)) {
-                  this.updateMatrixAttribute(index, matrixAttrIndex, attribute.value_varchar);
-                }
-              }
-            }
-          });
+  //               if (this.shouldUpdateMatrixAttribute(matrixAttr, attribute)) {
+  //                 this.updateMatrixAttribute(index, matrixAttrIndex, attribute.value_varchar);
+  //               }
+  //             }
+  //           }
+  //         });
 
-          if (!attrExists) {
-            this.removeMatrixAttribute(index, matrixAttrIndex);
-          }
-        });
-      }
-    });
-  }
+  //         if (!attrExists) {
+  //           this.removeMatrixAttribute(index, matrixAttrIndex);
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
 
   // syncTplArrayWithMatrix(newCalcMatrix: any[]) {
   //   const tplArrayControl = this.tplArrayControl;
@@ -187,26 +171,26 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   });
   // }
 
-  syncTplArrayWithMatrix(newCalcMatrix: CalcMatrix[]) {
-    const tplArrayControl = this.tplArrayControl;
+  // syncTplArrayWithMatrix(newCalcMatrix: CalcMatrix[]) {
+  //   const tplArrayControl = this.tplArrayControl;
 
-    tplArrayControl.controls.forEach((tplControl: any, index: number) => {
-      const tplMatrix = tplControl.get('matrix') as FormGroup;
+  //   tplArrayControl.controls.forEach((tplControl: any, index: number) => {
+  //     const tplMatrix = tplControl.get('matrix') as FormGroup;
 
-      const correspondingMatrix = newCalcMatrix.find((matrix) =>
-        matrix.id === tplMatrix?.get('id')?.value ||
-        matrix.uniqueId === tplMatrix?.get('uniqueId')?.value
-      );
+  //     const correspondingMatrix = newCalcMatrix.find((matrix) =>
+  //       matrix.id === tplMatrix?.get('id')?.value ||
+  //       matrix.uniqueId === tplMatrix?.get('uniqueId')?.value
+  //     );
 
-      if (correspondingMatrix) {
-        if (!this.deepEqual(correspondingMatrix, tplMatrix.value)) {
-          tplMatrix.patchValue(correspondingMatrix);
-        }
-      } else {
-        //tplControl.removeControl('matrix');
-      }
-    });
-  }
+  //     if (correspondingMatrix) {
+  //       if (!this.deepEqual(correspondingMatrix, tplMatrix.value)) {
+  //         tplMatrix.patchValue(correspondingMatrix);
+  //       }
+  //     } else {
+  //       //tplControl.removeControl('matrix');
+  //     }
+  //   });
+  // }
 
   // syncTariffDetails(){
   //   //tariffDetails: AttributeGroup[]
@@ -245,31 +229,31 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   }
   // }
 
-  syncTariffDetails() {
-    const attributeGroups = this.attributeGroupsControl.value as AttributeGroup[];
-    const tariffDetails = this.tariffDetails.value as AttributeGroup[];
+  // syncTariffDetails() {
+  //   const attributeGroups = this.attributeGroupsControl.value as AttributeGroup[];
+  //   const tariffDetails = this.tariffDetails.value as AttributeGroup[];
 
-    if (tariffDetails) {
-      tariffDetails.forEach((tariffDetail, tariffDetailIndex) => {
-        let groupIndex: number;
+  //   if (tariffDetails) {
+  //     tariffDetails.forEach((tariffDetail, tariffDetailIndex) => {
+  //       let groupIndex: number;
 
-        if (tariffDetail.id) {
-          groupIndex = attributeGroups.findIndex((group) => group.id === tariffDetail.id);
-        } else {
-          groupIndex = attributeGroups.findIndex((group) => group.uniqueId === tariffDetail.uniqueId);
-        }
+  //       if (tariffDetail.id) {
+  //         groupIndex = attributeGroups.findIndex((group) => group.id === tariffDetail.id);
+  //       } else {
+  //         groupIndex = attributeGroups.findIndex((group) => group.uniqueId === tariffDetail.uniqueId);
+  //       }
 
-        if (groupIndex !== -1) {
-          const attributeGroup = attributeGroups[groupIndex];
-          if (!this.deepEqual(attributeGroup, tariffDetail)) {
-            this.tariffDetails.setControl(tariffDetailIndex, this.setTariffDetailsItem(attributeGroup));
-          }
-        } else {
-          this.tariffDetails.removeAt(tariffDetailIndex);
-        }
-      });
-    }
-  }
+  //       if (groupIndex !== -1) {
+  //         const attributeGroup = attributeGroups[groupIndex];
+  //         if (!this.deepEqual(attributeGroup, tariffDetail)) {
+  //           this.tariffDetails.setControl(tariffDetailIndex, this.setTariffDetailsItem(attributeGroup));
+  //         }
+  //       } else {
+  //         this.tariffDetails.removeAt(tariffDetailIndex);
+  //       }
+  //     });
+  //   }
+  // }
 
   // setTariffDeailsItem(attributGroup: AttributeGroup){
   //   return this.fb.group({
@@ -282,16 +266,16 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   }); 
   // }
 
-  setTariffDetailsItem(attributeGroup: AttributeGroup): FormGroup {
-    return this.fb.group({
-      id: [attributeGroup.id],
-      name: [attributeGroup.name],
-      uniqueId: [attributeGroup.uniqueId],
-      attributs: this.fb.array(
-        attributeGroup.attributs.map((attr) => this.createAttributeFormControl(attr))
-      )
-    });
-  }
+  // setTariffDetailsItem(attributeGroup: AttributeGroup): FormGroup {
+  //   return this.fb.group({
+  //     id: [attributeGroup.id],
+  //     name: [attributeGroup.name],
+  //     uniqueId: [attributeGroup.uniqueId],
+  //     attributs: this.fb.array(
+  //       attributeGroup.attributs.map((attr) => this.createAttributeFormControl(attr))
+  //     )
+  //   });
+  // }
 
   // createAttributeFormControl(attr: Attribute){
   //   return this.fb.group({
@@ -305,17 +289,17 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   });
   // }
 
-  createAttributeFormControl(attr: Attribute): FormGroup {
-    return this.fb.group({
-      id: [attr.id],
-      code: [attr.code],
-      name: [attr.name],
-      unit: [attr.unit],
-      value_varchar: [attr.value_varchar],
-      value_text: [attr.value_text],
-      is_active: [attr.is_active]
-    });
-  }
+  // createAttributeFormControl(attr: Attribute): FormGroup {
+  //   return this.fb.group({
+  //     id: [attr.id],
+  //     code: [attr.code],
+  //     name: [attr.name],
+  //     unit: [attr.unit],
+  //     value_varchar: [attr.value_varchar],
+  //     value_text: [attr.value_text],
+  //     is_active: [attr.is_active]
+  //   });
+  // }
 
   // syncAttributsWithTemplate() {
   //   const attributeGroups = this.attributeGroupsControl?.value;
@@ -396,45 +380,45 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   });
   // }
 
-  syncAttributesWithTemplate() {
-    const attributeGroups = this.attributeGroupsControl.value as AttributeGroup[];
-    const templateArray = this.tplArrayControl.value as Template[];
+  // syncAttributesWithTemplate() {
+  //   const attributeGroups = this.attributeGroupsControl.value as AttributeGroup[];
+  //   const templateArray = this.tplArrayControl.value as Template[];
 
-    templateArray.forEach((tpl, index) => {
-      let attrExists = false;
-      if (tpl.attribute) {
-        attributeGroups.forEach((group) => {
-          if (group.attributs) {
-            const attributeIndex = group.attributs.findIndex(
-              (attr) => attr.id === tpl?.attribute?.id
-            );
+  //   templateArray.forEach((tpl, index) => {
+  //     let attrExists = false;
+  //     if (tpl.attribute) {
+  //       attributeGroups.forEach((group) => {
+  //         if (group.attributs) {
+  //           const attributeIndex = group.attributs.findIndex(
+  //             (attr) => attr.id === tpl?.attribute?.id
+  //           );
 
-            if (attributeIndex !== -1) {
-              attrExists = true;
-              const attribute = group.attributs[attributeIndex];
+  //           if (attributeIndex !== -1) {
+  //             attrExists = true;
+  //             const attribute = group.attributs[attributeIndex];
 
-              if (!this.deepEqual(attribute, tpl.attribute)) {
-                this.updateTemplateAttribute(index, attribute);
-              }
-            }
-          }
-        });
+  //             if (!this.deepEqual(attribute, tpl.attribute)) {
+  //               this.updateTemplateAttribute(index, attribute);
+  //             }
+  //           }
+  //         }
+  //       });
 
-        if (!attrExists) {
-          const tplControl = this.tplArrayControl.at(index) as FormGroup;
-          tplControl.removeControl('attribute');
-        }
-      }
-    });
-  }
+  //       if (!attrExists) {
+  //         const tplControl = this.tplArrayControl.at(index) as FormGroup;
+  //         tplControl.removeControl('attribute');
+  //       }
+  //     }
+  //   });
+  // }
 
   // shouldUpdateMatrixAttribute(attr: calcMatrixAttr, attribute: Attribute ): boolean {
   //   return attr.id === attribute.id && attr.value !== attribute.value_varchar;
   // }
   
-  shouldUpdateMatrixAttribute(matrixAttr: calcMatrixAttr, attribute: Attribute): boolean {
-    return matrixAttr.id === attribute.id && matrixAttr.value !== attribute.value_varchar;
-  }
+  // shouldUpdateMatrixAttribute(matrixAttr: calcMatrixAttr, attribute: Attribute): boolean {
+  //   return matrixAttr.id === attribute.id && matrixAttr.value !== attribute.value_varchar;
+  // }
 
   // syncAttributeWithTemplate(attribute: Attribute, templates: Template[]) {
   //   templates.forEach((template, templateIndex) => {
@@ -481,15 +465,15 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   this.updateTplMatrix(matrix);
   // }
 
-  updateMatrixAttribute(matrixIndex: number, attrIndex: number, newValue: string | undefined) {
-    const matrices = this.calcMatrixControl;
-    const matrix = matrices.at(matrixIndex) as FormGroup;
-    const attributs = matrix.get('attributs') as FormArray;
-    attributs.at(attrIndex).patchValue({ value: newValue });
+  // updateMatrixAttribute(matrixIndex: number, attrIndex: number, newValue: string | undefined) {
+  //   const matrices = this.calcMatrixControl;
+  //   const matrix = matrices.at(matrixIndex) as FormGroup;
+  //   const attributs = matrix.get('attributs') as FormArray;
+  //   attributs.at(attrIndex).patchValue({ value: newValue });
 
-    this.updateTotalValue(attributs.at(attrIndex) as FormGroup, matrix);
-    this.updateTplMatrix(matrix);
-  }
+  //   this.updateTotalValue(attributs.at(attrIndex) as FormGroup, matrix);
+  //   this.updateTplMatrix(matrix);
+  // }
 
   // updateTplMatrix(matrix: FormGroup) {
   //   const tplsForm = this.tplArrayControl;
@@ -503,34 +487,34 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   });
   // }
 
-  removeMatrixAttribute(matrixIndex: number, attrIndex: number) {
-    const matrices = this.calcMatrixControl;
-    const matrix = matrices.at(matrixIndex) as FormGroup;
-    const attributs = matrix.get('attributs') as FormArray;
+  // removeMatrixAttribute(matrixIndex: number, attrIndex: number) {
+  //   const matrices = this.calcMatrixControl;
+  //   const matrix = matrices.at(matrixIndex) as FormGroup;
+  //   const attributs = matrix.get('attributs') as FormArray;
 
-    attributs.removeAt(attrIndex);
-    this.updateTplMatrix(matrix);
-  }
+  //   attributs.removeAt(attrIndex);
+  //   this.updateTplMatrix(matrix);
+  // }
 
-  updateTplMatrix(matrix: FormGroup) {
-    const tplsForm = this.tplArrayControl;
-    const tpls = tplsForm.value as Template[];
+  // updateTplMatrix(matrix: FormGroup) {
+  //   const tplsForm = this.tplArrayControl;
+  //   const tpls = tplsForm.value as Template[];
 
-    tpls.forEach((tpl, tplIndex) => {
-      if (this.isSameMatrix(tpl.matrix, matrix)) {
-        const template = tplsForm.at(tplIndex) as FormGroup;
-        template.get('matrix')?.patchValue(matrix.value);
-      }
-    });
-  }
+  //   tpls.forEach((tpl, tplIndex) => {
+  //     if (this.isSameMatrix(tpl.matrix, matrix)) {
+  //       const template = tplsForm.at(tplIndex) as FormGroup;
+  //       template.get('matrix')?.patchValue(matrix.value);
+  //     }
+  //   });
+  // }
 
   // isSameMatrix(tplMatrix: any, formMatrix: FormGroup): boolean {
   //   return tplMatrix?.id === formMatrix?.get('id')?.value || tplMatrix?.uniqueId === formMatrix?.get('uniqueId')?.value;
   // }
 
-  isSameMatrix(tplMatrix: any, formMatrix: FormGroup): boolean {
-    return tplMatrix?.id === formMatrix.get('id')?.value || tplMatrix?.uniqueId === formMatrix.get('uniqueId')?.value;
-  }
+  // isSameMatrix(tplMatrix: any, formMatrix: FormGroup): boolean {
+  //   return tplMatrix?.id === formMatrix.get('id')?.value || tplMatrix?.uniqueId === formMatrix.get('uniqueId')?.value;
+  // }
 
 
   // updateTemplateAttribute(index: number, attribute: any) {
@@ -538,10 +522,10 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   tpl.get('attribute')?.patchValue(attribute);
   // }
 
-  updateTemplateAttribute(index: number, attribute: Attribute) {
-    const tpl = this.tplArrayControl.at(index) as FormGroup;
-    tpl.get('attribute')?.patchValue(attribute);
-  }
+  // updateTemplateAttribute(index: number, attribute: Attribute) {
+  //   const tpl = this.tplArrayControl.at(index) as FormGroup;
+  //   tpl.get('attribute')?.patchValue(attribute);
+  // }
 
 
   // updateTotalValue(attributeFormGroup: FormGroup, matrix: FormGroup) {
@@ -557,22 +541,22 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   }
   // }
 
-  updateTotalValue(attributeFormGroup: FormGroup, matrix: FormGroup) {
-    const valueControl = attributeFormGroup.get('value');
-    const periodControl = attributeFormGroup.get('period');
-    const valueTotalControl = attributeFormGroup.get('value_total');
+  // updateTotalValue(attributeFormGroup: FormGroup, matrix: FormGroup) {
+  //   const valueControl = attributeFormGroup.get('value');
+  //   const periodControl = attributeFormGroup.get('period');
+  //   const valueTotalControl = attributeFormGroup.get('value_total');
 
-    const value = parseFloat(valueControl?.value.replace(',', '.') || '0');
-    const period = parseInt(periodControl?.value, 10);
+  //   const value = parseFloat(valueControl?.value.replace(',', '.') || '0');
+  //   const period = parseInt(periodControl?.value, 10);
 
-    if (valueTotalControl) {
-      valueTotalControl.setValue(
-        !isNaN(value) && !isNaN(period) ? value * period : isNaN(value) ? 0 : value
-      );
-    }
+  //   if (valueTotalControl) {
+  //     valueTotalControl.setValue(
+  //       !isNaN(value) && !isNaN(period) ? value * period : isNaN(value) ? 0 : value
+  //     );
+  //   }
 
-    this.updateTotalValueMatrix(matrix);
-  }
+  //   this.updateTotalValueMatrix(matrix);
+  // }
 
   // updateTotalValueMatrix(matrix: FormGroup) {
   //   const attributs = matrix.get('attributs')?.value || [];
@@ -588,56 +572,56 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   //   matrix.get('total_value')?.setValue(totalValue);
   // }
 
-  updateTotalValueMatrix(matrix: FormGroup) {
-    const attributs = matrix.get('attributs')?.value || [];
-    let totalValue = 0;
-    const units = new Set<string>();
+  // updateTotalValueMatrix(matrix: FormGroup) {
+  //   const attributs = matrix.get('attributs')?.value || [];
+  //   let totalValue = 0;
+  //   const units = new Set<string>();
 
-    attributs.forEach((attr: any) => {
-      if (attr?.unit) units.add(attr.unit);
-      totalValue += parseFloat(attr?.value_total || 0);
-    });
+  //   attributs.forEach((attr: any) => {
+  //     if (attr?.unit) units.add(attr.unit);
+  //     totalValue += parseFloat(attr?.value_total || 0);
+  //   });
 
-    matrix.get('unit')?.setValue(units.size === 1 ? Array.from(units)[0] : '');
-    matrix.get('total_value')?.setValue(totalValue);
-  }
+  //   matrix.get('unit')?.setValue(units.size === 1 ? Array.from(units)[0] : '');
+  //   matrix.get('total_value')?.setValue(totalValue);
+  // }
 
-  deepEqual(obj1: any, obj2: any): boolean {
-    if (obj1 === obj2) return true;
+  // deepEqual(obj1: any, obj2: any): boolean {
+  //   if (obj1 === obj2) return true;
     
-    if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || obj1 === null || obj2 === null) {
-      return false;
-    }
+  //   if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || obj1 === null || obj2 === null) {
+  //     return false;
+  //   }
   
-    let keys1 = Object.keys(obj1);
-    let keys2 = Object.keys(obj2);
+  //   let keys1 = Object.keys(obj1);
+  //   let keys2 = Object.keys(obj2);
   
-    if (keys1.length !== keys2.length) return false;
+  //   if (keys1.length !== keys2.length) return false;
   
-    for (let key of keys1) {
-      if (!keys2.includes(key) || !this.deepEqual(obj1[key], obj2[key])) {
-        return false;
-      }
-    }
+  //   for (let key of keys1) {
+  //     if (!keys2.includes(key) || !this.deepEqual(obj1[key], obj2[key])) {
+  //       return false;
+  //     }
+  //   }
   
-    return true;
-  }
+  //   return true;
+  // }
 
-  get attributeGroupsControl() {
-    return this.tariffForm.get('attribute_groups') as FormArray;
-  }
+  // get attributeGroupsControl() {
+  //   return this.tariffForm.get('attribute_groups') as FormArray;
+  // }
 
-  get calcMatrixControl() {
-    return this.tariffForm.get('calc_matrix') as FormArray;
-  }
+  // get calcMatrixControl() {
+  //   return this.tariffForm.get('calc_matrix') as FormArray;
+  // }
 
-  get tplArrayControl(): FormArray {
-    return this.tariffForm.get('tpl') as FormArray;
-  }
+  // get tplArrayControl(): FormArray {
+  //   return this.tariffForm.get('tpl') as FormArray;
+  // }
 
-  get tariffDetails(): FormArray{
-    return this.tariffForm.get('tariffdetails') as FormArray
-  }
+  // get tariffDetails(): FormArray{
+  //   return this.tariffForm.get('tariffdetails') as FormArray
+  // }
 
   ngOnDestroy() {
     this.unsubscribe$.next();

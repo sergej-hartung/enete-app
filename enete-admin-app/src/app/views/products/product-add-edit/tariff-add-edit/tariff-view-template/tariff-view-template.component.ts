@@ -62,6 +62,7 @@ export class TariffViewTemplateComponent {
 
           if(tpl){
             this.deleteTpl(tpl)
+            this.unsubscribeToFormCanges(attr.id)
           }
         })
 
@@ -75,6 +76,7 @@ export class TariffViewTemplateComponent {
               const tpl = this.getTplByAttrId(attr.id)
               if(tpl){
                 this.deleteTpl(tpl)
+                this.unsubscribeToFormCanges(attr.id)
               }
             })
           }
@@ -88,11 +90,13 @@ export class TariffViewTemplateComponent {
             const tpl = this.getTplByMatrixId(matrix.id)
             if(tpl){
               this.deleteTpl(tpl)
+              this.unsubscribeToFormCanges(matrix.id)
             }
           }else if(matrix && matrix.uniqueId){
             const tpl = this.getTmlByMatrixUniqueId(matrix.uniqueId)
             if(tpl){
               this.deleteTpl(tpl)
+              this.unsubscribeToFormCanges(matrix.uniqueId)
             }
           }
         })
@@ -301,6 +305,19 @@ export class TariffViewTemplateComponent {
       return acc;
     }, []);
     this.copiedAttributs = new Set(ids);
+  }
+
+  unsubscribeToFormCanges(id: string | number){
+    console.log(this.subscriptions)
+    if(this.subscriptions.has(id)){
+      const subscription = this.subscriptions.get(id);
+      if (subscription) {
+        subscription.unsubscribe();
+        this.subscriptions.delete(id);
+        console.log(this.subscriptions)
+      }
+    }
+    
   }
 
   resetTplForm(tpl:any){
