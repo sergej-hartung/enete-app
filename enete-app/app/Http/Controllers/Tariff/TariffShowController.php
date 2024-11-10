@@ -30,8 +30,8 @@ class TariffShowController extends Controller
             'clacMatrices',
             'clacMatrices.attributs',
             'attributeGroups', 
-            'attributeGroups.attributs', 
-            'attributeGroups.attributs.inputType'
+            'attributeGroups.attributes', 
+            'attributeGroups.attributes.inputType'
         )->find($tarifId);
         //dd($tariff);
 

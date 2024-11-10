@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('attribute_group_id')->nullable();
             $table->unsignedBigInteger('attribute_id')->nullable();
-            $table->string('value_varchar', 255)->nullable();
-            $table->text('value_text')->nullable();
-            $table->boolean('is_active')->nullable();
+            // $table->string('value_varchar', 255)->nullable();
+            // $table->text('value_text')->nullable();
+            // $table->boolean('is_active')->nullable();
             $table->integer('position')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->timestamps();
-            $table->softDeletes();
+            // $table->unsignedBigInteger('created_by')->nullable();
+            // $table->unsignedBigInteger('updated_by')->nullable();
+            // $table->timestamps();
+            // $table->softDeletes();
 
             $table->foreign('attribute_group_id')->references('id')->on('tariff_attribute_groups')->onDelete('set null');
             $table->foreign('attribute_id')->references('id')->on('tariff_attributes')->onDelete('set null');

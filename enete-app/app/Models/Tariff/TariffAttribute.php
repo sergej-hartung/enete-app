@@ -19,15 +19,19 @@ class TariffAttribute extends Model
 
     public function tariffs()
     {
+        // return $this->belongsToMany(Tariff::class, 'tariff_attribute_mappings')
+        //             ->withPivot('value_varchar', 'value_text', 'is_active')
+        //             ->withTimestamps();
         return $this->belongsToMany(Tariff::class, 'tariff_attribute_mappings')
-                    ->withPivot('value_varchar', 'value_text', 'is_active')
-                    ->withTimestamps();
+                ->withPivot('value_varchar', 'value_text', 'is_active', 'created_by', 'updated_by')
+                ->withTimestamps()
+                ->using(TariffAttributeMapping::class);
     }
 
     public function attributeGroups()
     {
         return $this->belongsToMany(TariffAttributeGroup::class, 'tariff_attribute_group_mappings', 'attribute_id', 'attribute_group_id')
-                    ->withPivot('value_varchar', 'value_text', 'is_active', 'position')
+                    ->withPivot('position')
                     ->orderBy('position'); // Сортировка по position
     }
 

@@ -179,6 +179,7 @@ export class TariffDetailsAEComponent {
     this.tariffService.detailedData$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(tariffData => {
+        console.log(tariffData)
         if(tariffData){
           this.tariffFormGroup.patchValue(tariffData.data);
           this.patchComboStatus(tariffData.data.combo_status);
@@ -292,16 +293,4 @@ export class TariffDetailsAEComponent {
 }
 
 
-// private setControlRequiredStatus(group: FormGroup | FormArray, prefix: string = '') {
-//   Object.keys(group.controls).forEach(key => {
-//     const controlPath = prefix ? `${prefix}.${key}` : key;
-//     const control = group.get(key);
-//     this.requiredStatus[controlPath] = this.hasRequiredValidator(control);
-//   });
-// }
 
-// private hasRequiredValidator(control: AbstractControl | null): boolean {
-//   if (!control) return false;
-//   const validator = control.validator ? control.validator({} as AbstractControl) : null;
-//   return validator && validator["required"];
-// }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();     
             $table->unsignedBigInteger('tariff_id')->nullable();     
             $table->string('name', 255)->nullable();
+            $table->string('uniqueId', 255)->nullable();
             $table->unsignedBigInteger('created_by')->nullable()->index();
             $table->unsignedBigInteger('updated_by')->nullable()->index();
             $table->timestamps();

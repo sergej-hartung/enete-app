@@ -22,18 +22,18 @@ class TariffRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'external_id'                                  => 'nullable|sometimes|string|max:255',
-            'file_id'                                      => 'nullable|integer|exists:product_documents,id',
-            'file_name'                                    => 'nullable|string|max:255',
-            'group_id'                                     => 'integer|exists:tariff_groups,id',
-            'id'                                           => 'nullable|integer',
-            'is_published'                                 => 'nullable|boolean',
-            'name'                                         => 'nullable|string|max:255',
-            'name_short'                                   => 'nullable|string|max:255',
-            'network_operator_id'                          => 'nullable|integer|exists:tariff_network_operators,id',
-            'note'                                         => 'nullable|string',
-            'provider_id'                                  => 'nullable|integer|exists:tariff_providers,id',
-            'status_id'                                    => 'nullable|integer|exists:tariff_statuses,id',
+            'tariff.external_id'                           => 'nullable|sometimes|string|max:255',
+            'tariff.file_id'                               => 'nullable|integer|exists:product_documents,id',
+            'tariff.file_name'                             => 'nullable|string|max:255',
+            'tariff.group_id'                              => 'integer|exists:tariff_groups,id',
+            'tariff.id'                                    => 'nullable|integer',
+            'tariff.is_published'                          => 'nullable|boolean',
+            'tariff.name'                                  => 'nullable|string|max:255',
+            'tariff.name_short'                            => 'nullable|string|max:255',
+            'tariff.network_operator_id'                   => 'nullable|integer|exists:tariff_network_operators,id',
+            'tariff.note'                                  => 'nullable|string',
+            'tariff.provider_id'                           => 'nullable|integer|exists:tariff_providers,id',
+            'tariff.status_id'                             => 'nullable|integer|exists:tariff_statuses,id',
 
 
             'attribute_groups'                             => 'nullable|sometimes|array',

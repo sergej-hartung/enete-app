@@ -10,11 +10,11 @@ class TariffCalcMatrix extends Model
     use HasFactory;
 
     protected $fillable = [
+        'uniqueId',
         'tariff_id',
         'name',
         'total_value',
         'unit',
-        'position',
     ];
 
     public function attributs()

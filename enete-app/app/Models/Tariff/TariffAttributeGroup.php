@@ -16,10 +16,18 @@ class TariffAttributeGroup extends Model
         return $this->belongsTo(Tariff::class);
     }
 
-    public function attributs()
+    // public function attributs()
+    // {
+    //     return $this->belongsToMany(TariffAttribute::class, 'tariff_attribute_group_mappings', 'attribute_group_id', 'attribute_id')
+    //                 ->withPivot('position')
+    //                 ->orderBy('position'); // Сортировка по position
+
+    // }
+
+    public function attributes()
     {
         return $this->belongsToMany(TariffAttribute::class, 'tariff_attribute_group_mappings', 'attribute_group_id', 'attribute_id')
-                    ->withPivot('value_varchar', 'value_text', 'is_active', 'position')
-                    ->orderBy('position'); // Сортировка по position
+                    ->withPivot('position')
+                    ->orderBy('position');
     }
 }

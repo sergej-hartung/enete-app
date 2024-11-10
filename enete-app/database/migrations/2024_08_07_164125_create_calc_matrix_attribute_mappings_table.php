@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('calc_matrix_id')->nullable();
             $table->unsignedBigInteger('attribute_id')->nullable();
-            $table->string('period');
-            $table->string('periodeTyp');
+            $table->string('period')->nullable();
+            $table->string('periodeTyp')->nullable();
             $table->boolean('single');
-            $table->string('unit');
+            $table->string('unit')->nullable();
             $table->decimal('value', 15, 2);
             $table->decimal('value_total', 15, 2);
             $table->integer('position');

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->decimal('total_value', 15, 2);
             $table->string('unit');
-            $table->integer('position');
+            //$table->integer('position');
             $table->timestamps();
 
             $table->foreign('tariff_id')->references('id')->on('tariffs')->onDelete('set null');

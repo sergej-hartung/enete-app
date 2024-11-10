@@ -26,6 +26,14 @@ class Tariff extends Model
     //                 ->withTimestamps();
     // }
 
+    public function attributes()
+    {
+        return $this->belongsToMany(TariffAttribute::class, 'tariff_attribute_mappings', 'tariff_id', 'attribute_id')
+                ->withPivot('value_varchar', 'value_text', 'is_active', 'created_by', 'updated_by')
+                ->withTimestamps()
+                ->using(TariffAttributeMapping::class);
+    }
+
     public function attributeGroups()
     {
         return $this->hasMany(TariffAttributeGroup::class);
