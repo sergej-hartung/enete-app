@@ -24,4 +24,9 @@ class TariffCalcMatrix extends Model
             ->orderBy('position');
 
     }
+
+    public function tariffTpls()
+    {
+        return $this->hasMany(TariffTpl::class, 'matrix_id');
+    }
 }

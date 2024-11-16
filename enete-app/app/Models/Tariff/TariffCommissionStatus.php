@@ -4,6 +4,7 @@ namespace App\Models\Tariff;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\User;
 
 class TariffCommissionStatus extends Model
 {

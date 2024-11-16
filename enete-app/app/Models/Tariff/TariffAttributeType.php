@@ -4,6 +4,7 @@ namespace App\Models\Tariff;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\User;
 
 class TariffAttributeType extends Model
 {
@@ -13,7 +14,7 @@ class TariffAttributeType extends Model
 
     public function attributs()
     {
-        return $this->hasMany(Attribute::class);
+        return $this->hasMany(TariffAttribute::class);
     }
 
     public function creator()

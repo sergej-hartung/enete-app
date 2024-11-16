@@ -30,4 +30,9 @@ class TariffAttributeGroup extends Model
                     ->withPivot('position')
                     ->orderBy('position');
     }
+
+    public function tariffDetails()
+    {
+        return $this->hasMany(TariffDetail::class, 'tariff_attribute_group_id')->orderBy('position');
+    }
 }

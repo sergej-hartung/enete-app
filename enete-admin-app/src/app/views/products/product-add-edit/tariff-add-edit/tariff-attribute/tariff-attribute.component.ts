@@ -12,6 +12,7 @@ import { EditorModalComponent } from '../../../../../shared/components/editor-mo
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FormService } from '../../../../../services/form.service';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
+import { AttributeGroup } from '../../../../../models/tariff/attributeGroup/attributeGroup'
 
 interface Group {
   id?: number;
@@ -31,6 +32,8 @@ export class TariffAttributeComponent implements OnDestroy {
   groups: Group[] = [];
   tariffDropListId = 'tariffDropList';
   connectedDropLists: string[] = [this.tariffDropListId];
+
+  tariffForm: FormGroup
   attributeGroupsForm: FormArray;
 
   addNewGroup = false;
@@ -53,8 +56,8 @@ export class TariffAttributeComponent implements OnDestroy {
     private formService: FormService,
     public tariffService: TariffService,
   ) {
-    const tariffForm = this.formService.getTariffForm();
-    this.attributeGroupsForm = tariffForm.get('attribute_groups') as FormArray;
+    this.tariffForm = this.formService.getTariffForm();
+    this.attributeGroupsForm = this.tariffForm.get('attribute_groups') as FormArray;
 
     this.newGroupForm = this.fb.group({
       groupName: ['', Validators.required]
@@ -222,6 +225,27 @@ export class TariffAttributeComponent implements OnDestroy {
   }
 
   private copyAttribute(attribute: Attribute): Attribute {
+    if(attribute?.pivot){
+      const isActiveDisabled = !attribute.is_frontend_visible
+      let isActiv = attribute?.pivot.is_active
+      if(isActiv !== attribute.is_frontend_visible){
+        if(!attribute.is_frontend_visible && isActiv){
+          isActiv = 0
+        }else if(!isActiv && attribute.is_frontend_visible) isActiv = 0
+      }
+
+      let Attr: Attribute = JSON.parse(JSON.stringify(attribute))
+      Attr.is_frontend_visible = isActiv 
+      delete Attr?.pivot;
+
+      return {
+        ...Attr,
+        isCopied: true,
+        isFocused: false,
+        isActiveDisabled: isActiveDisabled
+      };
+
+    }
     return {
       ...attribute,
       isCopied: true,
@@ -236,7 +260,16 @@ export class TariffAttributeComponent implements OnDestroy {
       name: [name],
       uniqueId: [this.generateUniqueIdWithTimestamp()],
       attributs: this.fb.array(
-        attributs.map(attr => this.createAttributeFormControl(attr))
+        attributs.map(attr => {
+          if(attr?.pivot){
+            let valueVarchar = attr?.pivot?.value_varchar ? attr.pivot.value_varchar : ''
+            let valueText = attr?.pivot?.value_text ? attr.pivot.value_text : ''
+            let isActive = attr?.pivot?.is_active ? attr.pivot.is_active : null
+            return this.createAttributeFormControl(attr, valueVarchar, valueText, isActive)
+          }
+
+          return this.createAttributeFormControl(attr)
+        })
       )
     });
   }
@@ -381,46 +414,43 @@ export class TariffAttributeComponent implements OnDestroy {
 
   private loadAttributeGroups() {
     if (this.groupId) {
-      if (this.detailedDataSubscription) {
-        this.detailedDataSubscription.unsubscribe();
-      }
-      this.detailedDataSubscription = this.tariffService.detailedData$
+      // if (this.detailedDataSubscription) {
+      //   this.detailedDataSubscription.unsubscribe();
+      // }
+      this.tariffService.detailedData$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(response => {
-          if (response) {
-            const groupsFromTariff = response?.data?.attribute_groups;
-            if (groupsFromTariff) {
-              this.groups = groupsFromTariff.map(group => ({
-                id: group.id,
-                name: group.name,
-                attributs: group.attributs.map(attr => ({
-                  ...attr,
-                  isCopied: true,
-                  isActiveDisabled: attr?.is_frontend_visible === 0 || attr?.is_frontend_visible === false
-                })),
-                hidden: false,
-                form: this.fb.group({
-                  id: [group.id],
-                  name: [group.name],
-                  attributs: this.fb.array(
-                    group.attributs.map(attr => this.createAttributeFormControl(
-                      attr,
-                      attr?.pivot?.value_varchar || '',
-                      attr?.pivot?.value_text || '',
-                      attr?.pivot?.is_active
-                    ))
-                  )
-                })
-              }));
+          
+          if (response && response.data && response.data.attribute_groups) {
+            // Очистим текущие группы и формы
+            this.groups = [];
+            this.attributeGroupsForm.clear();
 
-              this.attributeGroupsForm.clear();
-              this.groups.forEach(group => {
-                this.attributeGroupsForm.push(group.form);
-              });
+            let attributeGroups = JSON.parse(JSON.stringify(response.data.attribute_groups))
 
-              this.updateTariffAttributsStatus();
-              this.updateConnectedDropLists();
-            }
+            // Проходимся по каждой группе из ответа
+            attributeGroups.forEach((group: AttributeGroup) => {
+                // Создаем форму для группы
+                const copiedAttributes = group.attributs.map(attr => this.copyAttribute(attr));
+                
+                const groupForm = this.createGroupForm(group.name, group.attributs);
+                //const copiedAttribute = this.copyAttribute(group.attributs);
+                // Добавляем группу в список
+                this.groups.push({
+                    id: group.id,
+                    name: group.name,
+                    attributs: copiedAttributes,
+                    form: groupForm
+                });
+                // Добавляем форму группы в FormArray
+                this.attributeGroupsForm.push(groupForm);
+            });
+
+            // Обновляем подключенные списки для драг-н-дропа
+            this.updateConnectedDropLists();
+
+            // Обновляем статус атрибутов
+            this.updateTariffAttributsStatus();
           }
         });
     }
@@ -475,9 +505,6 @@ export class TariffAttributeComponent implements OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    if (this.detailedDataSubscription) {
-      this.detailedDataSubscription.unsubscribe();
-    }
   }
 }
 

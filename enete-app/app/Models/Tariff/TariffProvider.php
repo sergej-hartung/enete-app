@@ -4,6 +4,7 @@ namespace App\Models\Tariff;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\User;
 
 class TariffProvider extends Model
 {
@@ -13,7 +14,7 @@ class TariffProvider extends Model
 
     public function groups()
     {
-        return $this->belongsToMany(Group::class,'group_provider_mappings','provider_id','group_id');
+        return $this->belongsToMany(TariffGroup::class,'tariff_group_provider_mappings','provider_id','group_id');
     }
 
     public function creator()

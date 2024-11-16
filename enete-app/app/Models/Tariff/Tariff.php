@@ -9,6 +9,8 @@ use App\Models\Traits\Filterable;
 use App\Models\Traits\TarifSortable;
 use App\Models\User\User;
 use App\Models\ProductDocuments;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 class Tariff extends Model
 {
@@ -16,15 +18,51 @@ class Tariff extends Model
     use Filterable;
     use SoftDeletes;
     use TarifSortable;
+    //use LogsActivity;
 
-    protected $fillable = ['external_id', 'api_distributor_id', 'name', 'name_short', 'provider_id', 'network_operator_id', 'group_id', 'template_id', 'status_id', 'has_action', 'action_group_id', 'is_web_active', 'note', 'file_id', 'is_from_api', 'created_by', 'updated_by'];
+    protected $fillable = [
+        'external_id', 
+        'api_distributor_id', 
+        'name', 
+        'name_short', 
+        'provider_id', 
+        'network_operator_id', 
+        'group_id', 
+        'template_id', 
+        'status_id', 
+        'has_action', 
+        'action_group_id', 
+        'is_published', 
+        'note', 
+        'file_id', 
+        'is_from_api', 
+        'created_by', 
+        'updated_by'
+    ];
 
-    // public function attributes()
-    // {
-    //     return $this->belongsToMany(Attribute::class, 'tariff_attribute_mappings')
-    //                 ->withPivot('value_varchar', 'value_text', 'is_active')
-    //                 ->withTimestamps();
-    // }
+    // Настройка атрибутов для логирования
+    protected static $logAttributes = [
+        'external_id', 
+        'api_distributor_id', 
+        'name', 
+        'name_short', 
+        'provider_id', 
+        'network_operator_id', 
+        'group_id', 
+        'template_id', 
+        'status_id', 
+        'has_action', 
+        'action_group_id', 
+        'is_published', 
+        'note', 
+        'file_id', 
+        'is_from_api'
+    ];
+
+    protected static $logOnlyDirty = true; // Логировать только изменения
+    protected static $logName = 'tariff'; // Имя логов
+
+    
 
     public function attributes()
     {
@@ -32,6 +70,21 @@ class Tariff extends Model
                 ->withPivot('value_varchar', 'value_text', 'is_active', 'created_by', 'updated_by')
                 ->withTimestamps()
                 ->using(TariffAttributeMapping::class);
+    }
+
+    public function promotions()
+    {
+        return $this->hasMany(TariffPromotion::class, 'tariff_id');
+    }
+
+    public function tariffDetails()
+    {
+        return $this->hasMany(TariffDetail::class, 'tariff_id')->orderBy('position');
+    }
+
+    public function tariffTpls()
+    {
+        return $this->hasMany(TariffTpl::class, 'tariff_id')->orderBy('position');
     }
 
     public function attributeGroups()

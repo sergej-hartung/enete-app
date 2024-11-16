@@ -13,6 +13,6 @@ class TariffCommissionGroup extends Model
 
     public function commissions()
     {
-        return $this->belongsToMany(Commission::class, 'commission_group_mappings', 'group_id', 'commission_id')->withPivot('difference');
+        return $this->belongsToMany(TariffCommission::class, 'commission_group_mappings', 'group_id', 'commission_id')->withPivot('difference');
     }
 }

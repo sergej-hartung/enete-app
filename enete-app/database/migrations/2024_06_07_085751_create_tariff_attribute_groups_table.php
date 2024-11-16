@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable()->index();
             $table->unsignedBigInteger('updated_by')->nullable()->index();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('tariff_id')->references('id')->on('tariffs')->onDelete('set null');
         });

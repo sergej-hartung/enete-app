@@ -12,9 +12,11 @@ class TariffByGroupController extends Controller
 {
     public function __invoke(TariffByGroupRequest $request, $id)
     {
+        $queryParams = $request->validated();
 
-        $filter = app()->make(TariffFilter::class, ['queryParams' => array_filter($request->validated())]);
-        
+        //$filter = app()->make(TariffFilter::class, ['queryParams' => array_filter($request->validated())]);
+        $filter = app()->make(TariffFilter::class, ['queryParams' => $queryParams]);
+
         $data = Tariff::with(['provider', 'networkOperator', 'group', 'status'])
             ->where('group_id', '=', $id)
             ->filter($filter)

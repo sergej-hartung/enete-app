@@ -22,7 +22,10 @@ return new class extends Migration
             $table->decimal('value', 15, 2);
             $table->decimal('value_total', 15, 2);
             $table->integer('position');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('calc_matrix_id')->references('id')->on('tariff_calc_matrices')->onDelete('set null');
             $table->foreign('attribute_id')->references('id')->on('tariff_attributes')->onDelete('set null');

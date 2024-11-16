@@ -22,23 +22,43 @@ class TariffAttribute extends Model
         // return $this->belongsToMany(Tariff::class, 'tariff_attribute_mappings')
         //             ->withPivot('value_varchar', 'value_text', 'is_active')
         //             ->withTimestamps();
-        return $this->belongsToMany(Tariff::class, 'tariff_attribute_mappings')
+        return $this->belongsToMany(Tariff::class, 'tariff_attribute_mappings', 'attribute_id', 'tariff_id')
                 ->withPivot('value_varchar', 'value_text', 'is_active', 'created_by', 'updated_by')
                 ->withTimestamps()
                 ->using(TariffAttributeMapping::class);
     }
 
-    public function attributeGroups()
+    // public function attributeGroups()
+    // {
+    //     return $this->belongsToMany(TariffAttributeGroup::class, 'tariff_attribute_group_mappings', 'attribute_id', 'attribute_group_id')
+    //                 ->withPivot('position')
+    //                 ->orderBy('position'); // Сортировка по position
+    // }
+
+    public function groupAttributes()
     {
         return $this->belongsToMany(TariffAttributeGroup::class, 'tariff_attribute_group_mappings', 'attribute_id', 'attribute_group_id')
                     ->withPivot('position')
-                    ->orderBy('position'); // Сортировка по position
+                    ->orderBy('position');
+    }
+
+    public function tariffAttributes()
+    {
+        return $this->belongsToMany(Tariff::class, 'tariff_attribute_mappings', 'attribute_id', 'tariff_id')
+                    ->withPivot('value_varchar', 'value_text', 'is_active', 'created_by', 'updated_by')
+                    ->withTimestamps()
+                    ->using(TariffAttributeMapping::class);
     }
 
     public function tariffGroups()
     {
         return $this->belongsToMany(TariffGroup::class, 'tariff_group_attribute_mappings', 'attribute_id', 'group_id');
                     
+    }
+
+    public function tariffTpls()
+    {
+        return $this->hasMany(TariffTpl::class, 'attribute_id');
     }
 
     public function clacMatrices()
@@ -57,4 +77,5 @@ class TariffAttribute extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
 }

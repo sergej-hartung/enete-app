@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();  // Создает created_at и updated_at
+            $table->softDeletes();
         
             $table->foreign('commission_id')->references('id')->on('tariff_commissions');
             $table->foreign('group_id')->references('id')->on('tariff_commission_groups');

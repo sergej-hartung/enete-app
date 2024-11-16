@@ -19,10 +19,10 @@ return new class extends Migration
             // $table->text('value_text')->nullable();
             // $table->boolean('is_active')->nullable();
             $table->integer('position')->nullable();
-            // $table->unsignedBigInteger('created_by')->nullable();
-            // $table->unsignedBigInteger('updated_by')->nullable();
-            // $table->timestamps();
-            // $table->softDeletes();
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('attribute_group_id')->references('id')->on('tariff_attribute_groups')->onDelete('set null');
             $table->foreign('attribute_id')->references('id')->on('tariff_attributes')->onDelete('set null');

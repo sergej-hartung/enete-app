@@ -39,18 +39,28 @@ class TariffFilter extends AbstractFilter{
     // }
 
     public function status(Builder $builder, $value){ 
-        $builder->where('status_id', $value);
+        // var_dump($value);
+        if ($value !== 'all') {
+            $builder->where('status_id', $value);
+        }
+        
     }
 
     public function provider(Builder $builder, $value){
-        $builder->where('provider_id', $value);
+        if ($value !== 'all') {
+            $builder->where('provider_id', $value);
+        }
     }
 
     public function networkoperator(Builder $builder, $value){
-        $builder->where('network_operator_id', $value);
+        if ($value !== 'all') {
+            $builder->where('network_operator_id', $value);
+        }
     }
 
     public function ispublished(Builder $builder, $value){ 
-        $builder->where('is_published', $value);
+        if ($value !== 'all') {
+            $builder->where('is_published', $value);
+        }
     }
 }

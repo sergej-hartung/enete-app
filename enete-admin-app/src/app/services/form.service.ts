@@ -214,6 +214,10 @@ export class FormService {
     }
   }
 
+  public resetTariffForm(): void {
+    this.tariffForm = this.initTariffFormGroup(); // Создаем новую форму, чтобы сбросить все значения
+  }
+
   public cloneTariffFormGroup(originalForm: FormGroup): FormGroup {
     // Создаем новую форму, используя initTariffFormGroup для получения структуры
     const clonedForm = this.initTariffFormGroup();

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         
             $table->foreign('group_id')->references('id')->on('tariff_groups')->onDelete('cascade');
             $table->foreign('provider_id')->references('id')->on('tariff_providers')->onDelete('cascade');

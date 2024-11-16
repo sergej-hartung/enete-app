@@ -67,7 +67,6 @@ export class ProductsComponent {
           this.productService.tariffId$ 
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(id =>{
-            console.log(id)
             if(id) this.mainNavbarService.setIconState('edit', true, false);
           })
           this.productService.resetProductMode()

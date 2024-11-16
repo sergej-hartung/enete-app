@@ -45,7 +45,7 @@ export class TariffListComponent {
     { type: 'select', key: 'status_id', label: 'Status', options: [] },
     { type: 'select', key: 'provider_id', label: 'Provider', options: [] },
     { type: 'select', key: 'network_operator_id', label: 'Netzbetreiber', options: [] },
-    { type: 'select', key: 'is_published', label: 'Web Activ', options: [{label: 'alle', value: '0'}, {label: 'active', value: 1}, {label: 'inactive', value: 2}] },
+    { type: 'select', key: 'is_published', label: 'Web Activ', options: [{label: 'alle', value: 'all'}, {label: 'active', value: 1}, {label: 'inactive', value: 0}] },
   ];
 
 
@@ -102,7 +102,7 @@ export class TariffListComponent {
         if(data){ 
           let item = this.filters.find(item => item.key === 'status_id')
           if(item && data.data.length > 0){
-            let options:any  = [{label: 'alle', value: '0', selected: true}]
+            let options:any  = [{label: 'alle', value: 'all', selected: true}]
             data.data.forEach(item => {
               let option ={
                 label: item.name,
@@ -126,7 +126,7 @@ export class TariffListComponent {
           let item = this.filters.find(item => item.key === 'provider_id')
           console.log(item)
           if(item && data.data.length > 0){
-            let options:any  = [{label: 'alle', value: '0', selected: true}]
+            let options:any  = [{label: 'alle', value: 'all', selected: true}]
             data.data.forEach(item => {
               let option ={
                 label: item.name,
@@ -150,7 +150,7 @@ export class TariffListComponent {
         if(data){ 
           let item = this.filters.find(item => item.key === 'network_operator_id')
           if(item && data.data.length > 0){
-            let options:any  = [{label: 'alle', value: '0', selected: true}]
+            let options:any  = [{label: 'alle', value: 'all', selected: true}]
             data.data.forEach(item => {
               let option ={
                 label: item.name,

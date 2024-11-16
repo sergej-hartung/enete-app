@@ -4,6 +4,7 @@ namespace App\Models\Tariff;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\User;
 
 class TariffPromotion extends Model
 {
@@ -13,7 +14,7 @@ class TariffPromotion extends Model
 
     public function tariff()
     {
-        return $this->belongsTo(Tariff::class);
+        return $this->belongsTo(Tariff::class, 'tariff_id');
     }
 
     public function creator()

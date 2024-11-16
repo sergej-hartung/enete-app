@@ -624,6 +624,9 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
   // }
 
   ngOnDestroy() {
+    this.formService.resetTariffForm();
+    console.log(this.formService.getTariffForm())
+    console.log('test')
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

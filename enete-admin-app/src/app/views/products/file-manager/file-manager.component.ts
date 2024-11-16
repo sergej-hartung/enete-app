@@ -414,26 +414,11 @@ export class FileManagerComponent implements OnInit {
     });
   }
 
-  // saveNewFolder(folder: FolderData): void {
-  //   const parentPath = folder.path.split('/').slice(0, -1).join('/') || '';
-  //   const folderName = folder.name.trim();
-  //   if (folderName) {
-  //     this.productDocumentService.createFolder({ path: parentPath, folder_name: folderName })
-  //       .pipe(takeUntil(this.unsubscribe$))
-  //       .subscribe(() => {
-  //         this.saveOpenState(this.tree);
-  //         this.loadTree();
-  //         this.creatingFolder = null;
-  //       });
-  //   } else {
-  //     this.cancelCreateNewFolder();
-  //   }
-  // }
 
   saveNewFolder(folder: FolderData): void {
     const parentPath = folder.path.split('/').slice(0, -1).join('/') || '';
     const folderName = folder.name.trim();
-  
+
     if (!folderName) {
       this.cancelCreateNewFolder();
       return;
@@ -441,16 +426,19 @@ export class FileManagerComponent implements OnInit {
   
     // Check if a folder with the same name already exists in the parent path
     const siblings = this.getFolderSiblings(parentPath);
-    const nameAlreadyExists = siblings.some(
+
+    const siblingsWithoutCurrent = siblings.filter(sibling => sibling !== folder);
+    
+    const nameAlreadyExists = siblingsWithoutCurrent.some(
       sibling => sibling.type === 'folder' && sibling.name.toLowerCase() === folderName.toLowerCase()
     );
-  
+
     if (nameAlreadyExists) {
       // alert('A folder with this name already exists.');
       this.cancelCreateNewFolder();
       return;
     }
-  
+
     this.productDocumentService.createFolder({ path: parentPath, folder_name: folderName })
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(() => {

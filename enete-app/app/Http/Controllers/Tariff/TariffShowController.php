@@ -31,7 +31,16 @@ class TariffShowController extends Controller
             'clacMatrices.attributs',
             'attributeGroups', 
             'attributeGroups.attributes', 
-            'attributeGroups.attributes.inputType'
+            'attributeGroups.attributes.inputType',
+            'attributeGroups.attributes.tariffAttributes',
+            'promotions',
+            'tariffTpls',
+            'tariffTpls.matrix',
+            'tariffTpls.attribute',
+            'tariffTpls.attribute.tariffAttributes',
+            'tariffDetails',
+            'tariffDetails.attributeGroup',
+            'tariffDetails.attributeGroup.attributes'
         )->find($tarifId);
         //dd($tariff);
 

@@ -19,6 +19,9 @@ return new class extends Migration
             $table->decimal('total_value', 15, 2);
             $table->string('unit');
             //$table->integer('position');
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->unsignedBigInteger('updated_by')->nullable();
+            $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('tariff_id')->references('id')->on('tariffs')->onDelete('set null');

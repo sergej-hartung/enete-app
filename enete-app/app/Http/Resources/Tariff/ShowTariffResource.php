@@ -9,6 +9,9 @@ use App\Http\Resources\Tariff\ComboStatus\IndexTariffComboStatusResource;
 use App\Http\Resources\Tariff\Category\IndexTariffCategoryResource;
 use App\Http\Resources\ProductDocument\IndexProductDokumetResource;
 use App\Http\Resources\Tariff\CalcMatrix\IndexCalcMatrixResource;
+use App\Http\Resources\Tariff\Promo\IndexTariffPromoResource;
+use App\Http\Resources\Tariff\Tpl\IndexTariffTplResource;
+use App\Http\Resources\Tariff\Detail\TariffDetailWithAttributesResource;
 
 class ShowTariffResource extends JsonResource
 {
@@ -46,6 +49,14 @@ class ShowTariffResource extends JsonResource
             'attribute_groups'    => IndexTariffAttributeGroupResource::collection($this->whenLoaded('attributeGroups')),
             'combo_status'        => IndexTariffComboStatusResource::collection($this->whenLoaded('comboStatus')),
             'tariff_categories'   => IndexTariffCategoryResource::collection($this->whenLoaded('category')),
+            'promos'              => IndexTariffPromoResource::collection($this->whenLoaded('promotions')),
+            'tpl'                 => IndexTariffTplResource::collection($this->whenLoaded('tariffTpls')),
+            // 'tariffdetails'       => TariffDetailWithAttributesResource::collection($this->whenLoaded('tariffDetails')),
+            'tariffdetails'       => $this->whenLoaded('tariffDetails', function () {
+                return $this->tariffDetails->map(function ($tariffDetail) {
+                    return new TariffDetailWithAttributesResource($tariffDetail, $this->id);
+                });
+            }),
             'document'            => new IndexProductDokumetResource($this->whenLoaded('document')),
         ];
     }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable()->index();
             $table->unsignedBigInteger('updated_by')->nullable()->index();
             $table->timestamps();  // Laravel handles created_at and updated_at automatically
+            $table->softDeletes();
         });
     }
 

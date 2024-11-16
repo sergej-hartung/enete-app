@@ -25,11 +25,11 @@ class TariffCommission extends Model
 
     public function status()
     {
-        return $this->belongsTo(CommissionStatus::class, 'status_id');
+        return $this->belongsTo(TariffCommissionStatus::class, 'status_id');
     }
 
     public function commissionGroups()
     {
-        return $this->belongsToMany(CommissionGroup::class, 'commission_group_mappings', 'commission_id', 'group_id')->withPivot('difference');
+        return $this->belongsToMany(TariffCommissionGroup::class, 'commission_group_mappings', 'commission_id', 'group_id')->withPivot('difference');
     }
 }
