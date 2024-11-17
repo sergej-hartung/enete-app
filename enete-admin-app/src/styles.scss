@@ -2412,3 +2412,16 @@ app-tariff-add-edit{
     padding: 10px;
     background: #fff;
 }
+
+.input-group{
+    .btn-editor{
+        border-color: #dee2e6;
+        padding: 0.1rem 0.5rem;
+        font-size: 0.8rem;
+        color: #6c757d;
+
+        &:active{
+            border-color: #dee2e6;
+        }
+    }
+}

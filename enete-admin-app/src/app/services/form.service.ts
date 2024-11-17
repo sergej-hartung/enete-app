@@ -192,6 +192,8 @@ export class FormService {
       autoFieldName:    [true, [booleanValidator()]],
       manualFieldName:  ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
       autoValueSource: [true, [booleanValidator()]],
+      isHtml:           [false, [booleanValidator()]],
+      manualValueHtml:  [''],
       manualValue:     ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
       autoUnit:         [true, [booleanValidator()]],
       manualUnit:       ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],

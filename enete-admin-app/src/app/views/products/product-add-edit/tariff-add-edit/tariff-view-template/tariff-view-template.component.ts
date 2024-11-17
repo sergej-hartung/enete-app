@@ -5,6 +5,7 @@ import { TariffService } from '../../../../../services/product/tariff/tariff.ser
 import { ProductService } from '../../../../../services/product/product.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Subject, takeUntil } from 'rxjs';
+import { Template, TemplateResult } from '../../../../../models/tariff/tariff';
 
 @Component({
   selector: 'app-tariff-view-template',
@@ -44,13 +45,10 @@ export class TariffViewTemplateComponent {
   }
 
   ngOnInit(): void {
-    this.connectedDropLists = [
-      ...this.getTplForBlock(0).map((_, index) => `tplDropList-0-${index}`),
-      ...this.getTplForBlock(1).map((_, index) => `tplDropList-1-${index}`),
-      ...this.getTplForBlock(2).map((_, index) => `tplDropList-2-${index}`),
-      this.tariffDropListId,
-      this.tariffMatrixDropListId,
-    ];
+    this.loadTpl();
+
+    
+    this.updateConnectedDropLists()
 
     this.initCollapseArrays();
 
@@ -100,6 +98,136 @@ export class TariffViewTemplateComponent {
             }
           }
         })
+  }
+
+  private loadTpl() {
+    this.tariffService.detailedData$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(response => {
+            if (response && response.data && response.data.tpl) {
+                // this.tpl.clear();
+                response.data.tpl.forEach((tplItem: any) => {
+                  const index = this.tpl.controls.findIndex(
+                    control => control.get('position')?.value === tplItem.position
+                  );
+
+                  if (index > -1) {
+                    const tplControl = this.tpl.at(index) as FormGroup;
+                    this.resetTplForm(tplControl)
+                    this.setTplForm(tplControl, tplItem)
+                  }
+                });
+                this.updateConnectedDropLists();
+                console.log(this.tpl)
+                console.log(this.subscriptions)
+            }
+        });
+  }
+
+  private setTplForm(tplControl: FormGroup, tplItem: TemplateResult) {
+    // const form = this.fb.group({
+    //     id: [tplItem.id || null],
+    //     position: [tplItem.position || null],
+    //     autoFieldName: [tplItem.auto_field_name || true],
+    //     manualFieldName: [tplItem.manual_field_name || ''],
+    //     autoUnit: [tplItem.auto_unit || true],
+    //     manualUnit: [tplItem.manual_unit || ''],
+    //     autoValueSource: [tplItem.auto_value_source || true],
+    //     manualValue: [tplItem.manual_value || ''],
+    //     showFieldName: [tplItem.show_field_name || true],
+    //     showUnit: [tplItem.show_unit || true],
+    //     showValue: [tplItem.show_value || true],
+    //     showIcon: [tplItem.show_icon || true],
+    //     icon: [tplItem.icon || ''],
+    //     isMatrix: [tplItem.is_matrix || false]
+    // });
+    tplControl.patchValue({
+      id: tplItem.id || null,
+      customFild:       tplItem.custom_field || false,
+      isMatrix:         tplItem.is_matrix || false,
+      autoFieldName:    tplItem.auto_field_name || true,
+      manualFieldName:  tplItem.manual_field_name || '',
+      autoValueSource: tplItem.auto_value_source || true,
+      manualValue:     tplItem.manual_value || '',
+      autoUnit:         tplItem.auto_unit || true,
+      manualUnit:       tplItem.manual_unit || '',
+      showUnit:         tplItem.show_unit || true,
+      showValue:       tplItem.show_value || true,
+      showFieldName:    tplItem.show_field_name || true,
+      showIcon:         tplItem.show_icon || true,
+      //position:         [pos, [Validators.pattern('^[0-9]+$')]],
+      icon:             tplItem.icon || '',
+    })
+
+    // Динамически добавляем контролы, если данные есть
+    if (tplItem.attribute) {
+        this.addAttributeControl(tplControl, tplItem.attribute);
+    }
+
+    if (tplItem.matrix) {
+        this.addMatrixControl(tplControl, tplItem.matrix);
+    }
+
+    //return form;
+  }
+
+  private addAttributeControl(form: FormGroup, attribute: any): void {
+    if (!form.contains('attribute')) {
+        form.addControl(
+            'attribute',
+            this.fb.group({
+                id: [attribute?.id || null],
+                name: [attribute?.name || ''],
+                code: [attribute?.code || ''],
+                is_active: [attribute?.is_active || false],
+                value_text: [attribute?.value_text || null],
+                value_varchar: [attribute?.value_varchar || null],
+                unit: [attribute?.unit || null]
+            })
+        );
+
+        this.copiedAttributs.add(attribute.id);
+    }else{
+      this.copiedAttributs.add(attribute.id);
+      form?.get('attribute')?.patchValue(attribute)
+    }
+
+    this.subscribeToFormChanges(attribute?.id, form)
+  }
+
+  private addMatrixControl(form: FormGroup, matrix: any): void {
+    if (!form.contains('matrix')) {
+        form.addControl(
+            'matrix',
+            this.fb.group({
+                id: [matrix?.id || null],
+                uniqueId: [matrix?.uniqueId || ''],
+                name: [matrix?.name || ''],
+                total_value: [matrix?.total_value || 0],
+                unit: [matrix?.unit || '']
+            })
+        );
+    }else{
+      form?.get('matrix')?.patchValue(matrix)
+    }
+
+    this.subscribeToMatrixChanges(matrix?.uniqueId, form)
+  }
+
+  private removeControlIfExists(form: FormGroup, controlName: string): void {
+    if (form.contains(controlName)) {
+        form.removeControl(controlName);
+    }
+  }
+
+  private updateConnectedDropLists() {
+    this.connectedDropLists = [
+      ...this.getTplForBlock(0).map((_, index) => `tplDropList-0-${index}`),
+      ...this.getTplForBlock(1).map((_, index) => `tplDropList-1-${index}`),
+      ...this.getTplForBlock(2).map((_, index) => `tplDropList-2-${index}`),
+      this.tariffDropListId,
+      this.tariffMatrixDropListId,
+    ];
   }
 
   initCollapseArrays(): void {
@@ -157,9 +285,12 @@ export class TariffViewTemplateComponent {
         this.subscribeToMatrixChanges(matrix?.uniqueId, control)
       }
     }
+    console.log(this.tpl)
   }
 
   subscribeToFormChanges(id: number, control: FormGroup){
+    console.log(id)
+    console.log(control)
     if(id && !this.subscriptions.has(id)){
       let tariffForm = this.getAttributeGroupArray()
       

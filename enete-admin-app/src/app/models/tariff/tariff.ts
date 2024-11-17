@@ -27,12 +27,23 @@ export interface Tariff {
     combo_status?: ComboStatus[];
     tariff_categories?: Category[];
     document?: TariffDocument;
+    promos?: Promo[]
     tpl?: Template[]
     
     created_by: number;
     updated_by: number;
     created_at: string;
     updated_at: string;
+}
+
+export interface Promo{
+    id: number | null;
+    tariff_id: number | null;
+    start_date: string;
+    end_date: string;
+    text_long: string;
+    title: string;
+    is_active: boolean | number;
 }
 
 export interface Template{
@@ -48,6 +59,8 @@ export interface Template{
 
     manualFieldName: string;
     manualUnit:      string;
+    isHtml:          boolean | number;
+    manualValueHtml: string;
     manualValue:     string;
     
     showFieldName:   boolean | number;
@@ -57,6 +70,32 @@ export interface Template{
 
     attribute?:      Attribute
     matrix?:      CalcMatrix
+}
+
+export interface TemplateResult{
+    id:                number | null;
+    custom_field:      boolean | number;
+    is_matrix:         boolean | number;
+    position:          number;
+    icon:              string;
+
+    auto_field_name:   boolean | number;
+    auto_unit:         boolean | number;
+    auto_value_source: boolean | number;
+
+    manual_field_name: string;
+    manual_unit:       string;
+    is_html:           boolean | number;
+    manual_value_html: string;
+    manual_value:      string;
+    
+    show_field_name:   boolean | number;
+    show_icon:         boolean | number;
+    show_unit:         boolean | number;
+    show_value:        boolean | number;
+
+    attribute?:        Attribute
+    matrix?:           CalcMatrix
 }
 
 export interface CalcMatrix{

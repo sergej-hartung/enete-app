@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { AbstractControl, FormGroup } from '@angular/forms';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { Subject, take, takeUntil } from 'rxjs';
+import { EditorModalComponent } from '../../../../../../shared/components/editor-modal/editor-modal.component';
 
 @Component({
   selector: 'app-attribute-box',
@@ -15,8 +18,12 @@ export class AttributeBoxComponent {
   @Input() isCollapsed: boolean = true;
   @Output() removeTpl = new EventEmitter<any>();
 
+  textAreaIsCollapsed: boolean = true
   private unsubscribe$ = new Subject<void>();
 
+  toggleCollapseTextArea(){
+    this.textAreaIsCollapsed = !this.textAreaIsCollapsed
+  }
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
   }
@@ -24,6 +31,11 @@ export class AttributeBoxComponent {
   isNumeric(value: any): boolean {
     return !isNaN(parseFloat(value)) && isFinite(value);
   }
+
+  constructor(
+    private sanitizer: DomSanitizer,
+    private modalService: NgbModal,
+  ) { }
 
   ngOnInit(): void {
     this.control.get('customFild')?.valueChanges
@@ -52,6 +64,52 @@ export class AttributeBoxComponent {
     this.handleFormFildName()
     this.handleFormFildValue()
     this.handleFormFildUnit()
+  }
+
+  openEditor(event: Event, control: FormGroup) {
+    event.preventDefault();
+    (event.target as HTMLElement).blur();
+
+    const modalRef = this.openModal();
+    //const control = this.getAttributeFormArray(group).at(index) as FormGroup;
+    const textControl = control.get('manualValueHtml');
+    //const attribute = group.attributs[index];
+
+    //textControl?.setValue(attribute.pivot?.value_text || textControl?.value || '');
+    modalRef.componentInstance.initialValue = textControl?.value || '';
+
+    this.handleModalSaveClose(modalRef, control, textControl);
+  }
+
+  private openModal(): NgbModalRef {
+    return this.modalService.open(EditorModalComponent, {
+      backdropClass: 'ckedit-modal-backdrop',
+      windowClass: 'ckedit-modal',
+      size: 'lg'
+    });
+  }
+
+  private handleModalSaveClose(modalRef: NgbModalRef, control: AbstractControl, textControl: AbstractControl | null): void {
+    const markAsTouchedAndClose = () => {
+      textControl?.markAsTouched();
+      modalRef.close();
+    };
+
+    modalRef.componentInstance.saveText.pipe(take(1)).subscribe((result: any) => {
+      if (result !== undefined) {
+        const valueHtml = control.get('manualValueHtml')
+        const isHtml = control.get('isHtml')
+        const manualValue = control.get('manualValue')
+        valueHtml?.patchValue(result)
+        isHtml?.patchValue(true)
+        manualValue?.patchValue('')
+        console.log(control)
+        //control.patchValue({ value_text: result });
+        markAsTouchedAndClose();
+      }
+    });
+
+    modalRef.componentInstance.close.pipe(take(1)).subscribe(markAsTouchedAndClose);
   }
 
   handleFormFildIcon(){
@@ -86,6 +144,10 @@ export class AttributeBoxComponent {
     this.control.get('showValue')?.valueChanges
     .pipe(takeUntil(this.unsubscribe$))
     .subscribe((value: any) => {
+      //console.log(value)
+      if(!value){
+        this.textAreaIsCollapsed = true
+      }
       this.control.patchValue({
         manualValue: ''
       })
@@ -97,6 +159,18 @@ export class AttributeBoxComponent {
       this.control.patchValue({
         manualValue: ''
       })
+    })
+
+    this.control.get('manualValue')?.valueChanges
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((value: any) => {
+      if(value){
+        const valueHtml = this.control.get('manualValueHtml')
+        const isHtml = this.control.get('isHtml')
+        valueHtml?.patchValue('')
+        isHtml?.patchValue(false)
+        this.textAreaIsCollapsed = true
+      }
     })
   }
 
@@ -120,6 +194,10 @@ export class AttributeBoxComponent {
 
   removeControl(control: any){
     this.removeTpl.emit(control)
+  }
+
+  getSafeHtml(html: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(html);
   }
 
   ngOnDestroy() {

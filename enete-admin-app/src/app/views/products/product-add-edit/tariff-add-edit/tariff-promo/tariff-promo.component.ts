@@ -6,6 +6,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { EditorModalComponent } from '../../../../../shared/components/editor-modal/editor-modal.component'
 import { Subject, takeUntil } from 'rxjs';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ProductService } from '../../../../../services/product/product.service';
 
 @Component({
   selector: 'app-tariff-promo',
@@ -31,7 +32,7 @@ export class TariffPromoComponent {
     public tariffService: TariffService,
     private modalService: NgbModal,
     private sanitizer: DomSanitizer,
-    //private productService: ProductService,
+    private productService: ProductService,
   ){
     this.tariffForm = this.formService.getTariffForm()
     this.promosForm = this.tariffForm.get('promos') as FormArray
@@ -48,6 +49,40 @@ export class TariffPromoComponent {
       title: ['', Validators.required],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
+    });
+  }
+
+  ngOnInit() {
+    
+
+    this.productService.productMode$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(mode => {
+          if(mode == 'edit')  this.loadPromos();
+        })
+  }
+
+  private loadPromos() {
+    this.tariffService.detailedData$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(response => {
+            if (response && response.data && response.data.promos) {
+                this.promosForm.clear();
+                response.data.promos.forEach((promo: any) => {
+                    this.promosForm.push(this.createPromoForm(promo));
+                });
+            }
+        });
+  }
+
+  private createPromoForm(promo: any): FormGroup {
+    return this.fb.group({
+      id: [promo.id || null],
+      title: [promo.title, Validators.required],
+      start_date: [promo.start_date, Validators.required],
+      end_date: [promo.end_date, Validators.required],
+      is_active: [promo.is_active === 1], // Конвертируем 1/0 в true/false
+      text_long: [promo.text_long || '']
     });
   }
 

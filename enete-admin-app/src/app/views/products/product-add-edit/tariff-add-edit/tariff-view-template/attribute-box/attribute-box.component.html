@@ -37,7 +37,7 @@
       <ng-container *ngIf="control.get('showValue')?.value; else notShowValue">
         <!-- wenn Manueler Wert -->
         <ng-container *ngIf="control.get('autoValueSource')?.value; else manualValue">
-          <!-- wenn Atributt -->
+          <!-- wenn Atributt Varchar-->
           <ng-container *ngIf="!isMatrix && control.get('attribute')?.value?.value_varchar">
             <ng-container *ngIf="isNumeric(control.get('attribute')?.value?.value_varchar); else nonNumericTemplate">
                 {{ control.get('attribute')?.value?.value_varchar | number:'1.2-2' }}
@@ -45,6 +45,10 @@
             <ng-template #nonNumericTemplate>
                 {{ control.get('attribute')?.value?.value_varchar }}
             </ng-template>
+          </ng-container>
+          <!-- wenn Atributt Textbereich-->
+          <ng-container *ngIf="!isMatrix && control.get('attribute')?.value?.value_text">
+            <button class="p-0 ps-0 btn btn-link" (click)="toggleCollapseTextArea()">Text</button>
           </ng-container>
           <!-- wenn Matrix -->
           <ng-container *ngIf="isMatrix && control.get('matrix')?.value?.total_value">
@@ -57,12 +61,21 @@
           </ng-container>
         </ng-container>
         <ng-template #manualValue>
-          <ng-container *ngIf="isNumeric(control.get('manualValue')?.value); else nonNumericTemplate">
-            {{ control.get('manualValue')?.value | number:'1.2-2' }}
-          </ng-container>
-          <ng-template #nonNumericTemplate>
-              {{ control.get('manualValue')?.value }}
+          <P>{{control.get('isHtml')?.value === true}}</P>
+          <!-- control.get('isHtml')?.value -->
+          <ng-template *ngIf="control.get('isHtml')?.value === true; else notHtml">
+            <p>testtest</p>
+            <button class="p-0 ps-0 btn btn-link" (click)="toggleCollapseTextArea()">Text</button>
           </ng-template>
+          <ng-template #notHtml>
+            <ng-container *ngIf="isNumeric(control.get('manualValue')?.value); else nonNumericTemplate">
+              {{ control.get('manualValue')?.value | number:'1.2-2' }}
+            </ng-container>
+            <ng-template #nonNumericTemplate>
+                {{ control.get('manualValue')?.value }}
+            </ng-template>
+          </ng-template>
+          
         </ng-template>
       </ng-container>
       <ng-template #notShowValue>
@@ -103,6 +116,10 @@
     <button class="btn btn-link attr-action col" (click)="toggleCollapse()">
       <i class="fa-solid fa-ellipsis-vertical"></i>
     </button>
+  </div>
+  <div class="col-12 tpl-setting-wrapp" [ngbCollapse]="textAreaIsCollapsed">
+    <div class="ck-content accordion-body" [innerHTML]="getSafeHtml(control.get('attribute')?.value?.value_text)">
+    </div>
   </div>
     <div class="col-12 tpl-setting-wrapp" [ngbCollapse]="isCollapsed">
         <form [formGroup]="control">
@@ -206,7 +223,7 @@
                       role="switch"
                       id="showValue-{{blockIndex}}-{{controlIndex}}"
                       formControlName="showValue"
-                    />
+                    />                   
                   </div>
                   
                 </div>
@@ -225,12 +242,17 @@
                 <div class="ps-1" [ngClass]="{'col-8': control.get('customFild')?.value, 'col-4': !control.get('customFild')?.value}">
                   <ng-container *ngIf="control.get('showValue')?.value && !control.get('autoValueSource')?.value">
                     <label class="form-label custom-label-sm" for="manualValue-{{blockIndex}}-{{controlIndex}}">Benutzerdef. Wert</label>
-                    <input
-                      type="text"
-                      id="manualValue-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="manualValue"
-                      class="form-control form-control-sm"
-                    />
+                    <div class="input-group input-group-sm">
+                      
+                      <input
+                        type="text"
+                        id="manualValue-{{blockIndex}}-{{controlIndex}}"
+                        formControlName="manualValue"
+                        class="form-control form-control-sm"
+                      />
+                      <button class="btn btn-outline-light btn-editor" (click)="openEditor($event, control)">editor</button>
+                    </div>
+                    
                   </ng-container>
                 </div>
               </div>
