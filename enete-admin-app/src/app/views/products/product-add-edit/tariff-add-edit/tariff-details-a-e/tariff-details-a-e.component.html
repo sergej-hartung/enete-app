@@ -1,6 +1,6 @@
 <div class="tariff-add-edit-title-wrap">
     <div class="tariff-add-edit-title">
-        Tarifdeatails
+        Tarif konfigurieren
     </div>
 </div>
 <div class="tariff-add-edit-content flex-grow-1">
@@ -131,7 +131,7 @@
                 <div class="row">
                     
                     <div class="col">
-                        <button class="btn document-select" (click)="openModal()">
+                        <button class="btn document-select" (click)="openModal($event)">
                             {{ this.tariffForm.get('tariff')?.value?.file_name ? this.tariffForm.get('tariff')?.value?.file_name : 'PDF Dokument' }}
                         </button>
                         <div *ngIf="tariffFormGroup.get('file_id')?.errors && tariffFormGroup.get('file_id')?.touched" class="invalid-feedback d-block">

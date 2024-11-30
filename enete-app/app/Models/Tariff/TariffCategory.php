@@ -11,7 +11,7 @@ class TariffCategory extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'is_filter_active', 'created_by', 'updated_by'];
-
+    protected $touches = ['tariffs'];
 
     public function tariffs()
     {

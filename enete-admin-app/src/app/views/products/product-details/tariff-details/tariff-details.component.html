@@ -1,0 +1,41 @@
+<div class="row no-gutters pt-1 ps-2 pe-2" *ngIf="tariff && tariff !== null">
+    <div class="col">
+        <app-card *ngIf="tariff?.attribute_groups">
+            <div card-header>Tarif Attribute</div>
+            <div card-body>
+                <div class="custom-body">
+                    <div
+                        class="tariff-details-attr-group"
+                    >
+                        <div 
+                            class="tariff-details-tpl-wrapp"
+                            *ngFor="let attribute_group of tariff.attribute_groups; let i = index"
+                        >
+                            <div class="tariff-details-title">
+                                <span>{{ attribute_group?.name }}</span>
+                            </div>
+                            <div *ngFor="let attribute of attribute_group?.attributs; let j = index">
+                                <div class="d-flex" *ngIf="attribute?.pivot?.is_active && attribute?.is_frontend_visible">
+                                    <div class="attr-name col-7">
+                                        {{attribute?.name}}
+                                    </div>
+                                    <!-- <div class="attr_value col">
+                                        <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
+                                            {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
+                                        </ng-container>
+                                        <ng-template #nonNumericTemplate>
+                                            {{ attributeCtrl.value.value_varchar }}
+                                        </ng-template>
+                                    </div>
+                                    <div class="attr-unit col">
+                                        {{ attributeCtrl.value.unit }}
+                                    </div> -->
+                                </div>   
+                            </div>
+                        </div>
+                    </div>
+                </div>                           
+            </div>
+        </app-card>
+    </div>
+</div>

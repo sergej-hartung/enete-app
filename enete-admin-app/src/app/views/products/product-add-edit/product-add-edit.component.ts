@@ -48,6 +48,7 @@ export class ProductAddEditComponent {
     this.unsubscribe$.complete();
 
     this.mainNavbarService.setIconState('back', true, true);
+    this.mainNavbarService.setIconState('save', true, true);
     //this.groupId = undefined
   }
 

@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers\Tariff;
 
-use App\Models\User\User;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tariff\TariffRequest;
 use App\Services\TariffService;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Tariff\TariffUpdateRequest;
+use App\Http\Resources\Tariff\ShowTariffResource;
 
-class TariffStoreController extends Controller
+class TariffUpdateController extends Controller
 {
     protected $tariffService;
 
@@ -18,22 +17,20 @@ class TariffStoreController extends Controller
         $this->tariffService = $tariffService;
     }
 
-    public function __invoke(TariffRequest $request)
+    public function __invoke(TariffUpdateRequest $request, $tarifId)
     {
-        //var_dump($request);
         try {
             DB::beginTransaction();
-                $this->tariffService->createTariff($request, $request->validated());
-            // $this->userProfileService->createEmployeeProfile($request, $request->validated());
-
+                $tariff = $this->tariffService->updateTariff($request, $request->validated(), $tarifId);
+            
             DB::commit();
-            return response('', 201);
+            return new ShowTariffResource($tariff);
         } catch (\Exception $exception) {
             DB::rollBack();   
-  
-            //$this->userProfileService->cleanupUploadedFiles();
 
             return response()->json(['error' => $exception->getMessage()], 500);
         }
+        
     }
+
 }

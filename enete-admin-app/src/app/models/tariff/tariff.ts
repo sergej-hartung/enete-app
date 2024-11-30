@@ -14,6 +14,9 @@ export interface TariffDetailedData {
 export interface Tariff {
     id: number;
     external_id: string;
+    action_group_id: number;
+    has_action: boolean
+    group_id: number;
     name: string;
     name_short: string;
     icon: string;
@@ -22,6 +25,7 @@ export interface Tariff {
     status: TariffStatus;
     is_published: boolean;
     file_id: number;
+    note: string;
     calc_matrix?: CalcMatrix[];
     attribute_groups?: AttributeGroup[];
     combo_status?: ComboStatus[];
@@ -29,6 +33,7 @@ export interface Tariff {
     document?: TariffDocument;
     promos?: Promo[]
     tpl?: Template[]
+    tariffdetails: TariffDetail[]
     
     created_by: number;
     updated_by: number;
@@ -96,6 +101,14 @@ export interface TemplateResult{
 
     attribute?:        Attribute
     matrix?:           CalcMatrix
+}
+
+export interface TariffDetail{
+    id: number | null;
+    tariffAttributeGroupId: number | null;
+    name: string;
+    uniqueId: string;
+    attributs: Attribute[]
 }
 
 export interface CalcMatrix{

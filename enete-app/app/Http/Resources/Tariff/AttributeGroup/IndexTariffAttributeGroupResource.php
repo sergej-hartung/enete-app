@@ -20,6 +20,7 @@ class IndexTariffAttributeGroupResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'tariff_id' => $this->tariff_id,
+            'uniqueId' => $this->uniqueId,
             'attributs' => $this->whenLoaded('attributes')->map(function ($attribute) {
                 return new IndexTariffAttributeWithPivotResource($attribute, $this->tariff_id);
             }),

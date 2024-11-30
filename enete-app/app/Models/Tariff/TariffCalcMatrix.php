@@ -15,6 +15,8 @@ class TariffCalcMatrix extends Model
         'name',
         'total_value',
         'unit',
+        'created_by', 
+        'updated_by'
     ];
 
     public function attributs()

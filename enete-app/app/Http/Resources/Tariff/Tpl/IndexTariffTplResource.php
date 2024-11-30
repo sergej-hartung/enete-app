@@ -29,6 +29,8 @@ class IndexTariffTplResource extends JsonResource
             'manual_field_name' => $this->manual_field_name,
             'manual_unit' => $this->manual_unit,
             'manual_value' => $this->manual_value,
+            'is_html' => $this->is_html,
+            'manual_value_html' => $this->manual_value_html,
             'position' => $this->position,
             'show_field_name' => $this->show_field_name,
             'show_icon' => $this->show_icon,

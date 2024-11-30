@@ -90,7 +90,7 @@ export class GenericTableComponent<T> {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(data => {  
           if(data){
-            console.log('data service')
+            //console.log('data service')
             this.setData(data["data"]) 
             this.isLoaded = true
           }    
@@ -110,7 +110,7 @@ export class GenericTableComponent<T> {
 
   onEditBlur(event: FocusEvent, row:any){
     event.stopPropagation();
-    console.log(row)
+    //console.log(row)
     if(row.isEditing){
       setTimeout(() => {
         if (row) {
@@ -124,13 +124,13 @@ export class GenericTableComponent<T> {
   }
 
   editRow(row:any){
-    console.log('edit')
+    //console.log('edit')
     this.rowEdit.emit(row)
     row.isEditing = false;
   }
 
   onEditKeydown(event: KeyboardEvent, row: any){
-    console.log(event)
+    //console.log(event)
     if (event.key === 'Enter') {
       //this.onEditBlur(new FocusEvent('blur'), row);
       this.editRow(row)
@@ -143,7 +143,7 @@ export class GenericTableComponent<T> {
   }
 
   onClickButton(value:string){
-    console.log(value)
+    //console.log(value)
     this.buttonEvent.emit(value)
   }
 
@@ -263,6 +263,7 @@ export class GenericTableComponent<T> {
       }
 
       this.data?.forEach(d => {
+        console.log(d)
         if (d.selected && d['originalIconColor']) {
           d['iconIcon'].color  = d.originalIconColor;
         }

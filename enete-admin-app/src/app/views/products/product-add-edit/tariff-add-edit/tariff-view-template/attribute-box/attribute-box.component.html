@@ -61,12 +61,9 @@
           </ng-container>
         </ng-container>
         <ng-template #manualValue>
-          <P>{{control.get('isHtml')?.value === true}}</P>
-          <!-- control.get('isHtml')?.value -->
-          <ng-template *ngIf="control.get('isHtml')?.value === true; else notHtml">
-            <p>testtest</p>
+          <ng-container *ngIf="control.get('isHtml')?.value; else notHtml">
             <button class="p-0 ps-0 btn btn-link" (click)="toggleCollapseTextArea()">Text</button>
-          </ng-template>
+          </ng-container>
           <ng-template #notHtml>
             <ng-container *ngIf="isNumeric(control.get('manualValue')?.value); else nonNumericTemplate">
               {{ control.get('manualValue')?.value | number:'1.2-2' }}
@@ -118,190 +115,196 @@
     </button>
   </div>
   <div class="col-12 tpl-setting-wrapp" [ngbCollapse]="textAreaIsCollapsed">
-    <div class="ck-content accordion-body" [innerHTML]="getSafeHtml(control.get('attribute')?.value?.value_text)">
-    </div>
+    <ng-container *ngIf="control.get('isHtml')?.value; else attributeHtml">
+      <div class="ck-content accordion-body" [innerHTML]="getSafeHtml(control.get('manualValueHtml')?.value)">
+      </div>
+    </ng-container>
+    <ng-template #attributeHtml>
+      <div class="ck-content accordion-body" [innerHTML]="getSafeHtml(control.get('attribute')?.value?.value_text)">
+      </div>
+    </ng-template>
   </div>
-    <div class="col-12 tpl-setting-wrapp" [ngbCollapse]="isCollapsed">
-        <form [formGroup]="control">
-            <div *ngIf="!control.get('attribute')?.value?.id && !isMatrix" class="form-check form-switch form-switch-sm">
-                <label class="form-check-label" for="customFild-{{blockIndex}}-{{controlIndex}}">Benutzerdefiniert</label>
-                <input
-                  class="form-check-input"
-                  type="checkbox"
-                  role="switch"
-                  id="customFild-{{blockIndex}}-{{controlIndex}}"
-                  formControlName="customFild"
-                />
-            </div>
-            <ng-container *ngIf="control.get('attribute')?.value?.id || isMatrix || control.get('customFild')?.value">
-              <!-- Einstellungen Icon -->
-              <div class="row tpl-setting">
-                <div class="tpl-setting-title">
-                  Einstellungen Icon
-                </div>
-                <div class="col-4 tpl-switch pe-1">
-                  <div class="form-check form-switch form-switch-sm">
-                    <label class="form-check-label" for="showIcon-{{blockIndex}}-{{controlIndex}}">Icon anzeigen</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="showIcon-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="showIcon"
-                    />
-                  </div>
-                  
+  <div class="col-12 tpl-setting-wrapp" [ngbCollapse]="isCollapsed">
+      <form [formGroup]="control">
+          <div *ngIf="!control.get('attribute')?.value?.id && !isMatrix" class="form-check form-switch form-switch-sm">
+              <label class="form-check-label" for="customFild-{{blockIndex}}-{{controlIndex}}">Benutzerdefiniert</label>
+              <input
+                class="form-check-input"
+                type="checkbox"
+                role="switch"
+                id="customFild-{{blockIndex}}-{{controlIndex}}"
+                formControlName="customFild"
+              />
+          </div>
+          <ng-container *ngIf="control.get('attribute')?.value?.id || isMatrix || control.get('customFild')?.value">
+            <!-- Einstellungen Icon -->
+            <div class="row tpl-setting">
+              <div class="tpl-setting-title">
+                Einstellungen Icon
+              </div>
+              <div class="col-4 tpl-switch pe-1">
+                <div class="form-check form-switch form-switch-sm">
+                  <label class="form-check-label" for="showIcon-{{blockIndex}}-{{controlIndex}}">Icon anzeigen</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="showIcon-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="showIcon"
+                  />
                 </div>
                 
-                <div class="col-8 ps-1">
-                  <ng-container *ngIf="control.get('showIcon')?.value">
-                    <label class="form-label custom-label-sm" for="icon-{{blockIndex}}-{{controlIndex}}">Icon Class</label>
-                    <input
-                      type="text"
-                      id="icon-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="icon"
-                      class="form-control form-control-sm"
+              </div>
+              
+              <div class="col-8 ps-1">
+                <ng-container *ngIf="control.get('showIcon')?.value">
+                  <label class="form-label custom-label-sm" for="icon-{{blockIndex}}-{{controlIndex}}">Icon Class</label>
+                  <input
+                    type="text"
+                    id="icon-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="icon"
+                    class="form-control form-control-sm"
+                />
+                </ng-container>
+              </div>
+            </div>
+
+            <!-- Einstellungen Feldname -->
+            <div class="row tpl-setting">
+              <div class="tpl-setting-title">
+                Einstellungen Feldname
+              </div>
+              <div class="col-4 tpl-switch pe-1">
+                <div class="form-check form-switch form-switch-sm">
+                  <label class="form-check-label" for="showFieldName-{{blockIndex}}-{{controlIndex}}">Feldname anzeigen</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="showFieldName-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="showFieldName"
                   />
-                  </ng-container>
+                </div>
+                
+              </div>
+              <div class="col-4 tpl-switch pe-1 ps-1" *ngIf="!control.get('customFild')?.value">
+                <div class="form-check form-switch form-switch-sm" *ngIf="control.get('showFieldName')?.value">
+                  <label class="form-check-label" for="autoFieldName-{{blockIndex}}-{{controlIndex}}">Auto-Feldname</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="autoFieldName-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="autoFieldName"
+                  />
                 </div>
               </div>
+              <div class="ps-1" [ngClass]="{'col-8': control.get('customFild')?.value, 'col-4': !control.get('customFild')?.value}">
+                <ng-container *ngIf="control.get('showFieldName')?.value && !control.get('autoFieldName')?.value">
+                  <label class="form-label custom-label-sm" for="manualFieldName-{{blockIndex}}-{{controlIndex}}">Benutzerdef. Feldname</label>
+                  <input
+                    type="text"
+                    id="manualFieldName-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="manualFieldName"
+                    class="form-control form-control-sm"
+                  />
+                </ng-container>
+              </div>
+            </div>
 
-              <!-- Einstellungen Feldname -->
-              <div class="row tpl-setting">
-                <div class="tpl-setting-title">
-                  Einstellungen Feldname
+            <!-- Einstellungen Wert -->
+            <div class="row tpl-setting">
+              <div class="tpl-setting-title">
+                Einstellungen Wert
+              </div>
+              <div class="col-4 tpl-switch pe-1">
+                <div class="form-check form-switch form-switch-sm">
+                  <label class="form-check-label" for="showValue-{{blockIndex}}-{{controlIndex}}">Wert anzeigen</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="showValue-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="showValue"
+                  />                   
                 </div>
-                <div class="col-4 tpl-switch pe-1">
-                  <div class="form-check form-switch form-switch-sm">
-                    <label class="form-check-label" for="showFieldName-{{blockIndex}}-{{controlIndex}}">Feldname anzeigen</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="showFieldName-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="showFieldName"
-                    />
-                  </div>
-                  
-                </div>
-                <div class="col-4 tpl-switch pe-1 ps-1" *ngIf="!control.get('customFild')?.value">
-                  <div class="form-check form-switch form-switch-sm" *ngIf="control.get('showFieldName')?.value">
-                    <label class="form-check-label" for="autoFieldName-{{blockIndex}}-{{controlIndex}}">Auto-Feldname</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="autoFieldName-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="autoFieldName"
-                    />
-                  </div>
-                </div>
-                <div class="ps-1" [ngClass]="{'col-8': control.get('customFild')?.value, 'col-4': !control.get('customFild')?.value}">
-                  <ng-container *ngIf="control.get('showFieldName')?.value && !control.get('autoFieldName')?.value">
-                    <label class="form-label custom-label-sm" for="manualFieldName-{{blockIndex}}-{{controlIndex}}">Benutzerdef. Feldname</label>
-                    <input
-                      type="text"
-                      id="manualFieldName-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="manualFieldName"
-                      class="form-control form-control-sm"
-                    />
-                  </ng-container>
+                
+              </div>
+              <div class="col-4 tpl-switch pe-1 ps-1" *ngIf="!control.get('customFild')?.value">
+                <div class="form-check form-switch form-switch-sm" *ngIf="control.get('showValue')?.value">
+                  <label class="form-check-label" for="autoValueSource-{{blockIndex}}-{{controlIndex}}">Auto-Wert</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="autoValueSource-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="autoValueSource"
+                  />
                 </div>
               </div>
-
-              <!-- Einstellungen Wert -->
-              <div class="row tpl-setting">
-                <div class="tpl-setting-title">
-                  Einstellungen Wert
-                </div>
-                <div class="col-4 tpl-switch pe-1">
-                  <div class="form-check form-switch form-switch-sm">
-                    <label class="form-check-label" for="showValue-{{blockIndex}}-{{controlIndex}}">Wert anzeigen</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="showValue-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="showValue"
-                    />                   
-                  </div>
-                  
-                </div>
-                <div class="col-4 tpl-switch pe-1 ps-1" *ngIf="!control.get('customFild')?.value">
-                  <div class="form-check form-switch form-switch-sm" *ngIf="control.get('showValue')?.value">
-                    <label class="form-check-label" for="autoValueSource-{{blockIndex}}-{{controlIndex}}">Auto-Wert</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="autoValueSource-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="autoValueSource"
-                    />
-                  </div>
-                </div>
-                <div class="ps-1" [ngClass]="{'col-8': control.get('customFild')?.value, 'col-4': !control.get('customFild')?.value}">
-                  <ng-container *ngIf="control.get('showValue')?.value && !control.get('autoValueSource')?.value">
-                    <label class="form-label custom-label-sm" for="manualValue-{{blockIndex}}-{{controlIndex}}">Benutzerdef. Wert</label>
-                    <div class="input-group input-group-sm">
-                      
-                      <input
-                        type="text"
-                        id="manualValue-{{blockIndex}}-{{controlIndex}}"
-                        formControlName="manualValue"
-                        class="form-control form-control-sm"
-                      />
-                      <button class="btn btn-outline-light btn-editor" (click)="openEditor($event, control)">editor</button>
-                    </div>
+              <div class="ps-1" [ngClass]="{'col-8': control.get('customFild')?.value, 'col-4': !control.get('customFild')?.value}">
+                <ng-container *ngIf="control.get('showValue')?.value && !control.get('autoValueSource')?.value">
+                  <label class="form-label custom-label-sm" for="manualValue-{{blockIndex}}-{{controlIndex}}">Benutzerdef. Wert</label>
+                  <div class="input-group input-group-sm">
                     
-                  </ng-container>
-                </div>
-              </div>
-
-              <!-- Einstellungen Einheit -->
-              <div class="row tpl-setting">
-                <div class="tpl-setting-title">
-                  Einstellungen Einheit
-                </div>
-                <div class="col-4 tpl-switch pe-1">
-                  <div class="form-check form-switch form-switch-sm">
-                    <label class="form-check-label" for="showUnit-{{blockIndex}}-{{controlIndex}}">Einheit anzeigen</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="showUnit-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="showUnit"
-                    />
-                  </div>
-                  
-                </div>
-                <div class="col-4 tpl-switch pe-1 ps-1" *ngIf="!control.get('customFild')?.value">
-                  <div class="form-check form-switch form-switch-sm" *ngIf="control.get('showUnit')?.value">
-                    <label class="form-check-label" for="autoUnit-{{blockIndex}}-{{controlIndex}}">Auto-Einheit</label>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      role="switch"
-                      id="autoUnit-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="autoUnit"
-                    />
-                  </div>
-                </div>
-                <div class="ps-1" [ngClass]="{'col-8': control.get('customFild')?.value, 'col-4': !control.get('customFild')?.value}">
-                  <ng-container *ngIf="control.get('showUnit')?.value && !control.get('autoUnit')?.value">
-                    <label class="form-label custom-label-sm" for="manualUnit-{{blockIndex}}-{{controlIndex}}">Benutzerdef. Einheit</label>
                     <input
                       type="text"
-                      id="manualUnit-{{blockIndex}}-{{controlIndex}}"
-                      formControlName="manualUnit"
+                      id="manualValue-{{blockIndex}}-{{controlIndex}}"
+                      formControlName="manualValue"
                       class="form-control form-control-sm"
                     />
-                  </ng-container>
+                    <button class="btn btn-outline-light btn-editor" (click)="openEditor($event, control)">editor</button>
+                  </div>
                   
+                </ng-container>
+              </div>
+            </div>
+
+            <!-- Einstellungen Einheit -->
+            <div class="row tpl-setting">
+              <div class="tpl-setting-title">
+                Einstellungen Einheit
+              </div>
+              <div class="col-4 tpl-switch pe-1">
+                <div class="form-check form-switch form-switch-sm">
+                  <label class="form-check-label" for="showUnit-{{blockIndex}}-{{controlIndex}}">Einheit anzeigen</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="showUnit-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="showUnit"
+                  />
+                </div>
+                
+              </div>
+              <div class="col-4 tpl-switch pe-1 ps-1" *ngIf="!control.get('customFild')?.value">
+                <div class="form-check form-switch form-switch-sm" *ngIf="control.get('showUnit')?.value">
+                  <label class="form-check-label" for="autoUnit-{{blockIndex}}-{{controlIndex}}">Auto-Einheit</label>
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    role="switch"
+                    id="autoUnit-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="autoUnit"
+                  />
                 </div>
               </div>
-            </ng-container>
-        </form>
-      
-    </div>
+              <div class="ps-1" [ngClass]="{'col-8': control.get('customFild')?.value, 'col-4': !control.get('customFild')?.value}">
+                <ng-container *ngIf="control.get('showUnit')?.value && !control.get('autoUnit')?.value">
+                  <label class="form-label custom-label-sm" for="manualUnit-{{blockIndex}}-{{controlIndex}}">Benutzerdef. Einheit</label>
+                  <input
+                    type="text"
+                    id="manualUnit-{{blockIndex}}-{{controlIndex}}"
+                    formControlName="manualUnit"
+                    class="form-control form-control-sm"
+                  />
+                </ng-container>
+                
+              </div>
+            </div>
+          </ng-container>
+      </form>
+    
+  </div>
   </div>

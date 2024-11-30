@@ -90,7 +90,7 @@ export class TariffService extends DataService<Tariff> {
       )
       .subscribe({
         next: data => {
-            console.log(data)
+            //console.log(data)
           if (data) {
             this._data.next({
               data: data["data"],
@@ -104,7 +104,7 @@ export class TariffService extends DataService<Tariff> {
   }
 
   fetchDetailedDataById(id: number): void {
-    this.http.get<TariffDetailedData>(`${this.apiUrl}/products/tariffs/${id}`)
+    this.http.get<TariffDetailedData>(`${this.apiUrl}/products/tariff/${id}`)
       .pipe(
         takeUntil(this.destroy$),
       )
@@ -123,61 +123,62 @@ export class TariffService extends DataService<Tariff> {
       });
   }
 
-  addItem(item: FormData | any): any {
+  addItem(item: Tariff): any {
       
-    // this.http.post<Partner>(`${this.apiUrl}/user-profile/employees`, item)
-    //     .pipe(
-    //       takeUntil(this.destroy$),
-    //     )
-    //     .subscribe({
-    //       next: newPartner => {
+    this.http.post<Tariff>(`${this.apiUrl}/products/tariff`, item)
+        .pipe(
+          takeUntil(this.destroy$),
+        )
+        .subscribe({
+          next: newPartner => {
               
-    //           this._detailedData.next({
-    //             data: newPartner,
-    //             requestType: 'post',
-    //             entityType: 'partner'
-    //           });
-    //           //this.successSubject.next('created');
-    //       },
-    //       error: (error) => {
-              
-    //         this.handleError(error)
-    //       }
-    //   });
+              this._detailedData.next({
+                data: newPartner,
+                requestType: 'post',
+                entityType: 'Tariff'
+              });
+              //this.successSubject.next('created');
+          },
+          error: (error) => {
+              console.log(error)
+            this.handleError(error, 'post', 'Tariff')
+          }
+      });
   }
 
   updateItem(id: number, item: FormData | any): any {
-    // item.append('_method', 'PATCH')
-    // this.http.post<{'data': Partner}>(`${this.apiUrl}/user-profile/employees/${id}`, item)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe({
-    //     next: updatedPartner => {
-    //       const currentData = this._data.getValue();
+    this.http.patch<TariffDetailedData>(`${this.apiUrl}/products/tariff/${id}`, item)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: updatedTariff => {
+          const currentData = this._data.getValue();
+          console.log(currentData)
+          console.log(updatedTariff)
+          // const currentData = this._data.getValue();
 
-    //         if (currentData && currentData.data) {
-    //           const updatedData = currentData.data.map(p => {
-    //             if (p.id === updatedPartner['data'].id) {
-    //                 // Устанавливаем свойство selected в true только для обновленного партнера
-    //                 return {...p, ...this.extractBriefInfo(updatedPartner['data']), selected: true};
-    //             } else {
-    //                 // Убеждаемся, что свойство selected установлено в false для всех остальных партнеров
-    //                 return {...p, selected: false};
-    //             }
-    //         });
-    //         this._data.next({...currentData, data: updatedData});
-    //       }
-    //       this._detailedData.next({
-    //         data: updatedPartner["data"],
-    //         requestType: 'patch',
-    //         entityType: 'partner'
-    //       });
+            if (currentData && currentData.data) {
+              const updatedData = currentData.data.map(p => {
+                if (p.id === updatedTariff['data'].id) {
+                  return {...p, ...this.extractBriefInfo(updatedTariff['data']), selected: true};
+                }else {                  
+                  return {...p, selected: false};
+                } 
+            });
+            this._data.next({...currentData, data: updatedData});
+            console.log(this._data.getValue());
+          }
+          this._detailedData.next({
+            data: updatedTariff["data"],
+            requestType: 'patch',
+            entityType: 'Tariff'
+          });
            
-    //     },
-    //     error: (error) => {
+        },
+        error: (error) => {
             
-    //       this.handleError(error)
-    //     }
-    // });
+          this.handleError(error, 'patch', 'Tariff')
+        }
+    });
   }
 
   deleteItem(id: number): void {
@@ -205,17 +206,46 @@ export class TariffService extends DataService<Tariff> {
   }
 
 
-  private handleError(errorResponse: any) {
-    const errors = errorResponse?.error?.errors ?? ['An unknown error occurred'];
+  private handleError(errorResponse: any, requestType: string = '', entityType: string = '') {
+    const errors = {
+      requestType: '',
+      entityType: '',
+      msg: ''
+    }
+    console.log(errorResponse)
+    if(errorResponse?.error?.error){
+      errors.requestType = requestType
+      errors.entityType = entityType
+      errors.msg = errorResponse?.error?.error
+    }else{
+      errors.requestType = requestType
+      errors.entityType = entityType
+      errors.msg = 'An unknown error occurred'
+    }
+     
     this.errorSubject.next(errors);
   }
 
-  private extractBriefInfo(group: Tariff): any {
+  private extractBriefInfo(tariff: Tariff): any {
     // Возвращаем только нужные поля
     return {
-        id: group.id,
-        name: group.name,
-        icon: group.icon
+        id: tariff.id,
+        action_group_id: tariff.action_group_id,
+        created_at: tariff.created_at,
+        created_by: tariff.created_by,
+        external_id: tariff.external_id,
+        file_id: tariff.file_id,
+        group_id: tariff.group_id,
+        has_action: tariff.has_action,
+        is_published: tariff.is_published,
+        name: tariff.name,
+        name_short: tariff.name_short,
+        network_operator: tariff.network_operator,
+        note: tariff.note,
+        provider: tariff.provider,
+        status: tariff.status,
+        updated_at: tariff.updated_at,
+        updated_by: tariff.updated_by
         // Добавьте другие поля, которые необходимы для краткого представления
     };
   }
@@ -254,6 +284,7 @@ export class TariffService extends DataService<Tariff> {
   resetData():void {
     this._data.next(null);
   }
+
 
   confirmAction(action: string, proceedCallback: () => void) {
     this.confirmActionSource.next({action, proceedCallback});

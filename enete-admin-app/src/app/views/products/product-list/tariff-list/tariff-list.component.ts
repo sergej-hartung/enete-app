@@ -91,15 +91,16 @@ export class TariffListComponent {
           this.tariffProviderService.fetchDataByGroupId(this.groupId)
           this.tariffStatusService.fetchData()
           this.tariffNetworkOperatorService.fetchDataByGroupId(this.groupId)
-          console.log('load provider status networkOperator')      
+          //console.log('load provider status networkOperator')      
         }
       })
 
     this.tariffStatusService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => { 
-        console.log(data) 
         if(data){ 
+          this.productService.updateInitTariffDataLoaded('statuses', true);
+
           let item = this.filters.find(item => item.key === 'status_id')
           if(item && data.data.length > 0){
             let options:any  = [{label: 'alle', value: 'all', selected: true}]
@@ -123,8 +124,10 @@ export class TariffListComponent {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {  
         if(data){
+          this.productService.updateInitTariffDataLoaded('providers', true); // loaded provider
+
           let item = this.filters.find(item => item.key === 'provider_id')
-          console.log(item)
+
           if(item && data.data.length > 0){
             let options:any  = [{label: 'alle', value: 'all', selected: true}]
             data.data.forEach(item => {
@@ -140,7 +143,7 @@ export class TariffListComponent {
             item.options = []
           }
           
-          console.log(this.filters)
+          //console.log(this.filters)
         }    
       });
 
@@ -148,6 +151,8 @@ export class TariffListComponent {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(data => {  
         if(data){ 
+          this.productService.updateInitTariffDataLoaded('networkOperators', true);
+
           let item = this.filters.find(item => item.key === 'network_operator_id')
           if(item && data.data.length > 0){
             let options:any  = [{label: 'alle', value: 'all', selected: true}]
@@ -169,7 +174,7 @@ export class TariffListComponent {
   }
 
   sort(event: any){
-    console.log(event)
+
     this.tariffService.fetchDataByGroupId(this.groupId, event)
     this.mainNavbarService.setIconState('edit', true, true);
     this.productService.resetTariffId()
@@ -183,7 +188,7 @@ export class TariffListComponent {
   }
 
   selectedRow(event: any){
-    console.log(event)
+
     if(event){
       this.productService.setTariffId(event.id)
       //this.productService.setSelectedTariff(event)
@@ -196,7 +201,7 @@ export class TariffListComponent {
   }
 
   private resetData(){
-    console.log('reset Data')
+
     this.tariffService.resetData()
     this.tariffService.resetDetailedData()
     //this.attributeGroupService.resetData()
@@ -214,8 +219,11 @@ export class TariffListComponent {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
-    console.log('destroy list')
+    //console.log('destroy list')
 
+    this.productService.updateInitTariffDataLoaded('statuses', false);
+    this.productService.updateInitTariffDataLoaded('providers', false);
+    this.productService.updateInitTariffDataLoaded('networkOperators', false);
     this.resetData()
     
     //this.tariffService.resetData()

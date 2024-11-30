@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,7 +14,10 @@ import { HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } fro
 import {AuthInterceptor} from './interceptors/auth.interceptor';
 import {LoggingInterceptor} from './interceptors/logging.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async'
+import { registerLocaleData } from '@angular/common';
+import localeDe from '@angular/common/locales/de';
 
+registerLocaleData(localeDe, 'de');
 
 
 @NgModule({
@@ -34,6 +37,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     HttpClientModule,
   ],
   providers: [
+    { provide: LOCALE_ID, useValue: 'de' },
     provideClientHydration(),
     provideHttpClient(withFetch()),
     {

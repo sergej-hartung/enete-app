@@ -9,7 +9,8 @@ class TariffDetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tariff_id', 'tariff_attribute_group_id', 'position'];
+    protected $fillable = ['tariff_id', 'tariff_attribute_group_id', 'position', 'created_by', 
+        'updated_by'];
 
     public function tariff()
     {

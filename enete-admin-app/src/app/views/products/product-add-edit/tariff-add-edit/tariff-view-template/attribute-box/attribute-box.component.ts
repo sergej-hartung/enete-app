@@ -95,7 +95,7 @@ export class AttributeBoxComponent {
       modalRef.close();
     };
 
-    modalRef.componentInstance.saveText.pipe(take(1)).subscribe((result: any) => {
+    modalRef.componentInstance.saveText.pipe(takeUntil(this.unsubscribe$), take(1)).subscribe((result: any) => {
       if (result !== undefined) {
         const valueHtml = control.get('manualValueHtml')
         const isHtml = control.get('isHtml')
@@ -103,13 +103,12 @@ export class AttributeBoxComponent {
         valueHtml?.patchValue(result)
         isHtml?.patchValue(true)
         manualValue?.patchValue('')
-        console.log(control)
         //control.patchValue({ value_text: result });
         markAsTouchedAndClose();
       }
     });
 
-    modalRef.componentInstance.close.pipe(take(1)).subscribe(markAsTouchedAndClose);
+    modalRef.componentInstance.close.pipe(takeUntil(this.unsubscribe$), take(1)).subscribe(markAsTouchedAndClose);
   }
 
   handleFormFildIcon(){
@@ -144,9 +143,12 @@ export class AttributeBoxComponent {
     this.control.get('showValue')?.valueChanges
     .pipe(takeUntil(this.unsubscribe$))
     .subscribe((value: any) => {
-      //console.log(value)
       if(!value){
         this.textAreaIsCollapsed = true
+        const valueHtml = this.control.get('manualValueHtml')
+        const isHtml = this.control.get('isHtml')
+        valueHtml?.patchValue('')
+        isHtml?.patchValue(false)
       }
       this.control.patchValue({
         manualValue: ''
@@ -156,6 +158,13 @@ export class AttributeBoxComponent {
     this.control.get('autoValueSource')?.valueChanges
     .pipe(takeUntil(this.unsubscribe$))
     .subscribe((value: any) => {
+      this.textAreaIsCollapsed = true
+      if(value){
+        const valueHtml = this.control.get('manualValueHtml')
+        const isHtml = this.control.get('isHtml')
+        valueHtml?.patchValue('')
+        isHtml?.patchValue(false)
+      }
       this.control.patchValue({
         manualValue: ''
       })
@@ -165,11 +174,11 @@ export class AttributeBoxComponent {
     .pipe(takeUntil(this.unsubscribe$))
     .subscribe((value: any) => {
       if(value){
+        this.textAreaIsCollapsed = true
         const valueHtml = this.control.get('manualValueHtml')
         const isHtml = this.control.get('isHtml')
         valueHtml?.patchValue('')
         isHtml?.patchValue(false)
-        this.textAreaIsCollapsed = true
       }
     })
   }

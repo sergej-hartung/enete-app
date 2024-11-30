@@ -7,6 +7,7 @@ import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FileManagerModalComponent } from './components/file-manager-modal/file-manager-modal.component';
 import { TreeNodeModalComponent } from './components/file-manager-modal/tree-node-modal/tree-node-modal.component';
+import { MainPreloaderComponent } from './components/main-preloader/main-preloader.component';
 //import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 
 
@@ -17,7 +18,8 @@ import { TreeNodeModalComponent } from './components/file-manager-modal/tree-nod
     CardComponent, 
     NotificationComponent, 
     FileManagerModalComponent, 
-    TreeNodeModalComponent
+    TreeNodeModalComponent, 
+    MainPreloaderComponent
   ],
   imports: [
     CommonModule,
@@ -30,6 +32,8 @@ import { TreeNodeModalComponent } from './components/file-manager-modal/tree-nod
     GenericTableComponent,
     CardComponent,
     NotificationComponent,
+    MainPreloaderComponent
+
   ]
 })
 export class SharedModule { }

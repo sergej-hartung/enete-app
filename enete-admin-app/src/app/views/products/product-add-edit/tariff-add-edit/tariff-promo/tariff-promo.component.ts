@@ -71,6 +71,7 @@ export class TariffPromoComponent {
                 response.data.promos.forEach((promo: any) => {
                     this.promosForm.push(this.createPromoForm(promo));
                 });
+                this.productService.updateTariffLoadedState('promos', true);
             }
         });
   }

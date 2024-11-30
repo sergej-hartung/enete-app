@@ -30,7 +30,7 @@
         <ng-container *ngTemplateOutlet="messageTemplate"></ng-container>
       </p>
       <div class="MessageBoxButtonSection">      
-        <button id="bot2-Msg1" class="btn btn-default btn-sm botTempo" (click)="handleDecline()">{{declineBtnTitle}}</button>
+        <button *ngIf="onDecline" id="bot2-Msg1" class="btn btn-default btn-sm botTempo" (click)="handleDecline()">{{declineBtnTitle}}</button>
         <button id="bot1-Msg1" class="btn btn-default btn-sm botTempo" (click)="handleAccept()">{{acceptBtnTitle}}</button>
       </div>
     </div>

@@ -22,9 +22,11 @@ return new class extends Migration
             $table->boolean('custom_field')->default(false);
             $table->string('icon')->nullable();
             $table->boolean('is_matrix')->default(false);
+            $table->boolean('is_html')->default(false);
             $table->string('manual_field_name')->nullable();
             $table->string('manual_unit')->nullable();
             $table->string('manual_value')->nullable();
+            $table->string('manual_value_html')->nullable();
             $table->integer('position')->nullable();
             $table->boolean('show_field_name')->default(false);
             $table->boolean('show_icon')->default(false);

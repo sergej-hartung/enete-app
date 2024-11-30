@@ -41,11 +41,16 @@ export class TariffDetailsTplComponent {
   }
 
   ngOnInit() {
+    this.productService.productMode$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(mode => {
+          if(mode == 'edit')  this.loadTariffDetails();
+        })
+
     // Delete Tariff Group
     this.productService.deletedTariffAttrGroup
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(group => {
-          console.log(group)
           const tariffGroup = group?.form.value
           const tariffDetails = this.tariffdetails.value
           if(tariffGroup && tariffGroup.uniqueId){
@@ -56,6 +61,36 @@ export class TariffDetailsTplComponent {
             }
           }
         })
+  }
+
+
+  private loadTariffDetails() {
+    this.tariffService.detailedData$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(response => {
+            if (response && response.data && response.data.tariffdetails) {
+                const detailsFromResponse = response.data.tariffdetails;
+
+                detailsFromResponse.forEach((detail: any) => {
+                   
+
+                    let tariffDetail = this.fb.group({
+                      id: [detail.id],
+                      tariffAttributeGroupId: [detail.tariff_attributeg_groupId],
+                      name: [detail.name],
+                      uniqueId: [detail?.uniqueId],
+                      attributs: this.fb.array(
+                        detail.attributs.map((attr:any) => this.createAttributeFormControl(attr))
+                      )
+                    }); 
+
+                    this.tariffdetails.push(tariffDetail);
+                    this.subscribeToFormGroupChanges(detail)                 
+                });
+
+              this.productService.updateTariffLoadedState('tariffDetails', true);
+            }
+        });
   }
 
   drop(event: CdkDragDrop<AttributeGroup[]>){
@@ -73,29 +108,33 @@ export class TariffDetailsTplComponent {
   }
 
   subscribeToFormGroupChanges(item: any){
+    
     if(item && !this.subscriptions.has(item.uniqueId)){
       const attributGroups = this.attributeGroupsControl
+
       if(attributGroups){
         const control = attributGroups.controls.find(groupObj => {
           const group = groupObj.value;
-          return group && ((group.id && item.id === group.id) || (group.uniqueId && item.uniqueId === group.uniqueId));
+          return group && ((group.tariff_attributeg_groupId && item.tariff_attributeg_groupId === group.id) || (group.uniqueId && item.uniqueId === group.uniqueId));
         });
-
+       
         if(control){
           const subscription = control.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe((group: AttributeGroup) => {
             if(group && group?.id){
               let tariffDetail = this.getTariffDetailById(group.id)
+
               if(tariffDetail){
                 let attributs = tariffDetail.get('attributs') as FormArray
                 attributs.clear()
 
                 tariffDetail.patchValue({
-                  id: group.id,
+                  tariffAttributeGroupId: group.id,
                   name: group.name,
                   uniqueId: group?.uniqueId,
                 })
 
                 let newAttributs = group.attributs.map(attr => this.createAttributeFormControl(attr))
+
                 newAttributs.forEach(elements => {
                   attributs.push(elements)
                 })
@@ -108,7 +147,7 @@ export class TariffDetailsTplComponent {
                 attributs.clear()
 
                 tariffDetail.patchValue({
-                  id: group.id,
+                  tariffAttributeGroupId: group.id,
                   name: group.name,
                   uniqueId: group?.uniqueId,
                 })
@@ -138,9 +177,9 @@ export class TariffDetailsTplComponent {
   }
 
   setTariffDeailsItem(tariffGroup: AttributeGroup){
-    console.log(tariffGroup)
     return this.fb.group({
-      id: [tariffGroup.id],
+      id: [null],
+      tariffAttributeGroupId: [tariffGroup.id],
       name: [tariffGroup.name],
       uniqueId: [tariffGroup?.uniqueId],
       attributs: this.fb.array(
@@ -180,7 +219,7 @@ export class TariffDetailsTplComponent {
     return this.tariffdetails.controls.find(controlObj => {
       const control = controlObj.value
 
-      if(control && control.id == id) return true
+      if(control && control.tariffAttributeGroupId == id) return true
 
       return false
     })

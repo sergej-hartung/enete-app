@@ -54,7 +54,7 @@ export class TariffGroupService extends DataService<TariffGroup> {
       )
       .subscribe({
         next: data => {
-            console.log(data)
+            //console.log(data)
           if (data) {
             this._data.next({
               data: data["data"],

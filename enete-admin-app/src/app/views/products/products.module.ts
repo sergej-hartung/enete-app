@@ -27,6 +27,7 @@ import {MatListModule} from '@angular/material/list';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
+import {MatSnackBarModule } from '@angular/material/snack-bar';
 
 import {
   CdkDragDrop,
@@ -40,6 +41,7 @@ import { TreeNodeComponent } from './file-manager/tree-node/tree-node.component'
 import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
 import { AttributeBoxComponent } from './product-add-edit/tariff-add-edit/tariff-view-template/attribute-box/attribute-box.component';
 import { TariffDetailsTplComponent } from './product-add-edit/tariff-add-edit/tariff-details-tpl/tariff-details-tpl.component';
+import { TariffDetailsComponent } from './product-details/tariff-details/tariff-details.component';
 
 
 @NgModule({
@@ -62,6 +64,7 @@ import { TariffDetailsTplComponent } from './product-add-edit/tariff-add-edit/ta
     TreeNodeComponent,
     AttributeBoxComponent,
     TariffDetailsTplComponent,
+    TariffDetailsComponent,
     //FileSizePipe,
   ],
   imports: [
@@ -80,6 +83,7 @@ import { TariffDetailsTplComponent } from './product-add-edit/tariff-add-edit/ta
     MatButtonModule,
     MatIconModule,
     MatCardModule,
+    MatSnackBarModule,
     NgbAccordionModule,
     
     // CdkDropList, CdkDrag

@@ -88,6 +88,8 @@ export class TariffAttributeComponent implements OnDestroy {
         if (data && data.entityType === 'tariffAttributsByGroup') {
           this.tariffAttributs = data.data;
           this.updateTariffAttributsStatus();
+
+          this.productService.updateInitTariffDataLoaded('attributes', true);
         }
       });
 
@@ -225,16 +227,22 @@ export class TariffAttributeComponent implements OnDestroy {
   }
 
   private copyAttribute(attribute: Attribute): Attribute {
+    
     if(attribute?.pivot){
       const isActiveDisabled = !attribute.is_frontend_visible
       let isActiv = attribute?.pivot.is_active
       if(isActiv !== attribute.is_frontend_visible){
         if(!attribute.is_frontend_visible && isActiv){
           isActiv = 0
-        }else if(!isActiv && attribute.is_frontend_visible) isActiv = 0
+        }else if(!isActiv && attribute.is_frontend_visible){
+          isActiv = 0
+        } 
       }
 
       let Attr: Attribute = JSON.parse(JSON.stringify(attribute))
+      
+
+
       Attr.is_frontend_visible = isActiv 
       delete Attr?.pivot;
 
@@ -254,7 +262,28 @@ export class TariffAttributeComponent implements OnDestroy {
     };
   }
 
-  private createGroupForm(name: string, attributs: Attribute[] = []): FormGroup {
+  private createGroupForm(name: string, attributs: Attribute[] = [], Group: boolean | AttributeGroup  = false): FormGroup { 
+    if(Group && typeof Group !== 'boolean'){
+     
+      return this.fb.group({
+        id: [Group.id],
+        name: [Group.name],
+        uniqueId: [Group.uniqueId],
+        attributs: this.fb.array(
+          attributs.map(attr => {
+            if(attr?.pivot){
+              let valueVarchar = attr?.pivot?.value_varchar ? attr.pivot.value_varchar : ''
+              let valueText = attr?.pivot?.value_text ? attr.pivot.value_text : ''
+              let isActive = attr?.pivot?.is_active !== null ? attr.pivot.is_active : null
+              return this.createAttributeFormControl(attr, valueVarchar, valueText, isActive)
+            }
+  
+            return this.createAttributeFormControl(attr)
+          })
+        )
+      });
+    }
+
     return this.fb.group({
       id: [null],
       name: [name],
@@ -264,7 +293,7 @@ export class TariffAttributeComponent implements OnDestroy {
           if(attr?.pivot){
             let valueVarchar = attr?.pivot?.value_varchar ? attr.pivot.value_varchar : ''
             let valueText = attr?.pivot?.value_text ? attr.pivot.value_text : ''
-            let isActive = attr?.pivot?.is_active ? attr.pivot.is_active : null
+            let isActive = attr?.pivot?.is_active !== null ? attr.pivot.is_active : null
             return this.createAttributeFormControl(attr, valueVarchar, valueText, isActive)
           }
 
@@ -279,6 +308,11 @@ export class TariffAttributeComponent implements OnDestroy {
   private createAttributeFormControl(attribute: Attribute, valueVarchar: string = '', valueText: string = '', isActive: number | null = null): FormGroup {
     const valueVarcharValidators = attribute.input_type !== 'Textbereich' ? this.getValidatorsForType(attribute) : [];
     const valueTextValidators = attribute.input_type === 'Textbereich' ? this.getValidatorsForType(attribute) : [];
+
+    // Заменяем точку на запятую в поле value_varchar, если это числовое значение
+    // if (valueVarchar && !isNaN(Number(valueVarchar))) {
+    //   valueVarchar = valueVarchar.replace('.', ',');
+    // }
 
     return this.fb.group({
       id: [attribute.id],
@@ -299,7 +333,7 @@ export class TariffAttributeComponent implements OnDestroy {
         validators.push(Validators.pattern(/^\d+$/));
         break;
       case 'Dezimalzahlen':
-        validators.push(Validators.pattern(/^\d+(,\d+)?$/));
+        validators.push(Validators.pattern(/^\d{1,3}(\.\d{3})*(,\d+)?$|^\d+([.,]\d+)?$/));
         break;
       case 'Datumfeld':
         validators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/));
@@ -432,8 +466,10 @@ export class TariffAttributeComponent implements OnDestroy {
             attributeGroups.forEach((group: AttributeGroup) => {
                 // Создаем форму для группы
                 const copiedAttributes = group.attributs.map(attr => this.copyAttribute(attr));
+               
+                const groupForm = this.createGroupForm(group.name, group.attributs, group);
+               
                 
-                const groupForm = this.createGroupForm(group.name, group.attributs);
                 //const copiedAttribute = this.copyAttribute(group.attributs);
                 // Добавляем группу в список
                 this.groups.push({
@@ -451,6 +487,8 @@ export class TariffAttributeComponent implements OnDestroy {
 
             // Обновляем статус атрибутов
             this.updateTariffAttributsStatus();
+
+            this.productService.updateTariffLoadedState('attributeGroup', true);
           }
         });
     }

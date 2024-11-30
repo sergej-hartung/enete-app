@@ -151,17 +151,17 @@ export class FormService {
     return this.fb.group({
       tariff: this.fb.group({
         id:                  [],
-        external_id:         ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
-        name:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
-        name_short:          ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+        external_id:         ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
+        name:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
+        name_short:          ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
         provider_id:         ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         network_operator_id: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         group_id:            ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         status_id:           ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         is_published:        [false, [booleanValidator()]],
-        note:                ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+        note:                ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
         file_id:             ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-        file_name:           ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß.]+$')]],
+        file_name:           ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
         
       }),
       combo_status: this.fb.array([]), // New field
@@ -190,19 +190,19 @@ export class FormService {
       customFild:       [false, [booleanValidator()]],
       isMatrix:         [false, [booleanValidator()]],
       autoFieldName:    [true, [booleanValidator()]],
-      manualFieldName:  ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+      manualFieldName:  ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
       autoValueSource: [true, [booleanValidator()]],
       isHtml:           [false, [booleanValidator()]],
       manualValueHtml:  [''],
-      manualValue:     ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+      manualValue:     ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
       autoUnit:         [true, [booleanValidator()]],
-      manualUnit:       ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+      manualUnit:       ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
       showUnit:         [true, [booleanValidator()]],
       showValue:       [true, [booleanValidator()]],
       showFieldName:    [true, [booleanValidator()]],
       showIcon:         [true, [booleanValidator()]],
       position:         [pos, [Validators.pattern('^[0-9]+$')]],
-      icon:             ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß]+$')]],
+      icon:             ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_<>\\.\\-]+$')]],
     })
   }
 

@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('tariff_promotions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tariff_id');
-            $table->timestamp('start_date');
-            $table->timestamp('end_date');
-            $table->text('text_long');
-            $table->string('title', 255);
-            $table->boolean('is_active');
+            $table->unsignedBigInteger('tariff_id')->nullable();
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->text('text_long')->nullable();
+            $table->string('title', 255)->nullable();
+            $table->boolean('is_active')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

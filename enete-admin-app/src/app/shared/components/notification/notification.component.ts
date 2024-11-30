@@ -30,6 +30,7 @@ export class NotificationComponent implements OnInit {
     this.notificationService.notificationConfig$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(config  => {
+        console.log(config)
         if (config ) {
           this.title = config .title;
           this.message = config .message;

@@ -91,7 +91,6 @@ export class TariffCalcMatrixComponent {
     this.productService.deletedTariffAttrGroup
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(group => {
-          console.log(group)
           if(group && 'attributs' in group){
             group.attributs.forEach((attr: any) => {
               this.removeAllAtributteById(attr)
@@ -258,7 +257,6 @@ export class TariffCalcMatrixComponent {
   
       this.addFormSwitchListener(attributeFormGroup, matrix?.form);
       this.updateTotalValueMatrix(matrix?.form)
-      console.log(this.calcMatrixForm)
   }
 
   addFormSwitchListener(attributeFormGroup: FormGroup, matrixGroup: FormGroup) {
@@ -447,138 +445,60 @@ export class TariffCalcMatrixComponent {
   }
 
   private loadTariffMatrix() {
-      // add subscription Attr 
-      // this.tariffService.detailedData$
-      //   .pipe(takeUntil(this.unsubscribe$))
-      //   .subscribe(response => {
-      //     console.log(response)
-      //     if(response){
-      //       const matrixsFromTariff = response?.data?.calc_matrix; // Здесь ваши группы из ответа сервера
-      //       if(matrixsFromTariff){
-      //         this.matrixs = matrixsFromTariff.map(matrix => 
-      //         (
-      //           {
-      //             id: matrix.id,
-      //             uniqueId: matrix.uniqueId,
-      //             tariff_id: matrix.tariff_id,
-      //             name: matrix.name,
-      //             total_value: matrix.total_value,
-      //             unit: matrix.unit,
-      //             attributs: matrix.attributs.map(attr => ({
-      //               ...attr,
-      //               isCopied: true // Отметьте атрибуты как скопированные
-      //             })),
-      //             hidden: false,
-    
-      //             form: this.fb.group({
-      //               id: [matrix.id],
-      //               uniqueId: [matrix.uniqueId],
-      //               tariff_id: [matrix.tariff_id],
-      //               name: [matrix.name],
-      //               total_value: [matrix.total_value],
-      //               unit: [matrix.unit],
-      //               attributs: this.fb.array(
+    this.tariffService.detailedData$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(response => {
+          if (response && response.data && response.data.calc_matrix) {
+              // Очищаем текущую матрицу и формы
+              this.matrixs = [];
+              this.calcMatrixForm.clear();
 
-      //                 matrix.attributs.map(attr => {
-      //                   return this.fb.group({
-      //                     id: [attr.id],
-      //                     code: [attr.code],
-      //                     name: [attr.name],
-      //                     period: [attr.period],
-      //                     periodeTyp: [attr.periodeTyp],
-      //                     single: [attr.single],
-      //                     unit: [attr.unit],
-      //                     value: [attr.value],
-      //                     value_total: [attr.value_total],
-      //                   });
-      //                 })
-      //               )
-      //             })
-      //           }
-      //         ));
+              const CALC_MATRIX = JSON.parse(JSON.stringify(response.data.calc_matrix))
+              // Проходимся по каждой матрице в ответе
+              CALC_MATRIX.forEach((matrixData: any) => {
 
-      //         this.calcMatrixForm.clear();
-      //         this.matrixs.forEach(matrix => {
-      //           this.calcMatrixForm.push(matrix.form);
-      //           let attributeFormGroups = matrix.form.get('attributs') as FormArray
+                  const attributs = matrixData.attributs.map((attr: Attribute) => this.createAttributeForm(attr))
+                  const copiedAttributes = JSON.parse(JSON.stringify(matrixData.attributs))
+                  // Создаем форму для матрицы
+                  const matrixForm = this.fb.group({
+                      id: [matrixData.id || null],
+                      uniqueId: [matrixData.uniqueId || this.generateUniqueIdWithTimestamp()],
+                      name: [matrixData.name, Validators.required],
+                      total_value: [matrixData.total_value || 0],
+                      unit: [matrixData.unit || ''],
+                      attributs: this.fb.array(attributs)
+                  });
+                  // Добавляем подписки на изменения атрибутов
+                  const attributsFormArray = matrixForm.get('attributs') as FormArray;
+                  attributsFormArray.controls.forEach(attrForm => {
+                      if (attrForm instanceof FormGroup) {
+                          this.addFormSwitchListener(attrForm, matrixForm);
+                      }
+                  });
 
-      //           attributeFormGroups.controls.forEach(attributeFormGroup => {
-      //             let attributForm = attributeFormGroup as FormGroup
+                  // Добавляем матрицу в список
+                  this.matrixs.push({
+                      id: matrixData.id,
+                      uniqueId: matrixData.uniqueId,
+                      name: matrixData.name,
+                      attributs: copiedAttributes,
+                      form: matrixForm
+                  });
 
-      //             const singleControl = attributForm.get('single');
-      //             const periodControl = attributForm.get('period');
-      //             const periodTypeControl = attributForm.get('periodeTyp');
+                  // Добавляем форму матрицы в FormArray
+                  this.calcMatrixForm.push(matrixForm);
+              });
 
-      //             if(!singleControl?.value){
-      //               periodControl?.setValidators([Validators.required, Validators.pattern('^[0-9]*$')]);
-      //               periodTypeControl?.setValidators([Validators.required])
-      //             }
+              // Обновляем списки для драг-н-дропа
+              this.updateTariffAttributsStatus();
+              this.updateConnectedDropLists();
 
-      //             this.addFormSwitchListener(attributForm, matrix?.form);
-      //           })
-      //         });
-
-              
-      //         this.updateTariffAttributsStatus();
-      //         this.updateConnectedDropLists();
-      //       }
-      //     }
-      //   })
-
-      this.tariffService.detailedData$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(response => {
-            if (response && response.data && response.data.calc_matrix) {
-                // Очищаем текущую матрицу и формы
-                this.matrixs = [];
-                this.calcMatrixForm.clear();
-
-                const CALC_MATRIX = JSON.parse(JSON.stringify(response.data.calc_matrix))
-                // Проходимся по каждой матрице в ответе
-                CALC_MATRIX.forEach((matrixData: any) => {
-
-                    const attributs = matrixData.attributs.map((attr: Attribute) => this.createAttributeForm(attr))
-                    const copiedAttributes = JSON.parse(JSON.stringify(matrixData.attributs))
-                    // Создаем форму для матрицы
-                    const matrixForm = this.fb.group({
-                        id: [matrixData.id || null],
-                        uniqueId: [matrixData.uniqueId || this.generateUniqueIdWithTimestamp()],
-                        name: [matrixData.name, Validators.required],
-                        total_value: [matrixData.total_value || 0],
-                        unit: [matrixData.unit || ''],
-                        attributs: this.fb.array(attributs)
-                    });
-                    // Добавляем подписки на изменения атрибутов
-                    const attributsFormArray = matrixForm.get('attributs') as FormArray;
-                    attributsFormArray.controls.forEach(attrForm => {
-                        if (attrForm instanceof FormGroup) {
-                            this.addFormSwitchListener(attrForm, matrixForm);
-                        }
-                    });
-
-                    // Добавляем матрицу в список
-                    this.matrixs.push({
-                        id: matrixData.id,
-                        uniqueId: matrixData.uniqueId,
-                        name: matrixData.name,
-                        attributs: copiedAttributes,
-                        form: matrixForm
-                    });
-
-                    // Добавляем форму матрицы в FormArray
-                    this.calcMatrixForm.push(matrixForm);
-                });
-
-                // Обновляем списки для драг-н-дропа
-                console.log(this.matrixs)
-                this.updateTariffAttributsStatus();
-                this.updateConnectedDropLists();
-            }
-        });
+              this.productService.updateTariffLoadedState('calcMatrix', true);
+          }
+      });
   }
 
   private createAttributeForm(attribute: any): FormGroup {
-    console.log(attribute)
     this.subscribeToFormChanges(attribute.id)
     return this.fb.group({
         id: [attribute.id],

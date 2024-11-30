@@ -25,7 +25,8 @@ class TariffDetailWithAttributesResource extends JsonResource
     {
 
         return [
-            'id' => $this->attributeGroup->id, // Похоже, вам нужно, чтобы 'id' был null
+            'id' => $this->id,
+            'tariff_attributeg_groupId' => $this->attributeGroup->id, // Похоже, вам нужно, чтобы 'id' был null
             'name' => $this->attributeGroup->name,
             'uniqueId' => $this->attributeGroup->uniqueId, // Используйте соответствующий уникальный идентификатор или добавьте другой источник, если доступно
             'attributs' => $this->attributeGroup->attributes->map(function ($attribute) {

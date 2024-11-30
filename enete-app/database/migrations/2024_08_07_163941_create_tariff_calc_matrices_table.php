@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('tariff_calc_matrices', function (Blueprint $table) {
             $table->id();
-            $table->string('uniqueId');
+            $table->string('uniqueId')->nullable();
             $table->unsignedBigInteger('tariff_id')->nullable(); 
-            $table->string('name');
-            $table->decimal('total_value', 15, 2);
-            $table->string('unit');
+            $table->string('name')->nullable();
+            $table->decimal('total_value', 15, 2)->nullable();
+            $table->string('unit')->nullable();
             //$table->integer('position');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

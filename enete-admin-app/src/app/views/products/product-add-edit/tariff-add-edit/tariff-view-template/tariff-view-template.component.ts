@@ -45,9 +45,13 @@ export class TariffViewTemplateComponent {
   }
 
   ngOnInit(): void {
-    this.loadTpl();
 
-    
+    this.productService.productMode$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(mode => {
+          if(mode == 'edit')  this.loadTpl();
+        })
+
     this.updateConnectedDropLists()
 
     this.initCollapseArrays();
@@ -68,7 +72,6 @@ export class TariffViewTemplateComponent {
     this.productService.deletedTariffAttrGroup
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(group => {
-          console.log(group)
           if(group && 'attributs' in group){
             group.attributs.forEach((attr: any) => {
               const tpl = this.getTplByAttrId(attr.id)
@@ -118,45 +121,30 @@ export class TariffViewTemplateComponent {
                   }
                 });
                 this.updateConnectedDropLists();
-                console.log(this.tpl)
-                console.log(this.subscriptions)
+                this.productService.updateTariffLoadedState('tpl', true);
             }
         });
   }
 
   private setTplForm(tplControl: FormGroup, tplItem: TemplateResult) {
-    // const form = this.fb.group({
-    //     id: [tplItem.id || null],
-    //     position: [tplItem.position || null],
-    //     autoFieldName: [tplItem.auto_field_name || true],
-    //     manualFieldName: [tplItem.manual_field_name || ''],
-    //     autoUnit: [tplItem.auto_unit || true],
-    //     manualUnit: [tplItem.manual_unit || ''],
-    //     autoValueSource: [tplItem.auto_value_source || true],
-    //     manualValue: [tplItem.manual_value || ''],
-    //     showFieldName: [tplItem.show_field_name || true],
-    //     showUnit: [tplItem.show_unit || true],
-    //     showValue: [tplItem.show_value || true],
-    //     showIcon: [tplItem.show_icon || true],
-    //     icon: [tplItem.icon || ''],
-    //     isMatrix: [tplItem.is_matrix || false]
-    // });
     tplControl.patchValue({
       id: tplItem.id || null,
-      customFild:       tplItem.custom_field || false,
-      isMatrix:         tplItem.is_matrix || false,
-      autoFieldName:    tplItem.auto_field_name || true,
-      manualFieldName:  tplItem.manual_field_name || '',
-      autoValueSource: tplItem.auto_value_source || true,
-      manualValue:     tplItem.manual_value || '',
-      autoUnit:         tplItem.auto_unit || true,
-      manualUnit:       tplItem.manual_unit || '',
-      showUnit:         tplItem.show_unit || true,
-      showValue:       tplItem.show_value || true,
-      showFieldName:    tplItem.show_field_name || true,
-      showIcon:         tplItem.show_icon || true,
+      customFild:       tplItem.custom_field,
+      isMatrix:         tplItem.is_matrix,
+      isHtml:           tplItem.is_html,
+      autoFieldName:    tplItem.auto_field_name,
+      manualFieldName:  tplItem.manual_field_name,
+      autoValueSource:  tplItem.auto_value_source,
+      manualValue:      tplItem.manual_value,
+      manualValueHtml:  tplItem.manual_value_html,
+      autoUnit:         tplItem.auto_unit,
+      manualUnit:       tplItem.manual_unit,
+      showUnit:         tplItem.show_unit,
+      showValue:       tplItem.show_value,
+      showFieldName:    tplItem.show_field_name,
+      showIcon:         tplItem.show_icon,
       //position:         [pos, [Validators.pattern('^[0-9]+$')]],
-      icon:             tplItem.icon || '',
+      icon:             tplItem.icon,
     })
 
     // Динамически добавляем контролы, если данные есть
@@ -285,12 +273,9 @@ export class TariffViewTemplateComponent {
         this.subscribeToMatrixChanges(matrix?.uniqueId, control)
       }
     }
-    console.log(this.tpl)
   }
 
   subscribeToFormChanges(id: number, control: FormGroup){
-    console.log(id)
-    console.log(control)
     if(id && !this.subscriptions.has(id)){
       let tariffForm = this.getAttributeGroupArray()
       
@@ -352,8 +337,6 @@ export class TariffViewTemplateComponent {
   }
 
   getTmlByMatrixUniqueId(uniqueId: string){
-    console.log(uniqueId)
-    console.log(this.tpl)
     const tpl = this.tpl.controls.find(control => {
       const controlVal = control.value
       if("matrix" in controlVal){
@@ -439,13 +422,11 @@ export class TariffViewTemplateComponent {
   }
 
   unsubscribeToFormCanges(id: string | number){
-    console.log(this.subscriptions)
     if(this.subscriptions.has(id)){
       const subscription = this.subscriptions.get(id);
       if (subscription) {
         subscription.unsubscribe();
         this.subscriptions.delete(id);
-        console.log(this.subscriptions)
       }
     }
     
@@ -455,15 +436,17 @@ export class TariffViewTemplateComponent {
     if(tpl){
       tpl.removeControl('attribute')
       tpl.removeControl('matrix')
-      tpl.patchValue({
+      tpl.patchValue({              
         customFild:      false,
         isMatrix:        false,
-        autoFieldName:   true,
+        autoFieldName:   true, 
         manualFieldName: '' ,
+        isHtml:          false, 
         autoValueSource: true,
-        manualValue:     '',
+        manualValue:     '',  
+        manualValueHTML: '',  
         autoUnit:        true,
-        manualUnit:      '',
+        manualUnit:      '',  
         showUnit:        true,
         showValue:       true,
         showFieldName:   true,

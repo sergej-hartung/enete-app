@@ -10,7 +10,21 @@ class TariffAttribute extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['code', 'name', 'input_type_id', 'unit', 'is_system', 'is_required', 'is_frontend_visible', 'tariff_id', 'details', 'created_by', 'updated_by'];
+    protected $fillable = [
+        'code', 
+        'name', 
+        'input_type_id', 
+        'unit', 
+        'is_system', 
+        'is_required', 
+        'is_frontend_visible', 
+        'tariff_id', 
+        'details', 
+        'created_by', 
+        'updated_by'
+    ];
+
+    protected $touches = ['tariffs'];
 
     public function inputType()
     {

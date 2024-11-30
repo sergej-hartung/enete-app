@@ -9,7 +9,14 @@ class TariffAttributeGroup extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['tariff_id', 'name', 'created_by', 'updated_by'];
+    protected $fillable = [
+        'tariff_id', 
+        'name', 
+        'created_by', 
+        'updated_by'
+    ];
+
+    protected $touches = ['tariffs'];
 
     public function tariff()
     {

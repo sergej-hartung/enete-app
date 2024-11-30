@@ -66,7 +66,7 @@ class TariffRequest extends FormRequest
             'calc_matrix.*.attributs.*.periodeTyp'         => 'nullable|sometimes|string|max:255',
             'calc_matrix.*.attributs.*.single'             => 'nullable|sometimes|boolean',
             'calc_matrix.*.attributs.*.unit'               => 'nullable|sometimes|string|max:255',
-            'calc_matrix.*.attributs.*.value'              => 'nullable|sometimes|numeric',
+            'calc_matrix.*.attributs.*.value'              => 'nullable|sometimes|string',
             'calc_matrix.*.attributs.*.value_total'        => 'nullable|sometimes|numeric',
 
 
@@ -93,6 +93,8 @@ class TariffRequest extends FormRequest
 
             'tariffdetails'                                => 'nullable|sometimes|array',
             'tariffdetails.*.id'                           => 'nullable|sometimes|integer',
+            'tariffdetails.*.tariffAttributeGroupId'       => 'nullable|sometimes|integer',
+            'tariffdetails.*.position'                     => 'nullable|sometimes|integer',
             'tariffdetails.*.name'                         => 'nullable|sometimes|string|max:255',
             'tariffdetails.*.uniqueId'                     => 'nullable|sometimes|string|max:255',
 
@@ -114,9 +116,11 @@ class TariffRequest extends FormRequest
             'tpl.*.icon'                                   => 'nullable|sometimes|string|max:255',
             'tpl.*.id'                                     => 'nullable|sometimes|integer',
             'tpl.*.isMatrix'                               => 'nullable|sometimes|boolean',
+            'tpl.*.isHtml'                                 => 'nullable|sometimes|boolean',
             'tpl.*.manualFieldName'                        => 'nullable|sometimes|string|max:255',
             'tpl.*.manualUnit'                             => 'nullable|sometimes|string|max:255',
             'tpl.*.manualValue'                            => 'nullable|sometimes|string|max:255',
+            'tpl.*.manualValueHtml'                        => 'nullable|sometimes|string',
             'tpl.*.position'                               => 'nullable|sometimes|integer',
             'tpl.*.showFieldName'                          => 'nullable|sometimes|boolean',
             'tpl.*.showIcon'                               => 'nullable|sometimes|boolean',

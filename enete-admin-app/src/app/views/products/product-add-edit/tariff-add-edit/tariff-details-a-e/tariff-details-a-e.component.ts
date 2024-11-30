@@ -74,7 +74,10 @@ export class TariffDetailsAEComponent {
     })
   }
 
-  openModal() {
+  openModal(event: Event) {
+    event.preventDefault();
+    (event.target as HTMLElement).blur();
+
     const modalRef = this.modalService.open(
       FileManagerModalComponent, { 
         windowClass: 'file-manager-modal',
@@ -104,6 +107,7 @@ export class TariffDetailsAEComponent {
     this.categoryService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(categoriesData => {
+        this.productService.updateInitTariffDataLoaded('categories', true);
         this.tariffCategories = categoriesData?.data || [];
         this.setCategoriesFormArray();
       })
@@ -111,6 +115,7 @@ export class TariffDetailsAEComponent {
     this.comboStatusService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(comboStatusData => {
+        this.productService.updateInitTariffDataLoaded('connectionStatuses', true);
         this.combiStatus = comboStatusData?.data || [];
         this.setComboStatusFormArray();
       })
@@ -179,7 +184,6 @@ export class TariffDetailsAEComponent {
     this.tariffService.detailedData$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(tariffData => {
-        console.log(tariffData)
         if(tariffData){
           this.tariffFormGroup.patchValue(tariffData.data);
           this.patchComboStatus(tariffData.data.combo_status);
@@ -195,6 +199,8 @@ export class TariffDetailsAEComponent {
             provider_id: provider?.id,
             network_operator_id: network_operator?.id
           });
+
+          this.productService.updateTariffLoadedState('tariff', true);
         }   
       })
   }

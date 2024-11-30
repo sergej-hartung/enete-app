@@ -13,7 +13,11 @@ class TariffAttributeGroupMapping extends Model
     protected $table = 'tariff_attribute_group_mappings';
 
     protected $fillable = [
-        'attribute_group_id', 'attribute_id', 'position'
+        'attribute_group_id', 
+        'attribute_id', 
+        'position', 
+        'created_by', 
+        'updated_by'
     ];
 
     public $timestamps = false;
