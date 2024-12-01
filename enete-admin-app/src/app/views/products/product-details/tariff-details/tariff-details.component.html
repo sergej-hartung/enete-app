@@ -1,41 +1,189 @@
 <div class="row no-gutters pt-1 ps-2 pe-2" *ngIf="tariff && tariff !== null">
     <div class="col">
-        <app-card *ngIf="tariff?.attribute_groups">
-            <div card-header>Tarif Attribute</div>
-            <div card-body>
-                <div class="custom-body">
-                    <div
-                        class="tariff-details-attr-group"
-                    >
-                        <div 
-                            class="tariff-details-tpl-wrapp"
-                            *ngFor="let attribute_group of tariff.attribute_groups; let i = index"
-                        >
-                            <div class="tariff-details-title">
-                                <span>{{ attribute_group?.name }}</span>
+        <button class="btn btn-link" (click)="toggleCollapseTariffCharacteristics()">
+            <i class="fas fa-list"></i> Tarifeigenschaften 
+            <i 
+                [ngClass]="{'fa-regular fa-eye green': !tariffCharacteristicsCollapsed, 'fa-solid fa-eye-slash red': tariffCharacteristicsCollapsed }"
+            ></i>
+        </button>
+        <div class="tpl-setting-wrapp" [ngbCollapse]="tariffCharacteristicsCollapsed">
+            <div class="tariff-details-attr-group">
+                <div class="tariff-details-tpl-wrapp">
+                    <div class="tariff-details-title">
+                        <span>{{ tariff?.name }}</span>
+                    </div>
+                    <div>
+                        <ng-container *ngIf="tariff?.id">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Id
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.id}}
+                                </div>
+                                
                             </div>
-                            <div *ngFor="let attribute of attribute_group?.attributs; let j = index">
-                                <div class="d-flex" *ngIf="attribute?.pivot?.is_active && attribute?.is_frontend_visible">
-                                    <div class="attr-name col-7">
-                                        {{attribute?.name}}
-                                    </div>
-                                    <!-- <div class="attr_value col">
-                                        <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
-                                            {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
-                                        </ng-container>
-                                        <ng-template #nonNumericTemplate>
-                                            {{ attributeCtrl.value.value_varchar }}
-                                        </ng-template>
-                                    </div>
-                                    <div class="attr-unit col">
-                                        {{ attributeCtrl.value.unit }}
-                                    </div> -->
-                                </div>   
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.external_id">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Id-Extern
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.external_id}}
+                                </div>
                             </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.name">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Name
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.name}}
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.name_short">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Name Kurz
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.name_short}}
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.status?.name">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Status
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.status?.name}}
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.is_published !== undefined && ( tariff?.is_published || !tariff?.is_published)">
+                            <div class="d-flex"> 
+                                <div class="attr-name col-6">
+                                    Web Aktiv
+                                </div>
+                                <div class="attr_value col-6">
+                                    <ng-container *ngIf="tariff?.is_published">
+                                        Aktiv
+                                    </ng-container>
+                                    <ng-container *ngIf="!tariff?.is_published">
+                                        Inaktiv
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.provider?.name">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Provider
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.provider?.name}}
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.network_operator?.name">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Netzbetreiber
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.network_operator?.name}}
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.document?.original_name">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Dokument
+                                </div>
+                                <div class="attr_value col-6">
+                                    {{tariff?.document?.original_name}}
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="tariff?.note">
+                            <div class="d-flex">
+                                <div class="attr-name col-6">
+                                    Notiz
+                                </div>
+                                <div class="attr_value col-6">                                    
+                                    <button class="p-0 ps-0 btn btn-link devault" (click)="toogleTariffNote()">Text</button>
+                                </div>
+                            </div>
+                        </ng-container>
+                        <div class="col-12 tpl-setting-wrapp p-3" [ngbCollapse]="tariffNoteCollapsed">
+                            {{tariff?.note}}
                         </div>
                     </div>
-                </div>                           
-            </div>
-        </app-card>
+                </div>
+            </div>    
+        </div>                              
+    </div>
+</div>
+
+<div class="row no-gutters pt-1 ps-2 pe-2" *ngIf="tariff && tariff !== null && tariff?.attribute_groups && tariff?.attribute_groups?.length">
+    <div class="col">
+        <button class="btn btn-link" (click)="toggleCollapseTariffAttribute()">
+            <i class="fas fa-list"></i> Tarif Attribute 
+            <i 
+                [ngClass]="{'fa-regular fa-eye green': !tariffAttributeCollapsed, 'fa-solid fa-eye-slash red': tariffAttributeCollapsed }"
+            ></i>
+        </button>
+        <div class="tpl-setting-wrapp" [ngbCollapse]="tariffAttributeCollapsed">
+            <div
+                class="tariff-details-attr-group"
+            >
+                <div 
+                    class="tariff-details-tpl-wrapp"
+                    *ngFor="let attribute_group of tariff.attribute_groups; let i = index"
+                >
+                    <div class="tariff-details-title">
+                        <span>{{ attribute_group?.name }}</span>
+                    </div>
+                    <div *ngFor="let attribute of attribute_group?.attributs; let j = index">
+                        <div 
+                            class="d-flex" 
+                            [ngClass]="{'attr-not-active': !(attribute?.pivot?.is_active && attribute?.is_frontend_visible)}"
+                            
+                        >
+                            <div class="attr-name col-6">
+                                {{attribute?.name}}
+                            </div>
+                            <div class="attr_value col-4">
+                                <ng-container *ngIf="attribute?.input_type == 'Textbereich' && attribute?.pivot?.value_text; else attributeVarchar">
+                                    <button class="p-0 ps-0 btn btn-link devault" (click)="toggleCollapse(attribute_group.id, attribute.id, j)">Text</button>
+                                </ng-container>
+                                <ng-template #attributeVarchar>
+                                    <ng-container *ngIf="isNumeric(attribute?.pivot?.value_varchar); else nonNumericTemplate">
+                                        {{ attribute?.pivot?.value_varchar | number:'1.2-2' }}
+                                    </ng-container>
+                                    <ng-template #nonNumericTemplate>
+                                        {{ attribute?.pivot?.value_varchar }}
+                                    </ng-template>
+                                </ng-template>                            
+                            </div>
+                            <div class="attr-unit col">
+                                {{ attribute?.unit }}
+                            </div> 
+
+                            
+                        </div>   
+                        <ng-container *ngIf="attribute?.input_type == 'Textbereich' && attribute?.pivot?.value_text">
+                            <div class="col-12 tpl-setting-wrapp pt-3" [ngbCollapse]="isAttributeCollapsed(attribute_group.id, attribute.id, j)">
+                                <div [innerHTML]="getSafeHtml(attribute?.pivot?.value_text ?? null)"></div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>    
+        </div>                              
     </div>
 </div>

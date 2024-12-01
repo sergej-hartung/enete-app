@@ -36,7 +36,7 @@ class TariffUpdateRequest extends FormRequest
             'updated.*.tariff.*.file_id'                            => 'nullable|sometimes|integer|exists:product_documents,id',
             'updated.*.tariff.*.file_name'                          => 'nullable|sometimes|string|max:255',
             'updated.*.tariff.*.group_id'                           => 'nullable|sometimes|integer|exists:tariff_groups,id',
-            'updated.*.tariff.*.is_published'                       => 'nullable|sometimes|integer|boolean',
+            'updated.*.tariff.*.is_published'                       => 'nullable|sometimes|boolean',
             'updated.*.tariff.*.status_id'                          => 'nullable|sometimes|integer|exists:tariff_statuses,id',
 
             
@@ -164,7 +164,7 @@ class TariffUpdateRequest extends FormRequest
             'added.*.tariff.*.file_id'                   => 'nullable|sometimes|integer|exists:product_documents,id',
             'added.*.tariff.*.file_name'                 => 'nullable|sometimes|string|max:255',
             'added.*.tariff.*.group_id'                  => 'nullable|sometimes|integer|exists:tariff_groups,id',
-            'added.*.tariff.*.is_published'              => 'nullable|sometimes|integer|boolean',
+            'added.*.tariff.*.is_published'              => 'nullable|sometimes|boolean',
             'added.*.tariff.*.status_id'                 => 'nullable|sometimes|integer|exists:tariff_statuses,id',
 
 
@@ -289,7 +289,7 @@ class TariffUpdateRequest extends FormRequest
             'deleted.*.tariff.*.file_id'                   => 'nullable|sometimes|integer|exists:product_documents,id',
             'deleted.*.tariff.*.file_name'                 => 'nullable|sometimes|string|max:255',
             'deleted.*.tariff.*.group_id'                  => 'nullable|sometimes|integer|exists:tariff_groups,id',
-            'deleted.*.tariff.*.is_published'              => 'nullable|sometimes|integer|boolean',
+            'deleted.*.tariff.*.is_published'              => 'nullable|sometimes|boolean',
             'deleted.*.tariff.*.status_id'                 => 'nullable|sometimes|integer|exists:tariff_statuses,id',
 
 

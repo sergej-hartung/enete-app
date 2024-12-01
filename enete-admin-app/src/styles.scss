@@ -2092,8 +2092,27 @@ app-tariff-add-edit{
     }
 
     .attr-name{
-        font-weight: 300;
+        font-weight: 500;
         font-size: 11px;
+    }
+
+    .attr-not-active{
+        .attr-name{
+            color: #ccc;
+            font-weight: 300;
+        }
+        .attr_value{
+            color: #ccc;
+            font-weight: 300;
+        }
+        .attr-unit{
+            color: #ccc;
+            font-weight: 300;
+        }
+        .attr-visible{
+            color: #ccc;
+            font-weight: 300;
+        }
     }
 }
 
@@ -2635,5 +2654,16 @@ $f-body:'Open Sans', sans-serif;
     }
     .mat-mdc-snack-bar-label{
         color: #fff !important; /* Белый текст */
+    }
+}
+
+
+.tariff-details-content{
+    min-height: calc(100vh - 40px - 301px);
+    max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 48px);
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
     }
 }

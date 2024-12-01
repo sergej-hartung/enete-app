@@ -3,7 +3,7 @@
       <li [ngbNavItem]="1">
           <button ngbNavLink>Produktdetails</button>
           <ng-template ngbNavContent>
-            <app-tariff-details></app-tariff-details>                    
+              <app-tariff-details class="tariff-details"></app-tariff-details>                             
           </ng-template>
       </li>
       <li [ngbNavItem]="2">
@@ -19,5 +19,5 @@
           </ng-template>
       </li>
   </ul>
-  <div [ngbNavOutlet]="nav" class="pe-0 ps-0"></div>
+  <div [ngbNavOutlet]="nav" class="pe-0 ps-0 tariff-details-content"></div>
 </div>

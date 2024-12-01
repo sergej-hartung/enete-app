@@ -16,7 +16,7 @@ class TariffAttributeGroup extends Model
         'updated_by'
     ];
 
-    protected $touches = ['tariffs'];
+    protected $touches = ['tariff'];
 
     public function tariff()
     {

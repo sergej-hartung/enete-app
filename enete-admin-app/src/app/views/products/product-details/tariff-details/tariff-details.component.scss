@@ -1,0 +1,38 @@
+.btn-link{
+
+    // &.devault{
+    //     color: #6c757d;
+    //     font-size: 11px;
+    // }
+    //color:rgba(0, 0, 0, 0.8);
+    color: rgb(8, 116, 255);
+    font-size: 11px;
+    text-decoration: none;;
+    font-weight: 500;
+    text-decoration: none;
+    padding-left: 0;
+    padding-right: 0;
+
+    .fa-eye{
+        color: green;  
+    }
+    
+    i:first-child{
+        //color: rgb(8, 116, 255);
+        padding-right: 0.25rem;
+    }
+    i:last-child{
+        &.red{
+            color: #dc3545;
+        }
+        &.green{
+            color: #198754;
+        }
+        padding-left: 0.5rem;
+        font-size: 12px;
+    }
+}
+
+// .attr-name{
+//     width: unset;
+// }
