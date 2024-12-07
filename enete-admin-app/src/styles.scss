@@ -1507,6 +1507,10 @@ app-tariff-add-edit{
     }
 }
 
+.firstletterBig{
+    text-transform: capitalize;
+}
+
 .attr-group{
     display: flex;
     flex-grow: 1;
@@ -2116,7 +2120,30 @@ app-tariff-add-edit{
     }
 }
 
-.tariff-details-attr-group{
+// .collapse:not(.show) {
+//     display: block !important; /* Гарантируем, что элемент остаётся в DOM */
+//     height: 0 !important;
+//     visibility: hidden; /* Скроем элемент от пользователя */
+//     overflow: hidden;
+//   }
+
+.tpl-setting-wrapp {
+    transition: height 0.35s ease, padding 0.35s ease;
+    overflow: hidden;
+
+  }
+  
+  .tpl-setting-wrapp[ng-reflect-collapsed="true"] {
+    //height: 0 !important; /* Устанавливаем высоту 0 при закрытии */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  
+
+.tariff-details-attr-group, .tariff-details-matrix{
     min-height: 20px;
 }
 
@@ -2275,6 +2302,25 @@ app-tariff-add-edit{
     }
     .btn {
         border-color: #dee2e6;
+    }
+}
+
+.tariff-details-promo{
+    .tariff-promo-wrapp{
+        padding: 0;
+        &:not(:last-child){
+            margin-bottom: 0.75rem;
+        }
+
+        .header{
+            padding: 0.2rem 0.5rem;
+            .value:first-child {
+                padding-left: 0;
+            }
+        }
+        .body{
+            padding: 0.2rem 0.5rem;
+        }
     }
 }
 

@@ -288,9 +288,6 @@ export class TariffDetailsAEComponent {
     return false;
   }
 
-  test(){
-    console.log(this.tariffForm)
-  }
 
   ngOnDestroy() {
     this.unsubscribe$.next();

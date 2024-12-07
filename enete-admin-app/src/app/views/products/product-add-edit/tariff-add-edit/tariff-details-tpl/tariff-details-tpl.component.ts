@@ -24,7 +24,7 @@ export class TariffDetailsTplComponent {
 
   private unsubscribe$ = new Subject<void>();
 
-  copiedAttributsGroup: Set<number> = new Set();
+  copiedAttributsGroup: Set<string | undefined> = new Set();
   AttributsGroupHidden: Set<number> = new Set();
 
   private subscriptions: Map<number|string, any> = new Map();
@@ -85,7 +85,8 @@ export class TariffDetailsTplComponent {
                     }); 
 
                     this.tariffdetails.push(tariffDetail);
-                    this.subscribeToFormGroupChanges(detail)                 
+                    this.subscribeToFormGroupChanges(detail)         
+                    this.copiedAttributsGroup.add(detail?.uniqueId);        
                 });
 
               this.productService.updateTariffLoadedState('tariffDetails', true);
@@ -97,10 +98,12 @@ export class TariffDetailsTplComponent {
     if (event.previousContainer.id !== this.tariffDropListId){
 
       const movedItem = event.previousContainer.data[event.previousIndex];
+      if(!this.copiedAttributsGroup.has(movedItem.uniqueId)){
+        this.tariffdetails.push(this.setTariffDeailsItem(movedItem))
 
-      this.tariffdetails.push(this.setTariffDeailsItem(movedItem))
-
-      this.subscribeToFormGroupChanges(movedItem)
+        this.subscribeToFormGroupChanges(movedItem)
+        this.copiedAttributsGroup.add(movedItem?.uniqueId);
+      }
     }else{
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.moveTariffDetailsInFormArray(event.previousIndex, event.currentIndex);

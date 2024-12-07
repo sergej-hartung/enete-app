@@ -87,6 +87,7 @@
                 </div>
                 <div 
                     class="attr-group-tpl-wrapp" 
+                    [ngClass]="{'copied-attribute': copiedAttributsGroup.has(attributeGroup?.value?.uniqueId)}"
                     *ngIf="!AttributsGroupHidden.has(i)"
                     cdkDrag
                 >

@@ -215,7 +215,8 @@ export class TariffAttributeComponent implements OnDestroy {
       this.moveControlInFormArray(group.form.get('attributs') as FormArray, event.previousIndex, event.currentIndex);
     } else {
       const attribute = event.previousContainer.data[event.previousIndex];
-      if (!this.attributeExistsInGroup(group, attribute)) {
+
+      if (!this.attributeExistsInGroups(group, attribute)) {
         const copiedAttribute = this.copyAttribute(attribute);
         group.attributs.splice(event.currentIndex, 0, copiedAttribute);
         this.addControlToFormArray(group.form.get('attributs') as FormArray, this.createAttributeFormControl(attribute), event.currentIndex);
@@ -388,8 +389,9 @@ export class TariffAttributeComponent implements OnDestroy {
     formArray.insert(toIndex, control);
   }
 
-  private attributeExistsInGroup(group: Group, attribute: Attribute): boolean {
-    return group.attributs.some(attr => attr.id === attribute.id);
+  private attributeExistsInGroups(group: Group, attribute: Attribute): boolean {
+    return attribute?.isCopied ? true : false
+    //return group.attributs.some(attr => attr.id === attribute.id);
   }
 
   private findOriginalAttribute(attribute: Attribute): Attribute | undefined {

@@ -28,6 +28,7 @@ class TariffFilter extends AbstractFilter{
         $builder->where(function($query) use ($value) {
             $query->where('tariffs.external_id', 'like', "%{$value}%")
                   ->orWhere('tariffs.name_short', 'like', "%{$value}%")
+                  ->orWhere('tariffs.id', $value)
                   ->orWhereHas('provider', function ($subQuery) use ($value) {
                       $subQuery->where('name', 'like', "%{$value}%");
                   });

@@ -18,6 +18,11 @@ interface AttributeCollapseState {
   isCollapsed: boolean;
 }
 
+interface PromoCollapseState {
+  promoId: number | null;
+  isCollapsed: boolean;
+}
+
 @Component({
   selector: 'app-tariff-details',
   templateUrl: './tariff-details.component.html',
@@ -25,11 +30,16 @@ interface AttributeCollapseState {
 })
 export class TariffDetailsComponent {
 
+  isAnimating = false;
+
   tariff: Tariff | null = null
   tariffAttributeCollapsed: boolean = false
+  tariffMatrixCollapsed: boolean = false
+  tariffPromoCollapsed: boolean = false
   tariffCharacteristicsCollapsed: boolean = false
   tariffNoteCollapsed: boolean = true
   collapseStates: AttributeCollapseState[] = []
+  collapsePromoStates: PromoCollapseState[] = []
 
   private unsubscribe$ = new Subject<void>();
 
@@ -55,22 +65,38 @@ export class TariffDetailsComponent {
             this.tariff = response.data
 
             // Инициализация collapseStates для каждого атрибута, который соответствует условиям
-          if (this.tariff && this.tariff.attribute_groups) {
-            this.collapseStates = [];
-            this.tariff.attribute_groups.forEach((group, groupIndex) => {
-              group.attributs.forEach((attribute, attributeIndex) => {
-                if (attribute?.input_type === 'Textbereich' && attribute?.pivot?.value_text) {
-                  this.collapseStates.push({
-                    attributeGroupId: group.id,
-                    attributeId: attribute.id,
-                    attributeIndex: attributeIndex,
-                    isCollapsed: true
-                  });
-                }
+            if (this.tariff && this.tariff?.attribute_groups) {
+              this.collapseStates = [];
+              this.tariff.attribute_groups.forEach((group, groupIndex) => {
+                group.attributs.forEach((attribute, attributeIndex) => {
+                  if (attribute?.input_type === 'Textbereich' && attribute?.pivot?.value_text) {
+                    this.collapseStates.push({
+                      attributeGroupId: group.id,
+                      attributeId: attribute.id,
+                      attributeIndex: attributeIndex,
+                      isCollapsed: true
+                    });
+                  }
+                });
               });
-            });
-          }
-            console.log(this.collapseStates)
+            }
+
+            if(this.tariff && this.tariff?.promos){
+              this.collapsePromoStates = [];
+              this.tariff.promos.forEach((promo, promoIndex) => {
+                if(promo?.end_date && this.isPromoExpired(promo?.end_date)){
+                  this.collapsePromoStates.push({
+                    promoId: promo.id,
+                    isCollapsed: true
+                  })
+                }else{
+                  this.collapsePromoStates.push({
+                    promoId: promo.id,
+                    isCollapsed: false
+                  })
+                }
+              })
+            }
           }
         })
   }
@@ -81,8 +107,21 @@ export class TariffDetailsComponent {
                        collapseState.attributeId === attributeId &&
                        collapseState.attributeIndex === attributeIndex
     );
+
     if (state) {
-      state.isCollapsed = !state.isCollapsed;
+      requestAnimationFrame(() => {
+        state.isCollapsed = !state.isCollapsed;
+      });
+    }
+  }
+
+  togglePromoCollapse(promoId: number | null): void {
+    const state = this.collapsePromoStates.find(promoState => promoState.promoId === promoId );
+    console.log(state)
+    if (state) {
+      requestAnimationFrame(() => {
+        state.isCollapsed = !state.isCollapsed;
+      });
     }
   }
 
@@ -96,12 +135,25 @@ export class TariffDetailsComponent {
     return state ? state.isCollapsed : true; // если не найдено состояние, по умолчанию возвращаем true
   }
 
+  isPromoCollapsed(promoId: number | null): boolean {
+    const state = this.collapsePromoStates.find(promoState => promoState.promoId == promoId)
+    return state ? state.isCollapsed : true;
+  }
+
   getSafeHtml(html: string | null): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html || '');
   }
 
   toggleCollapseTariffAttribute(){
     this.tariffAttributeCollapsed = !this.tariffAttributeCollapsed
+  }
+
+  toggleCollapseTariffMatrix(){
+    this.tariffMatrixCollapsed = !this.tariffMatrixCollapsed
+  }
+
+  toggleCollapseTariffPromo(){
+    this.tariffPromoCollapsed = !this.tariffPromoCollapsed
   }
 
   toggleCollapseTariffCharacteristics(){
@@ -114,6 +166,13 @@ export class TariffDetailsComponent {
 
   isNumeric(value: any): boolean {
     return !isNaN(parseFloat(value)) && isFinite(value);
+  }
+
+  isPromoExpired(endDate: string): boolean {
+    const currentDate = new Date();
+    const promoEndDate = new Date(endDate);
+
+    return promoEndDate.setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0);
   }
 
 

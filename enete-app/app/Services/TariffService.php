@@ -229,6 +229,7 @@ class TariffService{
                         
                         foreach($attributs as $atribute){
                             $value = $atribute;
+
                             $attributeId = $value['id'];
                             
                             if($attributeId && $attributeGroup){
@@ -296,7 +297,13 @@ class TariffService{
             
                             if ($tariffAttribute) {
                                 // Определяем позицию как индекс в массиве + 1
-                                $position = $index + 1;
+                                $position = 0;
+                                if(isset($attributeData['position']) && $attributeData['position']){
+                                    $position = $attributeData['position'];
+                                }else{
+                                    $position = $index + 1;
+                                }
+                                
             
                                 // Привязываем атрибут к группе через pivot таблицу tariff_attribute_group_mappings
                                 $attributeGroup->attributes()->attach(

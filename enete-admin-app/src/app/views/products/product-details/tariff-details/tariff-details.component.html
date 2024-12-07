@@ -1,7 +1,7 @@
 <div class="row no-gutters pt-1 ps-2 pe-2" *ngIf="tariff && tariff !== null">
     <div class="col">
         <button class="btn btn-link" (click)="toggleCollapseTariffCharacteristics()">
-            <i class="fas fa-list"></i> Tarifeigenschaften 
+            <i class="fas fa-box"></i> Tarifeigenschaften 
             <i 
                 [ngClass]="{'fa-regular fa-eye green': !tariffCharacteristicsCollapsed, 'fa-solid fa-eye-slash red': tariffCharacteristicsCollapsed }"
             ></i>
@@ -59,7 +59,7 @@
                                 <div class="attr-name col-6">
                                     Status
                                 </div>
-                                <div class="attr_value col-6">
+                                <div class="attr_value firstletterBig col-6">
                                     {{tariff?.status?.name}}
                                 </div>
                             </div>
@@ -119,8 +119,10 @@
                                 </div>
                             </div>
                         </ng-container>
-                        <div class="col-12 tpl-setting-wrapp p-3" [ngbCollapse]="tariffNoteCollapsed">
-                            {{tariff?.note}}
+                        <div class="col-12 tpl-setting-wrapp" [ngbCollapse]="tariffNoteCollapsed">
+                            <div class="p-3">
+                                {{tariff?.note}}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,11 +178,104 @@
 
                             
                         </div>   
+                        
                         <ng-container *ngIf="attribute?.input_type == 'Textbereich' && attribute?.pivot?.value_text">
-                            <div class="col-12 tpl-setting-wrapp pt-3" [ngbCollapse]="isAttributeCollapsed(attribute_group.id, attribute.id, j)">
-                                <div [innerHTML]="getSafeHtml(attribute?.pivot?.value_text ?? null)"></div>
+                            <div 
+                                class="col-12 tpl-setting-wrapp " 
+                                [attr.data-attribute-id]="attribute.id" 
+                                [ngbCollapse]="isAttributeCollapsed(attribute_group.id, attribute.id, j)"
+                            >
+                                <!-- <div>Test Test</div> -->
+                                <ng-container *ngIf="attribute?.pivot?.value_text">
+                                    <div class="pt-3">
+                                        <div [innerHTML]="getSafeHtml(attribute?.pivot?.value_text ?? null)"></div>
+                                    </div>
+                                </ng-container>
+                                <!-- <div [innerHTML]="getSafeHtml(attribute?.pivot?.value_text ?? null)"></div> -->
                             </div>
                         </ng-container>
+                    </div>
+                </div>
+            </div>    
+        </div>                              
+    </div>
+</div>
+
+<div class="row no-gutters pt-1 ps-2 pe-2" *ngIf="tariff && tariff !== null && tariff?.calc_matrix && tariff?.calc_matrix?.length">
+    <div class="col">
+        <button class="btn btn-link" (click)="toggleCollapseTariffMatrix()">
+            <i class="fa-solid fa-calculator"></i> Kalkulations-Matrix
+            <i 
+                [ngClass]="{'fa-regular fa-eye green': !tariffMatrixCollapsed, 'fa-solid fa-eye-slash red': tariffMatrixCollapsed }"
+            ></i>
+        </button>
+        <div class="tpl-setting-wrapp" [ngbCollapse]="tariffMatrixCollapsed">
+            <div
+                class="tariff-details-matrix"
+            >
+                <div 
+                    class="tariff-details-tpl-wrapp"
+                    *ngFor="let matrix of tariff.calc_matrix; let i = index"
+                >
+                    <div class="d-flex">
+                        <div *ngIf="matrix?.name" class="attr-name col-6">{{matrix.name}}</div>
+                        <div *ngIf="matrix?.total_value" class="attr_value col-4">{{matrix.total_value}}</div>
+                        <div *ngIf="matrix?.unit" class="attr-unit col">{{matrix.unit}}</div>
+                    </div>
+                </div>
+            </div>    
+        </div>                              
+    </div>
+</div>
+
+<div class="row no-gutters pt-1 ps-2 pe-2" *ngIf="tariff && tariff !== null && tariff?.promos && tariff?.promos?.length">
+    <div class="col">
+        <button class="btn btn-link" (click)="toggleCollapseTariffPromo()">
+            <i class="fa-solid fa-bullhorn"></i> Promos
+            <i 
+                [ngClass]="{'fa-regular fa-eye green': !tariffPromoCollapsed, 'fa-solid fa-eye-slash red': tariffPromoCollapsed }"
+            ></i>
+        </button>
+        <div class="tpl-setting-wrapp" [ngbCollapse]="tariffPromoCollapsed">
+            <div
+                class="tariff-details-promo"
+            >
+                <div 
+                    class="tariff-promo-wrapp"
+                    *ngFor="let promo of tariff.promos; let i = index"
+                >
+                    <div class="tariff-promo" [ngClass]="{'expired': isPromoExpired(promo.end_date)}">
+                        <div class="header">
+                            <div class="col">
+                                <!-- <span class="name">Titel:</span> -->
+                                <span *ngIf="promo?.title" class="value">{{promo.title}}</span>
+                            </div>
+                            <div class="col-3">
+                                <span *ngIf="promo?.start_date" class="name">von:</span>
+                                <span *ngIf="promo?.start_date"  class="value">{{promo.start_date | date: 'dd.MM.yyyy'}}</span>
+                            </div>
+                            <div class="col-3">
+                                <span *ngIf="promo?.end_date" class="name">bis:</span>
+                                <span *ngIf="promo?.end_date" class="value">{{promo.end_date | date: 'dd.MM.yyyy'}}</span>
+                            </div>
+                        </div>
+                        <div class="body">
+                            <div class="col-12 promo-details-accordion accordion">
+                                <div class="accordion-item">
+                                    <button 
+                                        class="p-0 ps-0 btn btn-link devault" 
+                                        (click)="togglePromoCollapse(promo.id)"
+                                    > Promo Text </button>                                   
+                                    <div [ngbCollapse]="isPromoCollapsed(promo.id)">
+                                        <ng-container *ngIf="promo?.text_long">
+                                            <div class="pt-3">
+                                                <div [innerHTML]="getSafeHtml(promo?.text_long ?? null)"></div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>    

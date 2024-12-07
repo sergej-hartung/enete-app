@@ -16,7 +16,7 @@ class TariffStatusSeeder extends Seeder
             ['id' => 1, 'name' => 'aktiv',          'icon' => 'fas fa-check-circle', 'color' => '#69B548', 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],
             ['id' => 2, 'name' => 'inaktiv',       'icon' => 'fas fa-times-circle', 'color' => '#c00', 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],
             ['id' => 3, 'name' => 'unvollstaendig', 'icon' => 'fas fa-question-circle', 'color' => '#F8BC03', 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],
-            ['id' => 4, 'name' => 'Archiv',         'icon' => 'fas fa-archive', 'color' => '#542200', 'created_by' => 1, 'updated_by' => null, 'created_at' => now()]
+            ['id' => 4, 'name' => 'archiv',         'icon' => 'fas fa-archive', 'color' => '#542200', 'created_by' => 1, 'updated_by' => null, 'created_at' => now()]
         ]);
     }
 }
