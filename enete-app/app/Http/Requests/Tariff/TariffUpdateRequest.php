@@ -38,7 +38,8 @@ class TariffUpdateRequest extends FormRequest
             'updated.*.tariff.*.group_id'                           => 'nullable|sometimes|integer|exists:tariff_groups,id',
             'updated.*.tariff.*.is_published'                       => 'nullable|sometimes|boolean',
             'updated.*.tariff.*.status_id'                          => 'nullable|sometimes|integer|exists:tariff_statuses,id',
-
+            'updated.*.tariff.*.period'                             => 'nullable|sometimes|string|max:255',
+            'updated.*.tariff.*.periodeTyp'                         => 'nullable|sometimes|string|max:255',
             
 
 
@@ -166,6 +167,8 @@ class TariffUpdateRequest extends FormRequest
             'added.*.tariff.*.group_id'                  => 'nullable|sometimes|integer|exists:tariff_groups,id',
             'added.*.tariff.*.is_published'              => 'nullable|sometimes|boolean',
             'added.*.tariff.*.status_id'                 => 'nullable|sometimes|integer|exists:tariff_statuses,id',
+            'added.*.tariff.*.period'                    => 'nullable|sometimes|string|max:255',
+            'added.*.tariff.*.periodeTyp'                => 'nullable|sometimes|string|max:255',
 
 
             'added.*.attribute_groups'                             => 'nullable|sometimes|array',
@@ -291,6 +294,8 @@ class TariffUpdateRequest extends FormRequest
             'deleted.*.tariff.*.group_id'                  => 'nullable|sometimes|integer|exists:tariff_groups,id',
             'deleted.*.tariff.*.is_published'              => 'nullable|sometimes|boolean',
             'deleted.*.tariff.*.status_id'                 => 'nullable|sometimes|integer|exists:tariff_statuses,id',
+            'deleted.*.tariff.*.period'                    => 'nullable|sometimes|string|max:255',
+            'deleted.*.tariff.*.periodeTyp'                => 'nullable|sometimes|string|max:255',
 
 
             'deleted.*.attribute_groups'                             => 'nullable|sometimes|array',

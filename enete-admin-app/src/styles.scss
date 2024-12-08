@@ -1198,11 +1198,11 @@ app-tariff-add-edit{
     color: #717386;
     border: 2px dashed #717386;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 14px;
     overflow-x: auto;
     width: 100%;
     margin: 0.75rem 0;
-    height: 95px;
+    height: 39px;
 
     &:hover{
         border: 2px solid #717386;
@@ -2711,5 +2711,82 @@ $f-body:'Open Sans', sans-serif;
 
     &::-webkit-scrollbar {
         display: none;
+    }
+}
+
+
+.tariff-view{
+    padding: 1rem ;
+    font-family: roboto;
+
+    .left-block{
+        max-width: 240px;
+        border-right: 1px dashed #C5CEE0;
+        padding-right: 1rem;
+    }
+
+    .tariff-name-short{
+        font-size: 14px;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo-container{
+        height: 70px; 
+        width: 100%; 
+        overflow: hidden;
+        margin-bottom: 1rem;
+    }
+
+    .logo-image {
+        max-height: 100%; /* Логотип не превышает высоту контейнера */
+        max-width: 100%;  /* Логотип не превышает ширину контейнера */
+        height: auto;     /* Масштабируется автоматически */
+        width: auto;      /* Сохраняет пропорции */
+        //margin: auto;     /* Центрирует изображение внутри контейнера */
+        margin-bottom: auto;
+        display: block;   /* Убирает лишние отступы */
+    }
+
+    .tariff-period{
+        font-size: 12px;
+        color: #8F9BB3;
+        
+        i{
+            margin-right: 0.5rem;
+        }
+    }
+
+    .separatort{
+        border-right: 1px solid #8F9BB3;
+    }
+    .network-operator{
+        height: 16px;
+        padding-top: 1px;
+        //.logo-image
+    }
+
+    .attribut-group{
+        padding-left: 0.5rem;
+    }
+
+    .attribute-icon{
+       color: #8F9BB3;
+    }
+
+    .attribute-name{
+        color: #6c757d;
+        font-size: 11px;
+        line-height: 11px;
+    }
+
+    .attribute-value{
+        font-size: 14px;
+        font-weight: bold;
+
+
+        .attribute-unit{
+            margin-left: 0.25rem;
+            font-weight: 300;
+        }
     }
 }

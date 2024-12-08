@@ -64,6 +64,7 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
             this.preloaderService.show('Creating')
             const value = this.tariffForm.value
             this.tariffService.addItem(value)
+            console.log(JSON.stringify(value))
             console.log(value)
             // this.addOrEditProducts = true
             // this.productService.setProductMode(button)

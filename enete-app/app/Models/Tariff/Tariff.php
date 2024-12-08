@@ -36,6 +36,8 @@ class Tariff extends Model
         'note', 
         'file_id', 
         'is_from_api', 
+        'period',
+        'periodeTyp',
         'created_by', 
         'updated_by'
     ];

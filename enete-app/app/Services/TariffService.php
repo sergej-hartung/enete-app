@@ -123,6 +123,7 @@ class TariffService{
     public function createTariff($request, $data){
 
         $tariff_value = isset($data['tariff']) ? $data['tariff'] : null;
+
         $tariff = $this->handleTariff($tariff_value);
 
         if (!$tariff) {

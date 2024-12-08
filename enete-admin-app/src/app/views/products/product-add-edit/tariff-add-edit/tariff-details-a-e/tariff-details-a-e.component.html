@@ -73,6 +73,66 @@
                     </div>
                 </div>
                 <div formGroupName="tariff" class="row">
+                    <div class="col pe-1" >
+                        <label class="form-label custom-label-sm required" for="periodeTyp">Zeitraum auswählen</label>
+                        <select 
+                          id="periodeTyp" 
+                          formControlName="periodeTyp" 
+                          class="form-select form-select-sm"
+                          [ngClass]="{'is-invalid': (tariffFormGroup.get('periodeTyp')?.errors && tariffFormGroup.get('periodeTyp')?.touched)}"
+                        >
+                          <option value="day">Tag</option>
+                          <option value="month">Monat</option>
+                          <option value="quarter">Quartal</option>
+                          <option value="jahr">Jahr</option>
+                        </select>
+                    </div>
+                    <div class="col-5 ps-1">
+                        <label class="form-label custom-label-sm required" for="period">Dauer</label>
+                        <input
+                          type="text"
+                          id="period"
+                          formControlName="period"
+                          [ngClass]="{'is-invalid': (tariffFormGroup.get('period')?.errors && tariffFormGroup.get('period')?.touched)}"
+                          class="form-control form-control-sm"
+                        />
+                      </div>
+                    <!-- <div class="col pe-1">
+                        <label for="name-short" 
+                            class="form-label custom-label-sm"
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('name_short'))}"
+                        >Name kurz</label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-sm" 
+                            [ngClass]="{'is-invalid': tariffFormGroup.get('name_short')?.errors && tariffFormGroup.get('name_short')?.touched}"
+                            id="name-short"
+                            formControlName="name_short"
+                        >
+                        <div *ngIf="tariffFormGroup.get('name_short')?.errors && tariffFormGroup.get('name_short')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('name_short')?.errors?.['required']">Name kurz ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('name_short')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
+                    </div>
+                    <div class="col-7 ps-1">
+                        <label for="name" 
+                            class="form-label custom-label-sm" 
+                            [ngClass]="{'required': isRequired(tariffFormGroup.get('name'))}"
+                            >Name</label>
+                        <input 
+                            type="text" 
+                            class="form-control form-control-sm" 
+                            [ngClass]="{'is-invalid': tariffFormGroup.get('name')?.errors && tariffFormGroup.get('name')?.touched}"
+                            id="name"
+                            formControlName="name"
+                        >
+                        <div *ngIf="tariffFormGroup.get('name')?.errors && tariffFormGroup.get('name')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffFormGroup.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+                            <div *ngIf="tariffFormGroup.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
+                    </div> -->
+                </div>
+                <div formGroupName="tariff" class="row">
                     <div class="col pe-1">
                         <label for="id-extern" 
                             class="form-label custom-label-sm"

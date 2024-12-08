@@ -20,12 +20,10 @@ class TariffStoreController extends Controller
 
     public function __invoke(TariffRequest $request)
     {
-        //var_dump($request);
+        
         try {
             DB::beginTransaction();
                 $this->tariffService->createTariff($request, $request->validated());
-            // $this->userProfileService->createEmployeeProfile($request, $request->validated());
-
             DB::commit();
             return response('', 201);
         } catch (\Exception $exception) {

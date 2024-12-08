@@ -40,6 +40,8 @@ class ShowTariffResource extends JsonResource
             'is_published'        => $this->is_published,
             'note'                => $this->note,
             'file_id'             => $this->file_id,
+            'period'              => $this->period,
+            'periodeTyp'          => $this->periodeTyp,
             'calc_matrix'         => IndexCalcMatrixResource::collection($this->whenLoaded('clacMatrices')),
             'created_by'          => $this->created_by,
             'updated_by'          => $this->updated_by,

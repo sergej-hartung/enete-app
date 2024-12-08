@@ -34,7 +34,8 @@ class TariffRequest extends FormRequest
             'tariff.note'                                  => 'nullable|string',
             'tariff.provider_id'                           => 'nullable|integer|exists:tariff_providers,id',
             'tariff.status_id'                             => 'nullable|integer|exists:tariff_statuses,id',
-
+            'tariff.period'                                => 'nullable|sometimes|string|max:255',
+            'tariff.periodeTyp'                            => 'nullable|sometimes|string|max:255',
 
             'attribute_groups'                             => 'nullable|sometimes|array',
             'attribute_groups.*.id'                        => 'nullable|sometimes|integer|exists:tariff_attribute_groups,id',

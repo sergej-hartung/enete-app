@@ -42,6 +42,7 @@ import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
 import { AttributeBoxComponent } from './product-add-edit/tariff-add-edit/tariff-view-template/attribute-box/attribute-box.component';
 import { TariffDetailsTplComponent } from './product-add-edit/tariff-add-edit/tariff-details-tpl/tariff-details-tpl.component';
 import { TariffDetailsComponent } from './product-details/tariff-details/tariff-details.component';
+import { TariffViewComponent } from './product-list/tariff-list/tariff-view/tariff-view.component';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { TariffDetailsComponent } from './product-details/tariff-details/tariff-
     AttributeBoxComponent,
     TariffDetailsTplComponent,
     TariffDetailsComponent,
+    TariffViewComponent,
     //FileSizePipe,
   ],
   imports: [

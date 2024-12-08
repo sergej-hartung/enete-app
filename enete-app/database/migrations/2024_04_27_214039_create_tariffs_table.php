@@ -28,6 +28,8 @@ return new class extends Migration
             $table->text('note')->nullable();
             $table->unsignedBigInteger('file_id')->nullable();
             $table->boolean('is_from_api')->nullable();
+            $table->string('period')->nullable();
+            $table->string('periodeTyp')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();
