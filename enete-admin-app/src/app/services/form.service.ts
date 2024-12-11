@@ -162,8 +162,8 @@ export class FormService {
         note:                ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
         file_id:             ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
         file_name:           ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
-        period:              ['', [Validators.required]],
-        periodeTyp:          ['', [Validators.required]]
+        // period:              ['', [Validators.required]],
+        // periodeTyp:          ['', [Validators.required]]
         
       }),
       combo_status: this.fb.array([]), // New field

@@ -72,7 +72,7 @@
                         </div>
                     </div>
                 </div>
-                <div formGroupName="tariff" class="row">
+                <!-- <div formGroupName="tariff" class="row">
                     <div class="col pe-1" >
                         <label class="form-label custom-label-sm required" for="periodeTyp">Zeitraum auswählen</label>
                         <select 
@@ -96,42 +96,8 @@
                           [ngClass]="{'is-invalid': (tariffFormGroup.get('period')?.errors && tariffFormGroup.get('period')?.touched)}"
                           class="form-control form-control-sm"
                         />
-                      </div>
-                    <!-- <div class="col pe-1">
-                        <label for="name-short" 
-                            class="form-label custom-label-sm"
-                            [ngClass]="{'required': isRequired(tariffFormGroup.get('name_short'))}"
-                        >Name kurz</label>
-                        <input 
-                            type="text" 
-                            class="form-control form-control-sm" 
-                            [ngClass]="{'is-invalid': tariffFormGroup.get('name_short')?.errors && tariffFormGroup.get('name_short')?.touched}"
-                            id="name-short"
-                            formControlName="name_short"
-                        >
-                        <div *ngIf="tariffFormGroup.get('name_short')?.errors && tariffFormGroup.get('name_short')?.touched" class="invalid-feedback d-block">
-                            <div *ngIf="tariffFormGroup.get('name_short')?.errors?.['required']">Name kurz ist erforderlich.</div>
-                            <div *ngIf="tariffFormGroup.get('name_short')?.errors?.['pattern']">Ungültiges Format.</div>
-                        </div>
-                    </div>
-                    <div class="col-7 ps-1">
-                        <label for="name" 
-                            class="form-label custom-label-sm" 
-                            [ngClass]="{'required': isRequired(tariffFormGroup.get('name'))}"
-                            >Name</label>
-                        <input 
-                            type="text" 
-                            class="form-control form-control-sm" 
-                            [ngClass]="{'is-invalid': tariffFormGroup.get('name')?.errors && tariffFormGroup.get('name')?.touched}"
-                            id="name"
-                            formControlName="name"
-                        >
-                        <div *ngIf="tariffFormGroup.get('name')?.errors && tariffFormGroup.get('name')?.touched" class="invalid-feedback d-block">
-                            <div *ngIf="tariffFormGroup.get('name')?.errors?.['required']">Name ist erforderlich.</div>
-                            <div *ngIf="tariffFormGroup.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
-                        </div>
-                    </div> -->
-                </div>
+                      </div>                   
+                </div> -->
                 <div formGroupName="tariff" class="row">
                     <div class="col pe-1">
                         <label for="id-extern" 

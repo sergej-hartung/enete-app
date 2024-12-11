@@ -1202,7 +1202,7 @@ app-tariff-add-edit{
     overflow-x: auto;
     width: 100%;
     margin: 0.75rem 0;
-    height: 39px;
+    height: 94px;
 
     &:hover{
         border: 2px solid #717386;
@@ -2725,9 +2725,33 @@ $f-body:'Open Sans', sans-serif;
         padding-right: 1rem;
     }
 
+    .middle-block{
+        border-right: 1px dashed #C5CEE0;
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    .end-block {
+        //max-width: 140px;
+        padding-left: 1rem;
+        display: flex; /* Устанавливаем Flexbox для внутреннего выравнивания */
+        flex-direction: column; /* Элементы идут вертикально */
+        //align-items: flex-end; /* Прижимает весь блок к правому краю */
+        
+        // .attribut-group {
+        //     max-width: calc(140px - (var(--bs-gutter-x)* 0.5)*2);
+        // }
+
+        .attribute-name, .attribute-value{
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+    }
+
     .tariff-name-short{
         font-size: 14px;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     .logo-container{
@@ -2759,6 +2783,13 @@ $f-body:'Open Sans', sans-serif;
     .separatort{
         border-right: 1px solid #8F9BB3;
     }
+
+    .separator-bottom-block{
+        margin-left: -1rem;
+        margin-right: -1rem;
+        border-color: #dee2e6;
+        opacity: 1;
+    }
     .network-operator{
         height: 16px;
         padding-top: 1px;
@@ -2766,7 +2797,7 @@ $f-body:'Open Sans', sans-serif;
     }
 
     .attribut-group{
-        padding-left: 0.5rem;
+        //padding-left: 0.5rem;
     }
 
     .attribute-icon{
@@ -2788,5 +2819,72 @@ $f-body:'Open Sans', sans-serif;
             margin-left: 0.25rem;
             font-weight: 300;
         }
+    }
+
+    .attribute-text-value{
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        & > * {
+            font-size: 14px;
+            line-height: 22px;
+            padding-bottom: 2px;
+        }
+
+        p{
+            margin-bottom: 0;
+        }
+    }
+
+    .bottom-block{
+        margin-left: -1rem;
+        margin-right: -1rem;
+        border-top: 1px solid #dee2e6;
+        padding-top: 1rem;
+        background-color: #f6f7f9;
+    }
+
+    .btn-colapse{
+        margin-left: 1rem;
+        font-size: 11px;
+        line-height: 17px;
+        font-weight: 500;
+        border-top: 4px solid #c6ccd9;
+        border-left: 1px solid #f6f7f9;
+        border-right: 1px solid #f6f7f9;
+        border-bottom: none;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+
+        &:hover{
+            border-left-color: #dee2e6;
+            border-right-color: #dee2e6;
+        }
+
+        &.active{
+            border-top-color: #7D1120;
+            color: #7D1120;
+            border-left-color: #dee2e6;
+            border-right-color: #dee2e6;
+        }
+    }
+
+    .tariff-details-tpl-wrapp{
+        height: 100%;
+        background-color: #f6f7f9;
+        .attr-name{
+            align-content: normal;
+        }
+    }
+
+    .first-block-tariff-details{
+        .tariff-details-attr-group{
+            height: 100%; 
+        }
+
+        .tariff-details-tpl-wrapp{
+            border-left: 3px solid #7D1120;
+        }
+
+        
     }
 }
