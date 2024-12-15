@@ -5,6 +5,6 @@ export interface NetworkOperatorData {
 export interface NetworkOperator {
     id: number;
     name: string;
-    logo: string;
+    logo_id: number;
 }
 

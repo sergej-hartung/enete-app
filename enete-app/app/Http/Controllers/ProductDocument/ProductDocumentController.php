@@ -24,7 +24,7 @@ class ProductDocumentController extends Controller
     public function uploadFile(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:jpeg,jpg,png,gif,pdf'
+            'file' => 'required|mimes:jpeg,jpg,png,gif,pdf,svg'
         ]);
 
         $file = $request->file('file');

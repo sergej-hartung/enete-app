@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tariff_network_operators', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255)->nullable();
-            $table->string('logo', 255)->nullable();
+            $table->unsignedBigInteger('logo_id')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

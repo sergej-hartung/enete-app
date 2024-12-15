@@ -67,11 +67,11 @@
             </div>
         </ng-template>
     </li>
-    <li [ngbNavItem]="2">
+    <li [ngbNavItem]="2" [disabled]="disabledView">
         <button ngbNavLink>Vorschau</button>
         <ng-template ngbNavContent>  
             <app-tariff-view></app-tariff-view>                
         </ng-template>
     </li>
 </ul>
-<div [ngbNavOutlet]="nav" class="pe-0 ps-0"></div>
+<div [ngbNavOutlet]="nav" class="pe-0 ps-0 tariff-details-content"></div>

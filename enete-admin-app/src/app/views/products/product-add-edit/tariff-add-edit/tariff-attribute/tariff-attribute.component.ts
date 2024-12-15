@@ -334,7 +334,8 @@ export class TariffAttributeComponent implements OnDestroy {
         validators.push(Validators.pattern(/^\d+$/));
         break;
       case 'Dezimalzahlen':
-        validators.push(Validators.pattern(/^\d{1,3}(\.\d{3})*(,\d+)?$|^\d+([.,]\d+)?$/));
+        //validators.push(Validators.pattern(/^\d{1,3}(\.\d{3})*(,\d+)?$|^\d+([.,]\d+)?$/));
+        validators.push(Validators.pattern(/^[-+]?\d{1,3}(\.\d{3})*(,\d+)?$|^[-+]?\d+([.,]\d+)?$/));
         break;
       case 'Datumfeld':
         validators.push(Validators.pattern(/^\d{4}-\d{2}-\d{2}$/));

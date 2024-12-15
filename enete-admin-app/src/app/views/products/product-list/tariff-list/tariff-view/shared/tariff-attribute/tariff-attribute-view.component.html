@@ -1,0 +1,36 @@
+<div class="d-flex">
+    <div 
+    *ngIf="showIcon"
+      class="attribute-icon d-flex align-items-center pe-2"
+      [ngClass]="{
+        'align-items-center': showFieldName && showValue, 
+        'align-items-end': !showFieldName && showValue,
+        'align-items-start': showFieldName && !showValue
+      }"
+    >
+      <ng-container *ngIf="icon">
+        <i [ngClass]="icon"></i>
+      </ng-container>
+    </div>
+    <div class="attribut-group">
+      <ng-container *ngIf="showFieldName">
+        <div class="attribute-name">{{ fieldName }}</div>
+      </ng-container>
+
+      <ng-container *ngIf="showValue">
+        <div class="attribute-value" *ngIf="!isHtml">
+          <ng-container *ngIf="isPrice && isNumeric(value); else nonNumericTemplate">
+            {{ value | number:'1.2-2' }}
+          </ng-container>
+          <ng-template #nonNumericTemplate>
+            {{ value }}
+          </ng-template>
+          
+          <span class="attribute-unit" *ngIf="showUnit">{{ unit }}</span>
+        </div>
+        <div class="attribute-text-value" *ngIf="isHtml" [innerHTML]="getSafeHtml(value)">
+          <span class="attribute-unit" *ngIf="showUnit">{{ unit }}</span>
+        </div>
+      </ng-container>
+    </div>
+  </div>

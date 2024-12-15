@@ -10,7 +10,7 @@ class TariffNetworkOperator extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'logo', 'created_by', 'updated_by'];
+    protected $fillable = ['name', 'logo_id', 'created_by', 'updated_by'];
 
     public function groups()
     {

@@ -223,6 +223,20 @@ class TariffAttributesSeeder extends Seeder
                 'updated_by'          => null, 
                 'created_at'          => now()
             ],
+            [
+                'id'                  => 16, 
+                'code'                => 'tariff-laufzeit', 
+                'name'                => 'Tariff-Laufzeit', 
+                'input_type_id'       => 4, 
+                'unit'                => 'Monate',
+                'is_system'           => false,
+                'is_required'         => true,
+                'is_frontend_visible' => true,
+                'details'             => null,
+                'created_by'          => 1, 
+                'updated_by'          => null, 
+                'created_at'          => now()
+            ],
         ]);
     }
 }

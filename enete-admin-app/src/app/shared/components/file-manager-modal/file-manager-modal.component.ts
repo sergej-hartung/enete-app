@@ -193,7 +193,9 @@ export class FileManagerModalComponent {
   getFileType(mimeType: string): string {
     if (mimeType === 'application/pdf') {
       return 'PDF';
-    } else if (mimeType.startsWith('image/')) {
+    } else if (mimeType.startsWith('image/svg+xml')) {
+      return 'SVG';
+    }else if (mimeType.startsWith('image/')) {
       return 'Image';
     }
     return 'Unknown';

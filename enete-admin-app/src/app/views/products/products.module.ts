@@ -43,6 +43,10 @@ import { AttributeBoxComponent } from './product-add-edit/tariff-add-edit/tariff
 import { TariffDetailsTplComponent } from './product-add-edit/tariff-add-edit/tariff-details-tpl/tariff-details-tpl.component';
 import { TariffDetailsComponent } from './product-details/tariff-details/tariff-details.component';
 import { TariffViewComponent } from './product-list/tariff-list/tariff-view/tariff-view.component';
+import { TariffHeaderComponent } from './product-list/tariff-list/tariff-view/tariff-header/tariff-header.component';
+import { TariffCommissionComponent } from './product-list/tariff-list/tariff-view/tariff-commission/tariff-commission.component';
+import { TariffAttributeViewComponent } from './product-list/tariff-list/tariff-view/shared/tariff-attribute/tariff-attribute-view.component';
+import { TariffDetailsViewComponent } from './product-list/tariff-list/tariff-view/tariff-details/tariff-details-view.component';
 
 
 @NgModule({
@@ -67,6 +71,10 @@ import { TariffViewComponent } from './product-list/tariff-list/tariff-view/tari
     TariffDetailsTplComponent,
     TariffDetailsComponent,
     TariffViewComponent,
+    TariffAttributeViewComponent,
+    TariffHeaderComponent,
+    TariffDetailsViewComponent,
+    TariffCommissionComponent,
     //FileSizePipe,
   ],
   imports: [

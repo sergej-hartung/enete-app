@@ -49,7 +49,7 @@ export class TariffDetailsComponent {
     public tariffService: TariffService,
     private sanitizer: DomSanitizer,
     // private notificationService: NotificationService,
-    // private productService: ProductService,
+    private productService: ProductService,
     // private formService: FormService,
     // private preloaderService: PreloaderService,
     // private snackBar: MatSnackBar
@@ -57,48 +57,59 @@ export class TariffDetailsComponent {
 
 
   ngOnInit(): void {
+    this.productService.tariffId$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(response => {
+        //this.resetState()
+        if(!response){
+          this.resetState()
+        }
+        console.log(response)
+      })
+
+
     this.tariffService.detailedData$
       .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(response => {
-          console.log(response)
-          if(response && response?.data && response.entityType == 'Tariff' && (response.requestType == "get" || response.requestType == "patch")){
-            this.tariff = response.data
+      .subscribe(response => {
+        console.log(response)
+        if(response && response?.data && response.entityType == 'Tariff' && (response.requestType == "get" || response.requestType == "patch")){
+          this.tariff = response.data
 
-            // Инициализация collapseStates для каждого атрибута, который соответствует условиям
-            if (this.tariff && this.tariff?.attribute_groups) {
-              this.collapseStates = [];
-              this.tariff.attribute_groups.forEach((group, groupIndex) => {
-                group.attributs.forEach((attribute, attributeIndex) => {
-                  if (attribute?.input_type === 'Textbereich' && attribute?.pivot?.value_text) {
-                    this.collapseStates.push({
-                      attributeGroupId: group.id,
-                      attributeId: attribute.id,
-                      attributeIndex: attributeIndex,
-                      isCollapsed: true
-                    });
-                  }
-                });
-              });
-            }
-
-            if(this.tariff && this.tariff?.promos){
-              this.collapsePromoStates = [];
-              this.tariff.promos.forEach((promo, promoIndex) => {
-                if(promo?.end_date && this.isPromoExpired(promo?.end_date)){
-                  this.collapsePromoStates.push({
-                    promoId: promo.id,
+          // Инициализация collapseStates для каждого атрибута, который соответствует условиям
+          if (this.tariff && this.tariff?.attribute_groups) {
+            this.collapseStates = [];
+            this.tariff.attribute_groups.forEach((group, groupIndex) => {
+              group.attributs.forEach((attribute, attributeIndex) => {
+                if (attribute?.input_type === 'Textbereich' && attribute?.pivot?.value_text) {
+                  this.collapseStates.push({
+                    attributeGroupId: group.id,
+                    attributeId: attribute.id,
+                    attributeIndex: attributeIndex,
                     isCollapsed: true
-                  })
-                }else{
-                  this.collapsePromoStates.push({
-                    promoId: promo.id,
-                    isCollapsed: false
-                  })
+                  });
                 }
-              })
-            }
+              });
+            });
           }
-        })
+
+          if(this.tariff && this.tariff?.promos){
+            this.collapsePromoStates = [];
+            this.tariff.promos.forEach((promo, promoIndex) => {
+              if(promo?.end_date && this.isPromoExpired(promo?.end_date)){
+                this.collapsePromoStates.push({
+                  promoId: promo.id,
+                  isCollapsed: true
+                })
+              }else{
+                this.collapsePromoStates.push({
+                  promoId: promo.id,
+                  isCollapsed: false
+                })
+              }
+            })
+          }
+        }
+      })  
   }
 
   toggleCollapse(attributeGroupId: number, attributeId: number, attributeIndex: number): void {
@@ -173,6 +184,19 @@ export class TariffDetailsComponent {
     const promoEndDate = new Date(endDate);
 
     return promoEndDate.setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0);
+  }
+
+  resetState(){
+    this.isAnimating = false;
+
+    this.tariff = null
+    this.tariffAttributeCollapsed = false
+    this.tariffMatrixCollapsed = false
+    this.tariffPromoCollapsed = false
+    this.tariffCharacteristicsCollapsed = false
+    this.tariffNoteCollapsed = true
+    this.collapseStates = []
+    this.collapsePromoStates = []
   }
 
 

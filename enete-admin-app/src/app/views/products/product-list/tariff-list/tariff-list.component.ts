@@ -27,6 +27,8 @@ export class TariffListComponent {
   proviedersLoaded = false
   networkOperatorsLoaded = false
   tariffStatusesLoaded = false
+
+  disabledView = true
   
   parnerColumns: Tablecolumn[] = [
     { key: 'id', title: '#', sortable: true },
@@ -74,6 +76,15 @@ export class TariffListComponent {
     //     console.log('reset data')
     //     this.resetData()
     //   })
+    this.productService.tariffId$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(response => {
+        if(!response){
+          this.resetState()
+        }else{
+          this.disabledView = false
+        }
+      })
 
       this.tariffService.data$
       .pipe(takeUntil(this.unsubscribe$))
@@ -198,6 +209,18 @@ export class TariffListComponent {
     }
     
     //this.tariffService.fetchDataByGroupId(event.id)
+  }
+
+  resetState(){
+    this.active = 1;
+
+    this.dataLoadedOrNew = false
+    this.IsExpandable = false;
+
+    this.proviedersLoaded = false
+    this.networkOperatorsLoaded = false
+    this.tariffStatusesLoaded = false
+    this.disabledView = true
   }
 
   private resetData(){

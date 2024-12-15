@@ -1,0 +1,116 @@
+<div class="row no-gutters pt-3" *ngIf="tariffDetails.length > 0">
+    <!-- Первый col-6: Большая карта -->
+    <div class="col-6 first-block-tariff-details" *ngIf="tariffDetails[0]">
+        <div class="tariff-details-attr-group p-1">
+            <div class="tariff-details-tpl-wrapp">
+                <div class="tariff-details-title">
+                    <span>{{ tariffDetails[0].name }}</span>
+                </div>
+                <ng-container *ngIf="tariffDetails[0]?.attributs">
+                    <ng-container *ngFor="let attr of tariffDetails[0].attributs">
+                        <ng-container *ngIf="attr?.is_active">
+                            <div>
+                                <div class="d-flex">
+                                    <div class="attr-name col-6">{{ attr.name }}</div>
+                                    <ng-container *ngIf="attr?.value_varchar">
+                                        <div class="attr_value col-4">
+                                            <ng-container *ngIf="utilsService.isPrice(attr.unit) && utilsService.isNumeric(attr.value_varchar); else nonNumericTemplate">
+                                                {{ attr.value_varchar | number:'1.2-2' }}
+                                            </ng-container>
+                                            <ng-template #nonNumericTemplate>
+                                                {{ attr.value_varchar }}
+                                            </ng-template>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="attr?.value_text">
+                                        <div class="attr_value col-4" [innerHTML]="getSafeHtml(attr?.value_text ?? null)"></div>
+                                    </ng-container>
+                                    <div class="attr-unit col">{{ attr.unit }}</div>                                     
+                                </div>
+                            </div>
+                        </ng-container>                                       
+                    </ng-container>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+    <!-- Второй col-6: Две маленькие карточки -->
+    <div class="col-6" *ngIf="tariffDetails.length > 1">
+        <ng-container *ngFor="let smallCard of tariffDetails.slice(1, 3)">
+            <div 
+                class="tariff-details-attr-group p-1"
+                [ngClass]="{'h-100': tariffDetails.length == 2}"
+            >
+                <div class="tariff-details-tpl-wrapp">
+                    <div class="tariff-details-title">
+                        <span>{{ smallCard.name }}</span>
+                    </div>
+                    <ng-container *ngIf="smallCard?.attributs">
+                        <ng-container *ngFor="let attr of smallCard.attributs">
+                            <ng-container *ngIf="attr?.is_active">
+                                <div>
+                                    <div class="d-flex">
+                                        <div class="attr-name col-6">{{ attr.name }}</div>
+                                        <ng-container *ngIf="attr?.value_varchar">
+                                            <div class="attr_value col-4">
+                                                <ng-container *ngIf="utilsService.isPrice(attr.unit) && utilsService.isNumeric(attr.value_varchar); else nonNumericTemplate">
+                                                    {{ attr.value_varchar | number:'1.2-2' }}
+                                                </ng-container> 
+                                                <ng-template #nonNumericTemplate>
+                                                    {{ attr.value_varchar }}
+                                                </ng-template>
+                                            </div>
+                                        </ng-container>
+                                        <ng-container *ngIf="attr?.value_text">
+                                            <div class="attr_value col-4" [innerHTML]="getSafeHtml(attr?.value_text ?? null)"></div>
+                                        </ng-container>
+                                        <div class="attr-unit col">{{ attr.unit }}</div>                                     
+                                    </div>
+                                </div>
+                            </ng-container>                                       
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>                               
+    </div>
+    <!-- Дополнительные col-6: Каждый элемент с 4-го в отдельной колонке -->
+    <ng-container *ngFor="let extraCard of tariffDetails.slice(3)">
+        <div class="col-6">
+            <div class="tariff-details-attr-group p-1">
+                <div class="tariff-details-tpl-wrapp">
+                    <div class="tariff-details-title">
+                        <span>{{ extraCard.name }}</span>
+                    </div>
+                    <ng-container *ngIf="extraCard?.attributs">
+                        <ng-container *ngFor="let attr of extraCard.attributs">
+                            <ng-container *ngIf="attr?.is_active">
+                                <div>
+                                    <div class="d-flex">
+                                        <div class="attr-name col-6">{{ attr.name }}</div>
+                                        <ng-container *ngIf="attr?.value_varchar">
+                                            <div class="attr_value col-4">
+                                                <ng-container *ngIf="utilsService.isPrice(attr.unit) && utilsService.isNumeric(attr.value_varchar); else nonNumericTemplate">
+                                                    {{ attr.value_varchar | number:'1.2-2' }}
+                                                </ng-container>
+                                                <ng-template #nonNumericTemplate>
+                                                    {{ attr.value_varchar }}
+                                                </ng-template>
+                                            </div>
+                                        </ng-container>
+                                        <ng-container *ngIf="attr?.value_text">
+                                            <div class="attr_value col-4" [innerHTML]="getSafeHtml(attr?.value_text ?? null)"></div>
+                                        </ng-container>
+                                        <div class="attr-unit col">{{ attr.unit }}</div>                                     
+                                    </div>
+                                </div>
+                            </ng-container>                                       
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+

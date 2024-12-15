@@ -1,0 +1,120 @@
+<div class="row">
+    <!-- Левая часть: Логотип и информация -->
+    <div class="col-4 left-block">
+        <div class="logo-container d-flex align-items-center justify-content-center">
+            <ng-container *ngIf="logoProviderContent">
+                <img [src]="logoProviderContent" alt="Provider Logo" class="logo-image">
+            </ng-container>
+        </div>
+
+        <ng-container *ngIf="tariff?.name">
+            <div class="tariff-name-short">{{tariff?.name_short}}</div>
+        </ng-container>     
+
+        <div class="row">
+            <div class="col-7 separatort">
+                <div class="tariff-period" *ngIf="firstTpl">
+                    <div class="row">
+                        <div class="col"> 
+                            <ng-container *ngIf="firstTpl as tpl">
+                                <app-tariff-attribute-view
+                                  [icon]="tpl.icon"
+                                  [showIcon]="tpl.show_icon"
+                                  [showFieldName]="tpl.show_field_name"
+                                  [showValue]="tpl.show_value"
+                                  [showUnit]="tpl.show_unit"
+                                  [fieldName]="getFieldName(tpl)"
+                                  [value]="getValue(tpl).value"
+                                  [isHtml]="getValue(tpl).isHtml"
+                                  [unit]="getUnit(tpl)"
+                                  [getSafeHtml]="getSafeHtml"
+                                ></app-tariff-attribute-view>
+                            </ng-container>                                 
+                        </div>
+                    </div>
+                </div> 
+            </div>
+            <div class="col">
+                <div class="network-operator">
+                    <ng-container *ngIf="logoNetworkOperatorContent">
+                        <img [src]="logoNetworkOperatorContent" alt="Logo" class="logo-image">
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Центральная часть: данные по тарифу -->
+    <div class="col middle-block">
+        <div class="row">
+            <ng-container *ngIf="midleTpls.length > 0">
+                <ng-container *ngFor="let tpl of midleTpls">
+                    <div class="col">  
+                        <app-tariff-attribute-view
+                            [icon]="tpl.icon"
+                            [showIcon]="tpl.show_icon"
+                            [showFieldName]="tpl.show_field_name"
+                            [showValue]="tpl.show_value"
+                            [showUnit]="tpl.show_unit"
+                            [fieldName]="getFieldName(tpl)"
+                            [value]="getValue(tpl).value"
+                            [isHtml]="getValue(tpl).isHtml"
+                            [unit]="getUnit(tpl)"
+                            [getSafeHtml]="getSafeHtml"
+                        >
+                        </app-tariff-attribute-view>                               
+                   </div>
+                </ng-container>
+            </ng-container>                
+        </div>
+        <div class="row">                              
+            <ng-container *ngIf="tariffTpls.length > 0">
+                <ng-container *ngFor="let tpl of tariffTpls.slice(4, 5)">
+                    <div class="col">
+                        <app-tariff-attribute-view
+                              [icon]="tpl.icon"
+                              [showIcon]="tpl.show_icon"
+                              [showFieldName]="tpl.show_field_name"
+                              [showValue]="tpl.show_value"
+                              [showUnit]="tpl.show_unit"
+                              [fieldName]="getFieldName(tpl)"
+                              [value]="getValue(tpl).value"
+                              [isHtml]="getValue(tpl).isHtml"
+                              [unit]="getUnit(tpl)"
+                              [getSafeHtml]="getSafeHtml"
+                            >
+                        </app-tariff-attribute-view>                                  
+                   </div>
+                </ng-container>
+            </ng-container> 
+        </div>
+    </div>
+    <!-- Правая часть: цена и кнопки -->
+    <div class="col-2 end-block">
+        <div class="attribut-groups-wrapp">
+            <ng-container *ngIf="tariffTpls.length > 0">
+                <ng-container *ngFor="let tpl of tariffTpls.slice(5, 8); let i = index">
+                    <div 
+                        class="row"
+                        [ngClass]="{'mt-3': i > 0}"
+                    >
+                        <div class="col"> 
+                            <app-tariff-attribute-view
+                                [icon]="tpl.icon"
+                                [showIcon]="tpl.show_icon"
+                                [showFieldName]="tpl.show_field_name"
+                                [showValue]="tpl.show_value"
+                                [showUnit]="tpl.show_unit"
+                                [fieldName]="getFieldName(tpl)"
+                                [value]="getValue(tpl).value"
+                                [isHtml]="getValue(tpl).isHtml"
+                                [isPrice]="isPrice(tpl)"
+                                [unit]="getUnit(tpl)"
+                                [getSafeHtml]="getSafeHtml"
+                            ></app-tariff-attribute-view>                                 
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>                
+        </div>
+    </div>                       
+</div>

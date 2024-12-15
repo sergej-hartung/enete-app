@@ -5,6 +5,6 @@ export interface ProviderData {
 export interface Provider {
     id: number;
     name: string;
-    logo: string;
+    logo_id: number;
 }
 

@@ -671,6 +671,8 @@ export class FileManagerComponent implements OnInit {
   getFileType(mimeType: string): string {
     if (mimeType === 'application/pdf') {
       return 'PDF';
+    } else if (mimeType.startsWith('image/svg+xml')) {
+      return 'SVG';
     } else if (mimeType.startsWith('image/')) {
       return 'Image';
     }

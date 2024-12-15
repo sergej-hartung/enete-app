@@ -27,7 +27,8 @@ class TariffGroupAttributeMappingsSeeder extends Seeder
             ['id' => 12, 'group_id' => 3, 'attribute_id' => 12, 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],
             ['id' => 13, 'group_id' => 3, 'attribute_id' => 13, 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],
             ['id' => 14, 'group_id' => 3, 'attribute_id' => 14, 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],
-            ['id' => 15, 'group_id' => 3, 'attribute_id' => 15, 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],    
+            ['id' => 15, 'group_id' => 3, 'attribute_id' => 15, 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],  
+            ['id' => 16, 'group_id' => 3, 'attribute_id' => 16, 'created_by' => 1, 'updated_by' => null, 'created_at' => now()],  
         ]);
     }
 }

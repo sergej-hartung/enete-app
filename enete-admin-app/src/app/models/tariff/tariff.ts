@@ -54,27 +54,40 @@ export interface Promo{
 export interface Template{
     id:              number | null;
     customFild:      boolean | number;
-    isMatrix:        boolean | number;
+    isMatrix?:        boolean | number; 
+    is_matrix?:        boolean | number;
     position:        number;
     icon:            string;
 
-    autoFieldName:   boolean | number;
-    autoUnit:        boolean | number;
-    autoValueSource: boolean | number;
+    autoFieldName?:   boolean | number;
+    auto_field_name?:   boolean | number;
+    autoUnit?:        boolean | number; 
+    auto_unit?:        boolean | number;
+    autoValueSource?: boolean | number;
+    auto_value_source?: boolean | number;
 
-    manualFieldName: string;
-    manualUnit:      string;
-    isHtml:          boolean | number;
-    manualValueHtml: string;
-    manualValue:     string;
+    manualFieldName?: string; 
+    manual_field_name?: string;
+    manualUnit?:      string;
+    manual_unit?:      string;
+    isHtml?:          boolean | number; 
+    is_html?:          boolean | number;
+    manualValueHtml?: string; 
+    manual_value_html?: string;
+    manualValue?:     string; 
+    manual_value?:     string;
     
-    showFieldName:   boolean | number;
-    showIcon:        boolean | number;
-    showUnit:        boolean | number;
-    showValue:       boolean | number;
+    showFieldName?:   boolean | number;
+    show_field_name?:   boolean | number;
+    showIcon?:        boolean | number;
+    show_icon?:        boolean | number;
+    showUnit?:        boolean | number; 
+    show_unit?:        boolean | number;
+    showValue?:       boolean | number;
+    show_value?:       boolean | number;
 
     attribute?:      Attribute
-    matrix?:      CalcMatrix
+    matrix?:      CalcMatrix; 
 }
 
 export interface TemplateResult{
@@ -140,7 +153,7 @@ export interface calcMatrixAttr{
 interface Tariffprovider{
     id: number;
     name: string;
-    logo: string;
+    logo_id: number;
     created_by: number;
     updated_by: number;
     created_at: string;
@@ -150,7 +163,7 @@ interface Tariffprovider{
 interface TariffNetworkOperator{
     id: number;
     name: string;
-    logo: string;
+    logo_id: number;
     created_by: number;
     updated_by: number
     created_at: string;
