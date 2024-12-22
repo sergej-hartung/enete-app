@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
 import { Subject, takeUntil } from 'rxjs';
-import { Tariff, TariffDetail } from '../../../../../models/tariff/tariff';
+import { Promo, Tariff, TariffDetail } from '../../../../../models/tariff/tariff';
 import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { ProductDocumentService } from '../../../../../services/product/product-document.service';
 import { ProductService } from '../../../../../services/product/product.service';
@@ -76,6 +76,10 @@ export class TariffViewComponent {
     return this.tariff?.tariffdetails ? this.tariff.tariffdetails : []
   }
 
+  get promos(): Promo[]{
+    return this.tariff?.promos ? this.tariff.promos : []
+  }
+
   get tariffTpls(){
     return this.tariff?.tpl ? this.tariff?.tpl : []
   }
@@ -99,12 +103,7 @@ export class TariffViewComponent {
   //   return !isNaN(parseFloat(value)) && isFinite(value);
   // }
 
-  isPromoExpired(endDate: string): boolean {
-    const currentDate = new Date();
-    const promoEndDate = new Date(endDate);
-
-    return promoEndDate.setHours(0, 0, 0, 0) < currentDate.setHours(0, 0, 0, 0);
-  }
+  
 
   getLogoNetworkOperator(id:number){
     this.productDocumentService.getFileContentById(id)

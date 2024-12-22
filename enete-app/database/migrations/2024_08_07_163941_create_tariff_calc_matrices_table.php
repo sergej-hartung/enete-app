@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->decimal('total_value', 15, 2)->nullable();
             $table->string('unit')->nullable();
+            $table->boolean('hardware_charge')->default(false);
             //$table->integer('position');
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();

@@ -16,18 +16,19 @@ class IndexCalcMatrixResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'          => $this->id,
-            'uniqueId'    => $this->uniqueId,
-            'tariff_id'   => $this->tariff_id,
-            'name'        => $this->name,
-            'total_value' => $this->total_value,
-            'unit'        => $this->unit,
+            'id'               => $this->id,
+            'uniqueId'         => $this->uniqueId,
+            'tariff_id'        => $this->tariff_id,
+            'name'             => $this->name,
+            'total_value'      => $this->total_value,
+            'unit'             => $this->unit,
+            'hardware_charge'  => $this->hardware_charge,
             //'position' => $this->position,
-            'attributs'   => IndexTariffAttributeForCalcMatrixResource::collection($this->whenLoaded('attributs')),
-            'created_by'  => $this->created_by,
-            'updated_by'  => $this->updated_by,
-            'created_at'  => $this->created_at,
-            'updated_at'  => $this->updated_at,
+            'attributs'        => IndexTariffAttributeForCalcMatrixResource::collection($this->whenLoaded('attributs')),
+            'created_by'       => $this->created_by,
+            'updated_by'       => $this->updated_by,
+            'created_at'       => $this->created_at,
+            'updated_at'       => $this->updated_at,
         ];
     }
 }

@@ -15,6 +15,7 @@ class TariffCalcMatrix extends Model
         'name',
         'total_value',
         'unit',
+        'hardware_charge',
         'created_by', 
         'updated_by'
     ];

@@ -57,6 +57,7 @@ class TariffRequest extends FormRequest
             'calc_matrix.*.name'                           => 'nullable|sometimes|string|max:255',
             'calc_matrix.*.total_value'                    => 'nullable|sometimes|numeric',
             'calc_matrix.*.uniqueId'                       => 'nullable|sometimes|string|max:255',
+            'calc_matrix.*.hardware_charge'                => 'nullable|sometimes|boolean',
             'calc_matrix.*.unit'                           => 'nullable|sometimes|string|max:255',
 
             'calc_matrix.*.attributs'                      => 'nullable|sometimes|array',
@@ -132,6 +133,7 @@ class TariffRequest extends FormRequest
             'tpl.*.matrix.name'                            => 'nullable|sometimes|string|max:255',
             'tpl.*.matrix.total_value'                     => 'nullable|sometimes|numeric',
             'tpl.*.matrix.uniqueId'                        => 'nullable|sometimes|string|max:255',
+            'tpl.*.matrix.hardware_charge'                => 'nullable|sometimes|boolean',
             'tpl.*.matrix.unit'                            => 'nullable|sometimes|string|max:255',
 
             'tpl.*.attribute.id'                           => 'nullable|sometimes|integer|exists:tariff_attributes,id',

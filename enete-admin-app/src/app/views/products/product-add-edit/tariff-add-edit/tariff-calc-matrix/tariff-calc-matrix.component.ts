@@ -6,11 +6,13 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 import { merge, Subject, takeUntil } from 'rxjs';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
 import { ProductService } from '../../../../../services/product/product.service';
+import { ComboStatus } from '../../../../../models/tariff/comboStatus/comboStatus';
 
 interface Matrix {
   id?: number | null;
   uniqueId?: string,
   name: string;
+  // hardware_charge: boolean,
   attributs: any[];
   form: FormGroup; // Убедимся, что form всегда определяется как FormGroup
   hidden?: boolean;
@@ -42,10 +44,15 @@ export class TariffCalcMatrixComponent {
   hiddenGroups: boolean[] = [];
   //groupsу: Group[] = [];
 
+  withHardware = false
+  hardwareCharge = [
+    {name: 'Hardware Zuzahlung', id:'hardwareChargeId'}
+  ]
+  hardwareChargeId = 'hardwareChargeId'
   editMatrixIndex: number | null = null;
 
   tariffDropListId = 'tariffDropList';
-  connectedDropLists: string[] = [this.tariffDropListId];
+  connectedDropLists: string[] = [this.tariffDropListId, this.hardwareChargeId];
 
   tariffForm: FormGroup
   calcMatrixForm: FormArray
@@ -98,6 +105,34 @@ export class TariffCalcMatrixComponent {
             })
           }
         })
+    this.productService.loadedTarif$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(state =>{
+        if(state.tariff){
+          this.comboStatus.valueChanges
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(combos => {
+            
+            const comboStatusHardware = combos.find((item: ComboStatus) => item.id == 2)
+              if(comboStatusHardware){
+                if(comboStatusHardware?.checked){
+                  console.log(combos)
+                  this.withHardware = true
+                }else if(!comboStatusHardware?.checked){
+                  console.log(combos)
+                  this.withHardware = false
+                  this.matrixs.forEach(matrix => {
+                    this.removeHardwareCharge(matrix)
+                  })
+                  console.log(this.matrixs)
+                }
+                
+              }
+          })
+        }
+        console.log(state.tariff)
+      })
+    
   }
 
   
@@ -112,6 +147,7 @@ export class TariffCalcMatrixComponent {
           uniqueId: [this.generateUniqueIdWithTimestamp()],
           name: [this.newMatrixForm.value.name],
           total_value: 0,
+          hardware_charge: false,
           unit: [''],
           attributs: this.fb.array([])
         })
@@ -177,12 +213,14 @@ export class TariffCalcMatrixComponent {
 
 
   drop(event: CdkDragDrop<any[]>, matrix?: Matrix) {
-    
+    console.log(event)
     if (event.previousContainer === event.container && matrix) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
       this.moveAttributeInFormArray(matrix, event.previousIndex, event.currentIndex);
     } else {
       const attribute = event.previousContainer.data[event.previousIndex];
+      console.log(attribute)
+      console.log(matrix)
       if (matrix) {
         if(attribute?.value_varchar){
           this.addAttributeToMatrix(matrix, attribute);
@@ -190,6 +228,12 @@ export class TariffCalcMatrixComponent {
           this.copiedAttributs.add(attribute.id);
         }
         
+        if(attribute?.id && attribute?.id === "hardwareChargeId"){
+          //this.matrixs.hardware_charge = true
+          const hardwareCharge = matrix?.form.get('hardware_charge')
+          hardwareCharge?.setValue(true)
+          console.log(matrix?.form.get('hardware_charge'))
+        }
       }
     }
   }
@@ -365,7 +409,9 @@ export class TariffCalcMatrixComponent {
     return (this.tariffForm.get('attribute_groups') as FormArray);
   }
 
-
+  get comboStatus(): FormArray {
+    return this.tariffForm.get('combo_status') as FormArray;
+  }
 
   getAttributeGroupName(index: number): string {
     const attributeGroup = this.getAttributeGroupArray().at(index) as FormGroup;
@@ -411,6 +457,25 @@ export class TariffCalcMatrixComponent {
     return ''
   }
 
+  getHardwareChargematrix(matrix: Matrix){
+    if(matrix){
+      const hardwareCharge = matrix?.form.get('hardware_charge')
+      if(hardwareCharge){
+        return hardwareCharge.value
+      }else{
+        return false
+      }
+    }
+    return false
+  }
+
+  removeHardwareCharge(matrix: Matrix){
+    if(matrix){
+      const hardwareCharge = matrix?.form.get('hardware_charge')
+      hardwareCharge?.setValue(false)
+    }
+  }
+
   removeAttribute(matrix: Matrix, index: number) {
     //const index = //matrix.attributes.indexOf(attribute);
 
@@ -448,6 +513,13 @@ export class TariffCalcMatrixComponent {
     this.tariffService.detailedData$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(response => {
+          if(response && response.data && response.data.combo_status){
+            const comboStatus = response.data.combo_status
+            const hardwareCombo = comboStatus.find(item => item?.id == 2)
+            if(hardwareCombo){
+              this.withHardware = true
+            }
+          }
           if (response && response.data && response.data.calc_matrix) {
               // Очищаем текущую матрицу и формы
               this.matrixs = [];
@@ -466,6 +538,7 @@ export class TariffCalcMatrixComponent {
                       name: [matrixData.name, Validators.required],
                       total_value: [matrixData.total_value || 0],
                       unit: [matrixData.unit || ''],
+                      hardware_charge: [matrixData.hardware_charge || ''],
                       attributs: this.fb.array(attributs)
                   });
                   // Добавляем подписки на изменения атрибутов

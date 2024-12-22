@@ -64,6 +64,7 @@ class TariffUpdateRequest extends FormRequest
             'updated.*.calc_matrix.*.name'                           => 'nullable|sometimes|string|max:255',
             'updated.*.calc_matrix.*.total_value'                    => 'nullable|sometimes|numeric',
             'updated.*.calc_matrix.*.uniqueId'                       => 'nullable|sometimes|string|max:255',
+            'updated.*.calc_matrix.*.hardware_charge'                => 'nullable|sometimes|boolean',
             'updated.*.calc_matrix.*.unit'                           => 'nullable|sometimes|string|max:255',
 
             'updated.*.calc_matrix.*.attributs'                      => 'nullable|sometimes|array',
@@ -141,6 +142,7 @@ class TariffUpdateRequest extends FormRequest
             'updated.*.tpl.*.matrix.*.name'                          => 'nullable|sometimes|string|max:255',
             'updated.*.tpl.*.matrix.*.total_value'                   => 'nullable|sometimes|numeric',
             'updated.*.tpl.*.matrix.*.uniqueId'                      => 'nullable|sometimes|string|max:255',
+            'updated.*.tpl.*.matrix.hardware_charge'                 => 'nullable|sometimes|boolean',
             'updated.*.tpl.*.matrix.*.unit'                          => 'nullable|sometimes|string|max:255',
 
             'updated.*.tpl.*.attribute.*.id'                         => 'nullable|sometimes|integer|exists:tariff_attributes,id',
@@ -192,6 +194,7 @@ class TariffUpdateRequest extends FormRequest
             'added.*.calc_matrix.*.name'                           => 'nullable|sometimes|string|max:255',
             'added.*.calc_matrix.*.total_value'                    => 'nullable|sometimes|numeric',
             'added.*.calc_matrix.*.uniqueId'                       => 'nullable|sometimes|string|max:255',
+            'added.*.calc_matrix.*.hardware_charge'                => 'nullable|sometimes|boolean',
             'added.*.calc_matrix.*.unit'                           => 'nullable|sometimes|string|max:255',
 
             'added.*.calc_matrix.*.attributs'                      => 'nullable|sometimes|array',
@@ -269,6 +272,7 @@ class TariffUpdateRequest extends FormRequest
             'added.*.tpl.*.matrix.*.name'                          => 'nullable|sometimes|string|max:255',
             'added.*.tpl.*.matrix.*.total_value'                   => 'nullable|sometimes|numeric',
             'added.*.tpl.*.matrix.*.uniqueId'                      => 'nullable|sometimes|string|max:255',
+            'added.*.tpl.*.matrix.hardware_charge'                 => 'nullable|sometimes|boolean',
             'added.*.tpl.*.matrix.*.unit'                          => 'nullable|sometimes|string|max:255',
 
             'added.*.tpl.*.attribute.*.id'                         => 'nullable|sometimes|integer|exists:tariff_attributes,id',
@@ -319,6 +323,7 @@ class TariffUpdateRequest extends FormRequest
             'deleted.*.calc_matrix.*.name'                           => 'nullable|sometimes|string|max:255',
             'deleted.*.calc_matrix.*.total_value'                    => 'nullable|sometimes|numeric',
             'deleted.*.calc_matrix.*.uniqueId'                       => 'nullable|sometimes|string|max:255',
+            'deleted.*.calc_matrix.*.hardware_charge'                => 'nullable|sometimes|boolean',
             'deleted.*.calc_matrix.*.unit'                           => 'nullable|sometimes|string|max:255',
 
             'deleted.*.calc_matrix.*.attributs'                      => 'nullable|sometimes|array',
@@ -396,6 +401,7 @@ class TariffUpdateRequest extends FormRequest
             'deleted.*.tpl.*.matrix.*.name'                          => 'nullable|sometimes|string|max:255',
             'deleted.*.tpl.*.matrix.*.total_value'                   => 'nullable|sometimes|numeric',
             'deleted.*.tpl.*.matrix.*.uniqueId'                      => 'nullable|sometimes|string|max:255',
+            'deleted.*.tpl.*.matrix.hardware_charge'                 => 'nullable|sometimes|boolean',
             'deleted.*.tpl.*.matrix.*.unit'                          => 'nullable|sometimes|string|max:255',
 
             'deleted.*.tpl.*.attribute.*.id'                         => 'nullable|sometimes|integer|exists:tariff_attributes,id',

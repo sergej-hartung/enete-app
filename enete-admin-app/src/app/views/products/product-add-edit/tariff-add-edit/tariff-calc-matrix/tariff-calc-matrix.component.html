@@ -154,6 +154,21 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Hardware Zuzahlung -->
+              <div class="attr-group-box" *ngIf="getHardwareChargematrix(matrix)">
+                <div class="attr-group">
+                  <span class="attr-icon"> <i class="fa-solid fa-server"></i></span>
+                  <span class="attr-name col-8">Hardware Zuzahlung</span>
+                  <span  class="attr_value col"> 
+                  </span>
+                  <span  class="attr-unit col"></span> 
+                  <button class="btn-text-style red" (click)="removeHardwareCharge(matrix)">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>   
+              </div>
+              
               <div  *ngIf="matrix.attributs.length > 0" class="attr-group total-value">
                 <span class="attr-name col">
                   Gesamt:
@@ -208,6 +223,32 @@
         </button>
     </div>
     <div class="col-5 right-panel">
+        <!-- Hardware Zuzahlung -->
+        <ng-container *ngIf="withHardware">
+          <div
+            cdkDropList
+            [id]="hardwareChargeId"
+            [cdkDropListData]="hardwareCharge"
+            [cdkDropListConnectedTo]="connectedDropLists"
+            class="attr-group-list mt-2 mb-2"
+            (cdkDropListDropped)="drop($event)"
+            [cdkDropListEnterPredicate]="canDropToTariffList"
+          >
+            <div          
+              cdkDrag    
+              class="attr-group-box"
+            >
+              <div class="attr-group">
+                <span class="attr-icon"> <i class="fa-solid fa-server"></i></span>
+                <span class="attr-name col-8">Hardware Zuzahlung</span>
+                <span  class="attr_value col"></span>
+                <span  class="attr-unit col"></span> 
+              </div>          
+            </div>
+          </div>
+        </ng-container>
+        
+        <!-- Attribute Groups -->
       <div class="mb-2" *ngFor="let attributeGroup of getAttributeGroupArray().controls; let i = index">
           <span class="group-name">
             <button class="btn-text-style" (click)="onToggleGroupVisibility(i)">{{ getAttributeGroupName(i) }}</button>

@@ -131,6 +131,7 @@ export interface CalcMatrix{
     name: string,
     total_value: string,
     unit: string,
+    hardware_charge?: boolean | number,
     attributs: calcMatrixAttr[]
     created_by: number;
     updated_by: number;

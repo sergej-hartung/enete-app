@@ -1,0 +1,46 @@
+<div class="row no-gutters pt-3" *ngIf="promos && promos?.length">
+    <div class="col">
+        <div
+            class="tariff-details-promo"
+        >
+            <ng-container *ngFor="let promo of promos; let i = index">
+                <div 
+                    class="tariff-promo-wrapp"
+                    *ngIf="!isPromoExpired(promo.end_date)"
+                >
+                    <div class="tariff-promo">
+                        <div class="header">
+                            <div class="col">
+                                <!-- <span class="name">Titel:</span> -->
+                                <span *ngIf="promo?.title" class="value">{{promo.title}}</span>
+                            </div>
+                            <div class="col-3">
+                                <span *ngIf="promo?.start_date" class="name">von:</span>
+                                <span *ngIf="promo?.start_date"  class="value">{{promo.start_date | date: 'dd.MM.yyyy'}}</span>
+                            </div>
+                            <div class="col-3">
+                                <span *ngIf="promo?.end_date" class="name">bis:</span>
+                                <span *ngIf="promo?.end_date" class="value">{{promo.end_date | date: 'dd.MM.yyyy'}}</span>
+                            </div>
+                        </div>
+                        <div class="body">
+                            <div class="col-12 promo-details-accordion accordion">
+                                <div class="accordion-item">
+                                    
+                                    <ng-container *ngIf="promo?.text_long">
+                                        <div class="pt-3">
+                                            <div [innerHTML]="getSafeHtml(promo?.text_long ?? null)"></div>
+                                        </div>
+                                    </ng-container>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            
+        </div>                                
+    </div>
+</div>
+
