@@ -85,6 +85,29 @@ export class TariffCalcMatrixComponent {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(mode => {
           if(mode == 'edit')  this.loadTariffMatrix();
+
+          if(mode == 'new'){
+            this.comboStatus.valueChanges
+              .pipe(takeUntil(this.unsubscribe$))
+              .subscribe(combos => {
+                
+                const comboStatusHardware = combos.find((item: ComboStatus) => item.id == 2)
+                if(comboStatusHardware){
+                  if(comboStatusHardware?.checked){
+                    console.log(combos)
+                    this.withHardware = true
+                  }else if(!comboStatusHardware?.checked){
+                    console.log(combos)
+                    this.withHardware = false
+                    this.matrixs.forEach(matrix => {
+                      this.removeHardwareCharge(matrix)
+                    })
+                    console.log(this.matrixs)
+                  }
+                  
+                }
+              })
+          }
         })
 
 
@@ -114,20 +137,20 @@ export class TariffCalcMatrixComponent {
           .subscribe(combos => {
             
             const comboStatusHardware = combos.find((item: ComboStatus) => item.id == 2)
-              if(comboStatusHardware){
-                if(comboStatusHardware?.checked){
-                  console.log(combos)
-                  this.withHardware = true
-                }else if(!comboStatusHardware?.checked){
-                  console.log(combos)
-                  this.withHardware = false
-                  this.matrixs.forEach(matrix => {
-                    this.removeHardwareCharge(matrix)
-                  })
-                  console.log(this.matrixs)
-                }
-                
+            if(comboStatusHardware){
+              if(comboStatusHardware?.checked){
+                console.log(combos)
+                this.withHardware = true
+              }else if(!comboStatusHardware?.checked){
+                console.log(combos)
+                this.withHardware = false
+                this.matrixs.forEach(matrix => {
+                  this.removeHardwareCharge(matrix)
+                })
+                console.log(this.matrixs)
               }
+              
+            }
           })
         }
         console.log(state.tariff)

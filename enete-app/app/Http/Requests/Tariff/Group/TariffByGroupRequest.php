@@ -29,6 +29,7 @@ class TariffByGroupRequest extends FormRequest
             'search' => 'sometimes|string',
             'sortField' => 'sometimes|string',
             'sortOrder' => 'sometimes|string',
+            'hardware_id' => 'sometimes|string'
         ];
     }
 }

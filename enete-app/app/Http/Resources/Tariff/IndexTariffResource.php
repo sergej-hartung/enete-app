@@ -25,7 +25,7 @@ class IndexTariffResource extends JsonResource
             'network_operator'    => $this->networkOperator,
             'group_id'            => $this->group_id,
             //'group'               => $this->group,
-            //'status_id'           => $this->status_id,
+            'calculated_value'    => $this->calculated_value,
             'status'           => $this->status,
             'has_action'          => $this->has_action,
             'action_group_id'     => $this->action_group_id,

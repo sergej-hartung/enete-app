@@ -11,8 +11,8 @@ class SortCategory extends Model
 
     protected $fillable = ['name', 'description'];
 
-    public function categoryMappings()
+    public function mappings()
     {
-        return $this->hasMany(CategoryMapping::class, 'category_id');
+        return $this->hasMany(SortCategoryMapping::class, 'sort_category_id');
     }
 }
