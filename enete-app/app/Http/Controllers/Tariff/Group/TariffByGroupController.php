@@ -15,12 +15,16 @@ class TariffByGroupController extends Controller
         $queryParams = $request->validated();
 
         //$filter = app()->make(TariffFilter::class, ['queryParams' => array_filter($request->validated())]);
+        if(!isset($queryParams['group_id'])){
+            $queryParams['group_id']=$id;
+        }
+
         $filter = app()->make(TariffFilter::class, ['queryParams' => $queryParams]);
 
         $data = Tariff::with(['provider', 'networkOperator', 'group', 'status'])
-            ->where('group_id', '=', $id)
+            ->where('tariffs.group_id', '=', $id)
             ->filter($filter)
-            ->sort($request->validated())
+            ->sort($queryParams)
             ->get(); 
         
         return IndexTariffResource::collection($data);

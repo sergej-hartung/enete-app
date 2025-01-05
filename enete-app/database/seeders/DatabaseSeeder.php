@@ -35,7 +35,7 @@ class DatabaseSeeder extends Seeder
             TariffGroupAttributeMappingsSeeder::class,
             TariffCategoriesSeeder::class,
             TariffComboStatusSeeder::class,
-            SortCategorySeeder::class
+            TariffSortCriteriaSeeder::class
         ]);
     }
 }

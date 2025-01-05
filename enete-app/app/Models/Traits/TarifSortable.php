@@ -4,7 +4,7 @@ namespace App\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\SortCategory;
-
+use App\Models\TariffSortingCriteria;
 
 trait TarifSortable {
     /**
@@ -18,6 +18,7 @@ trait TarifSortable {
         $sortField = $data['sortField'] ?? 'id';
         $sortOrder = $data['sortOrder'] ?? 'asc';
         $hardwareId = $data['hardware_id'] ?? null; // ID оборудования, если передано
+        $groupId = $data['group_id'] ?? null; // ID группы тарифов
         //var_dump($data);
         // Массив, определяющий поля для сортировки и соответствующие таблицы и поля
         $sortableFields = [
@@ -29,15 +30,6 @@ trait TarifSortable {
             'is_published'   => ['table' => 'tariffs', 'column' => 'is_published'],
             // Добавьте другие поля сортировки по мере необходимости
         ];
-
-        // Проверяем, является ли поле названием категории сортировки
-        $sortCategory = SortCategory::where('name', $sortField)->first();
-
-        if ($sortCategory) {
-            // Если категория найдена, применяем сортировку по её маппингу
-            $query = $this->applySortCategory($query, $sortCategory, $sortOrder, $hardwareId);
-            return $query;
-        }
 
         // Стандартная обработка сортировки
         if (isset($sortableFields[$sortField])) {
@@ -54,70 +46,58 @@ trait TarifSortable {
             }
         } else {
             // Если поле сортировки не указано, применяется сортировка по умолчанию
-            $query = $query->orderBy('tariffs.' . $sortField, $sortOrder);
+            if($groupId){
+                $criteria = TariffSortingCriteria::where('group_id', $groupId)
+                    ->where('name', $sortField)
+                    ->first();
+
+                if ($criteria) {
+                    // Если категория найдена, применяем сортировку по её маппингу
+                    
+                    $query = $this->applyDynamicSorting($query, $criteria, $sortField, $sortOrder, $hardwareId);
+                    return $query;
+                }
+            }
+            
         }
 
         return $query;
     }
 
 
+   
     /**
-     * Применить сортировку по категории из sort_categories.
+     * Apply dynamic sorting based on sorting criteria and hardware.
      *
      * @param Builder $query
-     * @param SortCategory $sortCategory
+     * @param int|null $groupId
+     * @param string $sortField
      * @param string $sortOrder
      * @param int|null $hardwareId
      * @return Builder
      */
-    protected function applySortCategory(Builder $query, SortCategory $sortCategory, string $sortOrder, ?int $hardwareId = null): Builder {
-        $mappings = $sortCategory->mappings;
-    
-        $selectParts = [];
-        $joins = [];
-        $matrixCalculationAdded = false;
-    
-        foreach ($mappings as $mapping) {
-            if ($mapping->source === 'matrix' && !$matrixCalculationAdded) {
-                // Подключаем тарифные матрицы
-                if (!in_array('tariff_calc_matrices', $joins)) {
-                    $query->leftJoin('tariff_calc_matrices as tcm', 'tariffs.id', '=', 'tcm.tariff_id');
-                    $joins[] = 'tariff_calc_matrices';
-                }
-    
-                if ($hardwareId) {
-                    $query->leftJoin('tariff_hardware_mappings as thm', function ($join) use ($hardwareId) {
-                        $join->on('tcm.tariff_id', '=', 'thm.tariff_id')
-                             ->where('thm.hardware_id', '=', $hardwareId);
-                    });
-                    $selectParts[] = 'tcm.total_value + IF(tcm.hardware_charge = 1, COALESCE(thm.price, 0), 0)';
-                } else {
-                    $selectParts[] = 'tcm.total_value';
-                }
-    
-                $matrixCalculationAdded = true;
-            } elseif ($mapping->source === 'attribute') {
-                // Уникальные алиасы для каждого атрибута
-                $attributeAlias = 'tam_' . $mapping->tariff_attribute_id;
-                $attributeTableAlias = 'ta_' . $mapping->tariff_attribute_id;
-    
-                $query->leftJoin("tariff_attribute_mappings as $attributeAlias", function ($join) use ($mapping, $attributeAlias) {
-                    $join->on('tariffs.id', '=', "$attributeAlias.tariff_id")
-                         ->where("$attributeAlias.attribute_id", '=', $mapping->tariff_attribute_id)
-                         ->where("$attributeAlias.is_active", '=', 1);
-                })->leftJoin("tariff_attributes as $attributeTableAlias", "$attributeAlias.attribute_id", '=', "$attributeTableAlias.id");
-    
-                // Добавляем значение атрибута в расчёт
-                $selectParts[] = "CAST(COALESCE($attributeAlias.value_varchar, 0) AS DECIMAL)";
-            }
-        }
-    
-        // Если есть расчетное поле, добавляем его и сортируем
-        if (!empty($selectParts)) {
-            $query->selectRaw('tariffs.*, (' . implode(' + ', $selectParts) . ') as calculated_value')
-                  ->orderBy('calculated_value', $sortOrder);
-        }
-        dd($query->toSql(), $query->getBindings());
+    protected function applyDynamicSorting(Builder $query, $criteria, string $sortField, string $sortOrder, ?int $hardwareId): Builder
+    {
+        
+        // Подключаем таблицу с сортировочными значениями
+        $query = $query
+            ->leftJoin('tariff_sorting_values as tsv', 'tariffs.id', '=', 'tsv.tariff_id')
+            ->where('tsv.sorting_criteria_id', $criteria->id);
+
+        // Если включен флаг include_hardware в tariff_sorting_values
+        $query = $query->leftJoin('tariff_hardware_mappings as thm', function ($join) use ($hardwareId) {
+                $join->on('tariffs.id', '=', 'thm.tariff_id')
+                     ->where('thm.hardware_id', '=', $hardwareId);
+            })
+            ->selectRaw('
+                tariffs.*,
+                tsv.value + 
+                CASE WHEN tsv.include_hardware = TRUE THEN COALESCE(thm.total_value, 0) ELSE 0 END 
+                AS total_value
+            ')
+            ->orderByRaw('total_value ' . $sortOrder);
+
+            //dd($query->toSql(), $query->getBindings());
         return $query;
     }
 
