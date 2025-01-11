@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Tariff;
 
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class TariffSortingValue extends Model
+class TariffSortingValue extends Pivot
 {
     use HasFactory;
 
@@ -13,6 +13,7 @@ class TariffSortingValue extends Model
         'tariff_id',
         'sorting_criteria_id',
         'value',
+        'include_hardware'
     ];
 
     public function tariff()
@@ -22,6 +23,6 @@ class TariffSortingValue extends Model
 
     public function criteria()
     {
-        return $this->belongsTo(GroupSortingCriteria::class, 'sorting_criteria_id');
+        return $this->belongsTo(TariffSortingCriteria::class, 'sorting_criteria_id');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Models\Traits;
 
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\SortCategory;
-use App\Models\TariffSortingCriteria;
+use App\Models\Tariff\TariffSortingCriteria;
 
 trait TarifSortable {
     /**

@@ -18,6 +18,7 @@ interface InitDataState {
   providers: boolean;
   connectionStatuses: boolean;
   categories: boolean;
+  sortings: boolean;
 }
 
 // PartnerService: Specific service extending DataService for handling Partner type data
@@ -50,6 +51,7 @@ export class ProductService {
     providers: false,           // component TariffList
     connectionStatuses: false,  //component TariffDetailsAE
     categories: false,          //component TariffDetailsAE
+    sortings: false,
   });
   public initTariffDataLoaded$: Observable<InitDataState> = this._initTariffDataLoaded.asObservable();
 

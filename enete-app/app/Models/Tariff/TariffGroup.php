@@ -36,4 +36,9 @@ class TariffGroup extends Model
     {
         return $this->belongsToMany(TariffProvider::class,'tariff_group_provider_mappings','group_id','provider_id');
     }
+
+    public function sorting()
+    {
+        return $this->hasMany(TariffSortingCriteria::class, 'group_id');
+    }
 }

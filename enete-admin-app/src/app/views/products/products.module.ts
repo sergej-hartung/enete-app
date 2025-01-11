@@ -48,6 +48,7 @@ import { TariffCommissionComponent } from './product-list/tariff-list/tariff-vie
 import { TariffAttributeViewComponent } from './product-list/tariff-list/tariff-view/shared/tariff-attribute/tariff-attribute-view.component';
 import { TariffDetailsViewComponent } from './product-list/tariff-list/tariff-view/tariff-details/tariff-details-view.component';
 import { TariffPromoViewComponent } from './product-list/tariff-list/tariff-view/tariff-promo/tariff-promo-view.component';
+import { TariffSortingComponent } from './product-add-edit/tariff-add-edit/tariff-sorting/tariff-sorting.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { TariffPromoViewComponent } from './product-list/tariff-list/tariff-view
     TariffDetailsViewComponent,
     TariffPromoViewComponent,
     TariffCommissionComponent,
+    TariffSortingComponent,
     //FileSizePipe,
   ],
   imports: [

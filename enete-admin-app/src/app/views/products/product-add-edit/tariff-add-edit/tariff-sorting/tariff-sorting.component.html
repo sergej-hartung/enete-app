@@ -1,0 +1,114 @@
+<div class="row no-gutters">
+    <div class="col-7 left-panel pt-1">
+        <!-- Left Block -->
+        <app-card>
+            <div card-header>Sortierung</div>
+            <div card-body>
+                <div class="custom-body">
+                  
+                </div>
+            </div>
+        </app-card>
+    </div>
+
+    <div class="col-5 right-panel ">
+        <div class="mb-2" *ngIf="calcMatrixForm.length > 0">
+            <span class="group-name">
+              <button class="btn-text-style" (click)="onToggleMatrices()">Matrizen <i class="fa-solid fa-calculator"></i></button>
+            </span>
+  
+            <div *ngIf="!hiddenMatrices">
+              <div
+                cdkDropList
+                [id]="tariffMatrixDropListId"
+                [cdkDropListData]="calcMatrixForm.value"
+                [cdkDropListConnectedTo]="connectedDropLists"
+                class="attr-group-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container *ngFor="let matrix of calcMatrixForm?.controls; let i = index">
+                  <div
+                    class="attr-group-box matrix-bg"
+
+                    cdkDrag
+                  >
+                    <div class="attr-group ">
+                        <span class="attr-name col-8">
+                            <ng-container *ngIf="matrix?.value?.name">
+                                {{matrix.value.name}}
+                            </ng-container>
+                        </span>
+                        <span class="attr_value col">
+                            <ng-container *ngIf="matrix?.value?.total_value">
+                                <ng-container *ngIf="isNumeric(matrix?.value?.total_value); else nonNumericTemplate">
+                                    {{ matrix?.value?.total_value | number:'1.2-2' }}
+                                </ng-container>
+                                <ng-template #nonNumericTemplate>
+                                    {{ matrix?.value?.total_value }}
+                                </ng-template>
+                            </ng-container>
+                        </span>
+                        <span  class="attr-unit col">
+                            <ng-container *ngIf="matrix?.value?.unit">
+                                {{ matrix.value.unit }}
+                            </ng-container>
+                        </span> 
+                    </div>
+                             
+                  </div>
+                </ng-container>
+                
+              </div>
+            </div>
+        </div>
+        <div class="mb-2" *ngFor="let attributeGroup of getAttributeGroupArray().controls; let i = index">
+            <span class="group-name">
+              <button class="btn-text-style" (click)="onToggleGroupVisibility(i)">{{ getAttributeGroupName(i) }}</button>
+            </span>
+  
+            <div *ngIf="!hiddenGroups[i]">
+              <div
+                cdkDropList
+                [id]="tariffDropListId"
+                [cdkDropListData]="getAttributeGroupAttributs(i).value"
+                [cdkDropListConnectedTo]="connectedDropLists"
+                class="attr-group-list"
+                (cdkDropListDropped)="drop($event)"
+              >
+                <ng-container *ngFor="let attributeCtrl of getAttributeGroupAttributs(i).controls; let j = index">
+                  <div
+                    
+                    class="attr-group-box"
+                    cdkDrag
+
+                    [ngClass]="{
+                        'copied-attribute': copiedAttributs.has(attributeCtrl.value.id),
+                      }"
+                  >
+                    <div class="attr-group">
+                        <span class="attr-name col-8">
+                            {{attributeCtrl.value.name}}
+                        </span>
+                        <span  class="attr_value col">
+                            <ng-container *ngIf="attributeCtrl.value.value_varchar">
+                                <ng-container *ngIf="isNumeric(attributeCtrl.value.value_varchar); else nonNumericTemplate">
+                                    {{ attributeCtrl.value.value_varchar | number:'1.2-2' }}
+                                </ng-container>
+                                <ng-template #nonNumericTemplate>
+                                    {{ attributeCtrl.value.value_varchar }}
+                                </ng-template>
+                            </ng-container>
+                            
+                        </span>
+                        <span  class="attr-unit col">
+                            {{ attributeCtrl.value.unit }}
+                        </span>  
+                    </div>          
+                  </div>
+                </ng-container>
+                
+              </div>
+            </div>
+        </div>
+    </div>
+</div>

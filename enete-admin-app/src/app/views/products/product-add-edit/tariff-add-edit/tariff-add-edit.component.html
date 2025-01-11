@@ -39,6 +39,13 @@
                 <app-tariff-details-tpl></app-tariff-details-tpl>            
             </ng-template>
         </li>
+        <li [ngbNavItem]="6">
+            <button ngbNavLink>Sortieren & Filtern</button>
+            <ng-template ngbNavContent> 
+                <!-- <app-tariff-details-tpl></app-tariff-details-tpl>             -->
+                 <app-tariff-sorting></app-tariff-sorting>
+            </ng-template>
+        </li>
     </ul>
     <div [ngbNavOutlet]="nav" class="pe-0 ps-0"></div>
 </div>

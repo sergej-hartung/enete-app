@@ -26,6 +26,7 @@ class TariffShowController extends Controller
             'networkOperator', 
             'group', 
             'status',
+            'sorting',
             'document',
             'clacMatrices',
             'clacMatrices.attributs',

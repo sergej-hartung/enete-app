@@ -12,6 +12,7 @@ use App\Http\Resources\Tariff\CalcMatrix\IndexCalcMatrixResource;
 use App\Http\Resources\Tariff\Promo\IndexTariffPromoResource;
 use App\Http\Resources\Tariff\Tpl\IndexTariffTplResource;
 use App\Http\Resources\Tariff\Detail\TariffDetailWithAttributesResource;
+use App\Http\Resources\Tariff\Sorting\IndexTariffSortingWithPivotResource;
 
 class ShowTariffResource extends JsonResource
 {
@@ -60,6 +61,7 @@ class ShowTariffResource extends JsonResource
                 });
             }),
             'document'            => new IndexProductDokumetResource($this->whenLoaded('document')),
+            'sortings'            => IndexTariffSortingWithPivotResource::collection($this->whenLoaded('sorting'))
         ];
     }
 }

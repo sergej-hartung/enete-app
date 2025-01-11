@@ -171,6 +171,7 @@ export class FormService {
       attribute_groups: this.fb.array([]),
       calc_matrix: this.fb.array([]),
       promos: this.fb.array([]),
+      sortings: this.fb.array([]),
       tpl: this.createTplFormArray(),
       tariffdetails: this.fb.array([])
     })

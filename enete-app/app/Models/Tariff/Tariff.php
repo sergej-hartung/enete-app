@@ -139,6 +139,14 @@ class Tariff extends Model
         return $this->hasMany(TariffCalcMatrix::class, 'tariff_id');
     }
 
+    public function sorting()
+    {
+        return $this->belongsToMany(TariffSortingCriteria::class, 'tariff_sorting_values', 'tariff_id', 'sorting_criteria_id')
+                    ->withPivot('value', 'include_hardware') // Pivot-Felder
+                    ->using(TariffSortingValue::class) // Pivot-Modell
+                    ->withTimestamps();
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');

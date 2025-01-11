@@ -175,6 +175,7 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
     this.productService.updateInitTariffDataLoaded('attributes', false);
     this.productService.updateInitTariffDataLoaded('categories', false);
     this.productService.updateInitTariffDataLoaded('connectionStatuses', false);
+    this.productService.updateInitTariffDataLoaded('sortings', false);
 
     this.productService.updateTariffLoadedState('attributeGroup', false);
     this.productService.updateTariffLoadedState('calcMatrix', false);
