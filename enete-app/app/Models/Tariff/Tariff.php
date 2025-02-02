@@ -142,7 +142,7 @@ class Tariff extends Model
     public function sorting()
     {
         return $this->belongsToMany(TariffSortingCriteria::class, 'tariff_sorting_values', 'tariff_id', 'sorting_criteria_id')
-                    ->withPivot('value', 'include_hardware') // Pivot-Felder
+                    ->withPivot('value', 'include_hardware', 'matrix_uniqueId', 'attribute_id') // Pivot-Felder
                     ->using(TariffSortingValue::class) // Pivot-Modell
                     ->withTimestamps();
     }

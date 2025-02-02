@@ -34,6 +34,7 @@ export interface Tariff {
     promos?: Promo[]
     tpl?: Template[]
     tariffdetails: TariffDetail[]
+    sortings?: TariffSortings[]
     
     created_by: number;
     updated_by: number;
@@ -192,4 +193,15 @@ export interface TariffDocument{
     updated_by: number;
     created_at: string;
     updated_at: string;
+}
+
+export interface TariffSortings{
+    id: number;
+    name: string;
+    criteria_id: number;
+    description: string;
+    include_hardware: number;
+    value: string;
+    matrix_uniqueId: string;
+    attribute_id: number;
 }

@@ -5,7 +5,27 @@
             <div card-header>Sortierung</div>
             <div card-body>
                 <div class="custom-body">
-                  
+
+                    <ng-container *ngFor="let control of sortingsForm.controls; let i = index">
+                        <div class="field_name"> 
+                          <span>{{ control?.value?.name }}</span>
+                        </div>
+                        <div
+                            cdkDropList
+                            [id]="'sortId-' + i"
+                            [cdkDropListData]="sortingsForm.value"
+                            [cdkDropListConnectedTo]="connectedDropLists"
+                            class="attr-group-list"
+                            (cdkDropListDropped)="drop($event, control)"
+                        >
+                        <ng-container *ngIf="getConnectItem(control) as result">
+                          {{result?.name}}
+                        </ng-container>
+                            
+
+                        </div>
+                    </ng-container>
+ 
                 </div>
             </div>
         </app-card>

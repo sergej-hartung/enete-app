@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { FormService } from '../../../../../services/form.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { SortingService } from '../../../../../services/product/tariff/sorting/sorting.service';
@@ -7,6 +7,9 @@ import { combineLatest, Subject, takeUntil } from 'rxjs';
 import { ProductService } from '../../../../../services/product/product.service';
 import { Sorting } from '../../../../../models/tariff/sorting/sorting';
 import { TariffService } from '../../../../../services/product/tariff/tariff.service';
+import { CalcMatrix, Tariff } from '../../../../../models/tariff/tariff';
+import { Attribute } from '../../../../../models/tariff/attribute/attribute';
+import { ThisReceiver } from '@angular/compiler';
 
 @Component({
   selector: 'app-tariff-sorting',
@@ -19,6 +22,9 @@ export class TariffSortingComponent {
 
   tariffForm: FormGroup
   calcMatrixForm: FormArray
+  sortingsForm: FormArray
+
+  connectSortings: any = []
 
   tariffMatrixDropListId = 'tariffMatrixDropList';
   tariffDropListId = 'tariffDropList';
@@ -35,13 +41,14 @@ export class TariffSortingComponent {
   constructor(
       private fb: FormBuilder,
       private formService: FormService,
-      private tariffSortingrService: SortingService,
+      private tariffSortingService: SortingService,
       public tariffService: TariffService,
       private productService: ProductService,
     ){
       this.tariffForm = this.formService.getTariffForm()
       //this.tpl = this.tariffForm.get('tpl') as FormArray
       this.calcMatrixForm = this.tariffForm.get('calc_matrix') as FormArray
+      this.sortingsForm = this.getTariffSortingForm()
   
     }
 
@@ -55,13 +62,14 @@ export class TariffSortingComponent {
       this.productService.tariffGroupId$ 
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(id =>{
-          this.tariffSortingrService.fetchDataByGroupId(id)
+          this.tariffSortingService.fetchDataByGroupId(id)
       })
 
       this.productService.productMode$
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(mode => {
           if(mode){
+
             this.loadData(mode)
           }
         })
@@ -70,7 +78,7 @@ export class TariffSortingComponent {
   loadData(mode: string){
     
     if(mode == 'new'){
-      this.tariffSortingrService.data$
+      this.tariffSortingService.data$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(sortingData => {
         if(sortingData && sortingData.entityType == 'tariffSortingsByGroup'){
@@ -82,34 +90,44 @@ export class TariffSortingComponent {
 
     if(mode == 'edit'){
       combineLatest([
-        this.tariffSortingrService.data$,
+        this.tariffSortingService.data$,
         this.tariffService.detailedData$
       ])
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(([sorting, tariff]) => {
-          if(sorting && tariff){
+        .subscribe(([sortingData, tariffData]) => {
+          if(sortingData && tariffData && sortingData.entityType == 'tariffSortingsByGroup'){
             this.productService.updateInitTariffDataLoaded('sortings', true);
             console.log('Loaded')
-            console.log(sorting)
-            console.log(tariff)
+
+            this.tariffSortings = sortingData?.data || [];
+            console.log(this.tariffSortings)
+            this.tariffSortings.forEach((sort: Sorting)  => {
+              console.log(sort)
+              let sorting = this.createSortingFormControl(sort, tariffData.data)
+              this.sortingsForm.push(sorting)
+            })
+
+            this.updateConnectedDropLists()          
           }
           
         })
     }
-
-    
-
-      
     
   }
 
-  createSortingFormControl(sort: Sorting){
+  createSortingFormControl(sort: Sorting, tariff?: Tariff){
+      let sortings = tariff?.sortings
+      let sorting = sortings?.find(item => item.criteria_id == sort.id)
       return this.fb.group({
-        id: [sort.id],
-        tariff_id: [sort.name],
-        sorting_criteria_id: [sort.id],
-        value: [],
-        include_hardware: [false],
+        id: [sorting ? sorting.id : null],
+        name: [sorting ? sorting.name : sort.name],
+        description: [sorting ? sorting.description : sort.description],
+        tariff_id: [tariff?.id],
+        sorting_criteria_id: [sorting ? sorting.criteria_id : sort.id],
+        value: [sorting ? sorting.value : null, Validators.required],
+        include_hardware: [sorting ? sorting.include_hardware : false],
+        matrix_uniqueId: [sorting ? sorting.matrix_uniqueId : null],
+        attribute_id: [sorting ? sorting.attribute_id: null]
       });
     }
 
@@ -118,11 +136,65 @@ export class TariffSortingComponent {
   }
 
   drop(event: CdkDragDrop<any[]>, control?: any) {
+    if (event.previousContainer.id === this.tariffDropListId){
+      const attribute = event.previousContainer.data[event.previousIndex];
 
+      if(control){
+        // let value = control.value
+
+        // let itemIndex = this.connectSortings.findIndex((item: any) => item.id == value.attribute_id || item.uniqueId == value.matrix_uniqueId)
+        // if(itemIndex){
+        //   this.connectSortings.splice(itemIndex, 1);
+        // }
+
+        control.patchValue({
+          attribute_id: attribute.id,
+          matrix_uniqueId: null,
+          value: attribute.value_varchar
+        })
+
+        this.connectSortings.push(attribute)
+      }
+    }
+    if(event.previousContainer.id === this.tariffMatrixDropListId){
+      const matrix = event.previousContainer.data[event.previousIndex];
+
+      if(control){
+        // let value = control.value
+
+        // let itemIndex = this.connectSortings.findIndex((item: any) => item.id == value.attribute_id || item.uniqueId == value.matrix_uniqueId)
+        // if(itemIndex){
+        //   this.connectSortings.splice(itemIndex, 1);
+        // }
+
+        control.patchValue({
+          attribute_id: null,
+          matrix_uniqueId: matrix.uniqueId,
+          value: matrix.total_value
+        })
+
+        this.connectSortings.push(matrix)
+      }
+    }
+    //this.getConnectItem(control)
+    console.log(this.connectSortings)
+    console.log(event)
+  }
+
+  private updateConnectedDropLists() {
+    this.connectedDropLists = [
+      ...this.sortingsForm.value.map((_: any, index: number) => `sortId-${index}`),
+      this.tariffDropListId,
+      this.tariffMatrixDropListId,
+    ];
   }
 
   isNumeric(value: any): boolean {
     return !isNaN(parseFloat(value)) && isFinite(value);
+  }
+
+  getTariffSortingForm(): FormArray{
+    return (this.tariffForm.get('sortings') as FormArray);
   }
 
   onToggleGroupVisibility(index: number) {
@@ -143,7 +215,18 @@ export class TariffSortingComponent {
     return attributeGroup.get('attributs') as FormArray;
   }
 
+  getConnectItem(control: any){
+    let value = control.value
+    if(value){
+      let item = this.connectSortings.find((item: any) => item.id == value.attribute_id || item.uniqueId == value.matrix_uniqueId)
+      return item
+    }
+    return {}
+  }
+
   ngOnDestroy() {
+    console.log('remove')
+    this.tariffSortingService.resetData()
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

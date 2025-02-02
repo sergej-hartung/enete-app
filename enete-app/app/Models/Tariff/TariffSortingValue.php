@@ -13,7 +13,9 @@ class TariffSortingValue extends Pivot
         'tariff_id',
         'sorting_criteria_id',
         'value',
-        'include_hardware'
+        'include_hardware',
+        'matrix_uniqueId',
+        'attribute_id'
     ];
 
     public function tariff()

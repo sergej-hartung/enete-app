@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('sorting_criteria_id')->constrained('group_sorting_criteria')->onDelete('cascade'); // Критерий
             $table->decimal('value', 10, 2); // Значение
             $table->boolean('include_hardware')->default(false);
+            $table->string('matrix_uniqueId')->nullable();
+            $table->unsignedBigInteger('attribute_id');
             $table->timestamps();
         });
     }

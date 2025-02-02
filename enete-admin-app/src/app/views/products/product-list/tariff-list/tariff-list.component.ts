@@ -11,6 +11,7 @@ import { NetworkOperatorService } from '../../../../services/product/tariff/netw
 import { ProductService } from '../../../../services/product/product.service';
 import { MainNavbarService } from '../../../../services/main-navbar.service';
 import { AttributeGroupService } from '../../../../services/product/tariff/attribute-group/attribute-group.service';
+import { SortingService } from '../../../../services/product/tariff/sorting/sorting.service';
 
 @Component({
   selector: 'app-tariff-list',
@@ -63,6 +64,7 @@ export class TariffListComponent {
     private tariffNetworkOperatorService: NetworkOperatorService,
     private productService: ProductService,
     private mainNavbarService: MainNavbarService,
+    private tariffSortingService: SortingService,
     //private attributeGroupService: AttributeGroupService
   ) {}
 
@@ -227,6 +229,7 @@ export class TariffListComponent {
 
     this.tariffService.resetData()
     this.tariffService.resetDetailedData()
+    this.tariffSortingService.resetData(),
     //this.attributeGroupService.resetData()
     this.productService.resetTariffGroupId()
     this.productService.resetTariffId()
