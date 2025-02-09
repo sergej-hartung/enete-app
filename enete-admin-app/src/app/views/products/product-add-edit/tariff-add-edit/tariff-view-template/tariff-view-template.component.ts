@@ -64,7 +64,7 @@ export class TariffViewTemplateComponent {
 
           if(tpl){
             this.deleteTpl(tpl)
-            this.unsubscribeToFormCanges(attr.id)
+            //this.unsubscribeToFormCanges(attr.id)
           }
         })
 
@@ -77,7 +77,7 @@ export class TariffViewTemplateComponent {
               const tpl = this.getTplByAttrId(attr.id)
               if(tpl){
                 this.deleteTpl(tpl)
-                this.unsubscribeToFormCanges(attr.id)
+                //this.unsubscribeToFormCanges(attr.id)
               }
             })
           }
@@ -91,13 +91,13 @@ export class TariffViewTemplateComponent {
             const tpl = this.getTplByMatrixId(matrix.id)
             if(tpl){
               this.deleteTpl(tpl)
-              this.unsubscribeToFormCanges(matrix.id)
+              //this.unsubscribeToFormCanges(matrix.id)
             }
           }else if(matrix && matrix.uniqueId){
             const tpl = this.getTmlByMatrixUniqueId(matrix.uniqueId)
             if(tpl){
               this.deleteTpl(tpl)
-              this.unsubscribeToFormCanges(matrix.uniqueId)
+              //this.unsubscribeToFormCanges(matrix.uniqueId)
             }
           }
         })
@@ -407,8 +407,16 @@ export class TariffViewTemplateComponent {
   }
 
   deleteTpl(tpl: any){
+    let tplObj = tpl.value
+
     this.resetTplForm(tpl)
     this.updateTariffAttributsStatus()
+
+    if(!tplObj.isMatrix && tplObj?.attribute){
+      this.unsubscribeToFormCanges(tplObj?.attribute?.id)
+    }else if(tplObj.isMatrix && tplObj?.matrix){
+      this.unsubscribeToFormCanges(tplObj?.matrix?.uniqueId)
+    }
   }
 
   private updateTariffAttributsStatus() {

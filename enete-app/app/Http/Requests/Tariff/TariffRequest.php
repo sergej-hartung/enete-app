@@ -143,6 +143,19 @@ class TariffRequest extends FormRequest
             'tpl.*.attribute.unit'                         => 'nullable|sometimes|string|max:255',
             'tpl.*.attribute.value_text'                   => 'nullable|sometimes|string',
             'tpl.*.attribute.value_varchar'                => 'nullable|sometimes|string|max:255',
+
+            'sortings.*.id'                                 => 'nullable|sometimes|integer',
+            'sortings.*.name'                               => 'nullable|sometimes|string|max:255',
+            'sortings.*.description'                        => 'nullable|sometimes|string|max:255',
+            'sortings.*.tariff_id'                          => 'nullable|sometimes|integer',
+            'sortings.*.sorting_criteria_id'                => 'nullable|sometimes|integer',
+            'sortings.*.value'                              => 'nullable|sometimes|numeric',
+            'sortings.*.include_hardware'                   => 'nullable|sometimes|boolean',
+            'sortings.*.matrix_uniqueId'                    => 'nullable|sometimes|string|max:255',
+            'sortings.*.matrix_name'                        => 'nullable|sometimes|string|max:255',
+            'sortings.*.attribute_id'                       => 'nullable|sometimes|integer|exists:tariff_attributes,id',
+            'sortings.*.attribute_name'                     => 'nullable|sometimes|string|max:255',
+            'sortings.*.unit'                               => 'nullable|sometimes|string|max:255',
         ];
     }
 }

@@ -9,6 +9,8 @@ class TariffSortingValue extends Pivot
 {
     use HasFactory;
 
+    protected $table = 'tariff_sorting_values';
+
     protected $fillable = [
         'tariff_id',
         'sorting_criteria_id',

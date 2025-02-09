@@ -24,7 +24,6 @@ export class TariffSortingComponent {
   calcMatrixForm: FormArray
   sortingsForm: FormArray
 
-  connectSortings: any = []
 
   tariffMatrixDropListId = 'tariffMatrixDropList';
   tariffDropListId = 'tariffDropList';
@@ -37,6 +36,7 @@ export class TariffSortingComponent {
   tariffSortings: any = []
 
   private unsubscribe$ = new Subject<void>();
+  private subscriptions: Map<number|string, any> = new Map();
 
   constructor(
       private fb: FormBuilder,
@@ -52,27 +52,57 @@ export class TariffSortingComponent {
   
     }
 
-  ngOnInit() {
-      // this.categoryService.fetchData();
-      // this.comboStatusService.fetchData();
-  
-      
+  ngOnInit() {   
 
-      
-      this.productService.tariffGroupId$ 
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(id =>{
-          this.tariffSortingService.fetchDataByGroupId(id)
+    this.productService.deletedTariffAttr
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(attr => {
+        const sorting = this.getSortingByAttrId(attr.id)
+        if(sorting){
+          this.removeSorting(sorting)
+        }
       })
 
-      this.productService.productMode$
+    this.productService.deletedTariffAttrGroup
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(group => {
+        if(group && 'attributs' in group){
+          group.attributs.forEach((attr: any) => {
+            const sorting = this.getSortingByAttrId(attr.id)
+            if(sorting){
+              this.removeSorting(sorting)
+            }
+          })
+        }
+      })
+    
+      this.productService.deletedTariffMatrix
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(mode => {
-          if(mode){
-
-            this.loadData(mode)
+        .subscribe(matrixObj => {
+          const matrix = matrixObj?.form.value
+          //console.log(matrix)
+          if(matrix && matrix.uniqueId){
+            const sorting = this.getSortingByMatrixUniqueId(matrix.uniqueId)
+            if(sorting){
+              this.removeSorting(sorting)
+            }
           }
-        })
+      })
+
+    this.productService.tariffGroupId$ 
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(id =>{
+        this.tariffSortingService.fetchDataByGroupId(id)
+    })
+
+    this.productService.productMode$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(mode => {
+        if(mode){
+
+          this.loadData(mode)
+        }
+      })
   }
 
   loadData(mode: string){
@@ -84,6 +114,12 @@ export class TariffSortingComponent {
         if(sortingData && sortingData.entityType == 'tariffSortingsByGroup'){
           this.productService.updateInitTariffDataLoaded('sortings', true);
           this.tariffSortings = sortingData?.data || [];
+
+          this.tariffSortings.forEach((sort: Sorting)  => {
+            let sorting = this.createSortingFormControl(sort)
+            this.sortingsForm.push(sorting)
+          })
+          this.updateConnectedDropLists()  
         }
       })
     }
@@ -96,18 +132,20 @@ export class TariffSortingComponent {
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(([sortingData, tariffData]) => {
           if(sortingData && tariffData && sortingData.entityType == 'tariffSortingsByGroup'){
-            this.productService.updateInitTariffDataLoaded('sortings', true);
+            //this.productService.updateInitTariffDataLoaded('sortings', true);
             console.log('Loaded')
 
             this.tariffSortings = sortingData?.data || [];
-            console.log(this.tariffSortings)
+
             this.tariffSortings.forEach((sort: Sorting)  => {
               console.log(sort)
               let sorting = this.createSortingFormControl(sort, tariffData.data)
               this.sortingsForm.push(sorting)
             })
-
-            this.updateConnectedDropLists()          
+            console.log(this.sortingsForm)
+            this.updateConnectedDropLists()     
+            
+            this.productService.updateInitTariffDataLoaded('sortings', true);
           }
           
         })
@@ -118,7 +156,38 @@ export class TariffSortingComponent {
   createSortingFormControl(sort: Sorting, tariff?: Tariff){
       let sortings = tariff?.sortings
       let sorting = sortings?.find(item => item.criteria_id == sort.id)
-      return this.fb.group({
+      let matrixName = null
+      let attributName = null
+      let unit = null
+
+      if(sorting?.matrix_uniqueId){
+        let calcMatrixArr = this.calcMatrixForm.value
+        if(calcMatrixArr){
+          calcMatrixArr.forEach((matrix:any) => {
+            if(matrix.uniqueId == sorting?.matrix_uniqueId){
+              matrixName = matrix.name
+              unit = matrix.unit
+            }
+          })
+        }
+      }
+
+      if(sorting?.attribute_id){
+        let attrGroupArr = this.getAttributeGroupArray().value
+        attrGroupArr.forEach((group: any) => {
+          if(group?.attributs){
+            group.attributs.forEach((attribut:any) => {
+              if(attribut.id ==  sorting?.attribute_id){
+                attributName = attribut.name
+                unit = attribut.unit
+                this.copiedAttributs.add(attribut.id);
+              }
+            })
+          }
+        })
+      }
+
+      let form = this.fb.group({
         id: [sorting ? sorting.id : null],
         name: [sorting ? sorting.name : sort.name],
         description: [sorting ? sorting.description : sort.description],
@@ -127,8 +196,22 @@ export class TariffSortingComponent {
         value: [sorting ? sorting.value : null, Validators.required],
         include_hardware: [sorting ? sorting.include_hardware : false],
         matrix_uniqueId: [sorting ? sorting.matrix_uniqueId : null],
-        attribute_id: [sorting ? sorting.attribute_id: null]
+        matrix_name: [matrixName ? matrixName : null],
+        attribute_id: [sorting ? sorting.attribute_id: null],
+        attribute_name: [attributName ? attributName: null],
+        unit: [unit ? unit : null]
       });
+
+      if(sorting?.attribute_id){
+        this.subscribeToFormChanges(sorting.attribute_id, form)
+      }
+
+      if(sorting?.matrix_uniqueId){
+        this.subscribeToMatrixChanges(sorting?.matrix_uniqueId, form)
+      }
+      
+
+      return form
     }
 
   onToggleMatrices(){
@@ -140,45 +223,37 @@ export class TariffSortingComponent {
       const attribute = event.previousContainer.data[event.previousIndex];
 
       if(control){
-        // let value = control.value
-
-        // let itemIndex = this.connectSortings.findIndex((item: any) => item.id == value.attribute_id || item.uniqueId == value.matrix_uniqueId)
-        // if(itemIndex){
-        //   this.connectSortings.splice(itemIndex, 1);
-        // }
-
         control.patchValue({
           attribute_id: attribute.id,
           matrix_uniqueId: null,
-          value: attribute.value_varchar
+          value: attribute.value_varchar,
+          attribute_name: attribute.name,
+          matrix_name: null,
+          include_hardware: false,
+          unit: attribute.unit
         })
-
-        this.connectSortings.push(attribute)
+        this.subscribeToFormChanges(attribute.id, control)
+        this.copiedAttributs.add(attribute.id);
       }
     }
     if(event.previousContainer.id === this.tariffMatrixDropListId){
       const matrix = event.previousContainer.data[event.previousIndex];
 
       if(control){
-        // let value = control.value
-
-        // let itemIndex = this.connectSortings.findIndex((item: any) => item.id == value.attribute_id || item.uniqueId == value.matrix_uniqueId)
-        // if(itemIndex){
-        //   this.connectSortings.splice(itemIndex, 1);
-        // }
-
         control.patchValue({
           attribute_id: null,
           matrix_uniqueId: matrix.uniqueId,
-          value: matrix.total_value
+          matrix_name: matrix.name,
+          attribute_name: null,
+          include_hardware: matrix.hardware_charge,
+          value: matrix.total_value,
+          unit: matrix.unit
         })
-
-        this.connectSortings.push(matrix)
+        this.subscribeToMatrixChanges(matrix.uniqueId, control)
       }
     }
-    //this.getConnectItem(control)
-    console.log(this.connectSortings)
-    console.log(event)
+
+    console.log(this.tariffForm)
   }
 
   private updateConnectedDropLists() {
@@ -189,12 +264,108 @@ export class TariffSortingComponent {
     ];
   }
 
+  removeSorting(control: any){
+    let value = control.value
+    control.patchValue({
+      attribute_id: null,
+      attribute_name: null,
+      id: null,
+      include_hardware: false,
+      matrix_name: null,
+      matrix_uniqueId: null,
+      unit: null,
+      value: null
+    })
+
+    if(value?.attribute_id){
+      this.unsubscribeToFormCanges(value?.attribute_id)
+    }else if(value.matrix_uniqueId){
+      this.unsubscribeToFormCanges(value.matrix_uniqueId)
+    }
+  }
+
+  subscribeToFormChanges(id: number, control: FormGroup){
+    if(id && !this.subscriptions.has(id)){
+      let tariffForm = this.getAttributeGroupArray()
+      
+      tariffForm.controls.forEach((formGroup) => {
+        const attributs = formGroup.value?.attributs || [];
+
+        const attrIndex = attributs.findIndex((attribute: any) => attribute.id === id);
+
+        if (attrIndex > -1) {
+
+          const attributsArr = formGroup.get('attributs') as FormArray
+          const attrControl = attributsArr?.at(attrIndex)
+          if(attrControl){
+            
+              const subscription = attrControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(attr => {
+                control.patchValue({
+                  attribute_id: attr.id,
+                  matrix_uniqueId: null,
+                  value: attr.value_varchar,
+                  attribute_name: attr.name,
+                  matrix_name: null,
+                  include_hardware: false,
+                  unit: attr.unit
+                })
+              })
+              this.subscriptions.set(id, subscription);
+          }
+        }
+      });
+    }
+  }
+
+  subscribeToMatrixChanges(uniqueId: string, control: FormGroup){
+    if(uniqueId && !this.subscriptions.has(uniqueId)){
+      const matrices = this.calcMatrixForm.value
+      const matrixIndex = matrices.findIndex((matrix: any) => matrix.uniqueId == uniqueId)
+
+      if(matrixIndex > -1){
+        const matrixControl = this.calcMatrixForm.at(matrixIndex)
+        const subscription = matrixControl.valueChanges.pipe(takeUntil(this.unsubscribe$)).subscribe(matrix => {
+          control.patchValue({
+            attribute_id: null,
+            matrix_uniqueId: matrix.uniqueId,
+            matrix_name: matrix.name,
+            attribute_name: null,
+            include_hardware: matrix.hardware_charge,
+            value: matrix.total_value,
+            unit: matrix.unit
+          })
+        })
+        this.subscriptions.set(uniqueId, subscription);
+      }
+      
+    }
+  }
+
+  unsubscribeToFormCanges(id: string | number){
+    if(this.subscriptions.has(id)){
+      const subscription = this.subscriptions.get(id);
+      if (subscription) {
+        subscription.unsubscribe();
+        this.subscriptions.delete(id);
+      }
+    }
+    
+  }
+
   isNumeric(value: any): boolean {
     return !isNaN(parseFloat(value)) && isFinite(value);
   }
 
   getTariffSortingForm(): FormArray{
     return (this.tariffForm.get('sortings') as FormArray);
+  }
+
+  getSortingByAttrId(AttrId: number){
+    return this.sortingsForm.controls.find(control => control?.value?.attribute_id == AttrId)
+  }
+
+  getSortingByMatrixUniqueId(uniqueId: number){
+    return this.sortingsForm.controls.find(control => control?.value?.matrix_uniqueId == uniqueId)
   }
 
   onToggleGroupVisibility(index: number) {
@@ -215,14 +386,6 @@ export class TariffSortingComponent {
     return attributeGroup.get('attributs') as FormArray;
   }
 
-  getConnectItem(control: any){
-    let value = control.value
-    if(value){
-      let item = this.connectSortings.find((item: any) => item.id == value.attribute_id || item.uniqueId == value.matrix_uniqueId)
-      return item
-    }
-    return {}
-  }
 
   ngOnDestroy() {
     console.log('remove')

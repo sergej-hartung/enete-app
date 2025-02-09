@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('value', 10, 2); // Значение
             $table->boolean('include_hardware')->default(false);
             $table->string('matrix_uniqueId')->nullable();
-            $table->unsignedBigInteger('attribute_id');
+            $table->unsignedBigInteger('attribute_id')->nullable();
             $table->timestamps();
         });
     }

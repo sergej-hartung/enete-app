@@ -18,10 +18,40 @@
                             class="attr-group-list"
                             (cdkDropListDropped)="drop($event, control)"
                         >
-                        <ng-container *ngIf="getConnectItem(control) as result">
+                        <!-- <ng-container *ngIf="getConnectItem(control) as result">
                           {{result?.name}}
-                        </ng-container>
-                            
+                        </ng-container> -->
+                         <!-- <ng-container>
+                          {{control.value?.value}}
+                         </ng-container>    -->
+                        <div class="attr-group-box" *ngIf="control.value?.attribute_name || control.value?.matrix_name">
+                          <div class="attr-group">
+                            <span class="attr-name col" *ngIf="control.value?.attribute_name">
+                              {{control.value?.attribute_name}}
+                            </span>
+                            <span class="attr-name col" *ngIf="control.value?.matrix_name">
+                              {{control.value?.matrix_name}}
+                            </span>
+                            <span class="attr_value col" *ngIf="control.value?.value">
+                              <ng-container *ngIf="isNumeric(control.value?.value); else nonNumericTemplate">
+                                {{ control.value?.value | number:'1.2-2' }}
+                              </ng-container>
+                              <ng-template #nonNumericTemplate>
+                                  {{ control.value?.value }}
+                              </ng-template>
+                            </span>
+                            <span class="attr-unit col" *ngIf="control.value?.unit">
+                              {{control.value?.unit}}
+                            </span>
+                            <button 
+                              class="btn-text-style red" 
+                              (click)="removeSorting(control)"
+                            >
+                              <i  class="fas fa-times"></i>
+                            </button>
+                          </div>
+                        </div>
+                         
 
                         </div>
                     </ng-container>

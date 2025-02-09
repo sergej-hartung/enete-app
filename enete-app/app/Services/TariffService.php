@@ -9,6 +9,7 @@ use App\Models\Tariff\TariffCalcMatrix;
 use App\Models\Tariff\TariffPromotion;
 use App\Models\Tariff\TariffDetail;
 use App\Models\Tariff\TariffTpl;
+use App\Models\Tariff\TariffSortingValue;
 use Hamcrest\Arrays\IsArray;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -93,7 +94,7 @@ class TariffService{
         }
         
         $tariff->touch();
-
+        
 
         return Tariff::with(
             'comboStatus',
@@ -102,6 +103,7 @@ class TariffService{
             'networkOperator', 
             'group', 
             'status',
+            'sorting',
             'document',
             'clacMatrices',
             'clacMatrices.attributs',
@@ -151,6 +153,9 @@ class TariffService{
 
         $combo_status = isset($data['combo_status']) ? $data['combo_status'] : null;
         $this->handleTariffComboStatus($combo_status, $tariff);
+
+        $sortings = isset($data['sortings']) ? $data['sortings'] : null;
+        $this->handleTariffSortings($sortings, $tariff);
     }
 
     public function handleTariff($entities, Tariff $tariff = null, bool $update = false){
@@ -846,6 +851,53 @@ class TariffService{
                             'tariff_id' => $tariff->id
                         ]])
                         ->log('Kombinationstatus zum Tarif hinzugefügt');
+                }
+            }
+        }
+    }
+
+    public function handleTariffSortings($entities, Tariff $tariff, bool $update = false){
+        $currentUserId = Auth::id();
+
+        if ($entities && is_array($entities)) {
+            foreach ($entities as $sortingData) {
+                // Подготавливаем данные для сохранения.
+                // При этом поля, которых нет в таблице (например, name, description, matrix_name, attribute_name, unit)
+                // игнорируются.
+                $data = [
+                    'tariff_id'            => $tariff->id,
+                    'sorting_criteria_id'  => $sortingData['sorting_criteria_id'] ?? null,
+                    // Приводим значение к числу (в таблице тип decimal(10,0))
+                    'value'                => isset($sortingData['value']) ? $sortingData['value'] : 0,
+                    // Приводим булево значение к 1/0
+                    'include_hardware'     => !empty($sortingData['include_hardware']) ? 1 : 0,
+                    // Если поле отсутствует или равно null, записываем пустую строку, так как столбец NOT NULL
+                    'matrix_uniqueId'      => $sortingData['matrix_uniqueId'] ?? null,
+                    // Если отсутствует — будет null
+                    'attribute_id'         => $sortingData['attribute_id'] ?? null,
+                ];
+
+                if ($update && !empty($sortingData['id'])) {
+                    // Если указан id – обновляем существующую запись
+                    $sorting = TariffSortingValue::find($sortingData['id']);
+                    if ($sorting) {
+                        $sorting->update($data);
+
+                        activity()
+                            ->performedOn($tariff)
+                            ->causedBy($currentUserId)
+                            ->withProperties(['sorting' => $data])
+                            ->log('Tarif-Sortierung aktualisiert');
+                    }
+                } else {
+                    // Если id отсутствует или обновление не требуется – создаём новую запись
+                    $sorting = TariffSortingValue::create($data);
+
+                    activity()
+                        ->performedOn($tariff)
+                        ->causedBy($currentUserId)
+                        ->withProperties(['sorting' => $sorting->toArray()])
+                        ->log('Tarif-Sortierung hinzugefügt');
                 }
             }
         }
