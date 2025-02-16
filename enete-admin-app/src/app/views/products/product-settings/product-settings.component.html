@@ -1,0 +1,31 @@
+
+<!-- <div class="pe-0 ps-0 tariff-details-content">
+    <p>product-settings works!</p>
+</div> -->
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs nav-tabs-custom ps-2 pt-2 mb-1">
+    <li [ngbNavItem]="1">
+        <button ngbNavLink>Tarifgruppen</button>
+        <ng-template ngbNavContent>
+            Test 1                     
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+        <button ngbNavLink>Attribute</button>
+        <ng-template ngbNavContent>  
+            Test2           
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="3">
+        <button ngbNavLink>Provider</button>
+        <ng-template ngbNavContent>  
+            Test3           
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="4">
+        <button ngbNavLink>Netzbetreiber</button>
+        <ng-template ngbNavContent>  
+            Test4           
+        </ng-template>
+    </li>
+</ul>
+<div [ngbNavOutlet]="nav" class="pe-0 ps-0 tariff-setting-content"></div>

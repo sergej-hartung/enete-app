@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from '../common/layout/layout.component';
 import { ProductsComponent } from './products.component';
 import { FileManagerComponent } from './file-manager/file-manager.component';
+import { ProductSettingsComponent } from './product-settings/product-settings.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
       {
         path: 'document-manager', 
         component: FileManagerComponent
+      },
+      {
+        path: 'product-settings', 
+        component: ProductSettingsComponent
       }
     ]
   }

@@ -154,6 +154,19 @@ class TariffUpdateRequest extends FormRequest
             'updated.*.tpl.*.attribute.*.value_text'                 => 'nullable|sometimes|string',
             'updated.*.tpl.*.attribute.*.value_varchar'              => 'nullable|sometimes|string|max:255',
 
+            'updated.*.sortings.*.id'                                 => 'nullable|sometimes|integer',
+            'updated.*.sortings.*.name'                               => 'nullable|sometimes|string|max:255',
+            'updated.*.sortings.*.description'                        => 'nullable|sometimes|string|max:255',
+            'updated.*.sortings.*.tariff_id'                          => 'nullable|sometimes|integer',
+            'updated.*.sortings.*.sorting_criteria_id'                => 'nullable|sometimes|integer',
+            'updated.*.sortings.*.value'                              => 'nullable|sometimes|numeric',
+            'updated.*.sortings.*.include_hardware'                   => 'nullable|sometimes|boolean',
+            'updated.*.sortings.*.matrix_uniqueId'                    => 'nullable|sometimes|string|max:255',
+            'updated.*.sortings.*.matrix_name'                        => 'nullable|sometimes|string|max:255',
+            'updated.*.sortings.*.attribute_id'                       => 'nullable|sometimes|integer|exists:tariff_attributes,id',
+            'updated.*.sortings.*.attribute_name'                     => 'nullable|sometimes|string|max:255',
+            'updated.*.sortings.*.unit'                               => 'nullable|sometimes|string|max:255',
+
             //added
             'added'                                      => 'nullable|array',
             'added.*.tariff'                             => 'nullable|sometimes|array',
@@ -283,6 +296,19 @@ class TariffUpdateRequest extends FormRequest
             'added.*.tpl.*.attribute.*.value_text'                 => 'nullable|sometimes|string',
             'added.*.tpl.*.attribute.*.value_varchar'              => 'nullable|sometimes|string|max:255',
 
+            'added.*.sortings.*.id'                                 => 'nullable|sometimes|integer',
+            'added.*.sortings.*.name'                               => 'nullable|sometimes|string|max:255',
+            'added.*.sortings.*.description'                        => 'nullable|sometimes|string|max:255',
+            'added.*.sortings.*.tariff_id'                          => 'nullable|sometimes|integer',
+            'added.*.sortings.*.sorting_criteria_id'                => 'nullable|sometimes|integer',
+            'added.*.sortings.*.value'                              => 'nullable|sometimes|numeric',
+            'added.*.sortings.*.include_hardware'                   => 'nullable|sometimes|boolean',
+            'added.*.sortings.*.matrix_uniqueId'                    => 'nullable|sometimes|string|max:255',
+            'added.*.sortings.*.matrix_name'                        => 'nullable|sometimes|string|max:255',
+            'added.*.sortings.*.attribute_id'                       => 'nullable|sometimes|integer|exists:tariff_attributes,id',
+            'added.*.sortings.*.attribute_name'                     => 'nullable|sometimes|string|max:255',
+            'added.*.sortings.*.unit'                               => 'nullable|sometimes|string|max:255',
+
             //deleted
             'deleted'                                      => 'nullable|array',
             'deleted.*.tariff'                             => 'nullable|sometimes|array',
@@ -411,6 +437,19 @@ class TariffUpdateRequest extends FormRequest
             'deleted.*.tpl.*.attribute.*.unit'                       => 'nullable|sometimes|string|max:255',
             'deleted.*.tpl.*.attribute.*.value_text'                 => 'nullable|sometimes|string',
             'deleted.*.tpl.*.attribute.*.value_varchar'              => 'nullable|sometimes|string|max:255',
+
+            'deleted.*.sortings.*.id'                                 => 'nullable|sometimes|integer',
+            'deleted.*.sortings.*.name'                               => 'nullable|sometimes|string|max:255',
+            'deleted.*.sortings.*.description'                        => 'nullable|sometimes|string|max:255',
+            'deleted.*.sortings.*.tariff_id'                          => 'nullable|sometimes|integer',
+            'deleted.*.sortings.*.sorting_criteria_id'                => 'nullable|sometimes|integer',
+            'deleted.*.sortings.*.value'                              => 'nullable|sometimes|numeric',
+            'deleted.*.sortings.*.include_hardware'                   => 'nullable|sometimes|boolean',
+            'deleted.*.sortings.*.matrix_uniqueId'                    => 'nullable|sometimes|string|max:255',
+            'deleted.*.sortings.*.matrix_name'                        => 'nullable|sometimes|string|max:255',
+            'deleted.*.sortings.*.attribute_id'                       => 'nullable|sometimes|integer|exists:tariff_attributes,id',
+            'deleted.*.sortings.*.attribute_name'                     => 'nullable|sometimes|string|max:255',
+            'deleted.*.sortings.*.unit'                               => 'nullable|sometimes|string|max:255',
         ];
     }
 }

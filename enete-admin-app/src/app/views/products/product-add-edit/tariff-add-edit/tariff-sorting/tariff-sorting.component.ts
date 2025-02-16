@@ -137,15 +137,26 @@ export class TariffSortingComponent {
 
             this.tariffSortings = sortingData?.data || [];
 
+            let newSortings:any = []
+
             this.tariffSortings.forEach((sort: Sorting)  => {
-              console.log(sort)
+              console.log(tariffData.data)
               let sorting = this.createSortingFormControl(sort, tariffData.data)
-              this.sortingsForm.push(sorting)
+
+              if(sorting.get('id')?.value){
+                this.sortingsForm.push(sorting)
+              }else{
+                newSortings.push(sorting)
+              }
             })
             console.log(this.sortingsForm)
-            this.updateConnectedDropLists()     
+                 
             
             this.productService.updateInitTariffDataLoaded('sortings', true);
+            newSortings.forEach((sorting:any) => {
+              this.sortingsForm.push(sorting)
+            })
+            this.updateConnectedDropLists()
           }
           
         })
@@ -189,6 +200,7 @@ export class TariffSortingComponent {
 
       let form = this.fb.group({
         id: [sorting ? sorting.id : null],
+        //uniqueId: [sorting ? null : this.generateUniqueIdWithTimestamp()],
         name: [sorting ? sorting.name : sort.name],
         description: [sorting ? sorting.description : sort.description],
         tariff_id: [tariff?.id],
@@ -269,7 +281,7 @@ export class TariffSortingComponent {
     control.patchValue({
       attribute_id: null,
       attribute_name: null,
-      id: null,
+      //id: null,
       include_hardware: false,
       matrix_name: null,
       matrix_uniqueId: null,
@@ -384,6 +396,10 @@ export class TariffSortingComponent {
   getAttributeGroupAttributs(index: number): FormArray {
     const attributeGroup = this.getAttributeGroupArray().at(index) as FormGroup;
     return attributeGroup.get('attributs') as FormArray;
+  }
+
+  private generateUniqueIdWithTimestamp(): string {
+    return `${Date.now()}-${Math.floor(Math.random() * 10000)}`;
   }
 
 

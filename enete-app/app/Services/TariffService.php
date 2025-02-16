@@ -61,6 +61,11 @@ class TariffService{
                 $update = true;
                 $this->handleTariffComboStatus($dataUpdate['combo_status'], $tariff, true);
             }
+
+            if(isset($dataUpdate['sortings'])){
+                $update = true;
+                $this->handleTariffSortings($dataUpdate['sortings'], $tariff, true);
+            }
         }
         
         foreach($data["added"] as $dataAdded){
@@ -83,6 +88,10 @@ class TariffService{
             if(isset($dataAdded['tpl'])){
                 $update = true;
                 $this->handleTariffTpl($dataAdded['tpl'], $tariff, true);  // geprüft
+            }
+            if(isset($dataAdded['sortings'])){
+                $update = true;
+                $this->handleTariffSortings($dataAdded['sortings'], $tariff);
             }
         }
         
@@ -864,19 +873,31 @@ class TariffService{
                 // Подготавливаем данные для сохранения.
                 // При этом поля, которых нет в таблице (например, name, description, matrix_name, attribute_name, unit)
                 // игнорируются.
-                $data = [
-                    'tariff_id'            => $tariff->id,
-                    'sorting_criteria_id'  => $sortingData['sorting_criteria_id'] ?? null,
-                    // Приводим значение к числу (в таблице тип decimal(10,0))
-                    'value'                => isset($sortingData['value']) ? $sortingData['value'] : 0,
-                    // Приводим булево значение к 1/0
-                    'include_hardware'     => !empty($sortingData['include_hardware']) ? 1 : 0,
-                    // Если поле отсутствует или равно null, записываем пустую строку, так как столбец NOT NULL
-                    'matrix_uniqueId'      => $sortingData['matrix_uniqueId'] ?? null,
-                    // Если отсутствует — будет null
-                    'attribute_id'         => $sortingData['attribute_id'] ?? null,
-                ];
+                $data = [];
 
+                if($tariff->id){
+                    $data['tariff_id'] = $tariff->id;
+                }
+                if(array_key_exists('sorting_criteria_id', $sortingData)){
+                    $data['sorting_criteria_id'] = $sortingData['sorting_criteria_id'];
+                }
+                if(array_key_exists('value', $sortingData)){
+                    $data['value'] = $sortingData['value'] ? $sortingData['value'] : 0;
+                }
+                if(array_key_exists('include_hardware', $sortingData)){
+                    $data['include_hardware'] = !empty($sortingData['include_hardware']) ? 1 : 0;
+                }
+                if(array_key_exists('matrix_uniqueId', $sortingData)){
+                    $data['matrix_uniqueId'] = $sortingData['matrix_uniqueId'] ? $sortingData['matrix_uniqueId'] : null;
+                }
+                if(array_key_exists('attribute_id', $sortingData)){
+                    $data['attribute_id'] = $sortingData['attribute_id'] ?? null;
+                }
+                //var_dump('test');
+                // var_dump($sortingData['matrix_uniqueId']);
+                // var_dump($sortingData);
+                // var_dump(isset($sortingData['matrix_uniqueId']));
+                //var_dump($data);
                 if ($update && !empty($sortingData['id'])) {
                     // Если указан id – обновляем существующую запись
                     $sorting = TariffSortingValue::find($sortingData['id']);

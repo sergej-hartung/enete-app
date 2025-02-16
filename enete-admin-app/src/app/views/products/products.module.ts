@@ -49,6 +49,7 @@ import { TariffAttributeViewComponent } from './product-list/tariff-list/tariff-
 import { TariffDetailsViewComponent } from './product-list/tariff-list/tariff-view/tariff-details/tariff-details-view.component';
 import { TariffPromoViewComponent } from './product-list/tariff-list/tariff-view/tariff-promo/tariff-promo-view.component';
 import { TariffSortingComponent } from './product-add-edit/tariff-add-edit/tariff-sorting/tariff-sorting.component';
+import { ProductSettingsComponent } from './product-settings/product-settings.component';
 
 
 @NgModule({
@@ -79,6 +80,7 @@ import { TariffSortingComponent } from './product-add-edit/tariff-add-edit/tarif
     TariffPromoViewComponent,
     TariffCommissionComponent,
     TariffSortingComponent,
+    ProductSettingsComponent,
     //FileSizePipe,
   ],
   imports: [

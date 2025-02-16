@@ -64,8 +64,6 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
             this.preloaderService.show('Creating')
             const value = this.tariffForm.value
             this.tariffService.addItem(value)
-            console.log(JSON.stringify(value))
-            console.log(value)
             // this.addOrEditProducts = true
             // this.productService.setProductMode(button)
           }
@@ -75,21 +73,12 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
             if(tariff){
               const tariffId = tariff.get('id')?.value
               if(tariffId){
-                //console.log(JSON.stringify(this.copyTariffValue))
-                //console.log(this.copyTariffValue)
-                //console.log(JSON.stringify(this.tariffForm.value))
-                //console.log(this.tariffForm.value)
                 this.preloaderService.show('Updating')
                 const changes = this.objectDiffService.getChanges(this.copyTariffValue, this.tariffForm.value)
-                //console.log(changes)
+
                 this.tariffService.updateItem(tariffId, changes)
-                console.log(JSON.stringify(changes))
-                //console.log(changes)
               }
             }
-            // console.log(this.tariffForm.get('tariff'))
-            // console.log(changes)
-            // console.log(JSON.stringify(changes))
           }
         })
 
@@ -102,9 +91,7 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
     ])
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe(([tariffLoadedState, initDataLoadedState]) => {
-        // console.log(tariffLoadedState)
-        // console.log(initDataLoadedState)
-        // Проверяем, что оба значения подгрузились
+
         const tariffsLoaded = this.productService.areAllTariffsLoaded();
         const initDataLoaded = this.productService.areAllInitTariffDataLoaded();
     
@@ -136,9 +123,6 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
           takeUntil(this.unsubscribe$)
         )
         .subscribe(() => {
-          // console.log(this.tariffForm.valid)
-          // console.log(this.tariffLoaded)
-          //console.log(this.tariffForm)
           if(mode === 'new'){
             if(this.tariffForm.valid && this.tariffForm.touched){
               this.mainNavbarService.setIconState('save', true, false);
