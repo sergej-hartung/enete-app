@@ -1,0 +1,62 @@
+<div class="container-fluid">
+<div class="row">
+    <div class="pe-0 pt-1 ps-0"
+        [@resizeLeft]="groupEditOrNew ? 'partial' : 'full'"
+    >
+        <app-generic-table 
+            class="table-responsive"
+            [columns]="groupColumns"
+            [filters]="filters"
+            [isExpandable]="IsExpandable"
+            [dataService]="tariffGroupService"
+            [rowSelectionMode]="'parent'"
+            [sortMode]="'parent'"
+            [filterMode]="'parent'"
+            (rowSelected)="selectedRow($event)"
+            (sortEvent)="sort($event)"
+            (filterEvent)="filter($event)"
+            #genericTable 
+        >
+        </app-generic-table>
+
+        <button (click)="editGroup()">Edit</button>
+        <button (click)="closeGroup()">Abrechnen</button>
+    </div>
+     <!-- Rechte Seite: Container für Animation mit angepasstem Layout -->
+     <div *ngIf="groupEditOrNew" class="col pe-0 ps-0" style="overflow: hidden;"
+          >
+        <div class="product-settigs-wrapp" 
+            [@slideIn]
+            >
+          <div class="product-settings-tittle">Tarifgruppe Konfigurieren</div>
+          <div class="product-settings-content flex-grow-1">
+            <form>
+              <div class="row">
+                <div class="col">
+                  <div class="row">
+                    <div class="col">
+                      <label class="form-label custom-label-sm required">Name</label>
+                      <input type="text" class="form-control form-control-sm">
+                    </div>                          
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label class="form-label custom-label-sm required">Icon</label>
+                      <input type="text" class="form-control form-control-sm">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col">
+                      <label class="form-label custom-label-sm required">Farbe</label>
+                      <input type="text" class="form-control form-control-sm">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    
+</div>
+</div>

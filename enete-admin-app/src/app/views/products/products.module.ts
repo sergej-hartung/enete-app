@@ -50,6 +50,12 @@ import { TariffDetailsViewComponent } from './product-list/tariff-list/tariff-vi
 import { TariffPromoViewComponent } from './product-list/tariff-list/tariff-view/tariff-promo/tariff-promo-view.component';
 import { TariffSortingComponent } from './product-add-edit/tariff-add-edit/tariff-sorting/tariff-sorting.component';
 import { ProductSettingsComponent } from './product-settings/product-settings.component';
+import { TariffSettingsComponent } from './product-settings/tariff-settings/tariff-settings.component';
+import { HardwareSettingsComponent } from './product-settings/hardware-settings/hardware-settings.component';
+import { TariffGroupSettingsComponent } from './product-settings/tariff-settings/tariff-group-settings/tariff-group-settings.component';
+import { TariffAttributeSettingsComponent } from './product-settings/tariff-settings/tariff-attribute-settings/tariff-attribute-settings.component';
+import { TariffProviderSettingsComponent } from './product-settings/tariff-settings/tariff-provider-settings/tariff-provider-settings.component';
+import { TariffNetworkOperatorSettingsComponent } from './product-settings/tariff-settings/tariff-network-operator-settings/tariff-network-operator-settings.component';
 
 
 @NgModule({
@@ -81,6 +87,12 @@ import { ProductSettingsComponent } from './product-settings/product-settings.co
     TariffCommissionComponent,
     TariffSortingComponent,
     ProductSettingsComponent,
+    TariffSettingsComponent,
+    HardwareSettingsComponent,
+    TariffGroupSettingsComponent,
+    TariffAttributeSettingsComponent,
+    TariffProviderSettingsComponent,
+    TariffNetworkOperatorSettingsComponent,
     //FileSizePipe,
   ],
   imports: [

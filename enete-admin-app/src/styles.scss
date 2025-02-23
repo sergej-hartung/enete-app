@@ -2918,3 +2918,90 @@ $f-body:'Open Sans', sans-serif;
 .bg-hardware-charge{
     background-color: rgba(128, 0, 179, 0.05);
 }
+
+
+.nav-settings-group{
+    .nav-link{
+        color: #6c757d;
+        font-size: 0.9rem;
+        padding-bottom: 0.25rem;
+    }
+
+    &.nav-underline{
+        .nav-link.active{
+            color: rgba(0, 0, 0, 0.8);
+        }
+    }
+    
+}
+
+.tariff-setting-content{
+    min-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 31.6px - 48px);
+    max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 31.6px - 48px);
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .generic-table .icon-cell{
+        text-align: left;
+    }
+}
+
+.product-settings-tittle{
+    height: 38px;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 38px;
+
+    padding-right: calc(1.5rem * 0.5);
+    padding-left: calc(1.5rem * 0.5);
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.175);
+}
+
+.product-settigs-wrapp{
+    border-left: 1px solid rgba(0, 0, 0, 0.175);
+
+    min-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 32.5px - 48px);
+    max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 32.5px - 48px);
+}
+
+.product-settings-content{
+    padding-right: calc(1.5rem * 0.5);
+    padding-left: calc(1.5rem * 0.5);
+}
+
+
+
+
+
+/* Gemeinsamer Übergang für beide Blöcke */
+.left-block, .right-block {
+    transition: all 0.5s ease;
+  }
+  
+  /* Linker Block im Normalzustand: volle Breite */
+  .left-block.full-width {
+    width: 100%;
+  }
+  
+  /* Linker Block im Edit-Modus: ca. 7/12 der Breite */
+  .left-block.reduced-width {
+    width: 58.3333%;
+  }
+  
+  /* Rechter Block: initial außerhalb des sichtbaren Bereichs */
+  .right-block {
+    width: 41.6667%; /* entspricht col-5 */
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  
+  /* Rechter Block im Edit-Modus: fährt herein */
+  .right-block.slide-in {
+    transform: translateX(0);
+    opacity: 1;
+  }

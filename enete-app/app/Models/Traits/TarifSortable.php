@@ -26,6 +26,8 @@ trait TarifSortable {
             'external_id'    => ['table' => 'tariffs', 'column' => 'external_id'],      
             'provider.name'  => ['table' => 'tariff_providers', 'column' => 'name'],
             'name_short'     => ['table' => 'tariffs', 'column' => 'name_short'],
+            'created_at'     => ['table' => 'tariffs', 'column' => 'created_at'],
+            'updated_at'     => ['table' => 'tariffs', 'column' => 'updated_at'],
             'status'         => ['table' => 'tariffs', 'column' => 'status_id'],
             'is_published'   => ['table' => 'tariffs', 'column' => 'is_published'],
             // Добавьте другие поля сортировки по мере необходимости

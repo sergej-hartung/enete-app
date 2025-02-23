@@ -1,0 +1,27 @@
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs nav-tabs-custom ps-2 pt-2">
+    <li [ngbNavItem]="1">
+        <button ngbNavLink>Tarifgruppen</button>
+        <ng-template ngbNavContent>
+            <app-tariff-group-settings></app-tariff-group-settings>                     
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+        <button ngbNavLink>Attribute</button>
+        <ng-template ngbNavContent>  
+            <app-tariff-attribute-settings></app-tariff-attribute-settings>          
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="3">
+        <button ngbNavLink>Provider</button>
+        <ng-template ngbNavContent>  
+            <app-tariff-provider-settings></app-tariff-provider-settings>          
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="4">
+        <button ngbNavLink>Netzbetreiber</button>
+        <ng-template ngbNavContent>  
+            <app-tariff-network-operator-settings></app-tariff-network-operator-settings>          
+        </ng-template>
+    </li>
+</ul>
+<div [ngbNavOutlet]="nav" class="pe-0 ps-0 tariff-setting-content"></div>

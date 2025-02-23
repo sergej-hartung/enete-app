@@ -216,7 +216,7 @@ export class TariffListComponent {
   resetState(){
     this.active = 1;
 
-    this.dataLoadedOrNew = false
+    //this.dataLoadedOrNew = false
     this.IsExpandable = false;
 
     this.proviedersLoaded = false

@@ -263,7 +263,7 @@ export class GenericTableComponent<T> {
       }
 
       this.data?.forEach(d => {
-        console.log(d)
+        //console.log(d)
         if (d.selected && d['originalIconColor']) {
           d['iconIcon'].color  = d.originalIconColor;
         }
@@ -275,10 +275,10 @@ export class GenericTableComponent<T> {
   
       row.selected = true;
   
-      if (row?.iconIcon?.color === 'rgb(54, 54, 54)' || row?.iconIcon?.color === '#363636') {
-        row.originalIconColor = row['iconIcon'].color;
-        row['iconIcon'].color = '#c0bbb7';
-      }
+      // if (row?.iconIcon?.color === 'rgb(54, 54, 54)' || row?.iconIcon?.color === '#363636') {
+      //   row.originalIconColor = row['iconIcon'].color;
+      //   row['iconIcon'].color = '#c0bbb7';
+      // }
 
       this.rowSelected.emit(row);
     
@@ -300,6 +300,7 @@ export class GenericTableComponent<T> {
   }
 
   sort(column: string): void {
+    console.log(column)
     this.dataService?.confirmAction('sort', () => {
         
       if (this.currentSortColumn === column) {

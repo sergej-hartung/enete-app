@@ -7,7 +7,8 @@ import { MainNavbarService } from '../../../services/main-navbar.service';
   styleUrl: './product-settings.component.scss'
 })
 export class ProductSettingsComponent {
-  active = 1;
+  activeGroup = 1
+
 
   constructor(
       private mainNavbarService: MainNavbarService,
