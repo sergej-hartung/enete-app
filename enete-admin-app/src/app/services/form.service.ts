@@ -60,6 +60,8 @@ export class FormService {
     })
   }
 
+  
+
   private createContactFormGroup(): FormGroup {
     return this.fb.group({
       id:                               [],
@@ -206,6 +208,15 @@ export class FormService {
       showIcon:         [true, [booleanValidator()]],
       position:         [pos, [Validators.pattern('^[0-9]+$')]],
       icon:             ['', [Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+    })
+  }
+
+  createTariffGroupFormGroup(): FormGroup {
+    return this.fb.group({
+      id: [],
+      name: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      icon: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      color: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]]
     })
   }
 

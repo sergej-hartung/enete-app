@@ -87,61 +87,60 @@ export class TariffGroupService extends DataService<TariffGroup> {
     //   });
   }
 
-  addItem(item: FormData | any): any {
+  addItem(item: TariffGroup): any {
       
-    // this.http.post<Partner>(`${this.apiUrl}/user-profile/employees`, item)
-    //     .pipe(
-    //       takeUntil(this.destroy$),
-    //     )
-    //     .subscribe({
-    //       next: newPartner => {
+    this.http.post<TariffGroup>(`${this.apiUrl}/products/tariff-groups`, item)
+        .pipe(
+          takeUntil(this.destroy$),
+        )
+        .subscribe({
+          next: newGroup => {
               
-    //           this._detailedData.next({
-    //             data: newPartner,
-    //             requestType: 'post',
-    //             entityType: 'partner'
-    //           });
-    //           //this.successSubject.next('created');
-    //       },
-    //       error: (error) => {
+              this._detailedData.next({
+                data: newGroup,
+                requestType: 'post',
+                entityType: 'tariffGroup'
+              });
+              //this.successSubject.next('created');
+          },
+          error: (error) => {
               
-    //         this.handleError(error)
-    //       }
-    //   });
+            this.handleError(error)
+          }
+      });
   }
 
-  updateItem(id: number, item: FormData | any): any {
-    // item.append('_method', 'PATCH')
-    // this.http.post<{'data': Partner}>(`${this.apiUrl}/user-profile/employees/${id}`, item)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe({
-    //     next: updatedPartner => {
-    //       const currentData = this._data.getValue();
+  updateItem(id: number, item: TariffGroup | any): any {
+    this.http.patch<{'data': TariffGroup}>(`${this.apiUrl}/products/tariff-groups/${id}`, item)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: updatedGroup => {
+          const currentData = this._data.getValue();
 
-    //         if (currentData && currentData.data) {
-    //           const updatedData = currentData.data.map(p => {
-    //             if (p.id === updatedPartner['data'].id) {
-    //                 // Устанавливаем свойство selected в true только для обновленного партнера
-    //                 return {...p, ...this.extractBriefInfo(updatedPartner['data']), selected: true};
-    //             } else {
-    //                 // Убеждаемся, что свойство selected установлено в false для всех остальных партнеров
-    //                 return {...p, selected: false};
-    //             }
-    //         });
-    //         this._data.next({...currentData, data: updatedData});
-    //       }
-    //       this._detailedData.next({
-    //         data: updatedPartner["data"],
-    //         requestType: 'patch',
-    //         entityType: 'partner'
-    //       });
+            if (currentData && currentData.data) {
+              const updatedData = currentData.data.map(p => {
+                if (p.id === updatedGroup['data'].id) {
+                    // Устанавливаем свойство selected в true только для обновленного партнера
+                    return {...p, ...this.extractBriefInfo(updatedGroup['data']), selected: true};
+                }else {                  
+                  return {...p, selected: false};
+                } 
+            });
+
+            this._data.next({...currentData, data: updatedData});
+          }
+          this._detailedData.next({
+            data: updatedGroup["data"],
+            requestType: 'patch',
+            entityType: 'tariffGroup'
+          });
            
-    //     },
-    //     error: (error) => {
+        },
+        error: (error) => {
             
-    //       this.handleError(error)
-    //     }
-    // });
+          this.handleError(error)
+        }
+    });
   }
 
   deleteItem(id: number): void {
@@ -179,7 +178,8 @@ export class TariffGroupService extends DataService<TariffGroup> {
     return {
         id: group.id,
         name: group.name,
-        icon: group.icon
+        icon: group.icon,
+        color: group.color
         // Добавьте другие поля, которые необходимы для краткого представления
     };
   }

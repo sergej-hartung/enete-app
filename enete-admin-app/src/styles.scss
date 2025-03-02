@@ -2703,6 +2703,20 @@ $f-body:'Open Sans', sans-serif;
     }
 }
 
+.error-snackbar {
+    //background: #4caf50 !important; /* Зелёный */
+    //color: #fff !important; /* Белый текст */
+    .mdc-snackbar__surface{
+        background: #d32f2f  !important; /* Зелёный */
+        //background: rgba(76, 175, 80, 1) !important;
+        //background: rgb(105, 181, 72) !important;
+        
+    }
+    .mat-mdc-snack-bar-label{
+        color: #fff !important; /* Белый текст */
+    }
+}
+
 
 .tariff-details-content{
     min-height: calc(100vh - 40px - 301px);

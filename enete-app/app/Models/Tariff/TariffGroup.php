@@ -10,7 +10,7 @@ class TariffGroup extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'icon', 'created_by', 'updated_by'];
+    protected $fillable = ['name', 'icon', 'color', 'created_by', 'updated_by'];
 
     public function attributs()
     {

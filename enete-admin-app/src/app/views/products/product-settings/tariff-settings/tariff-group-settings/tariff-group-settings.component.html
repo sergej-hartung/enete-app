@@ -19,38 +19,85 @@
         >
         </app-generic-table>
 
-        <button (click)="editGroup()">Edit</button>
-        <button (click)="closeGroup()">Abrechnen</button>
+      
     </div>
      <!-- Rechte Seite: Container für Animation mit angepasstem Layout -->
-     <div *ngIf="groupEditOrNew" class="col pe-0 ps-0" style="overflow: hidden;"
-          >
+     <div *ngIf="groupEditOrNew" class="col pe-0 ps-0" style="overflow: hidden;">
         <div class="product-settigs-wrapp" 
             [@slideIn]
             >
-          <div class="product-settings-tittle">Tarifgruppe Konfigurieren</div>
+          <!-- <div class="product-settings-tittle">Tarifgruppe Konfigurieren</div> -->
+          <div class="product-settings-tittle">Tarifgruppe erstellen</div>
           <div class="product-settings-content flex-grow-1">
-            <form>
+            <form [formGroup]="tariffGroupForm">
               <div class="row">
                 <div class="col">
                   <div class="row">
                     <div class="col">
-                      <label class="form-label custom-label-sm required">Name</label>
-                      <input type="text" class="form-control form-control-sm">
-                    </div>                          
+                      <label 
+                        class="form-label custom-label-sm" 
+                        for="group-name"
+                        [ngClass]="{'required': isRequired(tariffGroupForm.get('name'))}"
+                      >Name</label>
+                      <input 
+                        type="text" 
+                        class="form-control form-control-sm"
+                        [ngClass]="{'is-invalid': tariffGroupForm.get('name')?.errors && tariffGroupForm.get('name')?.touched}"
+                        id="group-name"
+                        formControlName="name"
+                      >
+                      <div *ngIf="tariffGroupForm.get('name')?.errors && tariffGroupForm.get('name')?.touched" class="invalid-feedback d-block">
+                        <div *ngIf="tariffGroupForm.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+                        <div *ngIf="tariffGroupForm.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                      </div>
+                    </div>
+
                   </div>
                   <div class="row">
                     <div class="col">
-                      <label class="form-label custom-label-sm required">Icon</label>
-                      <input type="text" class="form-control form-control-sm">
+                      <label 
+                        class="form-label custom-label-sm"
+                        for="group-icon"
+                        [ngClass]="{'required': isRequired(tariffGroupForm.get('icon'))}"
+                      >Icon</label>
+                      <input 
+                        type="text" 
+                        class="form-control form-control-sm"
+                        [ngClass]="{'is-invalid': tariffGroupForm.get('icon')?.errors && tariffGroupForm.get('icon')?.touched}"
+                        id="group-icon"
+                        formControlName="icon"
+                      >
+                      <div *ngIf="tariffGroupForm.get('icon')?.errors && tariffGroupForm.get('icon')?.touched" class="invalid-feedback d-block">
+                        <div *ngIf="tariffGroupForm.get('icon')?.errors?.['required']">Icon ist erforderlich.</div>
+                        <div *ngIf="tariffGroupForm.get('icon')?.errors?.['pattern']">Ungültiges Format.</div>
+                      </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col">
-                      <label class="form-label custom-label-sm required">Farbe</label>
-                      <input type="text" class="form-control form-control-sm">
+                      <label 
+                        class="form-label custom-label-sm"
+                        for="group-color"
+                        [ngClass]="{'required': isRequired(tariffGroupForm.get('color'))}"
+                      >Farbe</label>
+                      <input 
+                        type="text" 
+                        class="form-control form-control-sm"
+                        [ngClass]="{'is-invalid': tariffGroupForm.get('color')?.errors && tariffGroupForm.get('color')?.touched}"
+                        id="group-color"
+                        formControlName="color"
+                      >
+                      <div *ngIf="tariffGroupForm.get('color')?.errors && tariffGroupForm.get('color')?.touched" class="invalid-feedback d-block">
+                        <div *ngIf="tariffGroupForm.get('color')?.errors?.['required']">Farbe ist erforderlich.</div>
+                        <div *ngIf="tariffGroupForm.get('color')?.errors?.['pattern']">Ungültiges Format.</div>
+                      </div>
                     </div>
                   </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col">
+                  <button type="button" class="btn btn-outline-danger w-100" (click)="closeGroup()">Abrechnen</button>
                 </div>
               </div>
             </form>
