@@ -55,7 +55,7 @@ export class AttributeService extends DataService<Attribute> {
   
 
   fetchData(): void {
-    this.http.get<AttributeData>(`${this.apiUrl}/products/tariff-atributes`)
+    this.http.get<AttributeData>(`${this.apiUrl}/products/tariff-attributes`)
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {

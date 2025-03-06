@@ -16,9 +16,10 @@ export class ProductSettingsComponent {
     ) {}
 
   ngOnInit() {
-    this.mainNavbarService.setIconState('save', true, true);
-    this.mainNavbarService.setIconState('new', true, true);
-    this.mainNavbarService.setIconState('back', false, true);
-    this.mainNavbarService.setIconState('edit', true, true);
+    // this.mainNavbarService.setIconState('save', true, true);
+    // this.mainNavbarService.setIconState('new', true, true);
+    // this.mainNavbarService.setIconState('back', false, true);
+    // this.mainNavbarService.setIconState('edit', true, true);
+    // this.mainNavbarService.setIconState('delete', true, true);
   }
 }

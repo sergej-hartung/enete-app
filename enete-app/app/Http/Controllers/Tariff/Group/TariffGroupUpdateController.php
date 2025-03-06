@@ -14,10 +14,6 @@ use App\Http\Resources\Tariff\Group\IndexTariffGroupResource;
 
 class TariffGroupUpdateController extends Controller
 {
-    protected $tariffService;
-
-   
-
     public function __invoke(UpdateTariffGroupRequest $request, $tariffGroupId)
     {
         

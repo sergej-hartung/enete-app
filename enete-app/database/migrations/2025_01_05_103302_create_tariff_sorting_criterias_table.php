@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('group_sorting_criterias');
+        Schema::dropIfExists('tariff_sorting_criterias');
     }
 };

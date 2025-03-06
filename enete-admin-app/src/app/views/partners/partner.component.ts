@@ -93,6 +93,7 @@ export class PartnerComponent {
     this.mainNavbarService.setIconState('new', true, false);
     this.mainNavbarService.setIconState('back', false, false);
     this.mainNavbarService.setIconState('edit', false, false);
+    this.mainNavbarService.setIconState('delete', false, true);
   }
 
   private fetchInitialData(): void {

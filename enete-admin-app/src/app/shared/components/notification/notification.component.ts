@@ -32,14 +32,14 @@ export class NotificationComponent implements OnInit {
       .subscribe(config  => {
         console.log(config)
         if (config ) {
-          this.title = config .title;
-          this.message = config .message;
-          this.titleTemplate = config .titleTemplate;
-          this.messageTemplate = config ?.messageTemplate;
-          this.acceptBtnTitle = config .acceptBtnTitle;
-          this.declineBtnTitle = config .declineBtnTitle;
-          this.onAccept = config .onAccept;
-          this.onDecline = config .onDecline;
+          this.title = config.title;
+          this.message = config.message;
+          this.titleTemplate = config.titleTemplate;
+          this.messageTemplate = config?.messageTemplate;
+          this.acceptBtnTitle = config.acceptBtnTitle;
+          this.declineBtnTitle = config.declineBtnTitle;
+          this.onAccept = config.onAccept;
+          this.onDecline = config.onDecline;
         }
       });
 

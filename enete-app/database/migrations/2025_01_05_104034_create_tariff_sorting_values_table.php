@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tariff_sorting_values', function (Blueprint $table) {
             $table->id();
             $table->foreignId('tariff_id')->constrained('tariffs')->onDelete('cascade'); // Тариф
-            $table->foreignId('sorting_criteria_id')->constrained('group_sorting_criteria')->onDelete('cascade'); // Критерий
+            $table->foreignId('sorting_criteria_id')->constrained('tariff_sorting_criterias')->onDelete('cascade'); // Критерий
             $table->decimal('value', 10, 2); // Значение
             $table->boolean('include_hardware')->default(false);
             $table->string('matrix_uniqueId')->nullable();

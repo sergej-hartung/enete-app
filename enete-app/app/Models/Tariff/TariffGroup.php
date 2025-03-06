@@ -41,4 +41,39 @@ class TariffGroup extends Model
     {
         return $this->hasMany(TariffSortingCriteria::class, 'group_id');
     }
+
+    public function attributeMappings()
+    {
+        return $this->hasMany(TariffGroupAttributeMapping::class, 'group_id');
+    }
+
+    public function hardwareMappings()
+    {
+        return $this->hasMany(TariffGroupHardwareMapping::class, 'group_id');
+    }
+
+    public function networkOperatorMappings()
+    {
+        return $this->hasMany(TariffGroupNetworkOperatorMapping::class, 'group_id');
+    }
+
+    public function providerMappings()
+    {
+        return $this->hasMany(TariffGroupProviderMapping::class, 'group_id');
+    }
+
+    public function categoryMappings()
+    {
+        return $this->hasMany(TariffGroupCategoryMapping::class, 'group_id');
+    }
+
+    public function isLinked()
+    {
+        return $this->attributeMappings()->exists() ||
+               $this->hardwareMappings()->exists() ||
+               $this->networkOperatorMappings()->exists() ||
+               $this->providerMappings()->exists() ||
+               $this->categoryMappings()->exists() ||
+               $this->sorting()->exists();
+    }
 }

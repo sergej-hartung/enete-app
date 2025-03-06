@@ -1,1 +1,151 @@
-<p>tariff-attribute-settings works!</p>
+<div class="container-fluid">
+    <div class="row">
+        <div class="pe-0 pt-1 ps-0"
+            [@resizeLeft]="attributeEditOrNew ? 'partial' : 'full'"
+        >
+            <app-generic-table 
+                class="table-responsive"
+                [columns]="attributeColumns"
+                [filters]="filters"
+                [isLoading]="attributeEditOrNew"
+                [isExpandable]="IsExpandable"
+                [dataService]="tariffAttributeService"
+                [rowSelectionMode]="'parent'"
+                [sortMode]="'parent'"
+                [filterMode]="'parent'"
+                (rowSelected)="selectedRow($event)"
+                (sortEvent)="sort($event)"
+                (filterEvent)="filter($event)"
+                #genericTable 
+            >
+            </app-generic-table>
+    
+          
+        </div>
+         <div *ngIf="attributeEditOrNew" class="col pe-0 ps-0" style="overflow: hidden;">
+            <div class="product-settigs-wrapp" 
+                [@slideIn]
+                >
+              <div class="product-settings-tittle">Tarifattribute erstellen</div>
+              <div class="product-settings-content flex-grow-1">
+                <!-- <form [formGroup]="tariffGroupForm">
+                  <div class="row">
+                    <div class="col">
+                      <div class="row">
+                        <div class="col">
+                          <label 
+                            class="form-label custom-label-sm" 
+                            for="group-name"
+                            [ngClass]="{'required': isRequired(tariffGroupForm.get('name'))}"
+                          >Name</label>
+                          <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': tariffGroupForm.get('name')?.errors && tariffGroupForm.get('name')?.touched}"
+                            id="group-name"
+                            formControlName="name"
+                          >
+                          <div *ngIf="tariffGroupForm.get('name')?.errors && tariffGroupForm.get('name')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffGroupForm.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+                            <div *ngIf="tariffGroupForm.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>
+    
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <label 
+                            class="form-label custom-label-sm"
+                            for="group-icon"
+                            [ngClass]="{'required': isRequired(tariffGroupForm.get('icon'))}"
+                          >Icon</label>
+                          <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': tariffGroupForm.get('icon')?.errors && tariffGroupForm.get('icon')?.touched}"
+                            id="group-icon"
+                            formControlName="icon"
+                          >
+                          <div *ngIf="tariffGroupForm.get('icon')?.errors && tariffGroupForm.get('icon')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffGroupForm.get('icon')?.errors?.['required']">Icon ist erforderlich.</div>
+                            <div *ngIf="tariffGroupForm.get('icon')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="row">
+                        <div class="col">
+                          <label 
+                            class="form-label custom-label-sm"
+                            for="group-color"
+                            [ngClass]="{'required': isRequired(tariffGroupForm.get('color'))}"
+                          >Farbe</label>
+                          <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': tariffGroupForm.get('color')?.errors && tariffGroupForm.get('color')?.touched}"
+                            id="group-color"
+                            formControlName="color"
+                          >
+                          <div *ngIf="tariffGroupForm.get('color')?.errors && tariffGroupForm.get('color')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffGroupForm.get('color')?.errors?.['required']">Farbe ist erforderlich.</div>
+                            <div *ngIf="tariffGroupForm.get('color')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-3">
+                    <div class="col">
+                      <button type="button" class="btn btn-outline-danger w-100" (click)="closeGroup()">Abrechnen</button>
+                    </div>
+                  </div>
+                </form> -->
+              </div>
+            </div>
+          </div>
+        
+    </div>
+    </div>
+    
+    <!-- <ng-template #deleteTariffGroupTitleTemplate>
+      <span>
+          <i style="color: rgb(237, 28, 36);" class="fas fa-trash me-1"></i>
+          Tarifgruppe löschen
+      </span>
+    </ng-template>
+    
+    <ng-template #deleteTariffGroupMessageTemplate>
+      <div>
+        Sind Sie sicher, dass Sie diese Tarifgruppe löschen möchten? <br>
+        <span class="mt-2" style="color: rgb(237, 28, 36); font-weight: 500;">Vorgang kann nicht rückgängig gemacht werden!</span>
+      </div>
+    </ng-template> -->
+    
+    
+    <!-- <ng-template #errorWhileDeletingTemplate let-data>
+      <div class="error-dialog">
+        <h2 mat-dialog-title class="error-title">
+          <mat-icon class="error-icon">error</mat-icon>
+          Fehler beim Löschen
+        </h2>
+        <mat-divider></mat-divider>
+    
+        <div mat-dialog-content class="error-content">
+          <p>Beim Löschen der Tarifgruppe sind folgende Fehler aufgetreten:</p>
+          <ul class="error-list">
+            <li *ngFor="let error of data.errors">
+              <mat-icon class="error-bullet">warning</mat-icon>
+              {{ error }}
+            </li>
+          </ul>
+        </div>
+    
+        <mat-divider></mat-divider>
+    
+        <div mat-dialog-actions align="end">
+          <button mat-button color="primary" (click)="closeDialog()">
+            <mat-icon>close</mat-icon> Schließen
+          </button>
+        </div>
+      </div>
+    </ng-template> -->

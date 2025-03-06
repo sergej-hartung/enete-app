@@ -33,6 +33,9 @@ export class AdminManagementComponent {
   ngOnInit() {
     this.mainNavbarService.setIconState('save', true, true);
     this.mainNavbarService.setIconState('new', true, false);
+    this.mainNavbarService.setIconState('back', false, false);
+    this.mainNavbarService.setIconState('edit', false, false);
+    this.mainNavbarService.setIconState('delete', false, true);
 
     this.adminService.fetchData()
 

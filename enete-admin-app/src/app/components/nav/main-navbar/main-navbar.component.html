@@ -53,6 +53,15 @@
                         <i class="fa-solid fa-pencil"></i> Bearbeiten
                     </button>
                   </li>
+                  <li class="nav-item" *ngIf="iconsState['delete']?.active">
+                    <button 
+                        class="btn nav-link red"
+                        [disabled]="iconsState['delete']?.disabled"
+                        (click)="handleIconClick('delete')"
+                    >
+                        <i class="fa-solid fa-trash"></i> Löschen
+                    </button>
+                  </li>
                   <!-- <li class="nav-item">
                     <button class="btn nav-link">
                         <i class="bi bi-plus-circle"></i> Add New

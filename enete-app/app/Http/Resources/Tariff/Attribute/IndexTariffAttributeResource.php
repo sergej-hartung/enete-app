@@ -22,10 +22,16 @@ class IndexTariffAttributeResource extends JsonResource
             'input_type' => $this->whenLoaded('inputType', function () {
                 return $this->inputType ? $this->inputType->name : null;
             }),
+            'tariff_group_ids' => $this->whenLoaded('tariffGroups', function () {
+                return $this->tariffGroups->pluck('id');
+            }),
             'unit' => $this->unit,
             'is_system' => $this->is_system,
             'is_required' => $this->is_required,
             'is_frontend_visible' => $this->is_frontend_visible,
+            'is_system_text' => $this->is_system ? 'Ja' : 'Nein',
+            'is_required_text' => $this->is_required ? 'Ja' : 'Nein',
+            'is_frontend_visible_text' => $this->is_frontend_visible ? 'Ja' : 'Nein',
             'details' => $this->details,   
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,

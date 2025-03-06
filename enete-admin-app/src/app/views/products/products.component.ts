@@ -175,6 +175,7 @@ export class ProductsComponent {
     this.mainNavbarService.setIconState('new', true, true);
     this.mainNavbarService.setIconState('back', true, true);
     this.mainNavbarService.setIconState('edit', true, true);
+    this.mainNavbarService.setIconState('delete', false, true);
   }
 
   private setupProductActions(): void {
@@ -216,7 +217,7 @@ export class ProductsComponent {
   }
 
   private showNotification(proceedCallback: () => void, tpl = this.notSaveTitleTemplate, msg = this.notSaveMessageTemplate) {
-    this.notificationService.configureNotification(null, null, tpl, msg, 'Weiter', 'Abbrechen', proceedCallback);
+    this.notificationService.configureNotification(null, null, tpl, msg, 'Weiter', 'Abbrechen', proceedCallback, () => {});
     this.notificationService.showNotification();
   }
 

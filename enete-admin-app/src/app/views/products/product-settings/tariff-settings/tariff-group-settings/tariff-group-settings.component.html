@@ -1,12 +1,13 @@
 <div class="container-fluid">
 <div class="row">
-    <div class="pe-0 pt-1 ps-0"
+    <div class="pe-0 pt-1 ps-0 tariff-group-table"
         [@resizeLeft]="groupEditOrNew ? 'partial' : 'full'"
     >
         <app-generic-table 
             class="table-responsive"
             [columns]="groupColumns"
             [filters]="filters"
+            [isLoading]="groupEditOrNew"
             [isExpandable]="IsExpandable"
             [dataService]="tariffGroupService"
             [rowSelectionMode]="'parent'"
@@ -27,7 +28,8 @@
             [@slideIn]
             >
           <!-- <div class="product-settings-tittle">Tarifgruppe Konfigurieren</div> -->
-          <div class="product-settings-tittle">Tarifgruppe erstellen</div>
+          <div *ngIf="mode == 'new'" class="product-settings-tittle">Tarifgruppe erstellen</div>
+          <div *ngIf="mode == 'edit'" class="product-settings-tittle">Tarifgruppe bearbeiten</div>
           <div class="product-settings-content flex-grow-1">
             <form [formGroup]="tariffGroupForm">
               <div class="row">
@@ -107,3 +109,46 @@
     
 </div>
 </div>
+
+<ng-template #deleteTariffGroupTitleTemplate>
+  <span>
+      <i style="color: rgb(237, 28, 36);" class="fas fa-trash me-1"></i>
+      Tarifgruppe löschen
+  </span>
+</ng-template>
+
+<ng-template #deleteTariffGroupMessageTemplate>
+  <div>
+    Sind Sie sicher, dass Sie diese Tarifgruppe löschen möchten? <br>
+    <span class="mt-2" style="color: rgb(237, 28, 36); font-weight: 500;">Vorgang kann nicht rückgängig gemacht werden!</span>
+  </div>
+</ng-template>
+
+
+<ng-template #errorWhileDeletingTemplate let-data>
+  <div class="error-dialog">
+    <h2 mat-dialog-title class="error-title">
+      <mat-icon class="error-icon">error</mat-icon>
+      Fehler beim Löschen
+    </h2>
+    <mat-divider></mat-divider>
+
+    <div mat-dialog-content class="error-content">
+      <p>Beim Löschen der Tarifgruppe sind folgende Fehler aufgetreten:</p>
+      <ul class="error-list">
+        <li *ngFor="let error of data.errors">
+          <mat-icon class="error-bullet">warning</mat-icon>
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div mat-dialog-actions align="end">
+      <button mat-button color="primary" (click)="closeDialog()">
+        <mat-icon>close</mat-icon> Schließen
+      </button>
+    </div>
+  </div>
+</ng-template>

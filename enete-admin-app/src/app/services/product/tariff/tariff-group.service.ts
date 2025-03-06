@@ -16,6 +16,9 @@ export class TariffGroupService extends DataService<TariffGroup> {
   private destroy$ = new Subject<void>();
   private formDirty = new BehaviorSubject<boolean | null>(false);
 
+  private deleteSuccessSubject = new Subject<number>();
+  public deleteSuccess$ = this.deleteSuccessSubject.asObservable();
+
   private currentFilters: {[key: string]: string} = {
     // Примеры параметров фильтрации
     // 'search': 'test',
@@ -48,7 +51,7 @@ export class TariffGroupService extends DataService<TariffGroup> {
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
-          this.handleError(error);
+          this.handleError(error, 'get');
           return of(null); // Возвращаем Observable<null> в случае ошибки
         })
       )
@@ -63,7 +66,7 @@ export class TariffGroupService extends DataService<TariffGroup> {
             });
           }
         },
-        error: error => console.error('Ошибка при получении данных:', error)
+        error: error => console.error('Fehler beim Abrufen der Daten:', error)
       });
   }
 
@@ -104,8 +107,7 @@ export class TariffGroupService extends DataService<TariffGroup> {
               //this.successSubject.next('created');
           },
           error: (error) => {
-              
-            this.handleError(error)
+            this.handleError(error, 'post')
           }
       });
   }
@@ -137,39 +139,53 @@ export class TariffGroupService extends DataService<TariffGroup> {
            
         },
         error: (error) => {
-            
-          this.handleError(error)
+          this.handleError(error, 'patch')
         }
     });
   }
 
   deleteItem(id: number): void {
-    // this.http.delete(`${this.apiUrl}/user-profiles/${id}`)
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe({
-    //     next: () => {
-    //         // Получаем текущие данные
-    //         const currentDataResponse = this._data.getValue();
+    this.http.delete(`${this.apiUrl}/products/tariff-groups/${id}`)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+            // Получаем текущие данные
+            const currentDataResponse = this._data.getValue();
             
-    //         // Проверяем, что текущие данные не undefined
-    //         if (currentDataResponse && currentDataResponse.data) {
-    //             // Фильтруем данные, исключая удаленный элемент
-    //             const remainingData = currentDataResponse.data.filter(p => p.id !== id);
+            // Проверяем, что текущие данные не undefined
+            if (currentDataResponse && currentDataResponse.data) {
+                // Фильтруем данные, исключая удаленный элемент
+                const remainingData = currentDataResponse.data.filter(p => p.id !== id);
 
-    //             // Обновляем BehaviorSubject новым объектом DataResponse
-    //             this._data.next({
-    //                 ...currentDataResponse,
-    //                 data: remainingData
-    //             });
-    //         }
-    //     },
-    //     error: error => console.error('Ошибка при удалении партнера:', error)
-    // });
+                // Обновляем BehaviorSubject новым объектом DataResponse
+                this._data.next({
+                    ...currentDataResponse,
+                    data: remainingData
+                });
+
+                this.deleteSuccessSubject.next(id);
+            }
+        },
+        //error: error => console.error('Das Löschen der Tarifgruppe ist fehlgeschlagen:', error)
+        error: (error) => {         
+          this.handleError(error, 'delete')
+        }
+    });
   }
 
 
-  private handleError(errorResponse: any) {
-    const errors = errorResponse?.error?.errors ?? ['An unknown error occurred'];
+  private handleError(errorResponse: any, requestType: string) {
+    console.log(errorResponse)
+    let errors = {
+      errors: ['An unknown error occurred'],
+      requestType: requestType
+    }
+    if(errorResponse?.error?.errors){
+      errors.errors = errorResponse?.error?.errors
+    }
+    if(errorResponse?.error?.message){
+      errors.errors = [errorResponse?.error?.message]
+    }
     this.errorSubject.next(errors);
   }
 

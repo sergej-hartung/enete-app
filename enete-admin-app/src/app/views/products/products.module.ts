@@ -28,14 +28,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
-import {
-  CdkDragDrop,
-  moveItemInArray,
-  transferArrayItem,
-  CdkDrag,
-  CdkDropList,
-} from '@angular/cdk/drag-drop';
 import { FileManagerComponent } from './file-manager/file-manager.component';
 import { TreeNodeComponent } from './file-manager/tree-node/tree-node.component';
 import { FileSizePipe } from '../../shared/pipes/file-size.pipe';
@@ -113,7 +107,7 @@ import { TariffNetworkOperatorSettingsComponent } from './product-settings/tarif
     MatCardModule,
     MatSnackBarModule,
     NgbAccordionModule,
-    
+    MatDialogModule
     // CdkDropList, CdkDrag
   ]
 })

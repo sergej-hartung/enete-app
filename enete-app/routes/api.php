@@ -137,12 +137,17 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
         $router->get('/', 'App\Http\Controllers\Tariff\Group\TariffGroupIndexController')->name('tariff-groups.index');
         $router->post('/', 'App\Http\Controllers\Tariff\Group\TariffGroupStoreController')->name('tariff-groups.store');
         $router->patch('/{groupId}', 'App\Http\Controllers\Tariff\Group\TariffGroupUpdateController')->name('tariff-groups.update');
+        $router->delete('/{groupId}', 'App\Http\Controllers\Tariff\Group\TariffGroupDeleteController')->name('tariff-groups.delete');
 
         $router->get('/{groupId}/tariffs', 'App\Http\Controllers\Tariff\Group\TariffByGroupController')->name('tariff-groups.tariffs');
         $router->get('/{groupId}/providers', 'App\Http\Controllers\Tariff\Group\ProviderByGroupController')->name('tariff-groups.providers');
         $router->get('/{groupId}/network-operators', 'App\Http\Controllers\Tariff\Group\NetworkOperatorByGroupController')->name('tariff-groups.network-operators');
         $router->get('/{groupId}/attributs', 'App\Http\Controllers\Tariff\Group\AttributeByGroupController')->name('tariff-groups.attributs');
         $router->get('/{groupId}/sortings', 'App\Http\Controllers\Tariff\Group\SortingByGroupController')->name('tariff-groups.sortings');
+    });
+
+    $router->group(['prefix' => 'tariff-attributes'], function ($router) {
+        $router->get('/', 'App\Http\Controllers\Tariff\TariffAttribute\IndexController')->name('tariff-attributes.index');
     });
     
     $router->group(['prefix' => 'tariff-statuses'], function ($router) {
