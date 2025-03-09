@@ -134,6 +134,7 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
             if(this.tariffForm.valid && this.tariffLoaded){
               
               const changes = this.objectDiffService.getChanges(this.copyTariffValue, this.tariffForm.value)
+              //console.log(changes)
               if(changes.added.length > 0 || changes.deleted.length > 0 || changes.updated.length > 0){
                 this.mainNavbarService.setIconState('save', true, false);
                 //console.log(this.objectDiffService.getChanges(this.copyTariffValue, this.tariffForm.value))

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, input } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators, FormControl } from '@angular/forms';
 import {dateValidator } from '../shared/validators/date-validator';
 import {booleanValidator } from '../shared/validators/boolean-validator'
@@ -217,6 +217,21 @@ export class FormService {
       name: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
       icon: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
       color: ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]]
+    })
+  }
+
+  createTariffAttributeFormGroup(): FormGroup {
+    return this.fb.group({
+      id: [],
+      code:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      name:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      input_type_id:       ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      unit:                [''],
+      is_system:           [false, [booleanValidator()]],
+      is_required:         [false, [booleanValidator()]],
+      is_frontend_visible: [false, [booleanValidator()]],
+      tariff_groups: this.fb.array([]),
+      details: this.fb.array([]),
     })
   }
 

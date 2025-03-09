@@ -109,6 +109,7 @@ export class TariffDetailsAEComponent {
       .subscribe(categoriesData => {
         this.productService.updateInitTariffDataLoaded('categories', true);
         this.tariffCategories = categoriesData?.data || [];
+        console.log(this.tariffCategories)
         this.setCategoriesFormArray();
       })
 

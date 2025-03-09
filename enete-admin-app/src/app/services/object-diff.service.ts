@@ -11,6 +11,8 @@ interface ChangeResult {
 })
 export class ObjectDiffService {
 
+  
+
   public getChanges(original: any, updated: any): ChangeResult {
     const changes: ChangeResult = { updated: [], added: [], deleted: [] };
     this.compareObjects(original, updated, changes);
@@ -215,5 +217,32 @@ export class ObjectDiffService {
 
   private areObjectsEqual(obj1: any, obj2: any): boolean {
     return JSON.stringify(obj1) === JSON.stringify(obj2);
+  }
+
+  hasDifferences(obj1: any, obj2: any): boolean {
+    return JSON.stringify(obj1) !== JSON.stringify(obj2);
+  }
+
+  getDifferences(obj1: any, obj2: any): any {
+    const differences: any = {};
+    
+    const compareObjects = (o1: any, o2: any, path: string = '') => {
+      for (const key in o2) {
+        if (Object.prototype.hasOwnProperty.call(o2, key)) {
+          const currentPath = path ? `${path}.${key}` : key;
+          
+          if (!(key in o1)) {
+            differences[currentPath] = o2[key];
+          } else if (typeof o2[key] === 'object' && o2[key] !== null && !Array.isArray(o2[key])) {
+            compareObjects(o1[key], o2[key], currentPath);
+          } else if (JSON.stringify(o1[key]) !== JSON.stringify(o2[key])) {
+            differences[currentPath] = o2[key];
+          }
+        }
+      }
+    };
+
+    compareObjects(obj1, obj2);
+    return differences;
   }
 }

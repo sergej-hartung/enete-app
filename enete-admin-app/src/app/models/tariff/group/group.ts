@@ -7,4 +7,5 @@ export interface TariffGroup {
     name: string;
     icon: string;
     color: string;
+    checked?: boolean;
 }

@@ -404,7 +404,8 @@ export class TariffAttributeComponent implements OnDestroy {
     if (attribute.input_type === 'Dropdown' && attribute.details) {
       try {
         const details = JSON.parse(attribute.details);
-        return details.options || [];
+        //console.log(details)
+        return details || [];
       } catch (error) {
         console.error('Ошибка парсинга JSON деталей атрибута', error);
         return [];

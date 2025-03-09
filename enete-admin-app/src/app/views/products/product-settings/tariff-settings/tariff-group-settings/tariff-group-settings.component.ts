@@ -97,6 +97,7 @@ export class TariffGroupSettingsComponent {
         }
         if(error.requestType == 'delete'){
           let errors: Error = error
+          this.preloaderService.hide();
           this.showErrorDialog(errors?.errors)
         }
       });
@@ -335,8 +336,7 @@ export class TariffGroupSettingsComponent {
   ngOnDestroy() {
     console.log('destroy Tariff-group')
     this.reset()
-    this.tariffGroupService.resetData()
-    this.tariffGroupService.resetDetailedData()
+
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }

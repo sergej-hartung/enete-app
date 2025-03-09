@@ -148,6 +148,12 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
 
     $router->group(['prefix' => 'tariff-attributes'], function ($router) {
         $router->get('/', 'App\Http\Controllers\Tariff\TariffAttribute\IndexController')->name('tariff-attributes.index');
+        $router->post('/', 'App\Http\Controllers\Tariff\TariffAttribute\StoreController')->name('tariff-attributes.store');
+        $router->patch('/{id}', 'App\Http\Controllers\Tariff\TariffAttribute\UpdateController')->name('tariff-attributes.update');
+    });
+
+    $router->group(['prefix' => 'tariff-attribute-types'], function ($router) {
+        $router->get('/', 'App\Http\Controllers\Tariff\TariffAttributeType\IndexController')->name('tariff-attribute-types.index');
     });
     
     $router->group(['prefix' => 'tariff-statuses'], function ($router) {

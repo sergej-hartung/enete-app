@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid product-attribute-setting">
     <div class="row">
         <div class="pe-0 pt-1 ps-0"
             [@resizeLeft]="attributeEditOrNew ? 'partial' : 'full'"
@@ -8,7 +8,7 @@
                 [columns]="attributeColumns"
                 [filters]="filters"
                 [isLoading]="attributeEditOrNew"
-                [isExpandable]="IsExpandable"
+                [isExpandable]="isExpandable"
                 [dataService]="tariffAttributeService"
                 [rowSelectionMode]="'parent'"
                 [sortMode]="'parent'"
@@ -28,8 +28,183 @@
                 >
               <div class="product-settings-tittle">Tarifattribute erstellen</div>
               <div class="product-settings-content flex-grow-1">
-                <!-- <form [formGroup]="tariffGroupForm">
+                <form [formGroup]="tariffAttributeForm">
                   <div class="row">
+                    <div class="col-7">
+                      <div class="row">
+                        
+                          <div class="form_check pt-2 col-4 " >
+                            <input 
+                                id="is-system" 
+                                type="checkbox"
+                                formControlName="is_system"
+                            >
+                            <label for="is-system">Systemfeld</label>
+                          </div>
+                          <div class="form_check pt-2 col-4 " >
+                            <input 
+                                id="is-required" 
+                                type="checkbox"
+                                formControlName="is_required"
+                            >
+                            <label for="is-required">Pflichtfeld</label>
+                          </div>
+                          <div class="form_check pt-2 col-4 " >
+                            <input 
+                                id="is-frontent-visible" 
+                                type="checkbox"
+                                formControlName="is_frontend_visible"
+                            >
+                            <label for="is-frontent-visible">Frontend sichtbar</label>
+                          </div>                                              
+                      </div>
+                      <div class="row">
+                        <div class="col-6 pe-1">
+                          <label 
+                            class="form-label custom-label-sm" 
+                            for="attribute-code"
+                            [ngClass]="{'required': isRequired(tariffAttributeForm.get('code'))}"
+                          >Kennung</label>
+                          <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': tariffAttributeForm.get('code')?.errors && tariffAttributeForm.get('code')?.touched}"
+                            id="attribute-code"
+                            formControlName="code"
+                          >
+                          <div *ngIf="tariffAttributeForm.get('code')?.errors && tariffAttributeForm.get('code')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffAttributeForm.get('code')?.errors?.['required']">Kennung ist erforderlich.</div>
+                            <div *ngIf="tariffAttributeForm.get('code')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>   
+                        <div class="col-6 ps-1">
+                          <label 
+                            class="form-label custom-label-sm" 
+                            for="attribute-name"
+                            [ngClass]="{'required': isRequired(tariffAttributeForm.get('name'))}"
+                          >Name</label>
+                          <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': tariffAttributeForm.get('name')?.errors && tariffAttributeForm.get('name')?.touched}"
+                            id="attribute-name"
+                            formControlName="name"
+                          >
+                          <div *ngIf="tariffAttributeForm.get('name')?.errors && tariffAttributeForm.get('name')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffAttributeForm.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+                            <div *ngIf="tariffAttributeForm.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>   
+                      </div>
+                      
+                      <div class="row">
+                        <div class="col-6 pe-1">
+                          <label for="input_type" 
+                              class="form-label custom-label-sm"
+                              [ngClass]="{'required': isRequired(tariffAttributeForm.get('input_type_id'))}"
+                          >Eingabe-Typ</label>
+                          <select formControlName="input_type_id" 
+                                  class="form-select form-select-sm is-invalid" 
+                                  id="input_type"
+                                  [ngClass]="{'is-invalid': tariffAttributeForm.get('input_type_id')?.errors && tariffAttributeForm.get('input_type_id')?.touched}"
+                          >
+                              <option *ngFor="let option of inputTypes" [value]="option?.id">{{option?.name}}</option>
+                          </select>
+                          <div *ngIf="tariffAttributeForm.get('input_type_id')?.errors && tariffAttributeForm.get('input_type_id')?.touched" class="invalid-feedback d-block">
+                              <div *ngIf="tariffAttributeForm.get('input_type_id')?.errors?.['required']">Eingabe-Typ ist erforderlich.</div>
+                              <div *ngIf="tariffAttributeForm.get('input_type_id')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>   
+                        <div class="col-6 ps-1">
+                          <label 
+                            class="form-label custom-label-sm" 
+                            for="attribute-unit"
+                            [ngClass]="{'required': isRequired(tariffAttributeForm.get('unit'))}"
+                          >Einheit</label>
+                          <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': tariffAttributeForm.get('unit')?.errors && tariffAttributeForm.get('unit')?.touched}"
+                            id="attribute-unit"
+                            formControlName="unit"
+                          >
+                          <div *ngIf="tariffAttributeForm.get('unit')?.errors && tariffAttributeForm.get('unit')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffAttributeForm.get('unit')?.errors?.['required']">Einheit ist erforderlich.</div>
+                            <div *ngIf="tariffAttributeForm.get('unit')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>   
+                      </div>
+                      <div formArrayName="details">
+                        <div class="row" *ngFor="let control of detailsArray.controls; let i = index" [formGroupName]="i">
+                          <div class="col-12">
+                            <label 
+                              class="form-label custom-label-sm" 
+                              for="attribute-details"
+                              [ngClass]="{'required': isRequired(control.get('name'))}"
+                            >Option {{i + 1}}
+                            </label>
+                            <div class="input-group">
+                              <input 
+                                type="text" 
+                                class="form-control form-control-sm"
+                                [ngClass]="{'is-invalid': control.get('name')?.errors && control.get('name')?.touched}"
+                                id="'attribute-details-' + i"
+                                formControlName="name"
+                              >
+                              <button 
+                                class="btn btn-outline-danger input-form-frame-btn-sm" 
+                                type="button" 
+                                id="button-addon2"
+                                (click)="deleteDetailOption(i)"
+                              >
+                                <i class="far fa-trash-alt"></i>
+                              </button>
+                            </div>
+                            
+                            <div *ngIf="control.get('name')?.errors && control.get('name')?.touched" class="invalid-feedback d-block">
+                              <div *ngIf="control.get('name')?.errors?.['required']">Option {{i + 1}} ist erforderlich.</div>
+                              <div *ngIf="control.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <button 
+                        *ngIf="isDropdown || isMultipleSelect" 
+                        class="btn-text-style new-attribute-group pt-2" 
+                        (click)="addNewDetailOption()">
+                        <i class="fa-solid fa-circle-plus"></i> Option hinzufügen 
+                      </button>
+                      
+                    </div>
+                    <div class="col pt-3 ps-1">
+                      
+                      <div formArrayName="tariff_groups" class="row">
+                          <div class="col">
+                              <app-card>
+                                  <div card-header>Tarifgruppen</div>
+                                  <div card-body>
+                                      <div class="form-check-card-custom-body max">
+                                          <div *ngFor="let control of tariffGroupsArray.controls; let i = index" [formGroupName]="i">
+                                              <div class="form-check form-check-card-custom">
+                                                  <input type="checkbox" class="form-check-input" formControlName="checked" [id]="'tariff_group' + control.value.id">
+                                                  <label class="form-check-label" [for]="'tariff_group' + control.value.id">
+                                                    <i [class]="control.value.icon" [style.color]="control.value.color"></i>
+                                                    <span class="ps-2">{{ control.value.name }}</span>
+                                                  </label>
+                                              </div>
+                                          </div>
+                                      </div>                           
+                                      <!-- <div class="selected-info">
+                                          {{ selectedTariffCategories.length }} selected / {{ tariffCategories.length }} total 
+                                          </div> -->
+                                  </div>
+                              </app-card>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="row">
                     <div class="col">
                       <div class="row">
                         <div class="col">
@@ -93,13 +268,13 @@
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <div class="row mt-3">
                     <div class="col">
                       <button type="button" class="btn btn-outline-danger w-100" (click)="closeGroup()">Abrechnen</button>
                     </div>
                   </div>
-                </form> -->
+                </form>
               </div>
             </div>
           </div>

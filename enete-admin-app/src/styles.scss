@@ -3083,3 +3083,40 @@ $f-body:'Open Sans', sans-serif;
         th:nth-child(6), td:nth-child(6) { width: 17%; }
     }
   }
+
+  .product-settigs-wrapp{
+    .form-check-card-custom-body.max{
+        max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 256px);
+        min-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-footer - 595px);
+    }
+
+    .custom-card{
+        margin-bottom: 0;
+    }
+}
+
+.input-form-frame-btn-sm{
+    font-size: .75rem;
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+
+    &.btn-outline-danger{
+        border-color: #dc3545;
+    }
+}
+
+.product-attribute-setting{
+    .table-responsive {
+        min-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-nav-tabs-custom - $max-height-footer - 39px);
+        max-height: calc(100vh - $max-height-main-nav - $max-height-second-nav - $max-height-nav-tabs-custom - $max-height-footer - 39px);
+        .generic-table{
+            thead{
+                th{
+                    top: 38px;
+                }
+            } 
+        } 
+    }
+}
+
+

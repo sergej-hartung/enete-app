@@ -73,8 +73,8 @@
                       (focus)="setFocus(group, j)"
                       (blur)="removeFocus(group, j)"
                     >
-                      <option *ngFor="let option of getDropdownOptions(group.attributs[j])" [value]="option.value">
-                        {{ option.label }}
+                      <option *ngFor="let option of getDropdownOptions(group.attributs[j])" [value]="option.name">
+                        {{ option.name }}
                       </option>
                     </select>
                     <input
