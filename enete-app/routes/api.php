@@ -150,6 +150,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
         $router->get('/', 'App\Http\Controllers\Tariff\TariffAttribute\IndexController')->name('tariff-attributes.index');
         $router->post('/', 'App\Http\Controllers\Tariff\TariffAttribute\StoreController')->name('tariff-attributes.store');
         $router->patch('/{id}', 'App\Http\Controllers\Tariff\TariffAttribute\UpdateController')->name('tariff-attributes.update');
+        $router->delete('/{id}', 'App\Http\Controllers\Tariff\TariffAttribute\DeleteController')->name('tariff-attributes.delete');
     });
 
     $router->group(['prefix' => 'tariff-attribute-types'], function ($router) {

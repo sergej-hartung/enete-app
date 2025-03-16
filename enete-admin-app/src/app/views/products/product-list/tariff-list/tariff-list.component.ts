@@ -194,6 +194,7 @@ export class TariffListComponent {
   }
 
   filter(event: any){
+    console.log(event)
     this.tariffService.fetchDataByGroupId(this.groupId, event)
     this.mainNavbarService.setIconState('edit', true, true);
     this.productService.resetTariffId()

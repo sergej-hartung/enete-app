@@ -17,18 +17,28 @@ export class AttributeService extends DataService<Attribute> {
 
   private destroy$ = new Subject<void>();
 
+  private deleteSuccessSubject = new Subject<number>();
+  public deleteSuccess$ = this.deleteSuccessSubject.asObservable();
 
 
+  private currentFilters: {[key: string]: string} = {
+    // Примеры параметров фильтрации
+    // 'search': 'test',
+    // 'status': '1',
+    // Примеры параметров сортировки
+    // 'sortField': 'last_name',
+    // 'sortOrder': 'asc'
+  };
   
 
   constructor(http: HttpClient) { 
     super(http, environment.apiUrl);
   }
 
+  override get filters(){
+    return this.currentFilters
+  }
   
-
-  // get filters(){
-  // }
 
   fetchDataByGroupId(id: any): void{
     this.http.get<AttributeData>(`${this.apiUrl}/products/tariff-groups/${id}/attributs`)
@@ -54,8 +64,16 @@ export class AttributeService extends DataService<Attribute> {
   }
   
 
-  fetchData(): void {
-    this.http.get<AttributeData>(`${this.apiUrl}/products/tariff-attributes`)
+  fetchData(params?: {[key: string]: string}): void {
+    console.log(params)
+    if (params) {
+      this.updateFilters(params);
+    }
+
+    // Создаем HttpParams на основе текущих фильтров
+    let httpParams = new HttpParams({ fromObject: this.currentFilters });
+
+    this.http.get<AttributeData>(`${this.apiUrl}/products/tariff-attributes`, { params: httpParams })
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
@@ -138,7 +156,32 @@ export class AttributeService extends DataService<Attribute> {
   }
 
   deleteItem(id: number): void {
-    
+    this.http.delete(`${this.apiUrl}/products/tariff-attributes/${id}`)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+            // Получаем текущие данные
+            const currentDataResponse = this._data.getValue();
+            
+            // Проверяем, что текущие данные не undefined
+            if (currentDataResponse && currentDataResponse.data) {
+                // Фильтруем данные, исключая удаленный элемент
+                const remainingData = currentDataResponse.data.filter(p => p.id !== id);
+
+                // Обновляем BehaviorSubject новым объектом DataResponse
+                this._data.next({
+                    ...currentDataResponse,
+                    data: remainingData
+                });
+
+                this.deleteSuccessSubject.next(id);
+            }
+        },
+        //error: error => console.error('Das Löschen der Tarifgruppe ist fehlgeschlagen:', error)
+        error: (error) => {         
+          this.handleError(error, 'delete')
+        }
+    });
   }
 
   private extractBriefInfo(attribute: Attribute): any {
@@ -166,6 +209,16 @@ export class AttributeService extends DataService<Attribute> {
       };
     }
 
+  private updateFilters(newFilters: {[key: string]: string}): void {
+    Object.keys(newFilters).forEach(key => {
+      const value = newFilters[key];
+      if (value) {
+        this.currentFilters[key] = value;
+      } else {
+        delete this.currentFilters[key];
+      }
+    });
+  }
 
   private handleError(errorResponse: any, requestType: string) {
     console.log(errorResponse)

@@ -131,7 +131,6 @@ export class TariffService extends DataService<Tariff> {
         )
         .subscribe({
           next: newPartner => {
-              
               this._detailedData.next({
                 data: newPartner,
                 requestType: 'post',

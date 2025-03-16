@@ -5,10 +5,14 @@ namespace App\Models\Tariff;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User\User;
+use App\Models\Traits\Filterable;
+use App\Models\Traits\TariffAttributeSortable;
 
 class TariffAttribute extends Model
 {
     use HasFactory;
+    use Filterable;
+    use TariffAttributeSortable;
 
     protected $fillable = [
         'code', 
@@ -77,7 +81,7 @@ class TariffAttribute extends Model
 
     public function clacMatrices()
     {
-        return $this->belongsToMany(TariffCalcMatrix::class, 'calc_matrix_attribute_mappings', 'attribute_id', 'clac_matrix_id')
+        return $this->belongsToMany(TariffCalcMatrix::class, 'calc_matrix_attribute_mappings', 'attribute_id', 'calc_matrix_id')
             ->withPivot(['period', 'periodeTyp', 'single', 'unit', 'value', 'value_total'])
             ->withTimestamps();
     }
@@ -90,6 +94,15 @@ class TariffAttribute extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function isLinked(){
+
+        return $this->tariffs()->exists() ||
+            $this->groupAttributes()->exists() ||
+            $this->tariffGroups()->exists() ||
+            $this->tariffTpls()->exists() ||
+            $this->clacMatrices()->exists();
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, SimpleChanges } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
 import { FormBuilder, FormGroup, FormArray, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { AttributeService } from '../../../../../services/product/tariff/attribute/attribute.service';
@@ -55,6 +55,7 @@ export class TariffAttributeComponent implements OnDestroy {
     private sanitizer: DomSanitizer,
     private formService: FormService,
     public tariffService: TariffService,
+    private cdr: ChangeDetectorRef
   ) {
     this.tariffForm = this.formService.getTariffForm();
     this.attributeGroupsForm = this.tariffForm.get('attribute_groups') as FormArray;
@@ -209,6 +210,7 @@ export class TariffAttributeComponent implements OnDestroy {
 
   drop(event: CdkDragDrop<any[]>, group?: Group) {
     if (!group) return;
+    console.log(this.tariffForm)
 
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
@@ -310,10 +312,12 @@ export class TariffAttributeComponent implements OnDestroy {
     const valueVarcharValidators = attribute.input_type !== 'Textbereich' ? this.getValidatorsForType(attribute) : [];
     const valueTextValidators = attribute.input_type === 'Textbereich' ? this.getValidatorsForType(attribute) : [];
 
-    // Заменяем точку на запятую в поле value_varchar, если это числовое значение
-    // if (valueVarchar && !isNaN(Number(valueVarchar))) {
-    //   valueVarchar = valueVarchar.replace('.', ',');
-    // }
+    // Wenn Dropdown, überprüfe, ob value_varchar mit einer Option übereinstimmt
+    if (attribute.input_type === 'Dropdown' && attribute.details) {
+      const options = this.getDropdownOptions(attribute);
+      const validOption = options.find((opt:any) => String(opt.name) === String(valueVarchar));
+      valueVarchar = validOption ? String(valueVarchar) : (options.length > 0 ? String(options[0].name) : '');
+    }
 
     return this.fb.group({
       id: [attribute.id],
@@ -482,6 +486,7 @@ export class TariffAttributeComponent implements OnDestroy {
                     attributs: copiedAttributes,
                     form: groupForm
                 });
+                console.log(groupForm)
                 // Добавляем форму группы в FormArray
                 this.attributeGroupsForm.push(groupForm);
             });
@@ -494,6 +499,8 @@ export class TariffAttributeComponent implements OnDestroy {
 
             this.productService.updateTariffLoadedState('attributeGroup', true);
           }
+
+          //console.log(this.tariffForm)
         });
     }
   }
@@ -547,6 +554,11 @@ export class TariffAttributeComponent implements OnDestroy {
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  logValue(value: any) {
+    console.log('Ausgewählter Wert (Typ):', value, typeof value);
+    this.cdr.detectChanges();
   }
 }
 

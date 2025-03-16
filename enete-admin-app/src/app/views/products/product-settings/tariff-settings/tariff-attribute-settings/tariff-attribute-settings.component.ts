@@ -1,5 +1,5 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { Tablecolumn } from '../../../../../models/tablecolumn';
@@ -15,6 +15,17 @@ import { TariffGroup } from '../../../../../models/tariff/group/group';
 import { TariffGroupService } from '../../../../../services/product/tariff/tariff-group.service';
 import { AttributeTypService } from '../../../../../services/product/tariff/attribute-typ/attribute-typ.service';
 import { ObjectDiffService } from '../../../../../services/object-diff.service';
+
+interface Error {
+  requestType: string;
+  errors: string[];
+}
+
+enum Mode {
+  New = 'new',
+  Edit = 'edit',
+  None = ''
+}
 
 @Component({
   selector: 'app-tariff-attribute-settings',
@@ -37,29 +48,29 @@ import { ObjectDiffService } from '../../../../../services/object-diff.service';
 })
 export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
 
-  // Komponenten-Zustand
   isExpandable = false;
   attributeEditOrNew = false;
   isDropdown = false;
   isMultipleSelect = false;
+  isTableLoading = false; // Neue Eigenschaft
 
   private initialFormValue: any;
-
-  // Formular
   tariffAttributeForm: FormGroup;
-
-  // Daten
-  selectedAttribute: any = null;
-  mode: 'new' | 'edit' | '' = '';
+  selectedAttribute: any = null; // TODO: Typisieren, z.B. TariffAttribute | null
+  
+  mode: Mode = Mode.None;
   tariffGroups: TariffGroup[] = [];
   inputTypes: any[] = [];
 
-  // Tabellen-Konfiguration
   attributeColumns: Tablecolumn[] = this.getDefaultColumns();
   filters: FilterOption[] = [
     { type: 'text', key: 'search', label: 'Suche' },
     { type: 'select', key: 'tariff_group_id', label: 'Tarifgruppe', options: [] }
   ];
+
+  @ViewChild('deleteTariffAttributTitleTemplate') deleteTariffAttributTitleTemplate!: TemplateRef<any>;
+  @ViewChild('deleteTariffAttributeMessageTemplate') deleteTariffAttributeMessageTemplate!: TemplateRef<any>;
+  @ViewChild('errorWhileDeletingTemplate') errorWhileDeletingTemplate!: TemplateRef<any>;
 
   private unsubscribe$ = new Subject<void>();
 
@@ -85,10 +96,71 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
     this.setupSubscriptions();
     this.mainNavbarService.setIconState('new', true, false);
     this.watchFormChanges();
+
+    this.tariffGroupService.data$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(data => { 
+        if(data){ 
+          //this.productService.updateInitTariffDataLoaded('statuses', true);
+
+          let item = this.filters.find(item => item.key === 'tariff_group_id')
+          if(item && data.data.length > 0){
+            let options:any  = [{label: 'alle', value: 'all', selected: true}]
+            data.data.forEach(item => {
+              let option ={
+                label: item.name,
+                value: item.id
+              }
+              options.push(option)
+            })
+            item.options = options
+            //this.tariffStatusesLoaded = true
+          }else if(item && data.data.length == 0){
+            item.options = []
+          }
+
+        }    
+      });
+
+    this.tariffAttributeService.confirmAction$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(action => this.handleAction(action));
+
+    this.tariffAttributeService.deleteSuccess$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(deleted => {
+        setTimeout(() => {
+          this.preloaderService.hide();
+          //this.closeEditMode()
+          this.showSnackbar('Das Tariffattribut wurde erfolgreich gelöscht.', 'success-snackbar');
+        }, 1000) 
+      });
+
+    
+    this.tariffAttributeService.errors$
+          .pipe(takeUntil(this.unsubscribe$))
+          .subscribe(error => {
+            console.log(error)
+            if(error.requestType == 'patch'){
+              this.preloaderService.hide();
+              this.showSnackbar('Speichern der Tarifgruppe fehlgeschlagen', 'error-snackbar');
+            }
+            if(error.requestType == 'patch'){
+              this.preloaderService.hide();
+              this.showSnackbar('Speichern der Tarifgruppe fehlgeschlagen', 'error-snackbar');
+            }
+            if(error.requestType == 'delete'){
+              let errors: Error = error
+              this.preloaderService.hide();
+              this.showErrorDialog(errors?.errors)
+            }
+          });
   }
 
   ngOnDestroy() {
     this.reset();
+    this.tariffAttributeService.resetData()
+    this.tariffAttributeService.resetDetailedData()
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
@@ -158,13 +230,21 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
       .subscribe(response => {
         if (!response || response.entityType !== 'tariffAttribute') return;
 
-        const successMessage = response.requestType === 'post'
-          ? 'Attribut wurde erfolgreich gespeichert!'
-          : 'Tarifgruppe wurde erfolgreich geändert!';
 
-        if (response.requestType === 'post' || (response.requestType === 'patch' && response.data)) {
+        if (response.requestType === 'post') {
           this.tariffAttributeService.fetchData();
+          const successMessage = 'Attribut wurde erfolgreich gespeichert!'
+          setTimeout(() => {
+            this.preloaderService.hide();
+            this.selectedAttribute = null
+            this.resetEditMode();
+            this.showSnackbar(successMessage, 'success-snackbar');
+          }, 1000);
+        }
+
+        if(response.requestType === 'patch' && response.data){
           this.selectedAttribute = response.requestType === 'patch' ? response.data : null;
+          const successMessage = 'Attribut wurde erfolgreich geändert!'
           setTimeout(() => {
             this.preloaderService.hide();
             this.resetEditMode();
@@ -194,6 +274,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
 
   // Ereignishandler
   private handleIconClick(button: string): void {
+    console.log(button)
     switch (button) {
       case 'new':
         this.startNewAttribute();
@@ -203,6 +284,10 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
         break;
       case 'save':
         this.saveAttribute();
+        break;
+      case 'delete':
+        
+        this.showNotification(() => this.deleteAttribut(this.selectedAttribute?.id))
         break;
       // case 'delete': Implementierung fehlt noch
     }
@@ -268,7 +353,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
 
   // Komponenten-Aktionen
   startNewAttribute(): void {
-    this.mode = 'new';
+    this.mode = Mode.New;
     this.attributeEditOrNew = true;
     this.attributeColumns = this.getEditColumns();
     this.resetForm(); // Setzt das Formular zurück, inkl. detailsArray.clear()
@@ -279,7 +364,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
   editAttribute(): void {
     if (!this.selectedAttribute) return;
   
-    this.mode = 'edit';
+    this.mode = Mode.Edit;
     this.attributeEditOrNew = true;
     this.attributeColumns = this.getEditColumns();
   
@@ -334,8 +419,20 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
     this.closeGroup();
   }
 
+  deleteAttribut(id: number){
+    if(id){
+      this.tariffAttributeService.deleteItem(id)
+      this.preloaderService.show('Deleting')
+      this.reset()
+      this.selectedAttribute = ''
+      //this.editMode()
+    }
+    
+    console.log('delete')
+  }
+
   closeGroup(): void {
-    this.mode = '';
+    this.mode = Mode.None;
     this.attributeEditOrNew = false;
     this.attributeColumns = this.getDefaultColumns();
     this.resetForm();
@@ -417,7 +514,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
   }
 
   reset(): void {
-    this.mode = '';
+    this.mode = Mode.None;
     this.tariffAttributeForm.reset();
     this.mainNavbarService.setIconState('save', true, true);
   }
@@ -439,10 +536,46 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
 
 
   sort(event: any): void {
+    console.log(event)
+    this.tariffAttributeService.fetchData(event)
     // Sortierlogik implementieren
   }
 
   filter(event: any): void {
+    console.log(event)
+    this.tariffAttributeService.fetchData(event)
     // Filterlogik implementieren
+  }
+
+  private handleAction(action: any): void {
+    console.log(action)
+    switch (action.action) {
+      // case 'deletePartnerFile':
+      //   this.showNotification(action.proceedCallback, this.deleteFileTitleTemplate, this.deleteFileMessageTemplate);
+      //   break;
+      case 'selectRow':
+      case 'sort':
+      case 'filter':
+        action.proceedCallback();
+        break;
+      default:
+        action.proceedCallback();
+    }
+  }
+
+  private showNotification(proceedCallback: () => void, tpl = this.deleteTariffAttributTitleTemplate, msg = this.deleteTariffAttributeMessageTemplate) {
+    this.notificationService.configureNotification(null, null, tpl, msg, 'Weiter', 'Abbrechen', proceedCallback, () => {});
+    this.notificationService.showNotification();
+  }
+
+  private showErrorDialog(errors: string[]): void {
+    this.dialog.open(this.errorWhileDeletingTemplate, {
+      width: '500px',
+      data: { errors }
+    });
+  }
+
+  closeDialog(): void {
+    this.dialog.closeAll();
   }
 }
