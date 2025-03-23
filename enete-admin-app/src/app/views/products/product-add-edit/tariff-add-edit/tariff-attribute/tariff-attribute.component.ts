@@ -437,6 +437,7 @@ export class TariffAttributeComponent implements OnDestroy {
   }
 
   setFocus(group: Group, index: number) {
+    
     group.attributs[index].isFocused = true;
   }
 
@@ -487,6 +488,7 @@ export class TariffAttributeComponent implements OnDestroy {
                     form: groupForm
                 });
                 console.log(groupForm)
+                console.log(this.groups)
                 // Добавляем форму группы в FormArray
                 this.attributeGroupsForm.push(groupForm);
             });
@@ -500,6 +502,7 @@ export class TariffAttributeComponent implements OnDestroy {
             this.productService.updateTariffLoadedState('attributeGroup', true);
           }
 
+          //this.cdr.detectChanges();
           //console.log(this.tariffForm)
         });
     }
@@ -551,15 +554,15 @@ export class TariffAttributeComponent implements OnDestroy {
     return (group.get('attributs') as FormArray).at(index).get(controlName);
   }
 
+  trackByOption(index: number, item: any): string {
+    return item.name;
+  }
+
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
   }
-
-  logValue(value: any) {
-    console.log('Ausgewählter Wert (Typ):', value, typeof value);
-    this.cdr.detectChanges();
-  }
+  
 }
 
 

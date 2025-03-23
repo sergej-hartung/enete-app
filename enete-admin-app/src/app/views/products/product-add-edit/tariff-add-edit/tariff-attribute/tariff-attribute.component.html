@@ -70,12 +70,11 @@
                       class="form-select form-select-sm"
                       [ngClass]="{'is-invalid': (attributeCtrl.get('value_varchar')?.errors && attributeCtrl.get('value_varchar')?.touched) || (attributeCtrl.get('value_text')?.errors && attributeCtrl.get('value_text')?.touched)}"
                       formControlName="value_varchar"
-                      (change)="logValue(attributeCtrl.get('value_varchar')?.value)"
                       (focus)="setFocus(group, j)"
                       (blur)="removeFocus(group, j)"
                     >
                       <!-- <option value="">Bitte wählen</option> -->
-                      <option *ngFor="let option of getDropdownOptions(group.attributs[j])" [value]="option.name">
+                      <option *ngFor="let option of getDropdownOptions(group.attributs[j]); trackBy: trackByOption" [value]="option.name">
                         {{ option.name }}
                       </option>
                     </select>

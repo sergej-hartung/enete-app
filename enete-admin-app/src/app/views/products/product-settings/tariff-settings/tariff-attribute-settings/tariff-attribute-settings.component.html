@@ -26,7 +26,8 @@
             <div class="product-settigs-wrapp" 
                 [@slideIn]
                 >
-              <div class="product-settings-tittle">Tarifattribute erstellen</div>
+              <div *ngIf="mode == 'edit'" class="product-settings-tittle">Tarifattribute bearbeiten</div>
+              <div *ngIf="mode == 'new'" class="product-settings-tittle">Tarifattribute erstellen</div>
               <div class="product-settings-content flex-grow-1">
                 <form [formGroup]="tariffAttributeForm">
                   <div class="row">

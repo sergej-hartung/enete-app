@@ -131,6 +131,8 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
       .subscribe(deleted => {
         setTimeout(() => {
           this.preloaderService.hide();
+          this.reset()
+          this.selectedAttribute = ''
           //this.closeEditMode()
           this.showSnackbar('Das Tariffattribut wurde erfolgreich gelöscht.', 'success-snackbar');
         }, 1000) 
@@ -152,6 +154,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
             if(error.requestType == 'delete'){
               let errors: Error = error
               this.preloaderService.hide();
+              //this.resetEditMode();
               this.showErrorDialog(errors?.errors)
             }
           });
@@ -261,6 +264,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         if (!this.tariffAttributeForm.valid) return;
 
+
         this.mainNavbarService.setIconState('save', true, this.mode !== 'new' && !this.hasFormChanges());
       });
   }
@@ -359,12 +363,14 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
     this.resetForm(); // Setzt das Formular zurück, inkl. detailsArray.clear()
     this.subscribeToInputTypeChanges();
     this.editMode();
+
+    //this.watchFormChanges();
   }
 
   editAttribute(): void {
+    console.log(this.selectedAttribute)
     if (!this.selectedAttribute) return;
   
-    this.mode = Mode.Edit;
     this.attributeEditOrNew = true;
     this.attributeColumns = this.getEditColumns();
   
@@ -374,9 +380,9 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
       name: this.selectedAttribute.name,
       input_type_id: this.selectedAttribute.input_type_id.toString(),
       unit: this.selectedAttribute.unit,
-      is_system: this.selectedAttribute.is_system,
-      is_required: this.selectedAttribute.is_required,
-      is_frontend_visible: this.selectedAttribute.is_frontend_visible
+      is_system: !!this.selectedAttribute.is_system,
+      is_required: !!this.selectedAttribute.is_required,
+      is_frontend_visible: !!this.selectedAttribute.is_frontend_visible
     });
   
     this.updateTariffGroupsFormArrayWithSelected(this.selectedAttribute.tariff_group_ids || []);
@@ -393,8 +399,13 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
     }
   
     this.initialFormValue = JSON.parse(JSON.stringify(this.tariffAttributeForm.getRawValue()));
+    console.log(this.initialFormValue)
     this.subscribeToInputTypeChanges();
+
+    this.mode = Mode.Edit;
     this.editMode();
+
+    //this.watchFormChanges();
   }
 
   private addNewDetailOptionWithValue(value: string): void {
@@ -423,9 +434,9 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
     if(id){
       this.tariffAttributeService.deleteItem(id)
       this.preloaderService.show('Deleting')
-      this.reset()
-      this.selectedAttribute = ''
-      //this.editMode()
+      // this.reset()
+      // this.selectedAttribute = ''
+
     }
     
     console.log('delete')
@@ -510,7 +521,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
     this.mainNavbarService.setIconState('new', true, true);
     this.mainNavbarService.setIconState('edit', true, true);
     this.mainNavbarService.setIconState('delete', true, true);
-    this.mainNavbarService.setIconState('save', true, false);
+    this.mainNavbarService.setIconState('save', true, true);
   }
 
   reset(): void {

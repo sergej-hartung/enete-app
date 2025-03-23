@@ -56,7 +56,7 @@ class ProductDocumentController extends Controller
         $fullPath = 'products/' . trim($folder, '/');
         $files = Storage::files($fullPath);
         $fileInfo = [];
-
+        
         foreach ($files as $file) {
             $relativePath = Str::after($file, 'products/');
             $fileRecord = ProductDocuments::where('path', $file)->first();
@@ -66,7 +66,7 @@ class ProductDocumentController extends Controller
 
                 // Фильтрация по вхождению строки поиска в имя файла
                 if (($search === '' || stripos($fileName, $search) !== false) &&
-                    ($mimeType === '' || $fileRecord->mime_type === $mimeType)){
+                    ($mimeType === '' || Str::startsWith($fileRecord->mime_type, $mimeType))){
                     $fileInfo[] = [
                         'id' => $fileRecord->id,
                         'name' => $fileName,

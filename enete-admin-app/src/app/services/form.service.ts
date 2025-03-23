@@ -235,6 +235,16 @@ export class FormService {
     })
   }
 
+  createTariffProviderFormGroup(): FormGroup {
+    return this.fb.group({
+      id: [],
+      name:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      logo_id:       ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      file_name:           ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      tariff_groups: this.fb.array([]),
+    })
+  }
+
 
   getTariffForm(){
     if(this.tariffForm){
