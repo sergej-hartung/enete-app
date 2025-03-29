@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255)->nullable();
             $table->unsignedBigInteger('logo_id')->nullable();
+            $table->boolean('is_filled_on_site')->default(true);
+            $table->string('external_fill_link', 255)->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('updated_by')->nullable();
             $table->timestamps();

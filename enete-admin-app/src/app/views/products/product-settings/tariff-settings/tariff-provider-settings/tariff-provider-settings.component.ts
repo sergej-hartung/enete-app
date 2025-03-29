@@ -44,7 +44,7 @@ enum Mode {
         // Animation für die linke Seite (Breitenwechsel)
         trigger('resizeLeft', [
           state('full', style({ width: '100%' })),
-          state('partial', style({ width: '51%' })), // ca. 7 von 12 Spalten
+          state('partial', style({ width: '58.33%' })), // ca. 7 von 12 Spalten
           transition('full <=> partial', [animate('300ms ease-in-out')])
         ]),
       ]
@@ -54,7 +54,7 @@ export class TariffProviderSettingsComponent {
   isExpandable = false;
   providerEditOrNew = false;
 
-  isTableLoading = false; // Neue Eigenschaft
+  //isTableLoading = false; // Neue Eigenschaft
 
   private initialFormValue: any;
   tariffProviderForm: FormGroup;
@@ -73,8 +73,8 @@ export class TariffProviderSettingsComponent {
   mimeType: string = 'image/';
   logoProviderContent: SafeResourceUrl | null = null;
 
-  @ViewChild('deleteTariffAttributTitleTemplate') deleteTariffAttributTitleTemplate!: TemplateRef<any>;
-  @ViewChild('deleteTariffAttributeMessageTemplate') deleteTariffAttributeMessageTemplate!: TemplateRef<any>;
+  @ViewChild('deleteTariffProviderTitleTemplate') deleteTariffProviderTitleTemplate!: TemplateRef<any>;
+  @ViewChild('deleteTariffProviderMessageTemplate') deleteTariffProviderMessageTemplate!: TemplateRef<any>;
   @ViewChild('errorWhileDeletingTemplate') errorWhileDeletingTemplate!: TemplateRef<any>;
 
   private unsubscribe$ = new Subject<void>();
@@ -104,7 +104,7 @@ export class TariffProviderSettingsComponent {
     this.fetchInitialData();
     this.setupSubscriptions();
     this.mainNavbarService.setIconState('new', true, false);
-    // this.watchFormChanges();
+    this.watchFormChanges();
 
     this.tariffGroupService.data$
       .pipe(takeUntil(this.unsubscribe$))
@@ -130,6 +130,38 @@ export class TariffProviderSettingsComponent {
 
         }    
       });
+
+    this.providerService.deleteSuccess$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(deleted => {
+        setTimeout(() => {
+          this.preloaderService.hide();
+          this.reset()
+          this.selectedProvider = ''
+          //this.closeEditMode()
+          this.showSnackbar('Der Provider wurde erfolgreich gelöscht.', 'success-snackbar');
+        }, 1000) 
+      });
+    
+    this.providerService.errors$
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe(error => {
+          console.log(error)
+          if(error.requestType == 'post'){
+            this.preloaderService.hide();
+            this.showSnackbar('Speichern der Tarifgruppe fehlgeschlagen', 'error-snackbar');
+          }
+          if(error.requestType == 'patch'){
+            this.preloaderService.hide();
+            this.showSnackbar('Speichern der Tarifgruppe fehlgeschlagen', 'error-snackbar');
+          }
+          if(error.requestType == 'delete'){
+            let errors: Error = error
+            this.preloaderService.hide();
+            //this.resetEditMode();
+            this.showErrorDialog(errors?.errors)
+          }
+        });
   }
 
   get tariffGroupsArray(): FormArray {
@@ -153,7 +185,7 @@ export class TariffProviderSettingsComponent {
     this.subscribeToTariffGroups();
     // this.subscribeToAttributeTypes();
     this.subscribeToNavbarActions();
-    // this.subscribeToServiceResponse();
+    this.subscribeToServiceResponse();
   }
 
   private subscribeToTariffGroups(): void {
@@ -194,27 +226,58 @@ export class TariffProviderSettingsComponent {
       .subscribe(action => action.proceedCallback());
   }
 
+  private subscribeToServiceResponse(): void {
+    this.providerService.detailedData$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(response => {
+        if (!response || response.entityType !== 'tariffProvider') return;
+
+
+        if (response.requestType === 'post') {
+          this.providerService.fetchData();
+          const successMessage = 'Provider wurde erfolgreich gespeichert!'
+          setTimeout(() => {
+            this.preloaderService.hide();
+            this.selectedProvider = null
+            this.logoProviderContent = null
+            this.resetEditMode();
+            this.showSnackbar(successMessage, 'success-snackbar');
+          }, 1000);
+        }
+
+        if(response.requestType === 'patch' && response.data){
+          this.selectedProvider = response.requestType === 'patch' ? response.data : null;
+          const successMessage = 'Provider wurde erfolgreich geändert!'
+          setTimeout(() => {
+            this.preloaderService.hide();
+            this.resetEditMode();
+            this.showSnackbar(successMessage, 'success-snackbar');
+          }, 1000);
+        }
+      });
+  }
+
   private handleIconClick(button: string): void {
     console.log(button)
     switch (button) {
       case 'new':
-        this.startNewAttribute();
+        this.startNewProvider();
         break;
       case 'edit':
-        //this.editAttribute();
+        this.editProvider();
         break;
       case 'save':
-        //this.saveAttribute();
+        this.saveProvider();
         break;
       case 'delete':
         
-        //this.showNotification(() => this.deleteAttribut(this.selectedAttribute?.id))
+        this.showNotification(() => this.deleteProvider(this.selectedProvider?.id))
         break;
       // case 'delete': Implementierung fehlt noch
     }
   }
 
-  startNewAttribute(): void {
+  startNewProvider(): void {
     this.mode = Mode.New;
     this.providerEditOrNew = true;
     //this.providerColumnsColumns = this.getEditColumns();
@@ -225,11 +288,84 @@ export class TariffProviderSettingsComponent {
     //this.watchFormChanges();
   }
 
+  editProvider(): void {
+    console.log(this.selectedProvider)
+    if (!this.selectedProvider) return;
+
+    if(this.selectedProvider.logo_id){
+      this.getLogoProvider(this.selectedProvider.logo_id)
+      this.tariffProviderForm.patchValue({
+        file_name: this.selectedProvider?.file_name,
+      });
+    }
+    
+  
+    this.providerEditOrNew = true;
+  
+    this.tariffProviderForm.patchValue({
+      id: this.selectedProvider.id,
+      name: this.selectedProvider?.name,
+      logo_id: this.selectedProvider?.logo_id,
+      is_filled_on_site: this.selectedProvider?.is_filled_on_site,
+      external_fill_link: this.selectedProvider?.external_fill_link
+    });
+  
+    this.updateTariffGroupsFormArrayWithSelected(this.selectedProvider.tariff_group_ids || []);
+  
+    this.initialFormValue = JSON.parse(JSON.stringify(this.tariffProviderForm.getRawValue()));
+    console.log(this.tariffProviderForm)
+    this.mode = Mode.Edit;
+    this.editMode();
+  }
+
+  saveProvider():void {
+    if (!this.tariffProviderForm.valid) return;
+
+    const formValue = this.tariffProviderForm.getRawValue();
+    this.preloaderService.show(this.mode === 'new' ? 'Creating' : 'Updating');
+
+    if (this.mode === 'new') {
+      this.providerService.addItem(formValue);
+    } else if (this.mode === 'edit') {
+      //console.log(this.initialFormValue)
+      const changes = this.objectDiffService.getDifferences(this.initialFormValue, formValue);
+      this.providerService.updateItem(formValue.id, changes);
+      this.logoProviderContent = null
+    }
+
+    this.closeGroup();
+  }
+
+  deleteProvider(id: number){
+    if(id){
+      this.providerService.deleteItem(id)
+      this.preloaderService.show('Deleting')
+      // this.reset()
+      // this.selectedAttribute = ''
+
+    }
+    
+    console.log('delete')
+  }
+
   editMode(): void {
     this.mainNavbarService.setIconState('new', true, true);
     this.mainNavbarService.setIconState('edit', true, true);
     this.mainNavbarService.setIconState('delete', true, true);
     this.mainNavbarService.setIconState('save', true, true);
+  }
+
+  private updateTariffGroupsFormArrayWithSelected(selectedIds: number[]): void {
+    this.tariffGroupsArray.clear();
+    this.tariffGroups.forEach(group => {
+      this.tariffGroupsArray.push(this.fb.group({
+        id: [group.id],
+        name: [group.name],
+        icon: [group.icon],
+        color: [group.color],
+        checked: [selectedIds.includes(group.id)]
+      }));
+    });
   }
   
 
@@ -244,10 +380,10 @@ export class TariffProviderSettingsComponent {
   }
 
   selectedRow(event: any): void {
-      this.selectedProvider = event;
-      this.mainNavbarService.setIconState('edit', true, false);
-      this.mainNavbarService.setIconState('delete', true, false);
-    }
+    this.selectedProvider = event;
+    this.mainNavbarService.setIconState('edit', true, false);
+    this.mainNavbarService.setIconState('delete', true, false);
+  }
   
   
   
@@ -271,7 +407,7 @@ export class TariffProviderSettingsComponent {
     }
 
     closeDialog(){
-
+      this.dialog.closeAll();
     }
 
     closeGroup(): void {
@@ -279,6 +415,7 @@ export class TariffProviderSettingsComponent {
       this.providerEditOrNew = false;
       this.providerColumns = this.getDefaultColumns();
       this.resetForm();
+      this.logoProviderContent = null
       this.resetEditMode();
     }
 
@@ -287,6 +424,9 @@ export class TariffProviderSettingsComponent {
         id: null,
         name: '',
         logo_id: null,
+        file_name: '',
+        is_filled_on_site: true,
+        external_fill_link: ''
       });
       this.updateTariffGroupsFormArray();
       // this.detailsArray.clear();
@@ -322,6 +462,27 @@ export class TariffProviderSettingsComponent {
         });
     }
 
+    private showNotification(proceedCallback: () => void, tpl = this.deleteTariffProviderTitleTemplate, msg = this.deleteTariffProviderMessageTemplate) {
+      this.notificationService.configureNotification(null, null, tpl, msg, 'Weiter', 'Abbrechen', proceedCallback, () => {});
+      this.notificationService.showNotification();
+    }
+
+    private showSnackbar(message: string, panelClass: string): void {
+      this.snackBar.open(message, '', {
+        duration: 3000,
+        horizontalPosition: 'right',
+        verticalPosition: 'bottom',
+        panelClass: [panelClass]
+      });
+    }
+
+    private showErrorDialog(errors: string[]): void {
+      this.dialog.open(this.errorWhileDeletingTemplate, {
+        width: '500px',
+        data: { errors }
+      });
+    }
+
     handleFileSelected(file: FileData) {
       // Handle the selected file here
 
@@ -333,12 +494,51 @@ export class TariffProviderSettingsComponent {
       console.log(this.tariffProviderForm)
     }
 
-    getLogoProvider(id:number){
+    getLogoProvider(id:number, mode?:Mode){
+      console.log(mode)
       this.productDocumentService.getFileContentById(id)
         .pipe(takeUntil(this.unsubscribe$))
         .subscribe(content => {
+          console.log(content)
           const url = window.URL.createObjectURL(content);
           this.logoProviderContent = this.sanitizer.bypassSecurityTrustResourceUrl(url+'#view=FitH');
+          if(mode == 'edit'){
+            console.log('edit')
+            
+          }
         });
     }
+
+     // Formular-Änderungen überwachen
+  private watchFormChanges(): void {
+    this.tariffProviderForm.valueChanges
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(() => {
+        if (!this.tariffProviderForm.valid) return;
+
+
+        this.mainNavbarService.setIconState('save', true, this.mode !== 'new' && !this.hasFormChanges());
+      });
+  }
+
+  private hasFormChanges(): boolean {
+    return this.mode === 'edit' && this.objectDiffService.hasDifferences(
+      this.initialFormValue,
+      this.tariffProviderForm.getRawValue()
+    );
+  }
+
+  reset(): void {
+    this.mode = Mode.None;
+    this.tariffProviderForm.reset();
+    this.mainNavbarService.setIconState('save', true, true);
+  }
+
+  ngOnDestroy() {
+    this.reset();
+    this.providerService.resetData()
+    this.providerService.resetDetailedData()
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

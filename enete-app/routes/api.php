@@ -163,6 +163,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
 
     $router->group(['prefix' => 'tariff-providers'], function ($router) {
         $router->get('/', 'App\Http\Controllers\Tariff\TariffProvider\IndexController')->name('tariff-providers.index');
+        $router->post('/', 'App\Http\Controllers\Tariff\TariffProvider\StoreController')->name('tariff-providers.store');
+        $router->patch('/{id}', 'App\Http\Controllers\Tariff\TariffProvider\UpdateController')->name('tariff-providers.update');
+        $router->delete('/{id}', 'App\Http\Controllers\Tariff\TariffProvider\DeleteController')->name('tariff-providers.delete');
     });
 
     $router->group(['prefix' => 'tariff-network-operators'], function ($router) {

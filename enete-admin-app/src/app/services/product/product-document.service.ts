@@ -42,6 +42,10 @@ export class ProductDocumentService {
     return this.http.get(`${this.apiUrl}/products/file-content`, { params: { path }, responseType: 'blob' });
   }
 
+  getFileById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/products/file-content/${id}`);
+  }
+
   getFileContentById(id: number): Observable<Blob> {
     return this.http.get(`${this.apiUrl}/products/file-content/${id}`, { responseType: 'blob' });
   }

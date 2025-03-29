@@ -143,7 +143,7 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
           .pipe(takeUntil(this.unsubscribe$))
           .subscribe(error => {
             console.log(error)
-            if(error.requestType == 'patch'){
+            if(error.requestType == 'post'){
               this.preloaderService.hide();
               this.showSnackbar('Speichern der Tarifgruppe fehlgeschlagen', 'error-snackbar');
             }

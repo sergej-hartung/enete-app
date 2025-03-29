@@ -241,6 +241,8 @@ export class FormService {
       name:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
       logo_id:       ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       file_name:           ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      is_filled_on_site:   [true, [booleanValidator()]],
+      external_fill_link:  [''],
       tariff_groups: this.fb.array([]),
     })
   }

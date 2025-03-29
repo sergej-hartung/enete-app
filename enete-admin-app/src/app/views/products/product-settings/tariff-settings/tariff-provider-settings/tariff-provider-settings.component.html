@@ -7,7 +7,7 @@
                 class="table-responsive"
                 [columns]="providerColumns"
                 [filters]="filters"
-                [isLoading]="isTableLoading"
+                [isLoading]="providerEditOrNew"
                 [isExpandable]="isExpandable"
                 [dataService]="providerService"
                 [rowSelectionMode]="'parent'"
@@ -80,7 +80,7 @@
                             <div *ngIf="tariffAttributeForm.get('code')?.errors?.['pattern']">Ungültiges Format.</div>
                           </div>
                         </div>    -->
-                        <div class="">
+                        <div class="col">
                           <label 
                             class="form-label custom-label-sm" 
                             for="provider-name"
@@ -97,7 +97,38 @@
                             <div *ngIf="tariffProviderForm.get('name')?.errors?.['required']">Name ist erforderlich.</div>
                             <div *ngIf="tariffProviderForm.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
                           </div>
-                        </div>   
+                        </div> 
+                          
+                      </div>
+                      <div class="row">
+                        <div class="form_check pt-2 col" >
+                          <input 
+                              id="is-frontent-visible" 
+                              type="checkbox"
+                              formControlName="is_filled_on_site"
+                          >
+                          <label for="is-frontent-visible">Wird der Vertrag auf unserer Seite ausgefüllt ?</label>
+                        </div> 
+                      </div>
+                      <div class="row" *ngIf="!this.tariffProviderForm.get('is_filled_on_site')?.value">
+                        <div class="col">
+                          <label 
+                            class="form-label custom-label-sm" 
+                            for="provider-external-link"
+                            [ngClass]="{'required': isRequired(tariffProviderForm.get('external_fill_link'))}"
+                          >Link</label>
+                          <input 
+                            type="text" 
+                            class="form-control form-control-sm"
+                            [ngClass]="{'is-invalid': tariffProviderForm.get('external_fill_link')?.errors && tariffProviderForm.get('external_fill_link')?.touched}"
+                            id="provider-external-link"
+                            formControlName="external_fill_link"
+                          >
+                          <div *ngIf="tariffProviderForm.get('external_fill_link')?.errors && tariffProviderForm.get('external_fill_link')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="tariffProviderForm.get('external_fill_link')?.errors?.['required']">Link ist erforderlich.</div>
+                            <div *ngIf="tariffProviderForm.get('external_fill_link')?.errors?.['pattern']">Ungültiges Format.</div>
+                          </div>
+                        </div>
                       </div>
                       <div class="row">
                     
@@ -237,16 +268,16 @@
     </div>
     </div>
 
-  <ng-template #deleteTariffAttributTitleTemplate>
+  <ng-template #deleteTariffProviderTitleTemplate>
     <span>
         <i style="color: rgb(237, 28, 36);" class="fas fa-trash me-1"></i>
-        Tariffattribut löschen
+        Provider löschen
     </span>
   </ng-template>
   
-  <ng-template #deleteTariffAttributeMessageTemplate>
+  <ng-template #deleteTariffProviderMessageTemplate>
     <div>
-      Sind Sie sicher, dass Sie diese Tariffattribut löschen möchten? <br>
+      Sind Sie sicher, dass Sie diesen Provider löschen möchten? <br>
       <span class="mt-2" style="color: rgb(237, 28, 36); font-weight: 500;">Vorgang kann nicht rückgängig gemacht werden!</span>
     </div>
   </ng-template>
@@ -260,7 +291,7 @@
       <mat-divider></mat-divider>
   
       <div mat-dialog-content class="error-content">
-        <p>Beim Löschen der Tariffattribut  sind folgende Fehler aufgetreten:</p>
+        <p>Beim Löschen von Providern sind folgende Fehler aufgetreten:</p>
         <ul class="error-list">
           <li *ngFor="let error of data.errors">
             <mat-icon class="error-bullet">warning</mat-icon>
