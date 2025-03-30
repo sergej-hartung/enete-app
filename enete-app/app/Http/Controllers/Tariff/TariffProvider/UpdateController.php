@@ -65,7 +65,7 @@ class UpdateController extends Controller
             }
 
             DB::commit();
-            return new IndexTariffProviderResource($tariffProvider->fresh()->load('groups'));
+            return new IndexTariffProviderResource($tariffProvider->fresh()->load(['groups', 'document']));
             // return response()->json([
             //     'message' => 'Tariff attribute successfully updated',
             //     'data' => $tariffAttribute->fresh()->load('tariffGroups')

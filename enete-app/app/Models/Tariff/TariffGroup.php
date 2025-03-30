@@ -4,11 +4,15 @@ namespace App\Models\Tariff;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Traits\Filterable;
+use App\Models\Traits\TariffGroupSortable;
 
 
 class TariffGroup extends Model
 {
     use HasFactory;
+    use Filterable;
+    use TariffGroupSortable;
 
     protected $fillable = ['name', 'icon', 'color', 'created_by', 'updated_by'];
 

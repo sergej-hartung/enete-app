@@ -547,15 +547,15 @@ export class TariffAttributeSettingsComponent implements OnInit, OnDestroy {
 
 
   sort(event: any): void {
-    console.log(event)
-    this.tariffAttributeService.fetchData(event)
-    // Sortierlogik implementieren
+    if(!this.attributeEditOrNew){
+      this.tariffAttributeService.fetchData(event)
+    }
   }
 
   filter(event: any): void {
-    console.log(event)
-    this.tariffAttributeService.fetchData(event)
-    // Filterlogik implementieren
+    if(!this.attributeEditOrNew){
+      this.tariffAttributeService.fetchData(event)
+    }
   }
 
   private handleAction(action: any): void {

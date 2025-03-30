@@ -128,6 +128,10 @@ export class TariffGroupSettingsComponent {
           this.showSnackbar('Tarifgruppe wurde erfolgreich gelöscht!', 'success-snackbar');
         }, 1000) 
       });
+
+    this.tariffGroupService.confirmAction$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(action => this.handleAction(action));
   }
 
   private handleResponse(response: any): void {
@@ -246,10 +250,16 @@ export class TariffGroupSettingsComponent {
 
   sort(event: any){
     console.log(event)
+    if(!this.groupEditOrNew){
+      this.tariffGroupService.fetchData(event)
+    }
   }
 
   filter(event: any){
     console.log(event)
+    if(!this.groupEditOrNew){
+      this.tariffGroupService.fetchData(event)
+    }
   }
   
   selectedRow(event: any){
@@ -331,6 +341,22 @@ export class TariffGroupSettingsComponent {
       this.mainNavbarService.setIconState('delete', true, false);
     }
     
+  }
+
+  private handleAction(action: any): void {
+    console.log(action)
+    switch (action.action) {
+      // case 'deletePartnerFile':
+      //   this.showNotification(action.proceedCallback, this.deleteFileTitleTemplate, this.deleteFileMessageTemplate);
+      //   break;
+      case 'selectRow':
+      case 'sort':
+      case 'filter':
+        action.proceedCallback();
+        break;
+      default:
+        action.proceedCallback();
+    }
   }
 
   ngOnDestroy() {

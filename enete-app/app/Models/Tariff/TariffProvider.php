@@ -6,10 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\ProductDocuments;
 use App\Models\User\User;
+use App\Models\Traits\Filterable;
+use App\Models\Traits\TariffProviderSortable;
 
 class TariffProvider extends Model
 {
     use HasFactory;
+    use Filterable;
+    use TariffProviderSortable;
 
     protected $fillable = ['name', 'logo_id', 'is_filled_on_site', 'external_fill_link', 'created_by', 'updated_by'];
 

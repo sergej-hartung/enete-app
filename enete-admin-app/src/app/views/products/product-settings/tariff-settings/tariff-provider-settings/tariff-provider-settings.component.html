@@ -1,6 +1,174 @@
 <div class="container-fluid product-provider-setting">
+  <div class="row">
+    <div class="pe-0 pt-1 ps-0 tariff-provider-table" [@resizeLeft]="providerEditOrNew ? 'partial' : 'full'">
+      <app-generic-table
+        class="table-responsive"
+        [columns]="providerColumns"
+        [filters]="filters"
+        [isLoading]="providerEditOrNew"
+        [isExpandable]="isExpandable"
+        [dataService]="providerService"
+        [rowSelectionMode]="'parent'"
+        [sortMode]="'parent'"
+        [filterMode]="'parent'"
+        (rowSelected)="selectedRow($event)"
+        (sortEvent)="sort($event)"
+        (filterEvent)="filter($event)"
+        #genericTable
+      >
+      </app-generic-table>
+    </div>
+    <div *ngIf="providerEditOrNew" class="col pe-0 ps-0" style="overflow: hidden;">
+      <div class="product-settigs-wrapp" [@slideIn]>
+        <div class="product-settings-tittle">{{ mode === 'edit' ? 'Provider bearbeiten' : 'Provider erstellen' }}</div>
+        <div class="product-settings-content flex-grow-1">
+          <form [formGroup]="tariffProviderForm">
+            <div class="row">
+              <div class="col-7">
+                <div class="row">
+                  <div class="col">
+                    <label
+                      class="form-label custom-label-sm"
+                      for="provider-name"
+                      [ngClass]="{'required': isRequired(tariffProviderForm.get('name'))}"
+                    >Name</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      [ngClass]="{'is-invalid': tariffProviderForm.get('name')?.errors && tariffProviderForm.get('name')?.touched}"
+                      id="provider-name"
+                      formControlName="name"
+                    >
+                    <div *ngIf="tariffProviderForm.get('name')?.errors && tariffProviderForm.get('name')?.touched" class="invalid-feedback d-block">
+                      <div *ngIf="tariffProviderForm.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+                      <div *ngIf="tariffProviderForm.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="form_check pt-2 col">
+                    <input
+                      id="is-frontent-visible"
+                      type="checkbox"
+                      formControlName="is_filled_on_site"
+                    >
+                    <label for="is-frontent-visible">Wird der Vertrag auf unserer Seite ausgefüllt?</label>
+                  </div>
+                </div>
+                <div class="row" *ngIf="!tariffProviderForm.get('is_filled_on_site')?.value">
+                  <div class="col">
+                    <label
+                      class="form-label custom-label-sm"
+                      for="provider-external-link"
+                      [ngClass]="{'required': isRequired(tariffProviderForm.get('external_fill_link'))}"
+                    >Link</label>
+                    <input
+                      type="text"
+                      class="form-control form-control-sm"
+                      [ngClass]="{'is-invalid': tariffProviderForm.get('external_fill_link')?.errors && tariffProviderForm.get('external_fill_link')?.touched}"
+                      id="provider-external-link"
+                      formControlName="external_fill_link"
+                    >
+                    <div *ngIf="tariffProviderForm.get('external_fill_link')?.errors && tariffProviderForm.get('external_fill_link')?.touched" class="invalid-feedback d-block">
+                      <div *ngIf="tariffProviderForm.get('external_fill_link')?.errors?.['required']">Link ist erforderlich.</div>
+                      <div *ngIf="tariffProviderForm.get('external_fill_link')?.errors?.['pattern']">Ungültiges URL-Format.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col">
+                    <button class="btn document-select" (click)="openModal($event)">
+                      {{ tariffProviderForm.get('file_name')?.value || 'Logo' }}
+                    </button>
+                    <div *ngIf="tariffProviderForm.get('logo_id')?.errors && tariffProviderForm.get('logo_id')?.touched" class="invalid-feedback d-block">
+                      <div *ngIf="tariffProviderForm.get('logo_id')?.errors?.['required']">Logo ist erforderlich.</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="logo-container d-flex align-items-center justify-content-center">
+                    <ng-container *ngIf="logoProviderContent">
+                      <img [src]="logoProviderContent" alt="Provider Logo" class="logo-image">
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+              <div class="col pt-3 ps-1">
+                <div formArrayName="tariff_groups" class="row">
+                  <div class="col">
+                    <app-card>
+                      <div card-header>Tarifgruppen</div>
+                      <div card-body>
+                        <div class="form-check-card-custom-body max">
+                          <div *ngFor="let control of tariffGroupsArray.controls; let i = index" [formGroupName]="i">
+                            <div class="form-check form-check-card-custom">
+                              <input type="checkbox" class="form-check-input" formControlName="checked" [id]="'tariff_group' + control.value.id">
+                              <label class="form-check-label" [for]="'tariff_group' + control.value.id">
+                                <i [class]="control.value.icon" [style.color]="control.value.color"></i>
+                                <span class="ps-2">{{ control.value.name }}</span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </app-card>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col">
+                <button type="button" class="btn btn-outline-danger w-100" (click)="closeGroup()">Abbrechen</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #deleteTariffProviderTitleTemplate>
+  <span>
+    <i style="color: rgb(237, 28, 36);" class="fas fa-trash me-1"></i>
+    Provider löschen
+  </span>
+</ng-template>
+
+<ng-template #deleteTariffProviderMessageTemplate>
+  <div>
+    Sind Sie sicher, dass Sie diesen Provider löschen möchten? <br>
+    <span class="mt-2" style="color: rgb(237, 28, 36); font-weight: 500;">Vorgang kann nicht rückgängig gemacht werden!</span>
+  </div>
+</ng-template>
+
+<ng-template #errorWhileDeletingTemplate let-data>
+  <div class="error-dialog">
+    <h2 mat-dialog-title class="error-title">
+      <mat-icon class="error-icon">error</mat-icon>
+      Fehler beim Löschen
+    </h2>
+    <mat-divider></mat-divider>
+    <div mat-dialog-content class="error-content">
+      <p>Beim Löschen von Providern sind folgende Fehler aufgetreten:</p>
+      <ul class="error-list">
+        <li *ngFor="let error of data.errors">
+          <mat-icon class="error-bullet">warning</mat-icon>
+          {{ error }}
+        </li>
+      </ul>
+    </div>
+    <mat-divider></mat-divider>
+    <div mat-dialog-actions align="end">
+      <button mat-button color="primary" (click)="closeDialog()">
+        <mat-icon>close</mat-icon> Schließen
+      </button>
+    </div>
+  </div>
+</ng-template>
+<!-- <div class="container-fluid product-provider-setting">
     <div class="row">
-        <div class="pe-0 pt-1 ps-0"
+        <div class="pe-0 pt-1 ps-0 tariff-provider-table"
             [@resizeLeft]="providerEditOrNew ? 'partial' : 'full'"
         >
             <app-generic-table 
@@ -33,53 +201,8 @@
               <div class="product-settings-content flex-grow-1">
                 <form [formGroup]="tariffProviderForm">
                   <div class="row">
-                    <div class="col-7">
-                      <!-- <div class="row">
-                        
-                          <div class="form_check pt-2 col-4 " >
-                            <input 
-                                id="is-system" 
-                                type="checkbox"
-                                formControlName="is_system"
-                            >
-                            <label for="is-system">Systemfeld</label>
-                          </div>
-                          <div class="form_check pt-2 col-4 " >
-                            <input 
-                                id="is-required" 
-                                type="checkbox"
-                                formControlName="is_required"
-                            >
-                            <label for="is-required">Pflichtfeld</label>
-                          </div>
-                          <div class="form_check pt-2 col-4 " >
-                            <input 
-                                id="is-frontent-visible" 
-                                type="checkbox"
-                                formControlName="is_frontend_visible"
-                            >
-                            <label for="is-frontent-visible">Frontend sichtbar</label>
-                          </div>                                              
-                      </div> -->
+                    <div class="col-7">                      
                       <div class="row">
-                        <!-- <div class="col-6 pe-1">
-                          <label 
-                            class="form-label custom-label-sm" 
-                            for="attribute-code"
-                            [ngClass]="{'required': isRequired(tariffAttributeForm.get('code'))}"
-                          >Kennung</label>
-                          <input 
-                            type="text" 
-                            class="form-control form-control-sm"
-                            [ngClass]="{'is-invalid': tariffAttributeForm.get('code')?.errors && tariffAttributeForm.get('code')?.touched}"
-                            id="attribute-code"
-                            formControlName="code"
-                          >
-                          <div *ngIf="tariffAttributeForm.get('code')?.errors && tariffAttributeForm.get('code')?.touched" class="invalid-feedback d-block">
-                            <div *ngIf="tariffAttributeForm.get('code')?.errors?.['required']">Kennung ist erforderlich.</div>
-                            <div *ngIf="tariffAttributeForm.get('code')?.errors?.['pattern']">Ungültiges Format.</div>
-                          </div>
-                        </div>    -->
                         <div class="col">
                           <label 
                             class="form-label custom-label-sm" 
@@ -150,85 +273,6 @@
                         </div>
                       </div>
                       
-                      <!-- <div class="row">
-                        <div class="col-6 pe-1">
-                          <label for="input_type" 
-                              class="form-label custom-label-sm"
-                              [ngClass]="{'required': isRequired(tariffAttributeForm.get('input_type_id'))}"
-                          >Eingabe-Typ</label>
-                          <select formControlName="input_type_id" 
-                                  class="form-select form-select-sm is-invalid" 
-                                  id="input_type"
-                                  [ngClass]="{'is-invalid': tariffAttributeForm.get('input_type_id')?.errors && tariffAttributeForm.get('input_type_id')?.touched}"
-                          >
-                              <option *ngFor="let option of inputTypes" [value]="option?.id">{{option?.name}}</option>
-                          </select>
-                          <div *ngIf="tariffAttributeForm.get('input_type_id')?.errors && tariffAttributeForm.get('input_type_id')?.touched" class="invalid-feedback d-block">
-                              <div *ngIf="tariffAttributeForm.get('input_type_id')?.errors?.['required']">Eingabe-Typ ist erforderlich.</div>
-                              <div *ngIf="tariffAttributeForm.get('input_type_id')?.errors?.['pattern']">Ungültiges Format.</div>
-                          </div>
-                        </div>   
-                        <div class="col-6 ps-1">
-                          <label 
-                            class="form-label custom-label-sm" 
-                            for="attribute-unit"
-                            [ngClass]="{'required': isRequired(tariffAttributeForm.get('unit'))}"
-                          >Einheit</label>
-                          <input 
-                            type="text" 
-                            class="form-control form-control-sm"
-                            [ngClass]="{'is-invalid': tariffAttributeForm.get('unit')?.errors && tariffAttributeForm.get('unit')?.touched}"
-                            id="attribute-unit"
-                            formControlName="unit"
-                          >
-                          <div *ngIf="tariffAttributeForm.get('unit')?.errors && tariffAttributeForm.get('unit')?.touched" class="invalid-feedback d-block">
-                            <div *ngIf="tariffAttributeForm.get('unit')?.errors?.['required']">Einheit ist erforderlich.</div>
-                            <div *ngIf="tariffAttributeForm.get('unit')?.errors?.['pattern']">Ungültiges Format.</div>
-                          </div>
-                        </div>   
-                      </div> -->
-                      <!-- <div formArrayName="details">
-                        <div class="row" *ngFor="let control of detailsArray.controls; let i = index" [formGroupName]="i">
-                          <div class="col-12">
-                            <label 
-                              class="form-label custom-label-sm" 
-                              for="attribute-details"
-                              [ngClass]="{'required': isRequired(control.get('name'))}"
-                            >Option {{i + 1}}
-                            </label>
-                            <div class="input-group">
-                              <input 
-                                type="text" 
-                                class="form-control form-control-sm"
-                                [ngClass]="{'is-invalid': control.get('name')?.errors && control.get('name')?.touched}"
-                                id="'attribute-details-' + i"
-                                formControlName="name"
-                              >
-                              <button 
-                                class="btn btn-outline-danger input-form-frame-btn-sm" 
-                                type="button" 
-                                id="button-addon2"
-                                (click)="deleteDetailOption(i)"
-                              >
-                                <i class="far fa-trash-alt"></i>
-                              </button>
-                            </div>
-                            
-                            <div *ngIf="control.get('name')?.errors && control.get('name')?.touched" class="invalid-feedback d-block">
-                              <div *ngIf="control.get('name')?.errors?.['required']">Option {{i + 1}} ist erforderlich.</div>
-                              <div *ngIf="control.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
-                            </div>
-                          </div>
-                        </div>
-                      </div> -->
-
-                      <!-- <button 
-                        *ngIf="isDropdown || isMultipleSelect" 
-                        class="btn-text-style new-attribute-group pt-2" 
-                        (click)="addNewDetailOption()">
-                        <i class="fa-solid fa-circle-plus"></i> Option hinzufügen 
-                      </button> -->
-                      
                     </div>
                     <div class="col pt-3 ps-1">
                       
@@ -257,7 +301,7 @@
                   
                   <div class="row mt-3">
                     <div class="col">
-                      <button type="button" class="btn btn-outline-danger w-100" (click)="closeGroup()">Abrechnen</button>
+                      <button type="button" class="btn btn-outline-danger w-100" (click)="closeGroup()">Abbrechen</button>
                     </div>
                   </div>
                 </form>
@@ -308,5 +352,5 @@
         </button>
       </div>
     </div>
-  </ng-template>
+  </ng-template> -->
 

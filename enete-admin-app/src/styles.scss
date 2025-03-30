@@ -404,6 +404,7 @@ app-partners-list{
             border: none; 
             text-wrap: nowrap;     
             z-index: 1100;  
+            
         }
         th:first-child{
             padding-left:calc(var(--bs-gutter-x) * 0.5 + 0.5rem) ;
@@ -3074,11 +3075,42 @@ $f-body:'Open Sans', sans-serif;
   }
 
   .tariff-group-table{
+    .filter{
+        max-width: 50%;
+    }
     .generic-table{
         th:nth-child(1), td:nth-child(1) { width: 7%; } 
         // th:nth-child(2), td:nth-child(2) { width: 200px; } 
         th:nth-child(3), td:nth-child(3) { width: 8%; } 
         th:nth-child(4), td:nth-child(4) { width: 12%; }
+        th:nth-child(5), td:nth-child(5) { width: 17%; }
+        th:nth-child(6), td:nth-child(6) { width: 17%; }
+    }
+  }
+
+  .tariff-attribute-table{
+    // .filter{
+    //     max-width: 50%;
+    // }
+  }
+
+  .tariff-provider-table{
+    .filter{
+        .row{
+            div:first-child{
+                max-width: 25%;
+            }
+        }
+        // .col{
+        //     max-width: 25%;
+        // }
+        
+    }
+    .generic-table{
+        th:nth-child(1), td:nth-child(1) { width: 7%; } 
+        th:nth-child(2), td:nth-child(2) { width: 34%; } 
+        th:nth-child(3), td:nth-child(3) { width: 8%; } 
+        th:nth-child(4), td:nth-child(4) { width: 17%; }
         th:nth-child(5), td:nth-child(5) { width: 17%; }
         th:nth-child(6), td:nth-child(6) { width: 17%; }
     }
@@ -3147,6 +3179,8 @@ $f-body:'Open Sans', sans-serif;
     }
 }
 
-
+.cdk-overlay-container{
+    z-index: 10001;
+}
 
 

@@ -19,6 +19,14 @@ export class ProviderService extends DataService<Provider> {
   private deleteSuccessSubject = new Subject<number>();
   public deleteSuccess$ = this.deleteSuccessSubject.asObservable();
 
+  private currentFilters: {[key: string]: string} = {
+    // Примеры параметров фильтрации
+    // 'search': 'test',
+    // 'status': '1',
+    // Примеры параметров сортировки
+    // 'sortField': 'last_name',
+    // 'sortOrder': 'asc'
+  };
 
   
 
@@ -26,7 +34,9 @@ export class ProviderService extends DataService<Provider> {
     super(http, environment.apiUrl);
   }
 
-  
+  override get filters(){
+    return this.currentFilters
+  }
 
   // get filters(){
   // }
@@ -55,8 +65,16 @@ export class ProviderService extends DataService<Provider> {
   }
   
 
-  fetchData(): void {
-    this.http.get<ProviderData>(`${this.apiUrl}/products/tariff-providers`)
+  fetchData(params?: {[key: string]: string}): void {
+
+    if (params) {
+      this.updateFilters(params);
+    }
+
+    // Создаем HttpParams на основе текущих фильтров
+    let httpParams = new HttpParams({ fromObject: this.currentFilters });
+
+    this.http.get<ProviderData>(`${this.apiUrl}/products/tariff-providers`, { params: httpParams })
       .pipe(
         takeUntil(this.destroy$),
         catchError(error => {
@@ -168,6 +186,17 @@ export class ProviderService extends DataService<Provider> {
     });
   }
 
+  private updateFilters(newFilters: {[key: string]: string}): void {
+    Object.keys(newFilters).forEach(key => {
+      const value = newFilters[key];
+      if (value) {
+        this.currentFilters[key] = value;
+      } else {
+        delete this.currentFilters[key];
+      }
+    });
+  }
+
 
   private handleError(errorResponse: any, requestType: string) {
     let errors = {
@@ -190,8 +219,10 @@ export class ProviderService extends DataService<Provider> {
           id:                       provider?.id,
           name:                     provider?.name,
           logo_id:                  provider?.logo_id,
+          file_name:                provider?.file_name,
           is_filled_on_site:        provider?.is_filled_on_site,
           external_fill_link:       provider?.external_fill_link,
+          is_filled_on_site_text:   provider?.is_filled_on_site_text,
           created_at:               provider?.created_at, 
           updated_at:               provider?.updated_at,
           created_by:               provider?.created_by,
