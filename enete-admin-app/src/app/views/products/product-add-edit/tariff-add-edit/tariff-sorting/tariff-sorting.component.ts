@@ -238,7 +238,7 @@ export class TariffSortingComponent {
         control.patchValue({
           attribute_id: attribute.id,
           matrix_uniqueId: null,
-          value: attribute.value_varchar,
+          value: parseFloat(attribute.value_varchar.replace(",", ".")),
           attribute_name: attribute.name,
           matrix_name: null,
           include_hardware: false,
@@ -315,7 +315,7 @@ export class TariffSortingComponent {
                 control.patchValue({
                   attribute_id: attr.id,
                   matrix_uniqueId: null,
-                  value: attr.value_varchar,
+                  value: parseFloat(attr.value_varchar.replace(",", ".")),
                   attribute_name: attr.name,
                   matrix_name: null,
                   include_hardware: false,
