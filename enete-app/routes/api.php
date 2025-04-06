@@ -175,6 +175,13 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
         $router->delete('/{id}', 'App\Http\Controllers\Tariff\TariffNetworkOperator\DeleteController')->name('tariff-network-operators.delete');
     });
 
+    $router->group(['prefix' => 'tariff-sorting-criterias'], function ($router) {
+        $router->get('/', 'App\Http\Controllers\Tariff\TariffSortingCriteria\IndexController')->name('tariff-sorting-criterias.index');
+        $router->post('/', 'App\Http\Controllers\Tariff\TariffSortingCriteria\StoreController')->name('tariff-sorting-criterias.store');
+        $router->patch('/{id}', 'App\Http\Controllers\Tariff\TariffSortingCriteria\UpdateController')->name('tariff-sorting-criterias.update');
+        $router->delete('/{id}', 'App\Http\Controllers\Tariff\TariffSortingCriteria\DeleteController')->name('tariff-sorting-criterias.delete');
+    });
+
     $router->group(['prefix' => 'tariff-attribute-groups'], function ($router) {
         $router->get('/{tariffId}', 'App\Http\Controllers\Tariff\TariffAttributeGroup\IndexController')->name('tariff-attribute-groups.index');
     });

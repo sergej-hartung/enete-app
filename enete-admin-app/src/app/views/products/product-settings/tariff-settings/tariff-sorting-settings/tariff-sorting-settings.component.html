@@ -1,0 +1,150 @@
+<div class="container-fluid product-sorting-setting">
+    <div class="row">
+      <div class="pe-0 pt-1 ps-0 tariff-sorting-table" [@resizeLeft]="sortingEditOrNew ? 'partial' : 'full'">
+        <app-generic-table
+          class="table-responsive"
+          [columns]="sortingColumns"
+          [filters]="filters"
+          [isLoading]="sortingEditOrNew"
+          [isExpandable]="isExpandable"
+          [dataService]="sortingService"
+          [rowSelectionMode]="'parent'"
+          [sortMode]="'parent'"
+          [filterMode]="'parent'"
+          (rowSelected)="selectedRow($event)"
+          (sortEvent)="sort($event)"
+          (filterEvent)="filter($event)"
+          #genericTable
+        >
+        </app-generic-table>
+      </div>
+      <div *ngIf="sortingEditOrNew" class="col pe-0 ps-0" style="overflow: hidden;">
+        <div class="product-settigs-wrapp" [@slideIn]>
+          <div class="product-settings-tittle">{{ mode === 'edit' ? 'Sortierung bearbeiten' : 'Sortierung erstellen' }}</div>
+          <div class="product-settings-content flex-grow-1">
+            <form [formGroup]="sortingForm">
+              <div class="row">
+                <div class="col-7">
+                  <div class="row">
+                    <div class="col">
+                      <label
+                        class="form-label custom-label-sm"
+                        for="sorting-name"
+                        [ngClass]="{'required': isRequired(sortingForm.get('name'))}"
+                      >Name</label>
+                      <input
+                        type="text"
+                        class="form-control form-control-sm"
+                        [ngClass]="{'is-invalid': sortingForm.get('name')?.errors && sortingForm.get('name')?.touched}"
+                        id="sorting-name"
+                        formControlName="name"
+                      >
+                      <div *ngIf="sortingForm.get('name')?.errors && sortingForm.get('name')?.touched" class="invalid-feedback d-block">
+                        <div *ngIf="sortingForm.get('name')?.errors?.['required']">Name ist erforderlich.</div>
+                        <div *ngIf="sortingForm.get('name')?.errors?.['pattern']">Ungültiges Format.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div class="row">
+                    <div class="col">
+                      <button class="btn document-select" (click)="openModal($event)">
+                        {{ networkOperatorForm.get('file_name')?.value || 'Logo' }}
+                      </button>
+                      <div *ngIf="networkOperatorForm.get('logo_id')?.errors && networkOperatorForm.get('logo_id')?.touched" class="invalid-feedback d-block">
+                        <div *ngIf="networkOperatorForm.get('logo_id')?.errors?.['required']">Logo ist erforderlich.</div>
+                      </div>
+                    </div>
+                  </div> -->
+                  <!-- <div class="row">
+                    <div class="logo-container d-flex align-items-center justify-content-center">
+                      <ng-container *ngIf="logoNetworkOperatorContent">
+                        <img [src]="logoNetworkOperatorContent" alt="Netzbetreiber Logo" class="logo-image">
+                      </ng-container>
+                    </div>
+                  </div> -->
+                  <div class="row">
+                    <div class="col">
+                        <label for="sorting-description" 
+                            class="form-label custom-label-sm"
+                            [ngClass]="{'required': isRequired(sortingForm.get('description'))}"
+                        >Beschreibung</label>
+                        <textarea formControlName="description" id="sorting-description" rows="8" class="form-control form-control-sm"></textarea>
+                        <div *ngIf="sortingForm.get('description')?.errors && sortingForm.get('description')?.touched" class="invalid-feedback d-block">
+                            <div *ngIf="sortingForm.get('description')?.errors?.['pattern']">Ungültiges Format.</div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col pt-3 ps-1">
+                  <div formArrayName="tariff_groups" class="row">
+                    <div class="col">
+                      <app-card>
+                        <div card-header>Tarifgruppen</div>
+                        <div card-body>
+                          <div class="form-check-card-custom-body max">
+                            <div *ngFor="let control of tariffGroupsArray.controls; let i = index" [formGroupName]="i">
+                              <div class="form-check form-check-card-custom">
+                                <input type="checkbox" class="form-check-input" formControlName="checked" [id]="'tariff_group' + control.value.id">
+                                <label class="form-check-label" [for]="'tariff_group' + control.value.id">
+                                  <i [class]="control.value.icon" [style.color]="control.value.color"></i>
+                                  <span class="ps-2">{{ control.value.name }}</span>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </app-card>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-3">
+                <div class="col">
+                  <button type="button" class="btn btn-outline-danger w-100" (click)="closeGroup()">Abbrechen</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #deleteSortingTitleTemplate>
+    <span>
+      <i style="color: rgb(237, 28, 36);" class="fas fa-trash me-1"></i>
+      Sortierung löschen
+    </span>
+  </ng-template>
+  
+  <ng-template #deleteSortingMessageTemplate>
+    <div>
+      Sind Sie sicher, dass Sie diese Sortierung löschen möchten? <br>
+      <span class="mt-2" style="color: rgb(237, 28, 36); font-weight: 500;">Vorgang kann nicht rückgängig gemacht werden!</span>
+    </div>
+  </ng-template>
+  
+  <ng-template #errorWhileDeletingTemplate let-data>
+    <div class="error-dialog">
+      <h2 mat-dialog-title class="error-title">
+        <mat-icon class="error-icon">error</mat-icon>
+        Fehler beim Löschen
+      </h2>
+      <mat-divider></mat-divider>
+      <div mat-dialog-content class="error-content">
+        <p>Beim Löschen von Sortierung sind folgende Fehler aufgetreten:</p>
+        <ul class="error-list">
+          <li *ngFor="let error of data.errors">
+            <mat-icon class="error-bullet">warning</mat-icon>
+            {{ error }}
+          </li>
+        </ul>
+      </div>
+      <mat-divider></mat-divider>
+      <div mat-dialog-actions align="end">
+        <button mat-button color="primary" (click)="closeDialog()">
+          <mat-icon>close</mat-icon> Schließen
+        </button>
+      </div>
+    </div>
+  </ng-template>

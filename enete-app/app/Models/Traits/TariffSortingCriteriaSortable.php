@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 
 
-trait TariffNetworkOperatorSortable  {
+trait TariffSortingCriteriaSortable  {
     /**
      * Apply dynamic sorting to the query.
      *
@@ -20,11 +20,10 @@ trait TariffNetworkOperatorSortable  {
 
         // Массив, определяющий поля для сортировки и соответствующие таблицы и поля
         $sortableFields = [
-            'id'                  => ['table' => 'tariff_network_operators', 'column' => 'id'],
-            'name'                => ['table' => 'tariff_network_operators', 'column' => 'name'],
-            'logo_id'             => ['table' => 'tariff_network_operators', 'column' => 'logo_id'],
-            'created_at'          => ['table' => 'tariff_network_operators', 'column' => 'created_at'],
-            'updated_at'          => ['table' => 'tariff_network_operators', 'column' => 'updated_at'],
+            'id'                  => ['table' => 'tariff_sorting_criterias', 'column' => 'id'],
+            'name'                => ['table' => 'tariff_sorting_criterias', 'column' => 'name'],
+            'created_at'          => ['table' => 'tariff_sorting_criterias', 'column' => 'created_at'],
+            'updated_at'          => ['table' => 'tariff_sorting_criterias', 'column' => 'updated_at'],
             // Добавьте другие поля сортировки по мере необходимости
         ];
 
@@ -32,13 +31,13 @@ trait TariffNetworkOperatorSortable  {
             $sortInfo = $sortableFields[$sortField];
             
             // Если поле для сортировки находится в основной таблице
-            if ($sortInfo['table'] === 'tariff_network_operators') {
+            if ($sortInfo['table'] === 'tariff_sorting_criterias') {
                 $query = $query->orderBy($sortInfo['column'], $sortOrder);
 
             } 
         } else {
             // Если поле сортировки не указано, применяется сортировка по умолчанию
-            $query = $query->orderBy('tariff_network_operators.' . $sortField, $sortOrder);
+            $query = $query->orderBy('tariff_sorting_criterias.' . $sortField, $sortOrder);
         }
 
         return $query;

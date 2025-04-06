@@ -1,30 +1,30 @@
 <?php
 
-namespace App\Http\Controllers\Tariff\TariffNetworkOperator;
+namespace App\Http\Controllers\Tariff\TariffSortingCriteria;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tariff\TariffNetworkOperator;
-use App\Http\Requests\Tariff\NetworkOperator\UpdateNetworkOperatorRequest;
-use App\Http\Resources\Tariff\NetworkOperator\IndexTariffNetworkOperatorResource;
+use App\Models\Tariff\TariffSortingCriteria;
+use App\Http\Requests\Tariff\SortingCriteria\UpdateSortingCriteriaRequest;
+use App\Http\Resources\Tariff\Sorting\IndexTariffSortingResource;
 
 class UpdateController extends Controller
 {
-    public function __invoke(UpdateNetworkOperatorRequest $request, $id)
+    public function __invoke(UpdateSortingCriteriaRequest $request, $id)
     {
         try {
             DB::beginTransaction();
 
             if(!$id){
-                throw new \Exception('Tariff Network Operator Id not exist.');
+                throw new \Exception('Tariff Sorting Criteria Id not exist.');
             }
 
-            $tariffNetworkOperator = TariffNetworkOperator::findOrFail($id);
+            $tariffSortingCriteria = TariffSortingCriteria::findOrFail($id);
 
-            if(!$tariffNetworkOperator){
-                throw new \Exception('Tariff Network Operator not found.');
+            if(!$tariffSortingCriteria){
+                throw new \Exception('Tariff Sorting Criteria not found.');
             }
 
             $data = $request->validated();
@@ -33,8 +33,8 @@ class UpdateController extends Controller
 
             // Nur geänderte Hauptfelder aktualisieren
             $fillableFields = [
-                'logo_id',
                 'name',
+                'description',
             ];
 
             foreach ($fillableFields as $field) {
@@ -47,7 +47,7 @@ class UpdateController extends Controller
             $updateData['updated_by'] = $currentUserId;
 
             if (!empty($updateData)) {
-                $tariffNetworkOperator->update($updateData);
+                $tariffSortingCriteria->update($updateData);
             }
 
 
@@ -59,11 +59,11 @@ class UpdateController extends Controller
                         $tariffGroups[] = $group['id'];
                     }
                 }
-                $tariffNetworkOperator->groups()->sync($tariffGroups);
+                $tariffSortingCriteria->groups()->sync($tariffGroups);
             }
 
             DB::commit();
-            return new IndexTariffNetworkOperatorResource($tariffNetworkOperator->fresh()->load(['groups', 'document']));
+            return new IndexTariffSortingResource($tariffSortingCriteria->fresh()->load(['groups']));
             // return response()->json([
             //     'message' => 'Tariff attribute successfully updated',
             //     'data' => $tariffAttribute->fresh()->load('tariffGroups')

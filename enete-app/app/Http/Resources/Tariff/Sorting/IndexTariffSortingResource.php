@@ -18,6 +18,9 @@ class IndexTariffSortingResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'tariff_group_ids'       => $this->whenLoaded('groups', function () {
+                return $this->groups->pluck('id');
+            }),
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,

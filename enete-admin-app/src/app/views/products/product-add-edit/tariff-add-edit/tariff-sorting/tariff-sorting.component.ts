@@ -170,7 +170,7 @@ export class TariffSortingComponent {
       let matrixName = null
       let attributName = null
       let unit = null
-
+      console.log(sortings)
       if(sorting?.matrix_uniqueId){
         let calcMatrixArr = this.calcMatrixForm.value
         if(calcMatrixArr){
@@ -244,6 +244,7 @@ export class TariffSortingComponent {
           include_hardware: false,
           unit: attribute.unit
         })
+        console.log(control)
         this.subscribeToFormChanges(attribute.id, control)
         this.copiedAttributs.add(attribute.id);
       }
@@ -288,8 +289,9 @@ export class TariffSortingComponent {
       unit: null,
       value: null
     })
-
+    
     if(value?.attribute_id){
+      this.copiedAttributs.delete(value?.attribute_id);
       this.unsubscribeToFormCanges(value?.attribute_id)
     }else if(value.matrix_uniqueId){
       this.unsubscribeToFormCanges(value.matrix_uniqueId)

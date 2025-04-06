@@ -50,6 +50,7 @@ import { TariffGroupSettingsComponent } from './product-settings/tariff-settings
 import { TariffAttributeSettingsComponent } from './product-settings/tariff-settings/tariff-attribute-settings/tariff-attribute-settings.component';
 import { TariffProviderSettingsComponent } from './product-settings/tariff-settings/tariff-provider-settings/tariff-provider-settings.component';
 import { TariffNetworkOperatorSettingsComponent } from './product-settings/tariff-settings/tariff-network-operator-settings/tariff-network-operator-settings.component';
+import { TariffSortingSettingsComponent } from './product-settings/tariff-settings/tariff-sorting-settings/tariff-sorting-settings.component';
 
 
 @NgModule({
@@ -87,6 +88,7 @@ import { TariffNetworkOperatorSettingsComponent } from './product-settings/tarif
     TariffAttributeSettingsComponent,
     TariffProviderSettingsComponent,
     TariffNetworkOperatorSettingsComponent,
+    TariffSortingSettingsComponent,
     //FileSizePipe,
   ],
   imports: [

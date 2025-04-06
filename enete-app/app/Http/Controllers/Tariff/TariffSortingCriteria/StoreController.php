@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Tariff\TariffAttribute;
+namespace App\Http\Controllers\Tariff\TariffSortingCriteria;
 
 use App\Models\User\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Tariff\Attribute\StoreTariffAttributeRequest;
+use App\Http\Requests\Tariff\SortingCriteria\StoreSortingCriteriaRequest;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tariff\TariffAttribute;
+use App\Models\Tariff\TariffSortingCriteria;
 
 class StoreController extends Controller
 {
@@ -17,31 +17,19 @@ class StoreController extends Controller
 
    
 
-    public function __invoke(StoreTariffAttributeRequest $request)
+    public function __invoke(StoreSortingCriteriaRequest $request)
     {
         try {
             DB::beginTransaction();
-
+                //var_dump($request->validated());
                 $data = $request->validated();
                 $currentUserId = Auth::id();
 
-                // Erstelle das Haupt-Attribut
-                $attribute = TariffAttribute::create([
-                    'code' => $data['code'],
-                    'input_type_id' => $data['input_type_id'],
-                    'is_frontend_visible' => $data['is_frontend_visible'], // Typo im Original korrigiert
-                    'is_required' => $data['is_required'],
-                    'is_system' => $data['is_system'],
+                $sortingCriteria = TariffSortingCriteria::create([
                     'name' => $data['name'],
-                    'unit' => $data['unit'],
+                    'description' => $data['description'],
                     'created_by' => $currentUserId,
                 ]);
-
-                // Speichere die Details als JSON oder in separater Tabelle
-                if (!empty($data['details'])) {
-                    $attribute->details = json_encode($data['details']);
-                    $attribute->save();
-                }
 
                 // Verarbeite tariff_groups
                 if (!empty($data['tariff_groups'])) {
@@ -51,7 +39,7 @@ class StoreController extends Controller
                             $tariffGroups[] = $group['id'];
                         }
                     }
-                    $attribute->tariffGroups()->sync($tariffGroups);
+                    $sortingCriteria->groups()->sync($tariffGroups);
                 }
 
             DB::commit();

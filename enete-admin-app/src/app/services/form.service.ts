@@ -257,6 +257,15 @@ export class FormService {
     })
   }
 
+  createTariffSortingCriteriaFormGroup(): FormGroup {
+    return this.fb.group({
+      id: [],
+      name:                ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      description:           ['', [Validators.required, Validators.pattern('^[a-zA-Z0-9 üÜöÖäÄß\\?=&!\\+\\*#~%@€"§():;_,<>\\.\\-\\n]+$')]],
+      tariff_groups: this.fb.array([]),
+    })
+  }
+
 
   getTariffForm(){
     if(this.tariffForm){

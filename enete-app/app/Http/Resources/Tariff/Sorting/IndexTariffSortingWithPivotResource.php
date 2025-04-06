@@ -15,7 +15,7 @@ class IndexTariffSortingWithPivotResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
+            'id' => $this->pivot->id,
             'name' => $this->name,
             'description' => $this->description,
             'criteria_id'    => $this->pivot->sorting_criteria_id,

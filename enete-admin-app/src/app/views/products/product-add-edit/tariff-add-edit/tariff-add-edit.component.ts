@@ -75,7 +75,7 @@ export class TariffAddEditComponent  implements OnInit, OnDestroy {
               if(tariffId){
                 this.preloaderService.show('Updating')
                 const changes = this.objectDiffService.getChanges(this.copyTariffValue, this.tariffForm.value)
-
+                console.log(changes)
                 this.tariffService.updateItem(tariffId, changes)
               }
             }

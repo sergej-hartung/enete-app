@@ -12,6 +12,7 @@ class TariffSortingValue extends Pivot
     protected $table = 'tariff_sorting_values';
 
     protected $fillable = [
+        'id',
         'tariff_id',
         'sorting_criteria_id',
         'value',

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('periodeTyp')->nullable();
             $table->boolean('single');
             $table->string('unit')->nullable();
-            $table->decimal('value', 15, 2);
+            $table->string('value')->nullable();
             $table->decimal('value_total', 15, 2);
             $table->integer('position');
             $table->unsignedBigInteger('created_by')->nullable();

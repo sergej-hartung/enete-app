@@ -6,7 +6,7 @@ namespace App\Http\Filters;
 use App\Http\Filters\AbstractFilter;
 use Illuminate\Database\Eloquent\Builder;
 
-class TariffProviderFilter extends AbstractFilter{
+class TariffSortingCriteriaFilter extends AbstractFilter{
     public const SEARCH = 'search';
     public const GROUP  = 'tariff_group_id';
 
@@ -20,7 +20,7 @@ class TariffProviderFilter extends AbstractFilter{
 
     public function search(Builder $builder, $value){ 
         $builder->where(function($query) use ($value) {
-            $query->where('tariff_providers.name', 'like', "%{$value}%");
+            $query->where('tariff_sorting_criterias.name', 'like', "%{$value}%");
         });
     }
 
@@ -29,7 +29,7 @@ class TariffProviderFilter extends AbstractFilter{
     { 
         if ($value !== 'all') {
             $builder->whereHas('groups', function (Builder $query) use ($value) {
-                $query->where('tariff_group_provider_mappings.group_id', $value);
+                $query->where('tariff_group_sorting_criterias_mapp.group_id', $value);
             });
         }
     }

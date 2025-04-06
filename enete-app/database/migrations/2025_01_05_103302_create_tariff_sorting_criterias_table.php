@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tariff_sorting_criterias', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('group_id')->constrained('tariff_groups')->onDelete('cascade'); // Группа тарифов
+            //$table->foreignId('group_id')->constrained('tariff_groups')->onDelete('cascade'); // Группа тарифов
             $table->string('name'); // Название критерия
             //$table->boolean('include_hardware')->default(false); // Учитывать ли стоимость оборудования
             $table->text('description')->nullable(); // Описание

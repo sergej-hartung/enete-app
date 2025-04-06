@@ -23,5 +23,11 @@
             <app-tariff-network-operator-settings></app-tariff-network-operator-settings>          
         </ng-template>
     </li>
+    <li [ngbNavItem]="5">
+        <button ngbNavLink>Sortierung</button>
+        <ng-template ngbNavContent>  
+            <app-tariff-sorting-settings></app-tariff-sorting-settings>          
+        </ng-template>
+    </li>
 </ul>
 <div [ngbNavOutlet]="nav" class="pe-0 ps-0 tariff-setting-content"></div>

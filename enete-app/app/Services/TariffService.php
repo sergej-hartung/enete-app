@@ -895,12 +895,14 @@ class TariffService{
                 }
                 //var_dump('test');
                 // var_dump($sortingData['matrix_uniqueId']);
-                // var_dump($sortingData);
+                //var_dump($sortingData);
                 // var_dump(isset($sortingData['matrix_uniqueId']));
                 //var_dump($data);
                 if ($update && !empty($sortingData['id'])) {
                     // Если указан id – обновляем существующую запись
                     $sorting = TariffSortingValue::find($sortingData['id']);
+                    // var_dump($sortingData['id']);
+                    // var_dump($sorting);
                     if ($sorting) {
                         $sorting->update($data);
 

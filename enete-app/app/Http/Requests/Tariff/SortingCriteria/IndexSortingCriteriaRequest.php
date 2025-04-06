@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tariff\Provider;
+namespace App\Http\Requests\Tariff\SortingCriteria;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexTariffProviderRequest extends FormRequest
+class IndexSortingCriteriaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

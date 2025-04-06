@@ -43,7 +43,8 @@ class TariffGroup extends Model
 
     public function sorting()
     {
-        return $this->hasMany(TariffSortingCriteria::class, 'group_id');
+        //return $this->hasMany(TariffSortingCriteria::class, 'group_id');
+        return $this->belongsToMany(TariffSortingCriteria::class,'tariff_group_sorting_criterias_mapp','group_id','sorting_criterias_id');
     }
 
     public function attributeMappings()

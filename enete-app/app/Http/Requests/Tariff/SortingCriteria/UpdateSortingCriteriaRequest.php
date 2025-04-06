@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tariff\NetworkOperator;
+namespace App\Http\Requests\Tariff\SortingCriteria;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreNetworkOperatorRequest extends FormRequest
+class UpdateSortingCriteriaRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +23,7 @@ class StoreNetworkOperatorRequest extends FormRequest
     {
         return [
             'name'                    => 'nullable|sometimes|string|max:255',           
-            'logo_id'                 => 'nullable|integer|exists:product_documents,id',
-            'file_name'               => 'nullable|sometimes|string|max:255', 
+            'description'               => 'nullable|sometimes|string', 
 
             'tariff_groups'           => 'nullable|sometimes|array',
             'tariff_groups.*.id'      => 'nullable|sometimes|integer|exists:tariff_groups,id',

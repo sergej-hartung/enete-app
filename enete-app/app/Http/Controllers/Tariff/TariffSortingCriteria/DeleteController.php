@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Tariff\TariffNetworkOperator;
+namespace App\Http\Controllers\Tariff\TariffSortingCriteria;
 
 use App\Models\User\User;
 use Illuminate\Http\Request;
@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Tariff\TariffNetworkOperator;
+use App\Models\Tariff\TariffSortingCriteria;
 
 class DeleteController extends Controller
 {
@@ -18,19 +18,19 @@ class DeleteController extends Controller
         try {
             DB::beginTransaction();
 
-            $data = TariffNetworkOperator::find($attributeId);
+            $data = TariffSortingCriteria::find($attributeId);
 
             if (!$data) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Der Netzbetreiber wurde nicht gefunden.'
+                    'message' => 'Die Sortierung wurde nicht gefunden.'
                 ], 404);
             }
     
             if ($data->isLinked()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Der Netzbetreiber kann nicht gelöscht werden, da er noch mit anderen Tabellen verknüpft ist.'
+                    'message' => 'Die Sortierung kann nicht gelöscht werden, da sie noch mit anderen Tabellen verknüpft ist.'
                 ], 422);
             }
 
@@ -43,14 +43,14 @@ class DeleteController extends Controller
             activity()
                 ->performedOn($data)
                 ->causedBy($currentUserId)
-                ->withProperties(['tariffNetworkProvider' => $oldValues])
-                ->log('Der Netzbetreiber wurde gelöscht');
+                ->withProperties(['tariffSortingCriteria' => $oldValues])
+                ->log('Die Sortierung wurde gelöscht');
 
             DB::commit();
 
             return response()->json([
                 'success' => true,
-                'message' => 'Der Netzbetreiber wurde erfolgreich gelöscht.'
+                'message' => 'Die Sortierung wurde erfolgreich gelöscht.'
             ], 200);
             
         } catch (\Exception $exception) {

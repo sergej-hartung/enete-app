@@ -14,21 +14,21 @@ class TariffSortCriteriaSeeder extends Seeder
     {
         DB::table('tariff_sorting_criterias')->insert([
             [
-                'group_id' => 3,
+                //'group_id' => 3,
                 'name' => 'Gesamtpreis',
                 'description' => 'Gesamtpreis fon Tarif',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'group_id' => 3,
+                //'group_id' => 3,
                 'name' => 'Grundpreis',
                 'description' => 'Monatlicher Preis',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'group_id' => 3,
+                //'group_id' => 3,
                 'name' => 'Datenvolummen',
                 'description' => 'Datenvolummen',
                 'created_at' => now(),
