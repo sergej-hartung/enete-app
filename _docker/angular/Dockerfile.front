@@ -1,18 +1,17 @@
 # Используем за основу образ Node.js
-FROM node:latest
+FROM node:22.14.0
 
 # Установка директории внутри контейнера
 WORKDIR /usr/src/app/enete-front
 
 # Копирование зависимостей
-#COPY ./enete-front-app/package*.json /usr/src/app/enete-front/package*.json
 COPY ./enete-front-app /usr/src/app/enete-front 
 
 # Установка зависимостей
 RUN npm install
 
-# Копирование всего остального приложения
-#COPY ./enete-front-app /usr/src/app/enete-front 
+# Устанавливаем Angular CLI глобально
+RUN npm install -g @angular/cli
 
 # Сборка приложения
 RUN npm run build
