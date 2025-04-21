@@ -78,18 +78,18 @@ export class StartPageComponent implements AfterViewInit {
 
   slides: Slide[] = [
     {
-      image: 'assets/img/start-page-img/bg-pattern/bg-3.jpg',
-      title: '<span>WIR SIND</span> ENETE',
+      image: 'public/img/start-page-img/bg-pattern/bg-3.jpg',
+      title: '<span class="slider-title-span">WIR SIND</span> ENETE',
       subtitle: 'Vertrieb für Energie und Telekommunikation.',
     },
     {
-      image: 'assets/img/start-page-img/bg-pattern/bg-4.jpg',
-      title: 'WIR LIEBEN <span>TEAMWORK</span>',
+      image: 'public/img/start-page-img/bg-pattern/bg-4.jpg',
+      title: 'WIR LIEBEN <span class="slider-title-span">TEAMWORK</span>',
       subtitle: 'Unser modernes und faires Konzept bietet auch Ihnen die Möglichkeit in unser Vertriebssystem einzusteigen.',
     },
     {
-      image: 'assets/img/bg-pattern/start-page-img/bg-5.jpg',
-      title: 'ENERGIELÖSUNGEN FÜR <span>UNTERNEHMEN</span>',
+      image: 'public/img/start-page-img/bg-pattern/bg-5.jpg',
+      title: 'ENERGIELÖSUNGEN FÜR <span class="slider-title-span">UNTERNEHMEN</span>',
       subtitle: 'Profitieren Sie exklusiv von unseren Lösungen für Unternehmen. Informationen für Unternehmer auf www.enete-energie.de.',
       button: { text: 'Besuchen', link: 'https://enete-energie.de' },
     },

@@ -2,3 +2,55 @@
 
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+
+@import "../public/css/start-page/style.css";
+@import "../public/css/start-page/responsive.css";
+
+
+.welcome_area{
+    .slider-title-span{
+        background-color: transparent;
+    }
+}
+
+
+.icon-lightbulb:before {
+    content: "\f0eb";
+    font-family: "FontAwesome"; /* Beispiel für Font Awesome */
+    font-weight: normal;
+}
+
+.icon-lifesaver:before{
+    content: "\f7e4";
+    font-family: "FontAwesome"; /* Beispiel für Font Awesome */
+    font-weight: normal;
+}
+
+.icon-laptop:before{
+    content: "\f109";
+    font-family: "FontAwesome"; /* Beispiel für Font Awesome */
+    font-weight: normal;
+}
+
+.icon-mobile:before{
+    content: "\f3cd";
+    font-family: "FontAwesome"; /* Beispiel für Font Awesome */
+    font-weight: normal;
+}
+
+
+.cool_facts_area{
+    display: flex;
+} 
+
+.abaut_area_img{
+    padding-top: 120px;
+    justify-items: center;
+}
+
+.shop-inshop_text{
+    .but{
+        text-decoration: none;
+    }
+}

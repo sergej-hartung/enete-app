@@ -1,44 +1,43 @@
 <!-- Header -->
-<header class="header_area" [ngClass]="{'sticky': isSticky}">
-    <div class="container">
-      <nav class="navbar">
-        <!-- Logo -->
-        <a class="navbar-brand" routerLink="/">
-          <img src="assets/img/logo.png" alt="ENETE Logo">
-        </a>
+  <header class="header_area">
+    <div id="sticky-sticky-wrapper" class="sticky-wrapper" [ngClass]="{'is-sticky': isSticky}"  style="height: 90px;">
+      <div class="main_header_area" id="sticky">
+        <div class="container">
+          <div class="row">
+
+            <div class="col-sm-2 col-xs-9">
+              <div class="logo_area">
+                <a href="https://enete.de"><img src="public/img/start-page-img/core-img/logo.png"></a>
+              </div>
+            </div>
   
-        <!-- Mobile Menu Toggle -->
-        <button class="navbar-toggler" (click)="toggleMenu()" [ngClass]="{'collapsed': !isMenuOpen}">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+            <div class="col-sm-10 col-xs-12">
+              <div class="main_menu_area">
+                <div class="mainmenu">
+                  <nav style="display: block;">
+                    <ul id="nav">
+                      <li class="current_page_item"><a href="#home">Home</a></li>
+                      <li class=""><a href="#about">Über Uns</a></li>
+                      <li class=""><a href="https://enete-energie.de" target="_blank">Für Unternehmen</a></li>
+                      <li class=""><a href="#shop-in-shop">Partner werden</a></li>
+                      <li class=""><a href="#contact">Kontakt</a></li>
+                      <li *ngIf="!isLoggedIn" class="current_page_item"><a href="#home" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                      <li *ngIf="isLoggedIn" class="current_page_item"><a href="#home" (click)="goToDashboard()">Dashboard</a></li>
+                    </ul>
+                  </nav>
+                </div>
   
-        <!-- Navigation -->
-        <div class="navbar-collapse" [ngbCollapse]="!isMenuOpen">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="#home">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#about">Über uns</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#features">Leistungen</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#facts">Fakten</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#contact">Kontakt</a>
-            </li>
-          </ul>
-          <div class="navbar-buttons">
-            <button *ngIf="!isLoggedIn" class="login-btn" (click)="openLoginModal()">Login</button>
-            <button *ngIf="isLoggedIn" class="dashboard-btn" (click)="goToDashboard()">Dashboard</button>
+              </div>
+            </div>
           </div>
         </div>
-      </nav>
+      </div>
     </div>
+    
+    
   </header>
+
+  
   
   <!-- Welcome Area -->
   <section class="welcome_area" id="home">
@@ -79,151 +78,638 @@
       </div>
     </div>
   </section>
-  
-  <!-- About Area -->
-  <section class="about_area" id="about">
-    <div class="container">
-      <div class="section_title">
-        <h2>Über uns</h2>
-        <p>Erfahren Sie mehr über ENETE und unser Engagement für Energie und Telekommunikation.</p>
+
+  <!-- ************** Special Feature Area Start ************** -->
+<section class="special_feature_area">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-12 col-md-6 col-lg-3 single_feature_wrapp">
+        <!-- Single Feature Area Start -->
+        <div class="single_feature wow fadeInUp" data-wow-delay=".2s">
+          <div class="bg-icon">
+            <span class="icon-lightbulb"></span>
+          </div>
+          <div class="feature_img">
+            <span class="icon-lightbulb"></span>
+          </div>
+          <!-- Single Feature Image Area End -->
+          <div class="feature_text">
+            <h5>Strom</h5>
+            <p>Wir vermitteln faire und günstige Preise für Privat- und Gewerbekunden.</p>
+          </div>
+          <!-- Single Feature Text Area End -->
+        </div>
       </div>
+
+      <div class="col-12 col-md-6 col-lg-3 single_feature_wrapp">
+        <!-- Single Feature Area Start -->
+        <div class="single_feature wow fadeInUp" data-wow-delay=".4s">
+          <div class="bg-icon">
+            <span class="icon-lifesaver"></span>
+          </div>
+          <div class="feature_img">
+            <span class="icon-lifesaver"></span>
+          </div>
+          <!-- Single Feature Image Area End -->
+          <div class="feature_text">
+            <h5>Gas</h5>
+            <p>Wir arbeiten nur mit seriösen und von uns geprüften Anbietern deutschlandweit.</p>
+          </div>
+          <!-- Single Feature Text Area End -->
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3 single_feature_wrapp">
+        <!-- Single Feature Area Start -->
+        <div class="single_feature wow fadeInUp" data-wow-delay=".6s">
+          <div class="bg-icon">
+            <span class="icon-laptop"></span>
+          </div>
+          <div class="feature_img">
+            <span class="icon-laptop"></span>
+          </div>
+          <!-- Single Feature Image Area End -->
+          <div class="feature_text">
+            <h5>Internet &amp; Phone</h5>
+            <p>Wir suchen die besten Angebote aus einer Vielzahl von DSL-Tarifen für Sie raus.</p>
+          </div>
+          <!-- Single Feature Text Area End -->
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-lg-3 single_feature_wrapp">
+        <!-- Single Feature Area Start -->
+        <div class="single_feature wow fadeInUp" data-wow-delay=".8s">
+          <div class="bg-icon">
+            <span class="icon-mobile"></span>
+          </div>
+          <div class="feature_img">
+            <span class="icon-mobile"></span>
+          </div>
+          <!-- Single Feature Image Area End -->
+          <div class="feature_text">
+            <h5>Mobilfunk</h5>
+            <p>Zahlreiche Anbieter und monatliche Aktionen mit den neusten Smartphones.</p>
+          </div>
+          <!-- Single Feature Text Area End -->
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ************** Special Feature Area End ************** -->
+
+<!-- ************** About Us Area Start ************** -->
+<section class="about_area" id="about">
+  <div class="container">
+    <div class="about_us_area">
       <div class="row">
-        <div class="col-md-6" [@fadeInUp]="animatedStates[0]" #animatedElement>
-          <div class="about_content">
-            <h3>Wer wir sind</h3>
+        <div class="col-12 col-lg-8 section_padding_100 wow fadeInUp">
+
+          <!-- Section Heading Start -->
+          <div class="section_heading">
+            <p>Wer wir sind</p>
+            <h3>ENETE - Energie und Telekommunikation</h3>
+          </div>
+          <!-- Section Heading End -->
+          <!-- About Us Text Start -->
+          <div class="about_us_text">
+            <h3>Philosophie</h3>
             <p>
-              ENETE ist ein führendes Unternehmen im Vertrieb von Energie- und Telekommunikationslösungen.
-              Mit über 10 Jahren Erfahrung bieten wir maßgeschneiderte Lösungen für Privatkunden und Unternehmen.
-            </p>
+              <strong>"Network für alle"</strong><br>
+              Jedem Menschen die Chance geben und auf dem Weg zum Erfolg und Glück zu helfen.
+            </p><br><br>
+            <h3>Vision</h3>
+            <p>
+              <strong>"Europas Marktführer im Network-Marketing"</strong><br>
+              Die Nummer eins im Bereich Energie &amp; Telekommunikation.
+            </p><br><br>
+            <h3>Positionierung</h3>
+            <p><strong>"Innovativer und einzigartiger Spezialist für Network-Marketing"</strong></p>
+          </div>
+
+
+
+        </div>
+
+        <!-- About Us Chart Area -->
+        <div class="col-12 col-lg-4 wow fadeInRight">
+          <div class="about_us_thumb d-flex justify-content-center">
+            <img src="public/img/start-page-img/bg-pattern/about-us.jpg" alt="">
           </div>
         </div>
-        <div class="col-md-6" [@fadeInUp]="animatedStates[1]" #animatedElement>
-          <div class="about_image">
-            <img src="assets/img/about-img.jpg" alt="Über uns">
+
+      </div>
+    </div>
+  </div>
+  <!-- end./ container -->
+</section>
+<!-- ************** About Us Area End ************** -->
+ 
+<!-- ************** Cool Facts Area Start ************** -->
+<section class="cool_facts_area">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Single Fact Start  -->
+      <div class="col-12 col-md cool_fact_text wow fadeInUp" data-wow-delay=".2s">
+        <h3><span class="counter">15</span>+</h3>
+        <h5>Jahre Erfahrung und Kompetenz</h5>
+      </div>
+      <!-- Single Fact Start  -->
+      <div class="col-12 col-md cool_fact_text wow fadeInUp" data-wow-delay=".4s">
+        <h3><span class="counter">50</span>+</h3>
+        <h5>Über 50 Anbieter</h5>
+      </div>
+      <!-- Single Fact Start  -->
+      <div class="col-12 col-md cool_fact_text wow fadeInUp" data-wow-delay=".6s">
+        <h3><span class="counter">4500</span>+</h3>
+        <h5>Entschlossene und ehrgeizige Vertriebspartner</h5>
+      </div>
+      <!-- Single Fact Start  -->
+      <div class="col-12 col-md cool_fact_text wow fadeInUp" data-wow-delay=".8s">
+        <h3><span class="counter">35000</span>+</h3>
+        <h5>Zufriedene Kunden</h5>
+      </div>
+      <!-- Single Fact Start  -->
+      <div class="col-12 col-md cool_fact_text wow fadeInUp">
+        <h3><span class="counter">100000</span>+</h3>
+        <h5>Optimierte Verträge</h5>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ************** Cool Facts Area End ************** -->
+
+<!-- ************** Our Speciality Area Start ************** -->
+<section class="our_speciality_area section_padding_60" data-stellar-background-ratio="0.6">
+  <div class="container">
+    <div class="row">
+      <div class="col-12  col-lg-8">
+        <div class="row">
+          <div class="col-12 wow fadeInUp">
+            <!-- Section Heading Start -->
+            <div class="section_heading" id="unsere-stärken">
+              <p>Im Mittelpunkt steht für uns der Mensch</p>
+              <h3>Unsere Stärken</h3>
+            </div>
+            <!-- Section Heading End -->
+          </div>
+
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".1s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Individuelle Produktanpassung an Kundenwünsche</h5>
+              </div>
+            </div>
+          </div>
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".2s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Bessere Leistungen zu günstigeren Preisen</h5>
+              </div>
+            </div>
+          </div>
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".3s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Verwaltung und Betreuung</h5>
+              </div>
+            </div>
+          </div>
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".4s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Ein kompetenter Ansprechpartner</h5>
+              </div>
+            </div>
+          </div>
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".5s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Vertragsmanager + Berater</h5>
+              </div>
+            </div>
+          </div>
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".6s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Zeitersparnis</h5>
+              </div>
+            </div>
+          </div>
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".7s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Sicherheit und Garantie</h5>
+              </div>
+            </div>
+          </div>
+          <!-- Single Speciality Area Start -->
+          <div class="col-12 col-md-6 col-lg-6 wow fadeInUp" data-wow-delay=".8s">
+            <div class="single_speciality">
+              <div class="single_speciality_icon">
+                <i class="fa fa-check-square" aria-hidden="true"></i>
+              </div>
+              <div class="single_speciality_text">
+                <h5>Seit 2008 auf dem Markt</h5>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end. container -->
+</section>
+<!-- ************** Our Speciality Area End ************** -->
+
+<!-- ************** Shop-in-Shop Area Start ************** -->
+<section class="about_area" id="shop-in-shop">
+  <div class="container">
+    <div class="about_us_area">
+      <div class="row">
+        <div class="col-12 col-lg-12 section_padding_100 wow fadeInUp">
+          <div class="row">
+            <!-- About Us Chart Area -->
+            <div class="col-12 col-lg-6 wow fadeInLeft abaut_area_img">
+              <div class="shop-in-shop_thumb">
+                <img src="public/img/start-page-img/bg-pattern/shop-in-shop.jpg" alt="">
+              </div>
+            </div>
+            <div class="col-12 col-lg-6 abaut_area_text">
+              <!-- Section Heading Start -->
+              <div class="section_heading">
+                <p>Vertriebspartner für Strom, Gas oder Telekommunikation gesucht</p>
+                <h3>GIB ALLES. ERREICHE MEHR.</h3>
+                <h2>Mit dem Network-Konzept von ENETE</h2>
+              </div>
+              <!-- Section Heading End -->
+              <!-- Shop-in-Shop Text Start -->
+              <div class="shop-inshop_text">
+                <p>
+                  Du bist der geborene Vertriebler? Oder suchst Du einfach nur eine neue Herausforderung? Bühne frei für deinen Erfolg! Ich lade Dich herzlich ein, Vertriebspartner von ENETE und damit ein Teil unseres Unternehmenserfolges zu werden.
+                  <br>
+                  <br>
+
+                  Jakob Walder, Geschäftsführer<br>
+                  ENETE GmbH
+                </p>
+                <br>
+
+
+                <h3>Wir suchen Partner, die</h3>
+                <ul class="fa-ul">
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>Kunden begeistern können</li>
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>lieber beim Kunden als im Büro sitzen</li>
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>fleißig sind und professionell arbeiten</li>
+                </ul>
+                <br>
+                <h3>Deine Vorteile bei ENETE:</h3>
+                <ul class="fa-ul">
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>Kompetente Betreuung durch das Backoffice</li>
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>Interessante Bonis und Incentives</li>
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>Attraktive Provisionen</li>
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>Modernes Vertriebspartnerportal</li>
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>Zuverlässige Zahlung Ihrer Provision</li>
+                  <li><i class="fa-li fa fa-check-square" style="color:#7D1120;"></i>Persönlichkeitsentwicklung</li>
+                </ul>
+                <br>
+                <style>
+                  .but {
+                    height: 50px;
+                    letter-spacing: 2px;
+                    padding: 10px;
+                    transition-duration: .5s;
+                    width: 280px;
+                    background-color: #7D1120;
+                    color: #fff;
+                    border: 2px solid #7D1120
+                  }
+
+                    .but:hover {
+                      background-color: #7D1120;
+                      border: 2px solid #ddd;
+                      border-radius: 6px;
+                      color: #fff;
+                      font-weight: 700;
+                      height: 50px;
+                      letter-spacing: 3px;
+                      padding: 10px;
+                      margin: 0 auto 30px;
+                      transition-duration: .5s;
+                      width: 280px;
+                    }
+                </style>
+                <a href="#contact" class="but">JETZT KONTAKT AUFNEHMEN</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
-  <!-- Features Area -->
-  <section class="features_area" id="features">
-    <div class="container">
-      <div class="section_title">
-        <h2>Unsere Leistungen</h2>
-        <p>Wir bieten Ihnen eine Vielzahl an Dienstleistungen für Energie und Telekommunikation.</p>
-      </div>
-      <div class="row">
-        <div class="col-md-3 col-sm-6" *ngFor="let feature of features; let i = index" [@fadeInUp]="animatedStates[i + 2]" #animatedElement>
-          <div class="single_feature">
-            <h3>{{ feature.title }}</h3>
-            <p>{{ feature.description }}</p>
+  </div>
+  <!-- end./ container -->
+</section>
+<!-- ************** Shop-in-Shop Area END ************** -->
+
+<!-- ***************** Video area start ***************** -->
+<div class="video_area section_padding_60" data-stellar-background-ratio="0.6">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <!-- Single Speciality Video Area Start -->
+        <div class="our_speciality_video">
+          <div class="video_play_area">
+            <!-- <div class="video_play_button wow bounceIn" id="video">
+                <a class="hover-link" data-lightbox-gallery="youtube-video" href="https://www.youtube.com/watch?v=P2uvaR-6ncM&feature=youtu.be" title="Youtube Video" target="_blank"><i class="fa fa-play" aria-hidden="true"></i></a>
+            </div> -->
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
-  <!-- Facts Area -->
-  <section class="facts_area" id="facts">
-    <div class="container">
-      <div class="row">
-        <div class="col-md-2 col-sm-4" *ngFor="let fact of facts; let i = index">
-          <div class="single_fact" #factElement>
-            <h3 [@countUp]="counters[i]">{{ counters[i] }}{{ fact.suffix }}</h3>
-            <p>{{ fact.title }}</p>
+  </div>
+</div>
+<!-- ***************** Video area end ***************** -->
+
+<!-- ***************** Testimonial Area Start ***************** -->
+<div class="testimonial_area section_padding_60" data-stellar-background-ratio="0.6">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <!-- Section Heading Start -->
+        <div class="section_heading">
+          <p>Das sagen unsere Kunden</p>
+          <h3>Kundenmeinungen</h3>
+        </div>
+        <!-- Section Heading End -->
+      </div>
+
+      <div class="col-xs-12 col-md-8 col-md-offset-2">
+        <div class="testimonials_area">
+
+          <div class="testimonials">
+            <!-- Single testimonial area start  -->
+            <div class="single_testimonial_area">
+              <!-- Single testimonial text  -->
+              <div class="testimonial_text">
+                <!-- Single testimonial thumb  -->
+                <div class="testimonial_author_thumb">
+                  <img src="public/img/start-page-img/advisor-img/tes-1.jpg" alt="">
+                </div>
+                <p>Fantastisch - nie mehr Kündigungstermine verpassen. Funktioniert einfach und einwandfrei.</p>
+              </div>
+              <div class="testimonial_author_name">
+                <h5>ERK VERONIKA</h5>
+                <h6>26 Jahre aus OsnabrÃ¼ck</h6>
+              </div>
+            </div>
+            <!-- Single testimonial area start  -->
+            <div class="single_testimonial_area">
+              <!-- Single testimonial text  -->
+              <div class="testimonial_text">
+                <!-- Single testimonial thumb  -->
+                <div class="testimonial_author_thumb">
+                  <img src="public/img/start-page-img/advisor-img/tes-2.jpg" alt="">
+                </div>
+                <p>Durch die Vertragsoptimierung spare ich monatlich 30 Euro. Meine Kündigung aus dem Kündigungsautomat wurde mir schon in kürzester Zeit vom Anbieter bestätigt.</p>
+              </div>
+              <div class="testimonial_author_name">
+                <h5>HERDT ILONA</h5>
+                <h6>26 Jahre aus Kempten</h6>
+              </div>
+            </div>
+
+            <!-- Single testimonial area start  -->
+            <div class="single_testimonial_area">
+              <!-- Single testimonial text  -->
+              <div class="testimonial_text">
+                <!-- Single testimonial thumb  -->
+                <div class="testimonial_author_thumb">
+                  <img src="public/img/start-page-img/advisor-img/tes-3.jpg" alt="">
+                </div>
+                <p>Ich habe schon immer günstige Angebote gesucht. Allerdings gab es oft Probleme und ich war auf mich alleine gestellt. Seit 2013 bin ich enete-Kunde und habe sogar einen persönlichen Berater. Das kostet mich keine Cent. Weiter so!</p>
+              </div>
+              <div class="testimonial_author_name">
+                <h5>MISIBAEVA ELLORA</h5>
+                <h6>56 Jahre aus Belm</h6>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
-  <!-- Contact Area -->
-  <section class="contact_area" id="contact">
-    <div class="container">
-      <div class="section_title">
-        <h2>Kontaktieren Sie uns</h2>
-        <p>Haben Sie Fragen? Wir freuen uns auf Ihre Nachricht!</p>
+  </div>
+</div>
+<!-- ***************** Testimonial Area End ***************** -->
+
+<!-- ************** Call to action Area Start ************** -->
+<div class="call_to_action section_padding_60">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <!-- call to action text -->
+        <div class="call_to wow fadeInUp" data-wow-delay=".2s">
+          <h3>Unser Netzwerk ist unsere Stärke! <i class="fa-regular fa-thumbs-up"></i> Werden Sie ein Teil davon.</h3>
+        </div>
       </div>
-      <div class="row">
-        <!-- Contact Form -->
-        <div class="col-md-6">
-          <form [formGroup]="contactForm" (ngSubmit)="onContactSubmit()">
-            <div class="form-group">
-              <input type="text" formControlName="name" placeholder="Ihr Name *" required>
-              <div *ngIf="contactForm.get('name')?.invalid && contactForm.get('name')?.touched" class="error">
-                Name ist erforderlich.
+    </div>
+  </div>
+</div>
+<!-- ************** Call to action Area End ************** -->
+
+<!-- ***************** Message Now Area Start ***************** -->
+<section class="message_now_area section_padding_100_70" id="contact">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12 col-sm-8">
+        <!-- Message Title -->
+        <div class="message_title">
+          <!-- Section Heading Start -->
+          <div class="section_heading text-left">
+            <p>Nehmen Sie Kontakt mit uns auf?</p>
+            <h3>E-Mail Kontakt</h3>
+          </div>
+          <!-- Section Heading End -->
+        </div>
+
+        <div class="contact_from wow fadeInUp" data-wow-delay=".2s">
+          <form action="https://enete.de/contacts" method="post" id="main_contact_form">
+            <!-- Message Input Area Start -->
+            <div class="contact_input_area">
+              <div id="success_fail_info"></div>
+              <div class="row">
+                <!-- Single Input Area Start -->
+                <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Ihr Name" required="">
+                  </div>
+                </div>
+                <!-- Single Input Area Start -->
+                <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <input type="email" class="form-control" name="email" id="email" placeholder="Ihre E-Mail-Adresse" required="">
+                  </div>
+                </div>
+                <!-- Single Input Area Start -->
+                <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <input type="text" class="form-control" name="subject" id="subject" placeholder="Ihr Betreff" required="">
+                  </div>
+                </div>
+                <!-- Single Input Area Start -->
+                <div class="col-sm-6 col-xs-12">
+                  <div class="form-group">
+                    <input type="number" class="form-control" name="number" id="number" placeholder="Ihre Rückrufnummer *" required="">
+                  </div>
+                </div>
+                <!-- Single Input Area Start -->
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <textarea name="message" class="form-control" id="message" cols="30" rows="10" placeholder="Ihre Nachricht *" required=""></textarea>
+                  </div>
+                </div>
+                <!-- Single Input Area Start -->
+                <div class="col-xs-12">
+                  <p>Bitte beachten Sie unsere Hinweise zum<a href="#" data-toggle="modal" data-target=".bs-example-modal"> Datenschutz</a></p><br>
+                  <button type="submit" class="btn btn-default">E-MAIL SENDEN</button>
+                </div>
               </div>
             </div>
-            <div class="form-group">
-              <input type="email" formControlName="email" placeholder="Ihre E-Mail *" required>
-              <div *ngIf="contactForm.get('email')?.invalid && contactForm.get('email')?.touched" class="error">
-                Bitte geben Sie eine gültige E-Mail-Adresse ein.
-              </div>
-            </div>
-            <div class="form-group">
-              <input type="text" formControlName="subject" placeholder="Betreff *" required>
-              <div *ngIf="contactForm.get('subject')?.invalid && contactForm.get('subject')?.touched" class="error">
-                Betreff ist erforderlich.
-              </div>
-            </div>
-            <div class="form-group">
-              <input type="text" formControlName="number" placeholder="Ihre Telefonnummer">
-              <div *ngIf="contactForm.get('number')?.invalid && contactForm.get('number')?.touched" class="error">
-                Bitte geben Sie eine gültige Telefonnummer ein.
-              </div>
-            </div>
-            <div class="form-group">
-              <textarea formControlName="message" placeholder="Ihre Nachricht *" required></textarea>
-              <div *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched" class="error">
-                Nachricht ist erforderlich.
-              </div>
-            </div>
-            <button type="submit" [disabled]="contactForm.invalid">Nachricht senden</button>
+            <!-- Message Input Area End -->
           </form>
         </div>
-        <!-- Google Map -->
-        <div class="col-md-6">
-          <google-map *ngIf="isBrowser" [center]="mapCenter" [zoom]="mapZoom" width="100%" height="400px">
-            <map-marker [position]="mapCenter"></map-marker>
-          </google-map>
-          <div *ngIf="!isBrowser" class="map_fallback">
-            <p>Karte wird im Browser angezeigt.</p>
+      </div>
+
+      <div class="col-xs-12 col-sm-4 col-lg-3 col-lg-offset-1">
+        <!-- Section Heading Start -->
+        <div class="section_heading text-left">
+          <p>Besuchen Sie uns mal.</p>
+          <h3>Unsere Anschrift</h3>
+        </div>
+        <!-- Section Heading End -->
+        <!-- Adress Area -->
+        <div class="address-area wow fadeInUp" data-wow-delay=".4s">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="single_part">
+                <i class="fa fa-globe" aria-hidden="true"></i>
+                <p>Cloppenburger Str. 10A</p>
+                <p>49696 Molbergen</p>
+              </div>
+            </div>
+
+            <div class="col-xs-12">
+              <div class="single_part">
+                <i class="fa fa-phone" aria-hidden="true"></i>
+                <a href="tel:+494475941920">+49 (0) 4475 - 941 920</a>
+                <p>+49 (0) 4475 - 941 92 15</p>
+              </div>
+            </div>
+
+            <div class="col-xs-12">
+              <div class="single_part">
+                <i class="fa fa-envelope" aria-hidden="true"></i>
+                <a href="mailto:info&#64;enete.de">info&#64;enete.de</a>
+                <a href="mailto:auftrag&#64;enete.de">auftrag&#64;enete.de (für GP's)</a>
+              </div>
+            </div>
+
+            <div class="col-xs-12">
+              <div class="single_part">
+                <i class="fa-regular fa-clock"></i>
+                <p>09:00 - 13:00 Uhr</p>
+                <p>14:00 - 18:00 Uhr</p>
+              </div>
+            </div>
+
+            <div class="col-xs-12">
+              <div class="single_part">
+                <i class="fa-regular fa-life-ring"></i>
+                <a href="https://nacl.pcvisit.com/fast_update/v1/hosted/jumplink?func=download&amp;productid=18&amp;product=guestSetup">PC Visit Fernwartung</a>
+                <br>
+              </div>
+            </div>
+
+            <div class="col-xs-12">
+              <div class="single_part">
+                <i class="fa-regular fa-life-ring"></i>
+                <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_YzYwZGZmMTgtYmEzMy00ZjZmLTllOTEtYjIyOTVlMzNmMmQ1%40thread.v2/0?context=%7b%22Tid%22%3a%221874638e-ceb5-4c2e-99a9-cb39d4f21e7b%22%2c%22Oid%22%3a%22f902bbfc-e35b-4941-b2a1-1f6dacf52288%22%7d" target="_blank">Online UP</a>
+                <br>
+              </div>
+            </div>
+
+            <div class="col-xs-12">
+              <div class="social_links_area">
+                <a href="https://www.facebook.com/enetegmbh"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="https://www.youtube.com/channel/UCnSSIUXJ0yYEO31x8KupGDw"><i class="fa-brands fa-youtube"></i></a>
+                <!--<a href="https://plus.google.com/107324494355161105560"><i class="fa                                                     fa-google-plus" aria-hidden="true"></i></a>-->
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
     </div>
-  </section>
+  </div>
+</section>
+<!-- ***************** Message Now Area END ***************** -->
   
-  <!-- Footer -->
-  <footer class="footer_area">
+ 
+ 
+  
+  <!-- ************** Footer Area Start ************** -->
+<footer class="footer_area">
+  <!-- Bottom Footer Area Start -->
+  <div class="footer_bottom_area">
     <div class="container">
       <div class="row">
-        <div class="col-md-4">
-          <div class="footer_logo">
-            <img src="assets/img/logo.png" alt="ENETE Logo">
+        <div class="col-xs-12">
+          <div class="footer_bottom wow fadeInDown" data-wow-delay=".2s">
+            <!-- <div id="datenschutzsiegel">
+              <a href="https://www.datenschutzexperte.de/datenschutzsiegel/" title="Mehr zum offiziellen Datenschutz Siegel von Datenschutzexperte.de" target="_blank"><img src="https://www.datenschutzexperte.de/siegel/Datenschutz_Siegel_Rund_small.png" alt="Datenschutzsiegel" style="margin-bottom:15px;"></a>
+            </div> -->
+
+            <p> enete GmbH - Wir <i class="fa fa-heart" aria-hidden="true"></i> Teamwork |<a href="#" data-toggle="modal" data-target=".bs-example-modal-lg"> Impressum</a> |<a href="#" data-toggle="modal" data-target=".bs-example-modal"> Datenschutz</a></p>
           </div>
-          <p>ENETE – Ihr Partner für Energie- und Telekommunikationslösungen.</p>
-        </div>
-        <div class="col-md-4">
-          <h4>Kontakt</h4>
-          <ul class="contact_info">
-            <li><strong>Adresse:</strong> Musterstraße 1, 12345 Musterstadt</li>
-            <li><strong>Telefon:</strong> +49 123 456789</li>
-            <!-- <li><strong>E-Mail:</strong> info@enete.de</li> -->
-          </ul>
-        </div>
-        <div class="col-md-4">
-          <h4>Links</h4>
-          <ul class="footer_links">
-            <li><a href="#" (click)="openImpressum(); $event.preventDefault()">Impressum</a></li>
-            <li><a href="#" (click)="openDatenschutz(); $event.preventDefault()">Datenschutz</a></li>
-          </ul>
+          <!-- Bottom Footer Copywrite Text Area End -->
         </div>
       </div>
-      <div class="footer_bottom">
-        <p>&copy; 2025 ENETE. Alle Rechte vorbehalten.</p>
-      </div>
+      <!-- end./ row -->
     </div>
-  </footer>
+    <!-- end./ container -->
+  </div>
+  <!-- Bottom Footer Area End -->
+</footer>
+<!-- ************** Footer Area End ************** -->
 
