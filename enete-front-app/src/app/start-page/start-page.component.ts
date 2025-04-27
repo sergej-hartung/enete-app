@@ -12,12 +12,10 @@ import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // Import für Web Components
 
-// Swiper-Imports für Swiper Element
-import { register } from 'swiper/element/bundle';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
-import 'swiper/css/autoplay';
+// Owl Carousel Imports
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { OwlOptions } from 'ngx-owl-carousel-o';
+
 import { AuthService } from '../core/service/auth.service';
 
 interface Slide {
@@ -38,6 +36,13 @@ interface Feature {
   description: string;
 }
 
+interface Testimonial {
+  image: string;
+  text: string;
+  name: string;
+  details: string;
+}
+
 @Component({
   selector: 'app-start-page',
   standalone: true,
@@ -47,6 +52,7 @@ interface Feature {
     ReactiveFormsModule,
     GoogleMapsModule,
     NgbCollapse,
+    CarouselModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA], // Hinzufügen für Web Components
   templateUrl: './start-page.component.html',
@@ -73,8 +79,11 @@ export class StartPageComponent implements AfterViewInit {
   isSticky = false;
   isLoggedIn = false;
   isMenuOpen = false;
+
+  activeSection: string = 'home';
   private platformId = inject(PLATFORM_ID);
   isBrowser: boolean;
+  private sectionObserver: IntersectionObserver | null = null;
 
   slides: Slide[] = [
     {
@@ -111,6 +120,58 @@ export class StartPageComponent implements AfterViewInit {
     { number: 70000, suffix: '+', title: 'Optimierte Verträge' },
   ];
 
+  testimonials: Testimonial[] = [
+    {
+      image: 'public/img/start-page-img/advisor-img/tes-1.jpg',
+      text: 'Fantastisch – nie mehr Kündigungstermine verpassen. Funktioniert einfach und einwandfrei.',
+      name: 'ERK VERONIKA',
+      details: '26 JAHRE AUS OSNABRÜCK'
+    },
+    {
+      image: 'public/img/start-page-img/advisor-img/tes-2.jpg',
+      text: 'Durch die Vertragsoptimierung spare ich monatlich 30 Euro. Meine Kündigung aus dem Kündigungsautomat wurde mir schon in kürzester Zeit vom Anbieter bestätigt.',
+      name: 'HERDT ILONA',
+      details: '26 JAHRE AUS KEMPTEN'
+    },
+    {
+      image: 'public/img/start-page-img/advisor-img/tes-3.jpg',
+      text: 'Ich habe schon immer günstige Angebote gesucht. Allerdings gab es oft Probleme und ich war auf mich alleine gestellt. Seit 2013 bin ich enete-Kunde und habe sogar einen persönlichen Berater. Das kostet mich keine Cent. Weiter so!',
+      name: 'MISIBAEVA ELLORA',
+      details: '56 JAHRE AUS BELM'
+    }
+  ];
+
+  // Owl Carousel Konfiguration für Welcome Area
+  welcomeCarouselOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: true,
+    navSpeed: 700,
+    navText: ['<', '>'],
+    autoplay: true,
+    autoplayTimeout: 5000,
+    autoplayHoverPause: true,
+    items: 1,
+    nav: true,
+  };
+
+  // Owl Carousel Konfiguration für Testimonials
+  testimonialCarouselOptions: OwlOptions = {
+    loop: true,
+    mouseDrag: true,
+    touchDrag: true,
+    pullDrag: true,
+    dots: true,
+    navSpeed: 700,
+    autoplay: true,
+    autoplayTimeout: 3000,
+    autoplayHoverPause: true,
+    items: 1,
+    nav: false,
+  };
+
   counters: number[] = this.facts.map(() => 0);
   animatedStates: string[] = [];
 
@@ -146,73 +207,6 @@ export class StartPageComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     if (!this.isBrowser) return; // Nur im Browser ausführen
 
-    // Swiper Element nur im Browser registrieren
-    register();
-
-    // Swiper Element initialisieren
-    const swiperEl = document.querySelector('swiper-container');
-    if (swiperEl) {
-      const swiperParams = {
-        slidesPerView: 1,
-        spaceBetween: 0,
-        loop: true,
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-        injectStyles: [
-          `
-            .swiper-button-prev,
-            .swiper-button-next {
-              color: #fff;
-              background: rgba(0, 0, 0, 0.5);
-              width: 50px;
-              height: 50px;
-              border-radius: 50%;
-              transition: background 0.3s;
-            }
-            .swiper-button-prev:hover,
-            .swiper-button-next:hover {
-              background: rgba(0, 0, 0, 0.8);
-            }
-            .swiper-button-prev {
-              left: 20px;
-            }
-            .swiper-button-next {
-              right: 20px;
-            }
-            .swiper-button-prev::after,
-            .swiper-button-next::after {
-              font-size: 20px;
-            }
-            .swiper-pagination {
-              bottom: 20px;
-            }
-            .swiper-pagination-bullet {
-              background: #fff;
-              opacity: 0.7;
-              width: 10px;
-              height: 10px;
-            }
-            .swiper-pagination-bullet-active {
-              background: #7d1120;
-              opacity: 1;
-            }
-          `,
-        ],
-      };
-      Object.assign(swiperEl, swiperParams);
-      (swiperEl as any).initialize();
-    }
-
     // Counter-Animation
     const observer = new IntersectionObserver(
       (entries) => {
@@ -247,6 +241,34 @@ export class StartPageComponent implements AfterViewInit {
     this.animatedElements.forEach((element, index) => {
       this.animatedStates[index] = 'hidden';
       fadeObserver.observe(element.nativeElement);
+    });
+
+    this.setupSectionObserver();
+  }
+
+  private setupSectionObserver(): void {
+    const sections = document.querySelectorAll('section[id], div[id]');
+    const options = {
+      root: null, // Viewport als Root
+      threshold: 0.3, // 30% des Abschnitts müssen sichtbar sein
+    };
+
+    this.sectionObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          // Setze den aktiven Abschnitt basierend auf der ID
+          console.log(entry.target.id)
+          if(entry.target.id == 'sticky-sticky-wrapper'){
+            this.activeSection = 'home'
+          }else{
+            this.activeSection = entry.target.id;
+          }
+        }
+      });
+    }, options);
+
+    sections.forEach((section) => {
+      this.sectionObserver!.observe(section);
     });
   }
 

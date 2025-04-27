@@ -2,26 +2,32 @@
   <header class="header_area">
     <div id="sticky-sticky-wrapper" class="sticky-wrapper" [ngClass]="{'is-sticky': isSticky}"  style="height: 90px;">
       <div class="main_header_area" id="sticky">
-        <div class="container">
+        <div class="container-fluid px-md-4">
           <div class="row">
 
-            <div class="col-sm-2 col-xs-9">
+            <div class="col-md-2 col-4">
               <div class="logo_area">
                 <a href="https://enete.de"><img src="public/img/start-page-img/core-img/logo.png"></a>
               </div>
             </div>
+            <div class="d-md-none col-8 d-flex justify-content-end pe-4">
+              <button class="navbar-toggler d-md-none" (click)="isMenuOpen=!isMenuOpen">
+                <i *ngIf="!isMenuOpen" class="fa-solid fa-bars"></i>
+                <i *ngIf="isMenuOpen" class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
   
-            <div class="col-sm-10 col-xs-12">
+            <div class="col-md-10 col-sm-12 main_menu_area_wrapp">
               <div class="main_menu_area">
                 <div class="mainmenu">
-                  <nav style="display: block;">
+                  <nav style="display: block;" class="d-md-block" [ngClass]="{'d-block': isMenuOpen, 'd-none': !isMenuOpen}">
                     <ul id="nav">
-                      <li class="current_page_item"><a href="#home">Home</a></li>
-                      <li class=""><a href="#about">Über Uns</a></li>
+                      <li [ngClass]="{'current_page_item': activeSection === 'home'}"><a href="#home">Home</a></li>
+                      <li [ngClass]="{'current_page_item': activeSection === 'about'}"><a href="#about">Über Uns</a></li>
                       <li class=""><a href="https://enete-energie.de" target="_blank">Für Unternehmen</a></li>
-                      <li class=""><a href="#shop-in-shop">Partner werden</a></li>
-                      <li class=""><a href="#contact">Kontakt</a></li>
-                      <li *ngIf="!isLoggedIn" class="current_page_item"><a href="#home" data-toggle="modal" data-target="#login-modal">Login</a></li>
+                      <li [ngClass]="{'current_page_item': activeSection === 'shop-in-shop'}"><a href="#shop-in-shop">Partner werden</a></li>
+                      <li [ngClass]="{'current_page_item': activeSection === 'contact'}"><a href="#contact">Kontakt</a></li>
+                      <li *ngIf="!isLoggedIn" ><a href="#home" data-toggle="modal" data-target="#login-modal">Login</a></li>
                       <li *ngIf="isLoggedIn" class="current_page_item"><a href="#home" (click)="goToDashboard()">Dashboard</a></li>
                     </ul>
                   </nav>
@@ -33,34 +39,31 @@
         </div>
       </div>
     </div>
-    
-    
   </header>
 
   
   
   <!-- Welcome Area -->
   <section class="welcome_area" id="home">
-    <swiper-container *ngIf="isBrowser">
-      <swiper-slide *ngFor="let slide of slides">
-        <div class="single_slide" [style.backgroundImage]="'url(' + slide.image + ')'">
-          <div class="slide_text">
-            <div class="table">
-              <div class="table_cell">
-                <h2 [innerHTML]="slide.title"></h2>
-                <h3>{{ slide.subtitle }}</h3>
-                <a *ngIf="slide.button" [href]="slide.button.link" class="but" target="_blank" rel="noopener">
-                  {{ slide.button.text }}
-                </a>
+    <owl-carousel-o [options]="welcomeCarouselOptions" class="welcome-carousel" *ngIf="isBrowser">
+      <ng-container *ngFor="let slide of slides">
+        <ng-template carouselSlide>
+          <div class="single_slide debug-slide" [style.backgroundImage]="'url(' + slide.image + ')'">
+            <div class="slide_text">
+              <div class="table">
+                <div class="table_cell">
+                  <h2 [innerHTML]="slide.title"></h2>
+                  <h3>{{ slide.subtitle }}</h3>
+                  <a *ngIf="slide.button" [href]="slide.button.link" class="but" target="_blank" rel="noopener">
+                    {{ slide.button.text }}
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </swiper-slide>
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-pagination"></div>
-    </swiper-container>
+        </ng-template>
+      </ng-container>
+    </owl-carousel-o>
     <!-- Fallback für SSR -->
     <div *ngIf="!isBrowser" class="welcome_area_fallback">
       <div class="single_slide" [style.backgroundImage]="'url(' + slides[0].image + ')'">
@@ -474,58 +477,47 @@
         <!-- Section Heading End -->
       </div>
 
-      <div class="col-xs-12 col-md-8 col-md-offset-2">
+      <div class="col-12">
         <div class="testimonials_area">
+          <owl-carousel-o [options]="testimonialCarouselOptions" class="testimonial-carousel" *ngIf="isBrowser">
+            <ng-template carouselSlide>Slide 1</ng-template>  
+            <ng-template carouselSlide>Slide 2</ng-template>  
+            <ng-template carouselSlide>Slide 3</ng-template>
+            <!-- <ng-container *ngFor="let testimonial of testimonials">
+              <ng-template carouselSlide>
+                <div class="single_testimonial_area">
 
-          <div class="testimonials">
-            <!-- Single testimonial area start  -->
-            <div class="single_testimonial_area">
-              <!-- Single testimonial text  -->
-              <div class="testimonial_text">
-                <!-- Single testimonial thumb  -->
-                <div class="testimonial_author_thumb">
-                  <img src="public/img/start-page-img/advisor-img/tes-1.jpg" alt="">
+                  <div class="testimonial_text">
+
+                    <div class="testimonial_author_thumb">
+                      <img [src]="testimonial.image" alt="">
+                    </div>
+                    <p>{{ testimonial.text }}</p>
+                  </div>
+                  <div class="testimonial_author_name">
+                    <h5>{{ testimonial.name }}</h5>
+                    <h6>{{ testimonial.details }}</h6>
+                  </div>
                 </div>
-                <p>Fantastisch - nie mehr Kündigungstermine verpassen. Funktioniert einfach und einwandfrei.</p>
+              </ng-template>
+            </ng-container> -->
+          </owl-carousel-o>
+          <!-- Fallback für SSR -->
+          <div *ngIf="!isBrowser" class="testimonial_area_fallback">
+            <div class="single_testimonial_area">
+              <div class="testimonial_text">
+                <div class="testimonial_author_thumb">
+                  <img [src]="testimonials[0].image" alt="">
+                </div>
+                <p>{{ testimonials[0].text }}</p>
               </div>
               <div class="testimonial_author_name">
-                <h5>ERK VERONIKA</h5>
-                <h6>26 Jahre aus OsnabrÃ¼ck</h6>
+                <h5>{{ testimonials[0].name }}</h5>
+                <h6>{{ testimonials[0].details }}</h6>
               </div>
             </div>
-            <!-- Single testimonial area start  -->
-            <div class="single_testimonial_area">
-              <!-- Single testimonial text  -->
-              <div class="testimonial_text">
-                <!-- Single testimonial thumb  -->
-                <div class="testimonial_author_thumb">
-                  <img src="public/img/start-page-img/advisor-img/tes-2.jpg" alt="">
-                </div>
-                <p>Durch die Vertragsoptimierung spare ich monatlich 30 Euro. Meine Kündigung aus dem Kündigungsautomat wurde mir schon in kürzester Zeit vom Anbieter bestätigt.</p>
-              </div>
-              <div class="testimonial_author_name">
-                <h5>HERDT ILONA</h5>
-                <h6>26 Jahre aus Kempten</h6>
-              </div>
-            </div>
-
-            <!-- Single testimonial area start  -->
-            <div class="single_testimonial_area">
-              <!-- Single testimonial text  -->
-              <div class="testimonial_text">
-                <!-- Single testimonial thumb  -->
-                <div class="testimonial_author_thumb">
-                  <img src="public/img/start-page-img/advisor-img/tes-3.jpg" alt="">
-                </div>
-                <p>Ich habe schon immer günstige Angebote gesucht. Allerdings gab es oft Probleme und ich war auf mich alleine gestellt. Seit 2013 bin ich enete-Kunde und habe sogar einen persönlichen Berater. Das kostet mich keine Cent. Weiter so!</p>
-              </div>
-              <div class="testimonial_author_name">
-                <h5>MISIBAEVA ELLORA</h5>
-                <h6>56 Jahre aus Belm</h6>
-              </div>
-            </div>
-
           </div>
+          
         </div>
       </div>
     </div>

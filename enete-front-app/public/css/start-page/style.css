@@ -214,7 +214,9 @@ header {
 }
 
 .main_menu_area {
-  float: right;
+  /* float: right; */
+  display: flex;
+  justify-content: right;
   position: relative;
   z-index: 1
 }
@@ -223,6 +225,20 @@ header {
   display: inline-block;
   text-align: right
 }
+
+.main_header_area .navbar-toggler{
+  font-size: 30px;
+}
+
+/* .mainmenu .navbar-toggler{
+  height: 100%;
+    position: relative;
+    right: -87px;
+    top: 28px;
+    font-size: 30px;
+} */
+
+
 
   .mainmenu ul#nav li {
     display: inline-block;
@@ -329,12 +345,14 @@ header {
       overflow: hidden;
       padding: 12px 15px;
       text-transform: uppercase;
+      text-decoration: none;
       width: 180px
     }
 
       .single_slide .slide_text a:hover {
         background-color: #7D1120;
-        color: #fff
+        color: #fff;
+        margin: 50px auto 0;
       }
 
     .single_slide .slide_text .table .table_cell {

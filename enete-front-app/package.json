@@ -28,6 +28,7 @@
     "bootstrap": "^5.3.3",
     "express": "^4.18.2",
     "ngx-cookieconsent": "^8.0.0",
+    "ngx-owl-carousel-o": "^19.0.2",
     "rxjs": "~7.8.0",
     "swiper": "^11.2.6",
     "tslib": "^2.3.0",
