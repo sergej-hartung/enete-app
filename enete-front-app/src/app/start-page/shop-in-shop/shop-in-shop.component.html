@@ -1,0 +1,48 @@
+<section class="about_area" id="shop-in-shop">
+    <div class="container">
+      <div class="about_us_area">
+        <div class="row">
+          <div class="col-12 col-lg-12 section_padding_100 wow fadeInUp">
+            <div class="row">
+              <div class="col-12 col-lg-6 wow fadeInLeft abaut_area_img">
+                <div class="shop-in-shop_thumb">
+                  <img [src]="imageUrl" alt="Shop in Shop">
+                </div>
+              </div>
+              <div class="col-12 col-lg-6 abaut_area_text">
+                <div class="section_heading">
+                  <p>Vertriebspartner für Strom, Gas oder Telekommunikation gesucht</p>
+                  <h3>GIB ALLES. ERREICHE MEHR.</h3>
+                  <h2>Mit dem Network-Konzept von ENETE</h2>
+                </div>
+                <div class="shop-inshop_text">
+                  <p>
+                    Du bist der geborene Vertriebler? Oder suchst Du einfach nur eine neue Herausforderung? Bühne frei für deinen Erfolg! Ich lade Dich herzlich ein, Vertriebspartner von ENETE und damit ein Teil unseres Unternehmenserfolges zu werden.
+                    <br><br>
+                    Jakob Walder, Geschäftsführer<br>
+                    ENETE GmbH
+                  </p>
+                  <br>
+                  <h3>Wir suchen Partner, die</h3>
+                  <ul class="fa-ul">
+                    <li *ngFor="let requirement of partnerRequirements">
+                      <i class="fa-li fa fa-check-square"></i>{{ requirement.text }}
+                    </li>
+                  </ul>
+                  <br>
+                  <h3>Deine Vorteile bei ENETE:</h3>
+                  <ul class="fa-ul">
+                    <li *ngFor="let advantage of advantages">
+                      <i class="fa-li fa fa-check-square"></i>{{ advantage.text }}
+                    </li>
+                  </ul>
+                  <br>
+                  <a href="#contact" class="but">JETZT KONTAKT AUFNEHMEN</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

@@ -1,0 +1,37 @@
+<section class="welcome_area" id="home">
+    <owl-carousel-o [options]="welcomeCarouselOptions" class="welcome-carousel" *ngIf="isBrowser">
+      <ng-container *ngFor="let slide of slides">
+        <ng-template carouselSlide>
+          <div class="single_slide debug-slide" [style.backgroundImage]="'url(' + slide.image + ')'">
+            <div class="slide_text">
+              <div class="table">
+                <div class="table_cell">
+                  <h2 [innerHTML]="slide.title"></h2>
+                  <h3>{{ slide.subtitle }}</h3>
+                  <a *ngIf="slide.button" [href]="slide.button.link" class="but" target="_blank" rel="noopener">
+                    {{ slide.button.text }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+    </owl-carousel-o>
+    <!-- Fallback für SSR -->
+    <div *ngIf="!isBrowser" class="welcome_area_fallback">
+      <div class="single_slide" [style.backgroundImage]="'url(' + slides[0].image + ')'">
+        <div class="slide_text">
+          <div class="table">
+            <div class="table_cell">
+              <h2 [innerHTML]="slides[0].title"></h2>
+              <h3>{{ slides[0].subtitle }}</h3>
+              <a *ngIf="slides[0].button" [href]="slides[0].button.link" class="but" target="_blank" rel="noopener">
+                {{ slides[0].button.text }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

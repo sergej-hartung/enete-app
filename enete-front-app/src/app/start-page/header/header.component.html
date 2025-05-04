@@ -1,0 +1,39 @@
+<header class="header_area">
+    <div id="sticky-sticky-wrapper" class="sticky-wrapper" [ngClass]="{'is-sticky': isSticky}" style="height: 90px;">
+      <div class="main_header_area" id="sticky">
+        <div class="container-fluid px-md-4">
+          <div class="row">
+            <div class="col-md-2 col-4">
+              <div class="logo_area">
+                <a href="https://enete.de"><img src="public/img/start-page-img/core-img/logo.png"></a>
+              </div>
+            </div>
+            <div class="d-md-none col-8 d-flex justify-content-end pe-4">
+              <button class="navbar-toggler d-md-none" (click)="toggleMenu()">
+                <i *ngIf="!isMenuOpen" class="fa-solid fa-bars"></i>
+                <i *ngIf="isMenuOpen" class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div class="col-md-10 col-sm-12 main_menu_area_wrapp">
+              <div class="main_menu_area">
+                <div class="mainmenu">
+                  <nav style="display: block;" class="d-md-block" [ngClass]="{'d-block': isMenuOpen, 'd-none': !isMenuOpen}">
+                    <ul id="nav">
+                      <li [ngClass]="{'current_page_item': activeSection === 'home'}"><a href="#home">Home</a></li>
+                      <li [ngClass]="{'current_page_item': activeSection === 'about'}"><a href="#about">Über Uns</a></li>
+                      <li><a href="https://enete-energie.de" target="_blank">Für Unternehmen</a></li>
+                      <li [ngClass]="{'current_page_item': activeSection === 'shop-in-shop'}"><a href="#shop-in-shop">Partner werden</a></li>
+                      <li [ngClass]="{'current_page_item': activeSection === 'contact'}"><a href="#contact">Kontakt</a></li>
+                      <li *ngIf="!isLoggedIn"><a href="#home" (click)="openLoginModal()">Login</a></li>
+                      <li *ngIf="isLoggedIn"><a href="#home" (click)="goToDashboard()">Dashboard</a></li>
+                    </ul>
+                  </nav>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+

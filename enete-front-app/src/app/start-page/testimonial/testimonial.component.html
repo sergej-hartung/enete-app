@@ -1,0 +1,60 @@
+
+
+<section class="testimonial_area section_padding_60">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <!-- Section Heading Start -->
+          <div class="section_heading">
+            <p>Das sagen unsere Kunden</p>
+            <h3>Kundenmeinungen</h3>
+          </div>
+          <!-- Section Heading End -->
+        </div>
+  
+        <div class="col-12">
+          <div class="testimonials_area">
+            <owl-carousel-o [options]="testimonialCarouselOptions" class="testimonial-carousel" *ngIf="isBrowser">
+              <!-- <ng-template carouselSlide>Slide 1</ng-template>  
+              <ng-template carouselSlide>Slide 2</ng-template>  
+              <ng-template carouselSlide>Slide 3</ng-template> -->
+              <ng-container *ngFor="let testimonial of testimonials">
+                <ng-template carouselSlide>
+                  <div class="single_testimonial_area">
+  
+                    <div class="testimonial_text">
+  
+                      <div class="testimonial_author_thumb">
+                        <img [src]="testimonial.image" alt="">
+                      </div>
+                      <p>{{ testimonial.text }}</p>
+                    </div>
+                    <div class="testimonial_author_name">
+                      <h5>{{ testimonial.name }}</h5>
+                      <h6>{{ testimonial.details }}</h6>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+            </owl-carousel-o>
+            <!-- Fallback für SSR -->
+            <div *ngIf="!isBrowser" class="testimonial_area_fallback">
+              <div class="single_testimonial_area">
+                <div class="testimonial_text">
+                  <div class="testimonial_author_thumb">
+                    <img [src]="testimonials[0].image" alt="">
+                  </div>
+                  <p>{{ testimonials[0].text }}</p>
+                </div>
+                <div class="testimonial_author_name">
+                  <h5>{{ testimonials[0].name }}</h5>
+                  <h6>{{ testimonials[0].details }}</h6>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

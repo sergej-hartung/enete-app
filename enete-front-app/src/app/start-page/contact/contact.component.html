@@ -1,0 +1,110 @@
+<section class="message_now_area section_padding_100_70" id="contact">
+    <div class="container">
+      <div class="row">
+        <div class="col-xs-12 col-md-8 col-lg-9">
+          <!-- Message Title -->
+          <div class="message_title">
+            <div class="section_heading text-left">
+              <p>Nehmen Sie Kontakt mit uns auf?</p>
+              <h3>E-Mail Kontakt</h3>
+            </div>
+          </div>
+  
+          <div class="contact_from wow fadeInUp" data-wow-delay=".2s">
+            <form [formGroup]="contactForm" (ngSubmit)="onContactSubmit()" id="main_contact_form">
+              <div class="contact_input_area">
+                <div class="row">
+                  <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="name" id="name" placeholder="Ihr Name" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="email" class="form-control" formControlName="email" id="email" placeholder="Ihre E-Mail-Adresse" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="text" class="form-control" formControlName="subject" id="subject" placeholder="Ihr Betreff" required>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 col-xs-12">
+                    <div class="form-group">
+                      <input type="number" class="form-control" formControlName="number" id="number" placeholder="Ihre Rückrufnummer *" required>
+                    </div>
+                  </div>
+                  <div class="col-xs-12">
+                    <div class="form-group">
+                      <textarea class="form-control" formControlName="message" id="message" cols="30" rows="10" placeholder="Ihre Nachricht *" required></textarea>
+                    </div>
+                  </div>
+                  <div class="col-xs-12">
+                    <p>Bitte beachten Sie unsere Hinweise zum <a href="#" data-toggle="modal" data-target=".bs-example-modal">Datenschutz</a></p><br>
+                    <button type="submit" class="btn btn-default" [disabled]="contactForm.invalid">E-MAIL SENDEN</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+  
+        <div class="col-xs-12 col-md-4 col-lg-3 col-lg-offset-1">
+          <div class="section_heading text-left">
+            <p>Besuchen Sie uns mal.</p>
+            <h3>Unsere Anschrift</h3>
+          </div>
+          <div class="address-area wow fadeInUp" data-wow-delay=".4s">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="single_part">
+                  <i class="fa fa-globe" aria-hidden="true"></i>
+                  <p>Cloppenburger Str. 10A</p>
+                  <p>49696 Molbergen</p>
+                </div>
+              </div>
+              <div class="col-xs-12">
+                <div class="single_part">
+                  <i class="fa fa-phone" aria-hidden="true"></i>
+                  <a href="tel:+494475941920">+49 (0) 4475 - 941 920</a>
+                  <p>+49 (0) 4475 - 941 92 15</p>
+                </div>
+              </div>
+              <div class="col-xs-12">
+                <div class="single_part">
+                  <i class="fa fa-envelope" aria-hidden="true"></i>
+                  <a href="mailto:info&#64;enete.de">info&#64;enete.de</a>
+                  <a href="mailto:auftrag&#64;enete.de">auftrag&#64;enete.de (für GP's)</a>
+                </div>
+              </div>
+              <div class="col-xs-12">
+                <div class="single_part">
+                  <i class="fa-regular fa-clock"></i>
+                  <p>09:00 - 13:00 Uhr</p>
+                  <p>14:00 - 18:00 Uhr</p>
+                </div>
+              </div>
+              <div class="col-xs-12">
+                <div class="single_part">
+                  <i class="fa-regular fa-life-ring"></i>
+                  <a href="https://nacl.pcvisit.com/fast_update/v1/hosted/jumplink?func=download&productid=18&product=guestSetup">PC Visit Fernwartung</a>
+                </div>
+              </div>
+              <div class="col-xs-12">
+                <div class="single_part">
+                  <i class="fa-regular fa-life-ring"></i>
+                  <a href="https://teams.microsoft.com/l/meetup-join/19%3ameeting_YzYwZGZmMTgtYmEzMy00ZjZmLTllOTEtYjIyOTVlMzNmMmQ1%40thread.v2/0?context=%7b%22Tid%22%3a%221874638e-ceb5-4c2e-99a9-cb39d4f21e7b%22%2c%22Oid%22%3a%22f902bbfc-e35b-4941-b2a1-1f6dacf52288%22%7d" target="_blank">Online UP</a>
+                </div>
+              </div>
+              <div class="col-xs-12">
+                <div class="social_links_area">
+                  <a href="https://www.facebook.com/enetegmbh"><i class="fa-brands fa-facebook-f"></i></a>
+                  <a href="https://www.youtube.com/channel/UCnSSIUXJ0yYEO31x8KupGDw"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

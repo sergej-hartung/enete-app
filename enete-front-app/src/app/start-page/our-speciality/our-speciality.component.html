@@ -1,0 +1,26 @@
+<section class="our_speciality_area section_padding_60">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-lg-8">
+          <div class="row">
+            <div class="col-12" [@fadeInUp]>
+              <div class="section_heading" id="unsere-stärken">
+                <p>Im Mittelpunkt steht für uns der Mensch</p>
+                <h3>Unsere Stärken</h3>
+              </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-6" *ngFor="let speciality of specialities" [@fadeInUp] >
+              <div class="single_speciality">
+                <div class="single_speciality_icon">
+                  <i class="fa fa-check-square" aria-hidden="true"></i>
+                </div>
+                <div class="single_speciality_text">
+                  <h5>{{ speciality.title }}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

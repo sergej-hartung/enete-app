@@ -1,0 +1,10 @@
+<section class="cool_facts_area">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 col-md cool_fact_text" *ngFor="let fact of facts; let i = index" [@countUp]="counters[i]" #factElement [attr.data-fact-index]="i">
+          <h3><span class="counter">{{ counters[i] }}</span>{{ fact.suffix }}</h3>
+          <h5>{{ fact.title }}</h5>
+        </div>
+      </div>
+    </div>
+  </section>

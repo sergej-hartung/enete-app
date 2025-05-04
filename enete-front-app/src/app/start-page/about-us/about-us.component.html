@@ -1,0 +1,26 @@
+<section class="about_area" id="about">
+    <div class="container">
+      <div class="about_us_area">
+        <div class="row">
+            <div class="col-12 col-lg-8 pt-4" [@fadeInUp]>
+                <div class="section_heading">
+                <p>Wer wir sind</p>
+                <h3>ENETE - Energie und Telekommunikation</h3>
+                </div>
+                <div class="about_us_text">
+                    <ng-container *ngFor="let section of aboutSections">
+                        <h3>{{ section.title }}</h3>
+                        <p [innerHTML]="section.content"></p>
+                        <br><br>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4" [@fadeInRight]>
+                <div class="about_us_thumb d-flex justify-content-center">
+                <img [src]="imageUrl" alt="About Us">
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</section>

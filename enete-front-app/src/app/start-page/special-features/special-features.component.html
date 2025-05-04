@@ -1,0 +1,20 @@
+<section class="special_feature_area">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-3 single_feature_wrapp" *ngFor="let feature of features; let i = index">
+                <div class="single_feature" [@fadeInUp]>
+                <div class="bg-icon">
+                    <span [class]="'icon-' + feature.icon"></span>
+                </div>
+                <div class="feature_img">
+                    <span [class]="'icon-' + feature.icon"></span>
+                </div>
+                <div class="feature_text">
+                    <h5>{{ feature.title }}</h5>
+                    <p>{{ feature.description }}</p>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

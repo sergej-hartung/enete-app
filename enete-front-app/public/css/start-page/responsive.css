@@ -348,6 +348,12 @@
     .abaut_area_text{
         padding: 20px 0;
     }
+    .about_us_area .section_heading h3{
+        font-size: 20px;
+    }
+    .about_us_area .about_us_text h3{
+        font-size: 18px;
+    }
 
     .abaut_area_img{
         padding-top: 0 !important;
