@@ -1,14 +1,14 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, signal, WritableSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { NgbModal, NgbCollapse } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbCollapse, NgbModalModule, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { AuthService } from '../../core/service/auth.service';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbCollapse],
+  imports: [CommonModule, RouterLink, NgbCollapse, NgbModalModule, LoginModalComponent],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -17,6 +17,8 @@ export class HeaderComponent {
   isLoggedIn = false;
   isMenuOpen = false;
   activeSection: string = 'home';
+
+  closeResult: WritableSignal<string> = signal('');
 
   private sectionObserver: IntersectionObserver | null = null;
 
@@ -67,16 +69,61 @@ export class HeaderComponent {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  // openLoginModal(): void {
+  //   this.modalService.open(LoginModalComponent).result.then(
+  //     (result) => {
+  //       if (result) {
+  //         this.isLoggedIn = true;
+  //       }
+  //     },
+  //     () => {}
+  //   );
+  // }
   openLoginModal(): void {
-    this.modalService.open(LoginModalComponent).result.then(
-      (result) => {
-        if (result) {
-          this.isLoggedIn = true;
-        }
-      },
-      () => {}
-    );
+    this.modalService.open(LoginModalComponent, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+			(result) => {
+				this.closeResult.set(`Closed with: ${result}`);
+			},
+			(reason) => {
+				this.closeResult.set(`Dismissed ${this.getDismissReason(reason)}`);
+			},
+		);
   }
+
+  // openLoginModal(): void {
+  //   console.log('Öffne Modal mit NgbModal');
+  //   // Setze inert auf den Hauptinhalt
+  //   document.querySelector('app-root')?.setAttribute('inert', '');
+  //   const modalRef = this.modalService.open(LoginModalComponent, {
+  //     ariaLabelledBy: 'login-modal-title',
+  //     centered: true
+  //   });
+  
+  //   modalRef.result.then(
+  //     (result) => {
+  //       console.log(`Modal geschlossen mit: ${result}`);
+  //       document.querySelector('app-root')?.removeAttribute('inert');
+  //       if (result) {
+  //         this.isLoggedIn = true;
+  //       }
+  //     },
+  //     (reason) => {
+  //       console.log(`Modal verworfen mit: ${reason}`);
+  //       document.querySelector('app-root')?.removeAttribute('inert');
+  //     }
+  //   );
+  // }
+
+  private getDismissReason(reason: any): string {
+		switch (reason) {
+			case ModalDismissReasons.ESC:
+				return 'by pressing ESC';
+			// case ModalDismissReasons.BACKDROP_CLICK:
+			// 	return 'by clicking on a backdrop';
+			default:
+				return `with: ${reason}`;
+		}
+	}
 
   goToDashboard(): void {
     // Navigiere zum Dashboard (Platzhalter)

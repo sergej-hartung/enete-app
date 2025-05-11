@@ -16,3 +16,32 @@ button.close {
         opacity: 1;
     }
 }
+
+.modal-header{
+    padding: 15px 15px 8px;
+    a {
+        color: #337ab7;
+        text-decoration:none;
+        width: 100%;
+        text-align: right;
+    }
+}
+
+.modal-title {
+    margin: 0;
+    line-height: 1.42857143;
+    font-size: 18px;
+}
+
+.login_modal_btn {
+    width: 100%;
+    margin: auto;
+
+    color: #7D1120;
+    border-color: #7D1120;
+
+    &:hover{
+        background-color: #7D1120;
+        color: #fff;
+    }
+}

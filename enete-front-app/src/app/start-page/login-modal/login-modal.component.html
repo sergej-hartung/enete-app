@@ -1,27 +1,92 @@
 
-
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" id="login-modal-title">Login</h4>
-                <a href="https://enete.de/">Passwort vergessen</a>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="login"><i class="fa fa-user" aria-hidden="true"></i></span>
-                        <input type="text" name="login" class="form-control" placeholder="Benutzername" aria-describedby="login">
+<div class="modal-header">
+    <button type="button" class="close" (click)="closeModal()" aria-label="Schließen"><span aria-hidden="true">×</span></button>
+    <h4 class="modal-title" id="login-modal-title">Login</h4>
+    <a href="https://enete.de/">Passwort vergessen</a>
+</div>
+<form [formGroup]="loginForm" (ngSubmit)="onLogin()" *ngIf="!showTwoFactor">
+    <div class="modal-body">
+        <!-- Fehlermeldung -->
+        <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+        <!-- Standard-Login-Formular -->
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="login"><i class="fa fa-user" aria-hidden="true"></i></span>
+                    <input 
+                        type="text" 
+                        formControlName="username"
+                        name="login" 
+                        class="form-control" 
+                        placeholder="Benutzername" 
+                        aria-describedby="login"
+                        autocomplete="username"
+                        [class.is-invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+                    />
+                    <div
+                        *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+                        class="invalid-feedback"
+                    >
+                        Benutzername ist erforderlich.
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon" id="password"><i class="fa fa-lock" aria-hidden="true"></i></span>
-                        <input type="password" name="password" class="form-control" placeholder="Passwort" aria-describedby="password">
+            </div>
+            <div class="form-group">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="password"><i class="fa fa-lock" aria-hidden="true"></i></span>
+                    <input 
+                        type="password" 
+                        formControlName="password"
+                        name="password" 
+                        class="form-control" 
+                        placeholder="Passwort" 
+                        aria-describedby="password"
+                        autocomplete="current-password"
+                        [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                    />
+                    <div
+                        *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                        class="invalid-feedback"
+                    >
+                        Passwort muss mindestens 6 Zeichen lang sein.
                     </div>
                 </div>
-
-            </div>
-            <div class="modal-footer">
-                <input type="submit" name="auth" value="Login" class="login_modal_btn btn btn_orange">
             </div>
 
 
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="login_modal_btn btn btn_orange" [disabled]="loginForm.invalid">
+          Login
+        </button>
+    </div>
+</form>
+<!-- 2FA-Formular -->
+<form [formGroup]="twoFactorForm" (ngSubmit)="onTwoFactorSubmit()" *ngIf="showTwoFactor">
+    <div class="form-group">
+      <div class="input-group mb-3">
+        <span class="input-group-text" id="twoFactorCode">
+          <i class="fa fa-shield" aria-hidden="true"></i>
+        </span>
+        <input
+          type="text"
+          formControlName="twoFactorCode"
+          class="form-control"
+          placeholder="6-stelliger Code"
+          aria-describedby="twoFactorCode"
+          [class.is-invalid]="twoFactorForm.get('twoFactorCode')?.invalid && twoFactorForm.get('twoFactorCode')?.touched"
+        />
+        <div
+          *ngIf="twoFactorForm.get('twoFactorCode')?.invalid && twoFactorForm.get('twoFactorCode')?.touched"
+          class="invalid-feedback"
+        >
+          Bitte gib einen gültigen 6-stelligen Code ein.
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="submit" class="login_modal_btn btn btn_orange" [disabled]="twoFactorForm.invalid">
+        Code bestätigen
+      </button>
+    </div>
+  </form>
