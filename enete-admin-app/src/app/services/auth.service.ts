@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-    private authUrl = environment.apiUrl
+  private authUrl = environment.apiUrl
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private jwtHelper = new JwtHelperService();
 

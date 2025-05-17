@@ -1,0 +1,136 @@
+.tarif-process-nav-wrap{
+    @media screen and (max-width: 767px) {
+        display: none;
+    }
+}
+
+.tarif-process-nav{
+    display: flex;
+    //flex-wrap: wrap;
+    width: 100%;
+    //margin-left: 35px;
+    //margin-right: 35px;
+    margin-left: 20px;
+    margin-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #fff;
+
+    flex-wrap: nowrap;
+    border: 1px solid #c4c4c4;
+    border-radius: 4px;
+    box-shadow: 0px 1px 20px -0.5px rgba(0, 0, 0, 0.1);
+
+    .step{
+        display: flex;
+        justify-content: center;
+        
+    }
+    .col{
+        &:not(:first-child){
+            @media screen and (max-width: 969px) {
+                padding-left: 10px;
+            }
+
+            @media screen and (max-width: 800px) {
+                padding-left: 5px;
+            }
+        }
+        &:not(:last-child){
+            @media screen and (max-width: 969px) {
+                padding-right: 10px;
+            }
+            @media screen and (max-width: 800px) {
+                padding-right: 5px;
+            }
+        }
+    }
+
+    .line{
+        border-color: #c4c4c4;
+    }
+    .step-name{
+        font-size: 12px;
+        font-family: Open Sans;
+        font-weight: 600;
+        line-height: 16px;
+        color: #8F9BB3;
+        // min-width: 141px;
+
+        @media screen and (max-width: 1449px) {
+            min-width: 92px;
+        }
+
+        @media screen and (max-width: 1009px) {
+                font-size: 11px;
+                min-width: 78px;
+        }
+
+        // @media screen and (max-width: 969px) {
+        //     font-size: 10px;
+        //     min-width: 74px;
+        // }
+    }
+    .circle-step{
+        display: inline-block;
+        font-size: 12px;
+        font-family: Open Sans;
+        line-height: 16px;
+        font-style: normal;
+        font-weight: 700;
+
+        line-height: 32px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid #8F9BB3;
+        box-sizing: border-box;
+        color: #8F9BB3;
+        background-color: rgba(143, 155, 179, 0.08);
+
+    }
+
+    .btn{
+        padding: 0;
+    }
+
+    .success{
+        .step-icon{
+            color: #54BC2B;
+        }
+        .step-name{
+            color: #54BC2B;
+        }
+    }
+
+    .error{
+        .step-icon{
+            color: #BA2110;
+        }
+        .step-name{
+            color: #BA2110;
+        }
+    }
+
+    .active{
+        .circle-step{
+            color: #7D1120;
+            border-color: #7D1120;
+        }
+        .step-name{
+            color: #7D1120;
+        }
+    }
+}
+
+.step-icon{
+    height: 32px;
+    i{
+        font-size: 32px;
+        line-height: 32px;
+    }   
+}
+
+.step-name{
+    margin-top: 8px;
+}

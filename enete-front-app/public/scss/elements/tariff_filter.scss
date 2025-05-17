@@ -1,0 +1,423 @@
+// Filter ein und ausschalten bis iPad Größe
+.alert:target {
+
+  @media screen and (min-width: 1000px) {
+    display: block;
+  }
+
+  @media screen and (max-width: 1000px) {
+    display: none;
+  }
+}
+
+.tarif-filter-wrap {
+  max-width: 285px;
+  padding-top: 20px;
+  padding-right: 15px;
+  padding-left: 0;
+  margin-bottom: 0px;
+  display: block;
+
+  .tarif-filter-sticky {
+    position: sticky;
+    position: -webkit-sticky;
+    overflow-y: scroll;
+    //height: 80vh;
+    top: 10px;
+    padding: 33px 15px;
+    background-color: #f3eeef;
+    border-radius: 8px;
+
+    & {
+      scrollbar-width: thin;
+      scrollbar-color: #C6CCD9 orange;
+    }
+    /* Works on Chrome, Edge, and Safari */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    /* Scrollbar Farbe anpassen
+            &::-webkit-scrollbar-track {
+                //background: orange;
+            } */
+    &::-webkit-scrollbar-thumb {
+      background-color: #C6CCD9;
+      border-radius: 20px;
+      border: 8px solid #C6CCD9;
+
+      @media screen and (max-width: 1000px) {
+        border-radius: 0px;
+      }
+    }
+  }
+
+  .checkbox_switch_mobil {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+
+
+  h6 {
+    color: #222B45;
+  }
+
+  .close {
+    position: absolute;
+    right: 32px;
+    top: 32px;
+    width: 32px;
+    height: 32px;
+    opacity: 0.3;
+  }
+
+  .close:hover {
+    opacity: 1;
+  }
+
+  .close:before, .close:after {
+    position: absolute;
+    left: 15px;
+    top: 0px;
+    content: ' ';
+    height: 33px;
+    width: 2px;
+    background-color: #333;
+  }
+
+  .close:before {
+    transform: rotate(45deg);
+  }
+
+  .close:after {
+    transform: rotate(-45deg);
+  }
+
+  .main-select {
+    border-bottom: 2px solid #e6e6e6;
+    //padding-bottom: 15px;
+
+    &.dsl-sort-title {
+      padding-top: 15px;
+      padding-bottom: 0px;
+    }
+  }
+
+  .details-select {
+    border-bottom: 2px solid #e6e6e6;
+    padding-bottom: 20px;
+
+    &.border-0 {
+      border-bottom: none;
+      padding-bottom: 0px;
+    }
+  }
+
+  .sort-select {
+    border-bottom: 2px solid #e6e6e6;
+    // padding-bottom: 20px;
+  }
+
+  .options-select {
+    // font-family: Open Sans;
+    // font-style: normal;
+    // font-weight: normal;
+    // font-size: 15px;
+    // line-height: 20px;
+    // color: #8f9bb3;
+    border-bottom: 2px solid #e6e6e6;
+    padding-bottom: 20px;
+
+    > div:last-child {
+      display: flex;
+      padding-top: 10px;
+
+      > div {
+        flex-grow: 1;
+      }
+
+      .font-s2 {
+        padding-left: 6px;
+        line-height: 20px;
+      }
+    }
+  }
+
+  .customer-select {
+    color: #8f9bb3;
+    //border-bottom: 2px solid #e6e6e6;
+    padding: 22px 0px 10px;
+
+    > div:first-child {
+      margin-bottom: 19px;
+    }
+  }
+
+  .other-select {
+    margin-top: 10px;
+
+
+    > div:first-child {
+      //margin-bottom: 19px;
+      border-top: 2px solid #e6e6e6;
+      padding-top: 20px;
+    }
+
+    span {
+      &.label_title {
+        padding-left: 9px;
+      }
+    }
+  }
+
+
+  .block-group {
+    display: flex;
+    padding-top: 15px;
+  }
+
+  .img-filter {
+    display: flex;
+    height: 42px;
+    align-items: center;
+  }
+
+  .btn-radio {
+    display: flex;
+    align-items: center;
+
+    span {
+      padding-left: 9px;
+    }
+
+    circle {
+      stroke: rgba(143, 155, 179, 0.16);
+      fill: #F7F9FC // rgba(143, 155, 179, 0.16);
+    }
+  }
+
+  .checkbox_custom {
+    input {
+      background: #F7F9FC;
+    }
+  }
+
+  .font-label {
+    padding-top: 10px;
+    color: #8F9BB3;
+  }
+
+  .block-left {
+    width: 50%;
+
+    .img-filter {
+      margin-left: 15px;
+    }
+  }
+
+  .block-right {
+    width: 50%;
+
+    .img-filter {
+      margin-left: 20px;
+    }
+
+    .btn-radio {
+      justify-content: center;
+    }
+
+    .font-label {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  .details-select {
+    padding: 2px 0;
+  }
+
+  .filter-form-group {
+    margin: 10px 0;
+
+    .form-control {
+      height: 40px;
+      border-color: #E4E9F2;
+      background-color: #F7F9FC;
+      color: #8F9BB3;
+    }
+
+    .font-label {
+      margin-bottom: 8px;
+      padding-top: 0;
+      display: flex;
+
+      span {
+        display: flex;
+        flex-basis: auto;
+        flex-grow: 1;
+        max-width: 100%;
+
+        &:last-child {
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1000px) {
+    position: fixed;
+    max-width: 100%;
+    top: -20px;
+    right: -16px;
+    z-index: 70;
+    transform: translateX(300px);
+
+    .tarif-filter-sticky {
+      height: 100vh;
+      border-radius: 0px;
+      //animation: fadeIn 2s;
+      opacity: 1;
+      //display: none;
+    }
+
+    .checkbox_switch_mobil {
+      display: none;
+    }
+
+    .animated {
+      -webkit-animation-duration: 1s;
+      animation-duration: 1s;
+      -webkit-animation-fill-mode: both;
+      animation-fill-mode: both
+    }
+
+    @-webkit-keyframes fadeInRight {
+      0% {
+        opacity: 1;
+        -webkit-transform: translateX(200px);
+        transform: translateX(200px)
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes fadeInRight {
+      0% {
+        opacity: 1;
+        -webkit-transform: translateX(200px);
+        -ms-transform: translateX(200px);
+        transform: translateX(200px)
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: translateX(0);
+        -ms-transform: translateX(0);
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes fadeOutRight {
+      0% {
+        opacity: 1;
+        -webkit-transform: translateX(0px);
+        -ms-transform: translateX(0px);
+        transform: translateX(0px)
+      }
+
+      100% {
+        opacity: 1;
+        -webkit-transform: translateX(300px);
+        -ms-transform: translateX(300px);
+        transform: translateX(300px)
+      }
+    }
+
+    .fadeInRight {
+      -webkit-animation-name: fadeInRight;
+      animation-name: fadeInRight
+    }
+
+    .fadeOutRight{
+      -webkit-animation-name: fadeOutRight;
+      animation-name: fadeOutRight
+    }
+  }
+
+  @media screen and (min-width: 1000px) {
+
+    .close-filter {
+      display: none;
+    }
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .animated {
+    -webkit-animation-duration: 1s;
+    animation-duration: 1s;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both
+  }
+
+  @-webkit-keyframes fadeInRight {
+    0% {
+      opacity: 1;
+      -webkit-transform: translateX(200px);
+      transform: translateX(200px)
+    }
+
+    100% {
+      opacity: 1;
+      -webkit-transform: translateX(0);
+      transform: translateX(0)
+    }
+  }
+
+  @keyframes fadeInRight {
+    0% {
+      opacity: 1;
+      -webkit-transform: translateX(300px);
+      -ms-transform: translateX(300px);
+      transform: translateX(300px)
+    }
+
+    100% {
+      opacity: 1;
+      -webkit-transform: translateX(0);
+      -ms-transform: translateX(0);
+      transform: translateX(0)
+    }
+  }
+
+  @keyframes fadeOutRight {
+    0% {
+      opacity: 1;
+      -webkit-transform: translateX(0px);
+      -ms-transform: translateX(0px);
+      transform: translateX(0px)
+    }
+
+    100% {
+      opacity: 1;
+      -webkit-transform: translateX(300px);
+      -ms-transform: translateX(300px);
+      transform: translateX(300px)
+    }
+  }
+
+  .fadeInRight {
+    -webkit-animation-name: fadeInRight;
+    animation-name: fadeInRight
+  }
+
+  .fadeOutRight{
+    -webkit-animation-name: fadeOutRight;
+    animation-name: fadeOutRight
+  }
+}

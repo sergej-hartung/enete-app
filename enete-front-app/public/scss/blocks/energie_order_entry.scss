@@ -1,0 +1,55 @@
+.content_energie_order_entry {
+  background-color: #f5f6f8;
+  padding-bottom: 30px;
+  position: relative;
+
+  @media screen and (min-width: 992px) {
+    .tarif-card {
+      margin: 0 20px;
+    }
+  }
+
+
+  @media screen and (max-width: 991px) {
+    padding-bottom: 20px;
+  }
+
+  .tarif-card-wrapp {
+    @media screen and (max-width: 991px) {
+      margin-bottom: 10px;
+    }
+  }
+
+  .tarif-card-wrapp {
+    @media screen and (max-width: 767px) {
+      display: none;
+    }
+  }
+
+  .tarif_info_wrapp {
+    @media screen and (max-width: 1385px) {
+      display: none;
+    }
+  }
+}
+
+.tarif-process-nav-wrap{
+    margin-bottom: 20px;
+}
+
+.tarif_forms_wrap{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    //padding-left: 20px;
+    //padding-right: 20px;
+    padding-left: 5px;
+    padding-right: 5px;
+
+   
+    @media screen and (max-width: 991px) {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+}

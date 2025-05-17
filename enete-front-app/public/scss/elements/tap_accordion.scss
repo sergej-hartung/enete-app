@@ -1,0 +1,91 @@
+.tab_accordion_btn{
+
+    .nav-tabs .nav-item {
+        margin-bottom: 0px; 
+        @media screen and (max-width: 767px){
+            flex: 1;
+        }
+    }
+    .nav-tabs{
+        border-bottom: none;
+
+        .nav-link{
+            &[aria-expanded="true"]{
+                
+                @media screen and (min-width: 768px){
+                    background-color: #fff;
+                    border-top-color: #7D1120;
+                    color: #7D1120;
+                }
+
+                @media screen and (max-width: 767px){
+                    border-bottom-color: #7D1120;
+                    color: #222B45;
+                }
+            }
+
+            
+        }
+    }
+    .nav-item:not(:last-child){
+        @media screen and (min-width: 768px){
+            margin-right: 12px;
+        }
+    }
+    .nav-link{
+        font-family: Open Sans;       
+        
+        
+        
+        border:none;
+        
+        @media screen and (max-width: 767px){
+            padding: 8px 16px 15px 16px;
+            border-bottom: 2px solid transparent;
+            text-align: center;
+            font-size: 13px;
+            line-height: 13px;
+            font-weight: 600;
+            color: rgba(46,58,89, 0.4);
+        }
+
+        @media screen and (min-width: 768px){
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 10px;
+            line-height: 12px;
+
+            background-color: #F7F9FC;
+            border-top: 4px solid rgba(143, 155, 179, 0.48);
+            border-left: 1px solid rgba(143, 155, 179, 0.24);
+            border-right: 1px solid rgba(143, 155, 179, 0.24);
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+
+            padding: 10px 16px;
+        }
+
+
+
+        &:focus{           
+            
+            @media screen and (min-width: 768px){
+                border-top: 4px solid rgba(143, 155, 179, 0.48);
+                border-left: 1px solid rgba(143, 155, 179, 0.24);
+                border-right: 1px solid rgba(143, 155, 179, 0.24);
+            }
+        }
+
+        &:hover{
+            border-color: #e9ecef #e9ecef #dee2e6;
+        }
+    }
+
+    
+}
+
+
+
+
+
+

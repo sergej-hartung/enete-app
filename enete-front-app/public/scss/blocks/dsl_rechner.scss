@@ -1,0 +1,254 @@
+.dsl_logo {
+  height: auto;
+  line-height: 47px;
+
+  img {
+    max-width: 100%;
+    width: auto;
+    height: 47px;
+  }
+
+  .svg_logo {
+
+    svg {
+      max-width: 100%;
+      width: auto;
+      height: 47px;
+    }
+  }
+}
+
+
+.provider_name_dsl {
+  padding-top: 6px;
+  font-size: 14px;
+  line-height: 145%;
+  font-weight: 400;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 14px;
+  color: #8F9BB3;
+}
+
+.dsl_logo, .provider_name_dsl {
+  text-align: center;
+
+  @media screen and (max-width: 575px) {
+    text-align: left;
+  }
+}
+
+.tariff_id_dsl {
+  font-size: 10px;
+  line-height: 16px;
+  background-color: #E5E5E5;
+  border-radius: 2px;
+  padding: 1px 4px;
+}
+
+.acq_commission_wrap_mobil {
+
+  @media screen and (max-width: 575px) {
+    display: none;
+  }
+}
+
+.duration_dsl {
+  padding-top: 14px;
+  padding-bottom: 4px;
+  line-height: 16px;
+  max-width: 300px;
+
+  .kalender_wrap {
+    padding-right: 10px;
+  }
+
+  .features_icon_wrap {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
+
+  .kalender_icon_mobil, .wifi_icon_mobil, .netz_icon_mobil {
+    width: 16px;
+    height: 16px;
+
+    img {
+      max-width: 100%;
+      width: 100%;
+      height: auto;
+    }
+  }
+
+
+
+  div:first-child {
+    border-right: 1px solid #8F9BB3;
+    ;
+  }
+
+  .term_mobil {
+    font-size: 10px;
+    line-height: 16px;
+    padding-left: 12px;
+    color: #8F9BB3;
+
+
+    @media screen and (max-width: 1278px) {
+      padding-left: 0px;
+    }
+  }
+}
+
+.tarif-info-title-dsl {
+  font-family: Roboto;
+  font-size: 16px;
+  text-align: left;
+  line-height: 18px;
+  max-width: 85px;
+
+  @media screen and (max-width: 1526px) {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    padding: 10px 0px 0px 0px;
+  }
+}
+
+.tarif-info-icon-dsl {
+  display: flex;
+  align-items: flex-start;
+  font-size: 12px;
+  line-height: 14px;
+
+  > i, img, span {
+    max-height: 13px;
+    height: 13px;
+    line-height: 13px;
+  }
+
+  .lte {
+    font-size: 10px;
+    font-family: Roboto;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    background: #2A53CC;
+    border-radius: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+
+.tarif-info-icon-features {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 5px 0px 0px;
+  margin: 0px 13px;
+
+  @media screen and (max-width: 1526px) {
+    display: none;
+  }
+}
+
+.tarif-info-group-dsl {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  -webkit-flex-basis: auto;
+  flex-basis: auto;
+}
+
+
+.tarif-info-wrap-dsl {
+
+  &.last-block {
+    /* No less than 576px, no greater than 650px */
+    @media (min-width:576px) and (max-width:650px) {
+      display: none;
+    }
+  }
+}
+
+.btn2 {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 8px;
+  border: 1px solid #54BC2B;
+  box-sizing: border-box;
+  border-radius: 4px;
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: 700;
+  font-size: .9rem;
+  line-height: 16px;
+  text-align: center;
+  text-transform: uppercase;
+
+
+  .ico2 {
+    flex: none;
+    order: 2;
+    align-self: center;
+    flex-grow: 0;
+    margin-bottom: 0px;
+    padding-left: 10px;
+
+    &.ico2:hover {
+      cursor: pointer;
+      filter: brightness(0) invert(1);
+    }
+  }
+
+  .text2 {
+    flex: none;
+    order: 1;
+    align-self: flex-start;
+    flex-grow: 0;
+    margin: 0px 0px;
+    padding: 0px 8px;
+  }
+}
+
+.btn-outline {
+  background: rgba(84, 188, 43, 0.08);
+  /* Success / 500 - Default */
+  color: #54BC2B;
+  border-radius: 4px;
+}
+
+.btn-outline:hover {
+  background-color: #54BC2B;
+  color: white;
+  text-decoration: none;
+}
+
+.features2-dsl {
+
+  span {
+    padding: 2px 0px 0px;
+  }
+
+  li {
+    display: flex;
+    flex-wrap: nowrap;
+    padding: 0px 0px 10px;
+  }
+}
+
+.offer--dsl {
+  padding: 4px 9px 0px;
+  background-color: #fff;
+  max-height: 100%;
+  height: 68px;
+  position: relative;
+  display: block;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+}

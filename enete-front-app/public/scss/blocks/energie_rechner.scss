@@ -1,0 +1,2020 @@
+
+.rechner_form_wrapp{
+    @media screen and (min-width: 1200px){
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        background-color: #fff;
+    }
+}
+
+.p-20{
+    &-right{
+        @media screen and (max-width: 1199px){
+            padding-right: 20px;
+        }
+        
+    }
+
+    &-left{       
+        @media screen and (max-width: 1199px){
+            padding-left: 20px;
+        }
+    }
+}
+
+.content_rechner{
+    background-color: $content_bg_color;
+    padding-bottom: 90px;
+    // @media screen and (max-width: 1199px){
+    //     background-color: $content_bg_color;
+    // }
+   
+}
+
+.vp-filter-mobile{
+    @media screen and (max-width: 1199px){
+        position: absolute;
+        width: calc(100% - 2px);
+        top:0px 
+    }   
+}
+
+.calc_data_wrap{
+    @media screen and (min-width: 1200px){
+        padding: 10px 20px 15px;
+        .radio_btn_group{
+            margin-top: 0;
+        }
+    }
+
+    @media screen and (max-width: 1199px){
+        margin-top: 70px;
+        //margin-bottom: 30px;
+
+        border: 1px solid $widget_border;
+        border-radius: 4px;
+        background-color: $white;
+        // filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+        // box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.06);
+        box-shadow: 0px 5px 5px 1px rgba(0, 0, 0, 0.25);
+    }   
+}
+
+.sub_title{
+    font-family: Poppins;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 28px;
+    padding: 32px 24px 24px;
+    color: $title_colr_rechner;
+    border-bottom: 1px solid $widget_border;
+}
+
+.vp-filter-wrapp{
+    @media screen and (min-width: 1350px){
+        margin-top: 7.5px;
+    } 
+
+    @media screen and (min-width: 1200px) and (max-width: 1349px){
+        margin-top: 3.5px; 
+    }  
+       
+    @media screen and (max-width: 1199px){
+        padding-top: 25px;
+    }  
+    padding-bottom: 13px;
+    display: flex;
+}
+
+.chekbox_switsh{
+    display: flex;
+    justify-content: flex-start;
+    width: 50%;
+}
+
+.filter_rechner{
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+}
+
+.filter_title{
+    font-family: Open Sans;
+    line-height: 31px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 10px;
+    color: $filter_rechner_title_color;
+}
+
+// .filter_icon{
+//     font-size: 32px;
+//     line-height: 32px;
+//     color: $filter_rechner_icon_color;
+// }
+
+.filter_rechner_btn{
+    padding: 0;
+    border: none;
+
+    font-size: 32px;
+    line-height: 32px;
+    color: $filter_rechner_icon_color;
+
+    &.focus{
+        box-shadow: none;
+    }
+    &:focus{
+        box-shadow: none;
+    }
+    :hover{
+        color: rgba(125,17,32, 0.9);
+    }
+
+}
+
+.energy_calc_form_row{    
+        @media screen and (min-width: 1200px){
+            margin-top: 10px; 
+            position: relative;
+        }  
+           
+        @media screen and (max-width: 1199px){
+            margin-top: 50px; 
+        }  
+
+    .block_one{
+        @media screen and (min-width: 768px) and (max-width: 1199px){
+            padding-right: 5px;
+        } 
+        
+        .energy_calc_form{
+            @media screen and (max-width: 1199px){
+                padding-left: 20px;
+            }
+
+            @media screen and (max-width: 767px) {
+                padding-right: 20px;
+            }
+        }
+
+        .form-control{
+            height: 40px;
+        }
+    }
+}
+
+.energy_calc_form{
+    @media screen and (min-width: 1200px){
+        padding-bottom: 40px;
+    }
+
+    .form-group{
+        margin-bottom: 10px;
+
+        .form-control{
+            &:focus{
+                box-shadow: none;
+                border-color: #7D1120;
+            }
+            // &::placeholder{
+            //     color: #8F9BB3;
+            // }
+        }
+
+        select.form-control{
+            
+            &:valid{
+                background-position: right calc(0.375em + 1.1875rem) center;
+            }
+        }
+    }
+}
+
+
+.block_two{
+    @media screen and (min-width: 768px) and (max-width: 1199px){
+        padding-left: 5px;
+    } 
+
+    @media screen and (max-width: 767px) {
+        margin-top: 40px;
+    }
+
+    .energy_calc_form{
+        @media screen and (max-width: 1199px){
+            padding-right: 20px;
+        } 
+        
+        
+        @media screen and (max-width: 767px) {
+            padding-left: 20px;
+        }
+    }
+
+    .p-20{
+        &-left{
+            @media screen and (min-width: 768px){
+                padding-left: 0px;
+            } 
+        }
+    }
+    
+    .radio_btn_group{
+        margin-top: 0;
+        @media screen and (min-width: 1350px){
+            height: 40px;
+        } 
+        label{
+
+            @media screen and (min-width: 1350px){
+                line-height: 40px;
+                min-width: 40px;
+                font-size: 20px;
+            } 
+        }
+    }
+
+    .form-control{
+        height: 40px;
+    }
+}
+
+.block_three{
+    .collapse_custom{
+        @media screen and (min-width: 1200px){
+            display: block;
+        } 
+    }
+
+    .form-control{
+        height: 40px;
+    }
+}
+
+.block_four{
+    @media screen and (min-width: 1200px){
+        position: absolute;
+        bottom: 0;
+    } 
+}
+
+.btn-custom-collapse{
+    box-sizing: border-box;
+    display: block;
+    padding: 16px 24px;
+    width: 100%;
+    height: 56px;
+    text-align: left;
+    border-radius: 0px;
+    border-right: none;
+    border-left: none;
+    border-top: 1px solid #EBEFF2;
+    border-bottom: 1px solid #EBEFF2;
+    background-color: #fff;
+
+    &:focus{
+        box-shadow: none;
+    }
+
+    .tittle{
+        font-size: 15px;
+        font-weight: 600;
+        font-family: Open Sans;
+        line-height: 24px;
+    }
+
+    .fa-chevron-down{
+        position: absolute;
+        top: 23px;
+        right: 41px;
+    }
+
+    &:hover{
+        background: rgba(143,155,179,.08);
+    }
+}
+
+.collapse_custom{
+    @media screen and (max-width: 1199px){
+        padding: 16px 20px;
+    } 
+    
+    //border-bottom: 1px solid #EBEFF2;;
+
+    .form-group{
+        margin-bottom: 10px;
+    }
+}
+
+.btn-group-b-prov{
+    @media screen and (max-width: 1199px){
+        margin-top: 10px;
+    }
+    
+    height: 40px;
+    width: 100%;    
+
+    .btn-reload{
+        max-width: 40px;
+        border: 1px solid #7D1120;
+        
+        &:hover{
+            background-color: #7D1120;
+            color: #fff;
+        }
+        &:focus{
+            box-shadow: none;
+        }
+    }
+    .btn-load{
+        border: 1px solid #7D1120;
+        border-radius: 4px 0px 0px 4px;
+        text-transform: uppercase;
+        font-size: 14px;
+        line-height: 16px;
+        font-weight: 700;
+        color: #7D1120;
+        font-family: Open Sans;
+        &:hover{
+            background-color: #7D1120;
+            color: #fff;
+        }
+        &:focus{
+            box-shadow: none;
+        }
+    }
+}
+
+.btn-grpup-calc-tariff{
+    @media screen and (max-width: 1199px){
+        padding: 30px 20px;
+    }    
+
+    .calc_tariff{
+        width: 100%;
+        background-color: #7D1120;
+        color: #fff;
+        height: 40px;
+        font-size: 13px;
+        line-height: 20px;
+        font-family: Poppins;
+        font-weight: 500;
+        border-radius: 4px;
+        box-shadow: 0px 4px 10px rgba(125, 17, 32, 0.24);
+        &:hover{
+            background-color: rgba(125,17,32,.8);
+        }
+        &:focus{
+            box-shadow: none;
+        }
+    }
+}
+
+.btn-radio-wrapp{
+    line-height: 13px;
+    min-width: 78px;
+
+    border: 1px solid #EDF1F7;
+    box-sizing: border-box;
+    border-radius: 4px;
+
+    .btn-radio{
+        padding: 14px 12px;
+        display: block;
+        span{
+            @media screen and (max-width: 767px) {
+                margin-left: 3px;
+            }
+            @media screen and (min-width: 768px) {
+                margin-left: 6px;
+            }
+
+        }
+    }
+}
+
+.modal-header{
+    padding: 16px 16px 12px;
+    border-bottom: none;
+    color:#192A3E;
+    .modal-title{
+        font-size: 18px;
+        font-weight: 500;
+        font-family: Poppins;
+        line-height: 28px;
+    }
+}
+
+.modal-body{
+    padding: 0 16px 16px;
+}
+
+.tittle-filter-block{
+    font-family: Open Sans;
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #222B45;
+}
+
+.radio-block-wrapp{
+    margin-bottom: 16px;
+    @media screen and (max-width: 767px) {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    @media screen and (min-width: 768px){
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+}
+
+
+.filter-datapicker-wrapp{
+    padding-top: 16px;
+    padding-bottom: 16px;
+
+    border-top: 1px solid #EDF1F7;
+    border-bottom: 1px solid #EDF1F7;
+    .form-group{
+        margin-bottom: 0px;
+    }
+}
+
+.enete-form-control{
+    height: 40px;
+    &:focus{
+        box-shadow: none;
+        border-color: #7D1120;
+    }
+}
+
+.contract-term-wrapp, .price-guarantee-wrapp{
+    .col-12{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    .col-3{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+    // @media screen and (max-width: 767px) {
+    //     .col-12{
+    //         padding-left: 5px;
+    //         padding-right: 5px;
+    //     }
+    //     .col-3{
+    //         padding-left: 5px;
+    //         padding-right: 5px;
+    //     }
+    // }
+    
+}
+
+.energie-rechner-filter-modal{   
+    
+
+    @media screen and (max-width: 767px) {
+        max-width: 100%;
+        top: 44px;
+        margin: 0;
+        .modal-content{
+            border-radius: 0;
+        }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1199px){
+        padding-left: 5px;
+        margin: 144px 21px 0px 98px;
+        max-width: 100%;
+        .modal-content{
+            border-radius: 5px;
+        }
+    } 
+
+    @media screen and (min-width: 1200px) {
+        margin-top: 155px;
+        max-width: 650px;
+
+        .modal-content{
+            border-radius: 5px;
+        }
+    }
+}
+
+.filter-datapicker{
+    @media screen and (max-width: 767px) {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    @media screen and (min-width: 768px){
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+}
+
+.filter-datapicker-wrapp{
+    .col-6{
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+}
+
+.filter-option-title{
+    font-family: Open Sans;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 24px;
+
+    padding-top: 16px;
+    padding-bottom: 10px;
+
+    @media screen and (min-width: 768px){
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+.filter-option-check-wrapp{
+    .checkbox_custom{
+        margin-left: -15px;
+        margin-right: -15px;
+        
+        box-sizing: border-box;
+        border-bottom: 1px solid #EDF1F7;
+
+        @media screen and (max-width: 767px) {
+            padding:16px 15px ;
+        }
+        // @media screen and (min-width: 768px){
+        //     padding:16px 30px ;
+        // }
+
+        input{
+            top: 16px;
+            position: absolute;
+            @media screen and (max-width: 767px) {
+                right: 15px;
+            }
+            // @media screen and (min-width: 768px){
+            //     right: 30px;
+            // }
+        }
+
+        svg{
+            top: 16px;
+            left: auto;
+            @media screen and (max-width: 767px) {
+                right: 15px;
+            }
+            // @media screen and (min-width: 768px){
+            //     right: 30px;
+            // }
+        }
+
+        .label_title{
+            padding-left: 0px;
+        }
+    }
+}
+
+.option-group-1{
+    .checkbox_custom{
+        @media screen and (min-width: 768px){
+            padding:16px 20px 16px 30px ;
+        }
+
+        input{
+            @media screen and (min-width: 768px){
+                right: 20px;
+            }
+        }
+
+        svg{
+            @media screen and (min-width: 768px){
+                right: 20px;
+            }
+        }  
+    }
+}
+
+.option-group-2{
+    .checkbox_custom{
+        @media screen and (min-width: 768px){
+            padding:16px 30px 16px 20px ;
+        }
+
+        input{
+            @media screen and (min-width: 768px){
+                right: 30px;
+            }
+        }
+
+        svg{
+            @media screen and (min-width: 768px){
+                right: 30px;
+            }
+        }
+    }
+}
+
+.provider_logo{
+    max-width: 90%;
+}
+
+.rechner_filter{
+    padding: 0 15px;
+
+    
+    .form-group{
+        margin-bottom: 0px;
+        margin-top: 20px;
+        justify-content: flex-end;
+
+        @media screen and (max-width: 767px) {
+            justify-content: space-between;
+        }
+
+        label{
+            padding-left: 5px;
+            line-height: 40px;
+            margin-bottom: 0;
+            font-size: 18px;
+            font-family: Open Sans;
+            font-weight: 400;
+            color: #8F9BB3;
+        }
+
+        div{
+            max-width: 320px;
+            padding-right: 5px;
+            padding-left: 20px;
+            @media screen and (min-width: 1386px){
+                padding: 0 20px;
+            } 
+
+            @media screen and (max-width: 390px) {
+                max-width: 200px;
+            }
+        
+        }
+    }
+
+    .form-control{
+        height: 40px;
+    }
+}
+
+.tarif-card-wrapp{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+
+.tarif-card{
+    border: 1px solid #c4c4c4;
+    border-radius: 4px;
+    box-sizing: border-box;
+    box-shadow: 0px 1px 20px -0.5px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+
+    margin: 0 5px;
+
+    @media screen and (min-width: 1386px){
+        margin: 0 20px;
+    } 
+
+    &.prio{
+        border-color: #7D1622;
+        box-shadow: 0px 1px 0px -0.5px rgba(195, 185, 255, 0.5), 0px -1px 0px -0.5px #7D1622, 1px 0px 0px -0.5px #7D1622, -1px 0px 0px -0.5px #7D1120;
+       
+        
+    }
+
+    .cunter_and_logo_wrap{
+        @media screen and (min-width: 955px) and (max-width: 1385px){
+            flex: 0 0 40%;
+            max-width: 40%;
+        }
+    }
+
+    .provider_name{
+        margin-top: 10px;
+        display: block;
+        font-size: 14px;
+        font-weight: 700;
+        
+        font-family: Roboto;
+        color: #8F9BB3;
+
+        @media screen and (min-width: 1386px){
+            text-align: center;
+        }
+
+        @media screen and (max-width: 767px){
+            font-size: 12px;
+            line-height: 17px;
+        }
+    }
+
+    .tarif_name{
+        margin-top: 10px;
+        display: block;
+        font-size: 14px;
+
+        font-family: Roboto; 
+        @media screen and (min-width: 1386px){
+            text-align: center;
+        }
+
+        @media screen and (max-width: 767px){
+            font-size: 12px;
+            line-height: 17px;
+        }
+    }
+
+    .tarif_id_wrapp{
+
+        @media screen and (min-width: 1386px){
+            text-align: center;
+        }
+        padding-top: 8px;
+        .tarif_id{
+            background-color: #E5E5E5;
+            border-radius: 4px;
+            color: #8f9bb3;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: Open Sans;
+            line-height: 16px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+    }
+
+    .tarif_counter_wrapp{
+        min-width: 40px;
+
+        @media screen and (max-width: 767px){
+            display: none;
+        }
+    }
+
+    .tarif_counter{
+        width: 40px;
+        height: 40px;
+        background-color: #f6f7f9;
+        border-right: 1px solid #c4c4c4;
+        border-bottom: 1px solid #c4c4c4;
+        font-size: 26px;
+        line-height: 32px;
+        font-weight: 400;
+        font-family: Open Sans;
+        text-align: center;
+        color: #8b9bb3;
+        border-top-left-radius: 4px;
+        box-sizing: border-box;
+    }
+
+    .logo_and_attributs_wrapp{
+        padding-top: 20px;
+        padding-left: 20px;
+
+        max-width: 270px;
+
+        // @media screen and (max-width: 1385px){
+        //     padding-left: 0px;
+        // }
+
+        @media screen and (max-width: 767px){
+            padding-top: 15px;
+            padding-left: 20px;
+        }
+    }
+
+    .tarif_info_wrapp{
+        padding-top: 15px;
+
+        @media screen and (min-width: 1386px) and (max-width: 1470px){
+            flex: 1 2 30%;
+            max-width: 30%;
+        }
+
+        @media screen and (min-width: 1200px) and (max-width: 1385px){
+            order: 12;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        @media screen and (max-width: 767px){
+            padding-top: 12px;
+        }
+    }
+
+    .tarif_info_icon_wrapp{
+        padding-left: 10px;
+        position: relative;
+
+        @media screen and (max-width: 767px){
+            padding-left: 20px; 
+            margin-right: -15px;
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            box-sizing: border-box;
+            padding: 5px 18px;
+            border-top: 1px solid #C6CCD9;
+            border-bottom: 1px solid #C6CCD9;
+            background: rgba(143, 155, 179, 0.08);
+            display: flex;
+        }
+
+        .tarif_info_icons{
+            @media screen and (min-width: 768px) and (max-width: 1385px){
+                flex: 0 0 50%;
+            }
+
+            @media screen and (max-width: 767px){
+                border-top: 1px solid #EBEFF2;
+                box-sizing: border-box;
+                padding-top: 7px;
+            }
+        }
+        
+        .tooltip_custom{
+            padding-right: 20px;
+            @media screen and (max-width: 767px){
+                padding-right: 9px;  
+            }  
+
+            @media screen and (min-width: 1386px){
+                padding-bottom: 10px;
+            }
+
+            .tarif_info_icon{
+                font-size: 16px;      
+                @media screen and (max-width: 767px){
+                    font-size: 13px;  
+                }          
+            }
+
+            .text_custom{
+                display: flex;
+                padding: 6px 8px;
+
+                .icon{
+                    font-size: 10px;
+                }
+
+                .text{
+                    padding-left: 4px;
+                }
+            }
+        }
+
+        .text_green{
+            color: #54BC2B;
+        }
+    }
+
+    .acq_commission_wrap_second{
+        display: none;
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            display: flex;
+            flex: 0 0 50%;
+            justify-content: flex-end;
+
+            font-size: 12px;
+            font-family: Roboto;
+            font-weight: 700;
+            line-height: 24px;
+            text-transform: uppercase;
+        }
+        .follow_up_comm_tittle_second{
+            padding-left: 20px;
+        }
+
+    }
+
+    .tarif_info_block{
+        padding-left: 10px;
+
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            display: flex;
+            padding: 8px 18px 0
+        }
+
+        @media screen and (max-width: 767px){
+            padding-left: 18px; 
+        }
+    }
+
+    .tarif_info{
+        list-style: none;
+        padding-left: 0px;
+        flex: 0 0 50%;
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            margin-bottom: 0px;
+        }
+
+        @media screen and (max-width: 767px){
+            margin-bottom: 0px;
+        }
+        
+        li{
+            font-size: 15px;
+            line-height: 15px;
+            padding-top: 5px;
+            padding-bottom: 2px;
+            padding-left: 23px;
+
+            @media screen and (max-width: 767px){
+                font-size: 11px;
+                padding-left: 21px;
+            }
+            span{
+                font-size: 20px;
+                margin-top: -5px;
+                margin-left: -23px;
+                padding-right: 3px;
+                @media screen and (max-width: 767px){
+                    font-size: 18px;
+                    margin-left: -21px;
+                }
+            }
+        }
+        
+    }
+
+    .folow_up_wrap_second{
+        display: none;
+
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            flex: 0 0 50%;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .follow_up_comm{
+            margin-left: 69px;
+        }
+    }
+}
+
+.first-block-wrapp{
+    padding-bottom: 15px;
+
+    @media screen and (max-width: 767px){
+        padding-bottom: 12px;
+    }
+}
+
+.second-block-wrapp{  
+    margin-bottom: 17px;
+
+    @media screen and (min-width: 768px){
+        border-top: 1px solid #C6CCD9;
+    }
+
+    @media screen and (max-width: 767px){
+        border-bottom: 1px solid rgba(51,77,110, 0.1)
+    }
+}
+
+.second-block{
+    
+
+    @media screen and (min-width: 768px){
+        background: rgba(143, 155, 179, 0.08);  
+        padding: 11px 25px 0 30px;
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1385px){
+        padding-top: 0px;
+        padding-left: 18px;
+        padding-right: 18px;
+    }
+
+    @media screen and (max-width: 767px){
+        padding: 0 20px;
+    }
+}
+
+.prio{
+    .first-block-wrapp, .second-block-wrapp{
+        @media screen and (min-width: 768px){
+            //background: linear-gradient(90deg, rgba(132, 151, 251, 0) 13.09%, rgba(102, 214, 194, 0.12) 44.71%, rgba(194, 196, 238, 0.14) 59.67%, rgba(195, 185, 255, 0.11) 81.76%, rgba(251, 207, 238, 0.31) 100.77%);
+        }  
+    }
+    .bg-tarif-card{
+        background: linear-gradient(90deg, rgba(132, 151, 251, 0) 13.09%, rgba(102, 214, 194, 0.12) 44.71%, rgba(194, 196, 238, 0.14) 59.67%, rgba(195, 185, 255, 0.11) 81.76%, rgba(251, 207, 238, 0.31) 100.77%);
+        @media screen and (max-width: 767px){
+            background: linear-gradient(179.47deg, rgba(132, 151, 251, 0) 13.49%, rgba(194, 196, 238, 0.14) 43.5%, rgba(195, 185, 255, 0.11) 58.98%, rgba(251, 207, 238, 0.31) 93.92%);
+        }
+    }
+
+    .tarif_counter{
+        span{
+            display: none;
+        }
+    }
+    .tarif_counter:before {
+        font-family: FontAwesome;
+        content: "\f005";
+        color: #7d1120;
+        line-height: 40px;
+     }
+}
+
+.tarif_block_3{
+    padding-top: 20px;
+    @media screen and (max-width: 767px){
+        padding-top: 15px;
+    }
+
+    @media screen and (min-width: 1386px) and (max-width: 1470px){
+        flex: 0 0 44.999999%;
+        max-width: 44.999999%;
+    }
+
+    @media screen and (min-width: 955px) and (max-width: 1385px){
+        order: 1;
+        flex: 0 0 60%;
+        max-width: 60%;
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 1385px){
+        padding-top: 10px;
+    }
+
+    &_1{
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            justify-content: flex-end;
+        }
+    }
+
+    &_1 > div:not(:last-child){
+        @media screen and (min-width: 768px){
+            border-right: 1px solid #C4C4C4;
+        }
+    }
+
+    &_2{
+        padding-top: 41px;
+
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            padding-top: 21px;
+        }
+    }
+
+    .tarif_block_3_1_costs{
+        @media screen and (min-width: 955px) and (max-width: 1385px){
+            flex: 0 0 29%;
+        }
+    }
+
+    .tarif_block_3_1_costs > div{
+        padding-right: 15px;
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            padding-right: 0;
+        }
+        @media screen and (max-width: 767px){
+            padding-right: 20px;
+        }
+    }
+
+    .tarif_block_3_1_savings{
+        @media screen and (min-width: 955px) and (max-width: 1385px){
+            flex: 0 0 29%;
+        }
+        @media screen and (max-width: 767px){
+            padding-top: 10px;
+        }
+    }
+
+
+    .tarif_block_3_1_savings > div{
+        padding: 0 15px;
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            padding: 0;
+        }
+        @media screen and (max-width: 767px){
+            padding-right: 20px;
+        }
+    }
+
+    .tarif_block_3_1_payment{
+        @media screen and (min-width: 955px) and (max-width: 1385px){
+            flex: 0 0 29%;
+        }
+    }
+
+    .tarif_block_3_1_payment > div{
+        padding: 0 25px 0 15px;
+        min-width: 185px;
+
+        @media screen and (max-width: 954px){
+            min-width: 165px;
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            padding: 0 18px 0 0;
+        }
+    }
+
+    .tarif_block_3_1_bonus{
+        @media screen and (max-width: 767px){
+            padding-top: 10px;
+        }
+    }
+
+    .tarif_block_3_1_bonus > div{
+        @media screen and (max-width: 767px){
+            padding-right: 20px;
+        }
+    }
+
+    .tarif_block_3_2_work_price{
+        @media screen and (min-width: 955px) and (max-width: 1385px){
+            flex: 0 0 29%;
+        }
+    }
+
+    .tarif_block_3_2_work_price > div{
+        padding: 0 15px 0 0;
+        color: rgba(143, 155, 179, 0.5);
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            padding: 0;
+        }
+    }
+
+    .tarif_block_3_2_base_price{
+        padding: 0 40px 0 15px;
+        min-width: 215px;
+        color: rgba(143, 155, 179, 0.5);
+
+        @media screen and (min-width: 955px) and (max-width: 1385px){
+            flex: 0 0 29%;
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 1385px){
+            padding-right: 33px;
+        }
+    }
+
+    div > span{
+        display: block;
+        font-family: Roboto;
+        font-size: 15px;
+        line-height: 24px;
+        font-weight: 600;
+        text-align: end;
+
+        sub{
+            font-size: 15px;
+            bottom: -3px;
+        }
+    }
+
+    .text_uppercas{
+        text-transform: uppercase;
+    }
+
+    .tarif_block_3_1_costs_icon{
+        font-size: 18px;
+        padding-bottom: 4.5px;
+        padding-right: 4px;
+    }
+
+    .tarif_block_3_1_costs_costs, .tarif_block_3_1_savings_savings, .tarif_block_3_1_payment_payment, .tarif_block_3_2_base_price_base_price, .tarif_block_3_2_work_price_work_price, .tarif_block_3_1_bonus_bonus{
+        font-family: Open Sans;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .tarif_block_3_1_costs_costs{        
+        color: #2A53CC;
+        @media screen and (max-width: 767px){
+            font-size: 15px;
+            line-height: 15px;
+
+            > span{
+                font-size: 18px;
+                padding-bottom: 3px;
+                margin-right: 5px;
+                color: #2E3A59;
+            }
+        }
+    }
+
+    .tarif_block_3_1_costs_term{
+        @media screen and (max-width: 767px){
+            font-size: 12px;
+            line-height: 13px;
+        }
+    }
+
+    .tarif_block_3_1_savings_savings{
+        color:#54BC2B;
+
+        @media screen and (max-width: 767px){
+            font-size: 15px;
+            line-height: 15px;
+            padding-bottom: 3px;
+        }
+    }
+
+    .tarif_block_3_1_savings_text{
+        @media screen and (max-width: 767px){
+            font-size: 12px;
+            line-height: 13px;
+        }
+    }
+
+    .tarif_block_3_1_bonus_bonus{
+        color:#54BC2B;
+        @media screen and (max-width: 767px){
+            font-size: 15px;
+            line-height: 15px;
+
+            > span{
+                font-size: 18px;
+                padding-bottom: 3px;
+                margin-right: 5px;
+                color: #2E3A59;
+            }
+        }
+    }
+
+    .tarif_block_3_1_bonus_text{
+        @media screen and (max-width: 767px){
+            font-size: 12px;
+            line-height: 13px;
+        }
+    }
+}
+
+.tarif_block_3_3{
+    padding-top: 12px;
+    font-family: Open Sans;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 400;
+    color: #8F9BB3;
+
+    .tarif_block_3_3_work{
+        border-top: 1px solid #EBEFF2;
+        box-sizing: border-box;
+        padding-top: 9px;
+    }
+
+    .tarif_block_3_3_price_wrap{
+        display: flex;
+        flex-direction: column;
+        padding-right: 20px;
+        margin-left: -15px;
+    }
+
+    .tarif_block_3_3_work_text, .tarif_block_3_3_work_price, .tarif_block_3_3_base_text, .tarif_block_3_3_base_price{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .tarif_block_3_3_work_price_price, .tarif_block_3_3_base_price_price{
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .tarif_block_3_3_base_price_price{
+        margin-right: 8px;
+    }
+}
+
+.commission_wrap{
+    display: flex;
+    padding-right: 40px;
+
+    @media screen and (max-width: 767px){
+        padding-right: 0;
+        box-sizing: border-box;
+        padding-top: 7px;
+        padding-bottom: 12px;
+        border-top: 1px solid #ebeff2;
+        border-bottom: 1px solid #ebeff2;
+    }
+}
+
+.acq_commission_wrap{
+    flex: 1;
+    text-align: end;
+
+    .acq_commission_tittle{
+        text-transform: uppercase;
+        font-family: Roboto;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 24px;
+        color: #2E3A59;
+    }   
+
+    @media screen and (max-width: 767px){
+        display: flex;
+    }
+}
+
+.acq_commission{
+    font-family: Open Sans;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 24px;
+    color: #54BC2B;
+
+    i{
+        color: #C6CCD9;
+        font-size: 20px;
+        margin-right: 10px;
+    }
+}
+
+.follow_up_comm_wrap{
+    flex: 1;
+    text-align: end;
+
+    .follow_up_comm_tittle{
+        text-transform: uppercase;
+        font-family: Roboto;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 24px;
+        color: #2E3A59;
+    }
+
+    
+}
+
+.follow_up_comm{
+    padding-top: 3px;
+    text-transform: uppercase;
+    width: 51px;
+    height: 22px;
+    border-radius: 5px;
+    background-color: #54BC2B;
+    text-align: center;
+    font-family: Open Sans;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 16px;
+    color: #fff;
+
+}
+
+
+.tariff_action{
+    
+    display: flex;
+    padding-top: 10px;
+    padding-bottom: 21px;
+
+    @media screen and (min-width: 768px) and (max-width: 1385px){
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    @media screen and (min-width: 768px){
+        justify-content: flex-end;
+    }
+
+    @media screen and (max-width: 767px){
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .tariff_action_offer{
+        padding: 12px 18px;
+        border: 1px solid #D8BB00;
+        box-sizing: border-box;
+        border-radius: 4px;
+        background: rgba(216, 187, 0, 0.08);
+        text-transform: uppercase;
+        font-family: Open Sans;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 16px;
+        color: #D8BB00;
+
+        @media screen and (min-width: 768px){
+            margin-right: 20px;
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 790px){
+            font-size: 12px;
+        }
+        @media screen and (max-width: 767px){
+            margin-right: 0;
+            background: rgba(52, 73, 94, 0.08);
+            color: #7D1120;
+            border-color: #7D1120;
+            font-size: 16px;
+            padding: 11px 18px;
+        }
+
+        &:hover{
+            background-color: #D8BB00;
+            color: #fff;
+
+            @media screen and (max-width: 767px){
+                background-color: #7D1120;
+                color: #fff;
+            }
+        }
+
+        i{
+            @media screen and (min-width: 768px){
+                display: none;
+            }
+        }
+
+        span{
+            @media screen and (max-width: 767px){
+                display: none;
+            }
+        }
+    }
+
+    .tariff_action_switch{
+        padding: 12px 18px;
+        border: 1px solid #7D1120;
+        box-sizing: border-box;
+        border-radius: 4px;
+        background: rgba(52, 73, 94, 0.08);
+        text-transform: uppercase;
+        font-family: Open Sans;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 16px;
+        color: #7D1120;
+
+        @media screen and (max-width: 767px){
+           flex: 1;
+        }
+
+        @media screen and (min-width: 768px) and (max-width: 790px){
+            font-size: 12px;
+        }
+
+        i{
+            margin-left: 8px;
+            @media screen and (max-width: 767px){
+                display: none;
+            }
+        }
+
+        &:hover{
+            background-color: #7D1120;
+            color: #fff;
+        }
+    }
+
+    &>.btn:not(:last-child):not(.dropdown-toggle) {
+        
+        @media screen and (max-width: 767px){
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+    }
+
+    &>.btn:not(:first-child) {
+        @media screen and (max-width: 767px){
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }        
+    }
+}
+
+.second_bloc_1{
+    max-width: 311px;
+
+    @media screen and (max-width: 767px){
+        max-width: 100%;
+        order: 3;
+        flex: 0 0 100%;
+        margin-bottom: -1px;
+        z-index: 70;
+    }
+
+    .tab_accordion_btn{
+        margin-left: -16px;
+        margin-right: -16px;
+        padding-bottom: 1px;
+    }
+}
+
+.second_bloc_2{
+    @media screen and (min-width: 768px) and (max-width: 1385px){
+       display: none;
+    }
+
+    @media screen and (max-width: 767px){
+        order: 1;
+        flex: 0 0 100%;
+    }
+}
+
+.second_bloc_3{
+    @media screen and (max-width: 767px){
+        order: 2;
+        flex: 0 0 100%;
+    }
+}
+
+.accordion-tarifdetails-wrap{
+    
+    padding: 0px 20px 20px;
+    .tarif-details{
+        margin-bottom: 40px;
+        tr:first-child{
+            td{
+                border-top: none;
+            }
+        }
+
+        td:first-child{
+            font-weight: 700;
+        }
+        td{
+            border-color: rgba(194, 201, 209, 0.25);
+            padding: 11px 16px 3px;
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 24px;
+            font-family: Open Sans;
+            width: 50%;
+
+            @media screen and (min-width: 1200px){
+                font-size: 15px;
+            }
+            @media screen and (max-width: 767px){
+                font-size: 10px;
+                line-height: 13px;
+            }
+        }
+    }
+    .tarif-note{
+        display: flex;
+        
+        @media screen and (min-width: 1200px){
+            margin-bottom: 40px;
+        }
+        @media screen and (max-width: 1199px){
+            flex-direction: column;
+        }
+
+        div:first-child{
+            font-weight: 700; 
+            @media screen and (max-width: 767px){
+                font-size: 13px;
+                line-height: 16px;
+            }                     
+        }
+        div{          
+            @media screen and (min-width: 1200px){
+                flex: 0 0 50%;
+                border-top: 1px solid rgba(194, 201, 209, 0.25);
+            }
+            padding: 11px 16px 3px;           
+            border-bottom: 1px solid rgba(194, 201, 209, 0.25);
+            
+            font-weight: 400;
+            
+            font-family: Open Sans;
+            color: #BA2110;
+
+            @media screen and (min-width: 1200px){
+                font-size: 15px;
+                line-height: 24px;
+            }
+            @media screen and (max-width: 767px){
+                font-size: 10px;
+                line-height: 16px;
+            }
+        }
+    }
+
+    .attr-and-documents{
+        display: flex;
+        @media screen and (max-width: 1199px){
+            flex-direction: column;
+        }
+    }
+
+    .tarif-attr{
+
+        @media screen and (min-width: 1200px){
+            flex: 0 0 50%;           
+        }
+        @media screen and (max-width: 1199px){
+            padding-bottom: 20px;
+        }
+        @media screen and (min-width: 768px){
+            min-width: 554px;
+        }
+
+        
+        display: flex;
+        flex-direction: column;
+
+        list-style: none;
+        margin-bottom: 0;
+        padding-left: 0;
+
+        li:not(:first-child){
+            border-top: 1px solid rgba(194, 201, 209, 0.25);
+        }
+
+        li:last-child{
+            @media screen and (max-width: 1199px){
+                border-bottom: 1px solid rgba(194, 201, 209, 0.25);
+            }
+        }
+
+        li{
+            padding: 11px 16px 3px;           
+            
+            font-weight: 400;
+            
+            font-family: Open Sans;
+            @media screen and (min-width: 768px){
+                font-size: 15px;
+                line-height: 24px;
+            }
+            @media screen and (max-width: 767px){
+                font-size: 10px;
+                line-height: 16px;
+            }
+            i{
+                font-size: 16px;
+                
+                
+                margin-right: 8px;
+                width: 20px;
+            }
+        }
+
+        .green{
+            color: #54BC2B;
+        }
+    }
+
+    .documents{
+        @media screen and (min-width: 1200px){
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+            justify-content: flex-end;
+
+        }       
+        display: flex;
+    
+        .btn-group{
+            display: flex;
+            
+            @media screen and (min-width: 1200px){
+                align-items: flex-end;
+            } 
+            @media screen and (min-width: 768px) and (max-width: 1199px){
+                flex: 1 1 100%;
+            }
+            @media screen and (max-width: 767px){
+                flex-direction: column;
+                min-width: 180px;
+                flex-basis: 0;
+                flex-grow: 1;
+                 max-width: 100%;
+            } 
+
+            .btn{
+                @media screen and (min-width: 1200px){
+                    border: 1px solid #8F9BB3;
+                }  
+                
+                @media screen and (max-width: 1199px){
+                   padding: 0;
+                   font-size: 13px;
+                   line-height: 18px;
+                   font-weight: 400;
+                   font-family: Open Sans;
+                }
+
+                @media screen and (max-width: 767px){
+                    text-align: left;
+                    padding-left: 16px;
+                } 
+                color: #8F9BB3;
+                
+                &:hover{
+                    @media screen and (min-width: 1200px){
+                        border: 1px solid #7d1120;
+                        color: #7d1120;
+                    }  
+
+                    .icon-text{
+                        @media screen and (max-width: 1199px){
+                            color: #7d1120;
+                        }                   
+                    }                                    
+                }
+            }
+        }
+
+        .cloud_bg{
+            @media screen and (min-width: 768px){
+                display: none;
+            }
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 45px;
+            color: #EDF1F7;
+        }
+
+        .desctop{
+            @media screen and (max-width: 1199px){
+                display: none;
+            }
+        }
+
+        .mobil{           
+            @media screen and (min-width: 1200px){
+                display: none;
+            } 
+            i{
+                margin-right: 10px;
+            }
+        }
+    }
+}
+
+.accordion-tarifcharacteristic-wrap{
+
+    padding: 0px 20px 20px;
+
+    .tarif-characteristic{
+        margin-bottom: 0px;
+        tr:first-child{
+            td{
+                border-top: none;
+            }
+        }
+
+        td:first-child{
+            font-weight: 700;
+            padding: 11px 0px 3px 16px;
+        }
+        td:last-child{
+            padding: 11px 16px 3px;
+        }
+        td{
+            border-color: rgba(194, 201, 209, 0.25);
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 24px;
+            font-family: Open Sans;
+
+            @media screen and (min-width: 768px){
+                width: 50%
+            }
+            @media screen and (min-width: 1200px){
+                font-size: 15px;
+                
+            }
+            @media screen and (max-width: 767px){
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+.accordion-tarifprov-wrap{
+
+    padding: 0px 20px 20px;
+    .tarif-prov{
+        margin-bottom: 0px;
+
+        td:first-child{
+            padding: 11px 0px 3px 16px;
+            @media screen and (max-width: 767px){
+                width: 57%;
+            }
+        }
+        td:last-child{
+            padding: 11px 16px 3px;
+            border-bottom: 1px solid rgba(194, 201, 209, 0.25);
+            @media screen and (max-width: 767px){
+                width: 43%;
+            }          
+        }
+        td{
+            border-top: none;
+            border-bottom: 1px solid rgba(194, 201, 209, 0.25);
+            border-color: rgba(194, 201, 209, 0.25);
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 24px;
+            font-family: Open Sans;
+
+            @media screen and (min-width: 768px){
+                width: 50%
+            }
+
+            @media screen and (max-width: 767px){
+                font-size: 13px;
+            }
+        }
+    }
+
+    .tarif-prov-summ{
+        display: flex;
+
+        div:first-child{
+            @media screen and (max-width: 767px){
+                max-width: 57%;
+            }
+        }
+
+        div:last-child{
+            @media screen and (max-width: 767px){
+                max-width: 43%;
+            }
+        }
+
+        div{
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
+            padding: 11px 0 3px 16px;
+
+            font-size: 18px;
+            line-height: 24px;
+            font-weight: 700;
+            font-family: Open Sans;
+            color: #2A53CC;
+
+            @media screen and (max-width: 767px){
+                font-size: 15px;
+            }
+        }
+    }
+}
+
+.offer_block_footer{
+    background-color: rgba(0,0,0, 0.8);
+    position: fixed;
+    width: 100%;
+    height: 95px;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+
+    @media screen and (max-width: 794px){
+        height: 143px;
+    }
+
+
+    .offer_block_row{
+        padding: 9px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .offer_block_col{
+        padding-left: 15px;
+        padding-right: 15px;
+        @media screen and (max-width: 550px){
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+    }
+
+    .offer_wrap{
+        min-width: 144px;
+        max-width: 144px;
+        height: 68px;
+        border: 1px solid #fff;
+        @media screen and (max-width: 550px){
+            min-width: 105px;
+            max-width: 105px;
+        }
+    }
+
+    .offer{
+        padding: 4px 9px 0px;
+        background-color: #fff;
+        max-height: 100%;
+        height: 68px;
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .offer_logo{
+        max-width: 80px;
+        @media screen and (max-width: 550px){
+            max-width: 70px;
+        }
+
+        img{
+            max-width: 80px;
+            @media screen and (max-width: 550px){
+                max-width: 70px;
+            }
+        }
+    }
+
+    .offer_close{
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        line-height: 14px;
+        font-size: 14px;
+        padding-top: 4px;
+        padding-bottom: 0px;
+        padding-right: 6px;
+    }
+
+    .offer_price{
+        font-size: 12px;
+        line-height: 24px;
+        align-self: flex-end;
+        flex-basis: 0;
+        flex-grow: 1;
+        max-width: 100%;
+
+        @media screen and (max-width: 550px){
+            min-width: 92px;
+            margin-left: -4px;
+            font-size: 11px;
+        }
+        span{
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: -2px;
+            @media screen and (max-width: 550px){
+                font-size: 12px;
+            }            
+        }
+    }
+
+    .offer_block_button{       
+        max-width: 255px;
+        padding-left: 15px;
+        padding-right: 15px;
+
+        @media screen and (max-width: 794px){
+            flex: 0 0 100%;
+            max-width: 522px;
+        }
+
+        @media screen and (max-width: 550px){
+            max-width: 345px;
+            padding-left: 5px;
+            padding-right: 5px;
+
+        } 
+
+        span{
+            color: #fff;
+            font-size: 13px;
+            line-height: 18px;
+            font-weight: 300;
+            font-family: Open Sans;
+
+            @media screen and (max-width: 794px){
+                display: none;
+            }
+        }
+
+        .offer_action{
+            color: #fff;
+            width: 100%;
+            background-color: #54BC2B;
+            margin-top: 2px;
+            height: 42px;
+
+            @media screen and (max-width: 794px){
+                margin-top: 9px;
+            }
+
+            &:hover{
+                background-color: rgba(77, 160, 44, 1);
+            }
+        }
+    }
+}

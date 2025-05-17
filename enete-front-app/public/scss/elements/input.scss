@@ -1,0 +1,57 @@
+.form-control.custom_input.is-invalid, .was-validated .form-control.custom_input:invalid{
+    padding-right: .75rem;
+    background-image: none;
+    background-color: rgba(186, 33, 16, 0.08);
+
+    &::placeholder {
+        color: #BA2110;
+    }
+
+
+}
+
+.form-control.is-valid, .was-validated .form-control.custom_input:valid{
+    background-image: none;
+    padding-right: .75rem;
+}
+
+.custom_input.is-invalid~.invalid-feedback, .custom_input.is-invalid~.invalid-tooltip, .was-validated :invalid~.invalid-feedback, .was-validated :invalid~.invalid-tooltip{
+    //position: absolute;
+    bottom: 2px;
+}
+
+.custom_input{
+    &::placeholder{
+        font-size: 15px;
+        line-height: 20px;
+        font-family: Open Sans;
+        font-weight: 400;
+        color: #8F9BB3;
+    }
+    
+    margin-bottom: 24px; 
+    height: 40px; 
+}
+
+.input-icon{
+    i{
+        top: 0;
+        position: absolute;
+        height: 38px;
+        line-height: 38px;
+        right: 22px;
+        color: #8F9BB3;
+    }
+
+    .custom_input{
+        padding-right: 40px;
+    }
+}
+
+.custom_label{
+    font-family: Open Sans;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: #8F9BB3;
+}

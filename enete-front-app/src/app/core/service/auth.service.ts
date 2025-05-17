@@ -1,30 +1,75 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient) { }
+  private authUrl = environment.apiUrl
+  private tokenSubject = new BehaviorSubject<string | null>(null);
+  private jwtHelper = new JwtHelperService();
 
-  login(username: string, password: string): Observable<boolean> {
-    // Simulierte API (ersetze durch echtes Backend)
-    return of({ access_token: 'fake-token' }).pipe(
-      map((response) => {
-        localStorage.setItem('token', response.access_token);
-        return true;
-      }),
-      catchError(() => of(false))
+  constructor(private http: HttpClient, private router: Router) {}
+
+  login(login_name: string, password: string): Observable<any> {
+    console.log(this.authUrl)
+    return this.http.post<{ access_token: string }>(`${this.authUrl}/auth/login`, { login_name, password }).pipe(
+      tap(tokens => {
+          console.log(tokens)
+        this.storeToken(tokens['access_token']);
+      })
     );
   }
 
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+  refreshToken(): Observable<any> {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : '';
+    return this.http.post<{ access_token: string }>(`${this.authUrl}/auth/refresh`, { token }).pipe(
+      tap(tokens => {
+        this.storeToken(tokens['access_token']);
+      }),
+      catchError(error => {
+        this.logout();
+        this.router.navigate(['/login']);
+        return throwError(error);
+      })
+    );
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('access_token');
+    }
+    this.tokenSubject.next(null);
+    this.router.navigate(['/login']);
   }
+
+  private storeToken(accessToken: string): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('access_token', accessToken);
+    }
+    
+    this.tokenSubject.next(accessToken);
+  }
+
+  getToken(): string | null {
+    return typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
+  }
+
+  isLoggedIn(): boolean {
+    const token = this.getToken();
+    return !!token && !this.jwtHelper.isTokenExpired(token);
+  }
+
+  // isAdmin(): boolean {
+  //   const token = this.getToken();
+  //   if (!token) return false;
+  //   const decodedToken = this.jwtHelper.decodeToken(token);
+  //   return decodedToken.role === 'admin';
+  // }
 }

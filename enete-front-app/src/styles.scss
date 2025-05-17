@@ -7,6 +7,282 @@
 @import "../public/css/start-page/style.css";
 @import "../public/css/start-page/responsive.css";
 
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+      //@use '~@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+      //@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+      //$client-primary: mat.define-palette(mat.$indigo-palette);
+      //$client-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+      //$client-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+      // $client-theme: mat.define-light-theme((
+      //   color: (
+      //     primary: $client-primary,
+      //     accent: $client-accent,
+      //     warn: $client-warn,
+      //   )
+      // ));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+      //@include mat.all-component-themes($client-theme);
+
+/* You can add global styles to this file, and also import other style files */
+//@charset "UTF-8";
+
+/* Importing Datepicker SCSS file. */
+      //@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
+
+@import "../public/scss/normalize";
+@import "../public/scss/variables";
+@import "../public/scss/fonts";
+@import "../public/scss/mixins";
+@import "../public/scss/core";
+
+@import "../public/scss/blocks/header";
+@import "../public/scss/blocks/content";
+@import "../public/scss/blocks/menu";
+@import "../public/scss/blocks/mobile_menu";
+@import "../public/scss/blocks/second_mobile_menu";
+@import "../public/scss/blocks/bread_krums";
+@import "../public/scss/blocks/widgets";
+@import "../public/scss/blocks/energie_rechner";
+@import "../public/scss/blocks/energie_order_entry";
+@import "../public/scss/blocks/dsl_rechner";
+@import "../public/scss/blocks/mobilfunk-rechner";
+@import "../public/scss/blocks/incentive_team";
+@import "../public/scss/elements/checkbox_switsh";
+@import "../public/scss/elements/radio_btn_rechner";
+@import "../public/scss/elements/checkbox";
+@import "../public/scss/elements/radio";
+@import "../public/scss/elements/tooltips";
+@import "../public/scss/elements/tap_accordion";
+@import "../public/scss/elements/process-nav";
+@import "../public/scss/elements/medium_card";
+@import "../public/scss/elements/product_card";
+@import "../public/scss/elements/input";
+@import "../public/scss/elements/preloader";
+@import "../public/scss/elements/tariff_filter";
+@import "../public/scss/elements/deal_card";
+
+//@import "./assets/css/start-page/owl.carousel.css";
+
+
+.conten{
+  overflow-x: hidden;
+}
+
+ /*modal animation 
+.modal-content {
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+@keyframes example {
+  0% {
+    transform: scale(0.5)
+  }
+
+  75% {
+    transform: scale(1.1)
+  }
+
+  100% {
+    transform: scale(1)
+  }
+}*/
+
+.modal-holder {
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+@keyframes example {
+  0% {
+    transform: scale(0.5)
+  }
+
+  100% {
+    transform: scale(1)
+  }
+}
+
+
+.content_rechner {
+  display: block;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  min-height: 100%;
+  padding-bottom: 100px
+}
+
+.content_order-entry {
+  display: block;
+  margin-left: -15px;
+  margin-right: -15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  min-height: 100%;
+
+  background-color: #f5f6f8;
+}
+/* Importing Bootstrap SCSS file. */
+//@import '~bootstrap/scss/bootstrap';
+.offer_logo {
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+body {
+  height: 100%;
+  font-family: Open Sans;
+}
+
+h6 {
+  /* Text Font / H6 Headline */
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 24px;
+  /* identical to box height, or 133% */
+}
+
+.font-label {
+  /* Text Font / LABEL */
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+  /* identical to box height, or 133% */
+  text-transform: uppercase;
+}
+
+.font-c1 {
+  /* Text Font / C1 Caption */
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 10px;
+  line-height: 16px;
+  /* identical to box height, or 160% */
+}
+
+.font-p1 {
+  /* Text Font / P1 Paragraph */
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 15px;
+  line-height: 20px;
+  /* identical to box height, or 133% */
+}
+
+.font-s1 {
+  /* Text Font / S1 Subtitle */
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 24px;
+  /* identical to box height, or 160% */
+}
+
+.font-s2 {
+  /* Text Font / S2 Subtitle */
+  font-family: Open Sans;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 24px;
+}
+
+/* Color */
+
+.clr-b600 {
+  /* Basic / 600 */
+  color: $clr-b600;
+}
+
+.clr-b700 {
+  /* Basic / 700 */
+  color: $clr-b700;
+}
+
+.clr-b800 {
+  /* Basic / 800 */
+  color: $clr-b800;
+}
+
+.clr-b1000 {
+  /* Basic / 1000 */
+  color: $clr-b1000;
+}
+
+.clr-i600 {
+  /* Info / 600 */
+  color: $clr-i600;
+}
+
+.clr-i400 {
+  /* Info / 600 */
+  color: $clr-i400;
+}
+
+.clr-warning {
+  /* Warning / 500 */
+  color: $clr-warning;
+}
+
+.clr-primary {
+  /* Pimary / 500 - Default */
+  color: $clr-primary;
+}
+
+.clr-disabled {
+  /* Text Color / Disabled */
+  color: $clr-disabled;
+}
+
+.clr-succes {
+  /* Text Color / Succes */
+  color: $clr-succes;
+}
+
+.clr-danger {
+  /* Text Color / Danger */
+  color: $clr-danger;
+}
+
+
+
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
 /*********** Start-Page ***********/
 .welcome_area{
     .slider-title-span{

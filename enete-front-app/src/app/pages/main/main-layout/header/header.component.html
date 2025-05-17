@@ -1,0 +1,78 @@
+<!-- Logo Desktop -->
+  <div class="col-3 d-none d-xl-block">
+    <div class="logo_wrap_desk">
+      <img class="logo_desk" alt="Logo" [src]="logoSrc" [alt]="logoAlt">
+    </div>
+  </div>
+  <!-- Logo Desktop Ende-->
+  <!-- Logo iPad -->
+  <div class="col-2 d-none d-md-block d-xl-none">
+    <div class="logo_wrap_ipad">
+      <img class="logo_ipad" alt="Logo" [src]="logoSmallSrc">
+    </div>
+  </div>
+  <!-- Logo iPad Ende -->
+  <!-- Search and Favoriten iPad / Desktop-->
+  <div class="col-7 col-xl-7 d-none d-md-block">
+    <div class="wrap_search_and_fav_ipad_desk">
+      <!-- Search iPad -->
+      <button class="btn search_ipad d-none d-md-block d-xl-none">
+        <i class="fas fa-search"></i>
+      </button>
+      <!-- Search iPad END -->
+      <!-- Search Desk -->
+      <div class="d-none d-xl-block">
+        <div class="form-group has-search ">
+          <input type="text" class="form-control" placeholder="SUCHE...">
+          <span class="fa fa-search form-control-feedback"></span>
+        </div>
+      </div>
+      <!-- Search Desk -->
+      <div class="fav_ipad">
+        <button type="button" class="btn btn-outline-white">
+          <i class="fas fa-star"></i>
+          <span class="btn_name_ipad">Provision</span>
+        </button>
+        <button type="button" class="btn btn-outline-white">
+          <i class="fas fa-star"></i>
+          <span class="btn_name_ipad">Statistik</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Search and favoriten iPad Ende -->
+
+  <div class="col-3 col-xl-2 d-none d-md-block">
+    <div class="user_and_logut_wrap_ipad_desk">
+      <button class="btn btn-outline-white"><i class="far fa-user"></i></button>
+      <button class="btn btn-outline-white"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+  </div>
+
+  <!-- Bock Navigation Mobile -->
+  <div class="col-4 d-block d-md-none">
+    <nav class="navbar navbar-expand-md navbar-light custom_mobil_nav">
+      <button class="navbar-toggler" type="button" (click)=MobileMenuToggle()>
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </nav>
+  </div>
+  <!-- Bock Navigation Mobile Ende -->
+  <!-- Block Title Mobil-->
+  <div class="col-4 header_title_wrapp d-block d-md-none">
+    <span class="header_title">Dashboard</span>
+  </div>
+  <!-- Block Title Mobil Ende-->
+  <!-- Block Bell and Logo Mobil-->
+  <div class="col-4 d-block d-md-none">
+    <div class="logo_and_ball">
+      <div class="bell_wrapp">
+        <i class="fas fa-bell"></i>
+        <span class="bell_circle"></span>
+      </div>
+      <div class="logo_wrapp">
+        <img class="logo" alt="Logo" [src]="logoSmallSrc">
+      </div>
+    </div>
+  </div>
+  <!-- Block Bell and Logo Mobil Ende -->

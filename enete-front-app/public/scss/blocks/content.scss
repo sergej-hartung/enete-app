@@ -1,0 +1,18 @@
+.content_wrap{ 
+    margin-bottom: 54px;
+
+    @media screen and (max-width: 767px){
+        height: calc(100% - #{$heder_height_M} - #{$height_secondMomil_menu})
+    }
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        height: calc(100% - #{$heder_height_T}) 
+    }
+    @media screen and (min-width: 1200px) {
+        height: calc(100% - #{$heder_height_D})   
+    }   
+}
+
+.ene_content{
+    height: 100%;
+    overflow: auto;
+}

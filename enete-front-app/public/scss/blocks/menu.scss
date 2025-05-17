@@ -1,0 +1,137 @@
+.nav_wrap {
+  display: flex;
+  z-index: 100;
+
+  @media screen and (min-width: 768px) and (max-width: 1199px) {
+    width: 72px;
+  }
+
+  @media screen and (min-width: 1200px) {
+    width: 256px;
+  }
+
+  align-items: stretch;
+  box-shadow: 1px 4px 16px rgba(151, 151, 151, 0.25);
+
+  .sidebar_menu {
+    .active, .active-child {
+      .menu_item {
+        background-color: $menu_active_bg_color;
+        padding-left: 20px;
+        border-left: 4px solid $menu_active_Tex_icon_color;
+      }
+
+      .menu_icon {
+        color: $menu_active_Tex_icon_color;
+      }
+
+      .menu_title {
+        color: $menu_active_Tex_icon_color;
+      }
+    }
+  }
+}
+
+.sidebar_menu{
+    height: 100%;
+    width: 100%;
+
+    .btn{
+        &:focus{
+            box-shadow: none;
+        }
+    }
+
+    ul ul{
+        .sub_menu_item{
+            padding-left: 40px;
+        }
+    }
+
+}
+
+.menu_item_wrap{
+    position: relative;
+}
+
+.sub_menu_togle{
+    position:absolute;
+    right: 0;
+    height: 64px;
+    top: 0;
+}
+
+.menu_item{
+    display: flex;
+    height: 65px;
+    padding-left: 24px;
+    font-size: 15px;
+    line-height: 65px;
+    border-bottom: 1px solid #EDF1F7;
+
+    box-sizing: border-box;
+
+    &:hover{
+        text-decoration: none;
+    }
+
+    .menu_title{
+        display: block;
+        width: 100%;
+        padding: 0 0 0 8px;
+        color: $menu_text_color;        
+    }
+
+    .menu_icon{
+        display: block;
+        line-height: 65px;
+        color: $icon_color_main_menu
+    }
+
+    .btn{
+        width: 65px;
+        height: 65px;
+        display: block;
+        padding: 0;
+    }
+
+    &:hover{
+        background: rgba(143, 155, 179, 0.08);
+    }
+}
+
+.sub_menu_item{
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+
+    //border-bottom: 1px solid #EDF1F7;
+
+
+    .sub_menu_icon{
+        line-height: 40px;
+        display: block;
+        color: $icon_color_main_menu
+    }
+
+    .sub_menu_title{
+        width: 100%;
+        display: block;
+        padding: 0 0 0 8px;
+        color: $menu_text_color;
+
+        &:hover{
+            text-decoration: none;
+        }
+
+    }
+
+    &:hover{
+        background: rgba(143, 155, 179, 0.08);
+    }
+}
+
+.list-unstyled{
+    border-bottom: 1px solid #EDF1F7;
+}

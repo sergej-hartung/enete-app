@@ -1,0 +1,262 @@
+.header{
+    background-image: $EneteGradientRed;
+    
+    @media screen and (max-width: 767px) {
+        height: $heder_height_M;   
+    }
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        height: $heder_height_T;   
+    }
+    @media screen and (min-width: 1200px) {
+        height: $heder_height_D;   
+    }
+    // @media screen and (max-width: 768px) and (min-width: 600px) {
+        
+    // }
+}
+
+.btn-outline-white{
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #fff;
+
+    &:hover{
+        color: #fff;
+        background-color: rgba(255,255,255, .3);
+    }
+}
+
+/*******************
+ ***** Mobil css ***
+ ******************/
+
+// Navigation Mobil
+.custom_mobil_nav{
+    padding: 0;
+
+    &.navbar-light{
+        .navbar-toggler{
+            color: #fff;            
+        }     
+    }
+
+    .navbar-toggler{
+        padding: 11px 10px 9px;
+        margin-left: -10px;
+        border: none;
+
+        &:focus{
+            outline: none;
+        }
+
+        &:hover{
+            background-color: rgba(0,0,0, .1);
+        }
+    }
+    .navbar-toggler-icon{
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+    }
+}
+// Navigation Mobil Ende
+
+//Wrap Tittle Mobil
+.header_title_wrapp{
+    text-align: center;
+    padding-top: 10px;
+}
+
+// Tittle Mobil
+.header_title{
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 23px;
+    letter-spacing: 0.1px;
+    white-space: nowrap;
+    color: #fff;
+}
+
+// Logo and Bell Mobil
+.logo_and_ball{
+    display: flex;
+    justify-content: flex-end;
+}
+
+// Logo Wrap Mobil
+.logo_wrapp{
+    display: flex;
+    padding-top: 11px;
+}
+
+// Logo Mobil
+.logo{    
+    width: 27.5px;
+}
+
+// Bell Wrap Mobil
+.bell_wrapp{
+    display: flex;
+    margin-right: 10px;
+    padding-top: 14px;
+    font-size: 16px;
+    color: #fff;
+    position: relative;
+}
+// Bell Circle Mobil
+.bell_circle{
+    border-radius: 100%;
+    height: 7.67px;
+    width: 7.67px;
+    border: 1px solid #fff;
+    background-color: #F7685B;
+    position: absolute;
+    top: 12px;
+    right: -1px;
+}
+
+
+/*******************
+ ***** iPad / Desk css ***
+ ******************/
+
+// Logo Wrap Ipad
+.logo_wrap_ipad{    
+    margin-left: -2px;
+    height: 100%;    
+}
+
+// Logo Ipad
+.logo_ipad{
+    margin-top: 22px;
+    width: 47px;
+}
+
+.wrap_search_and_fav_ipad_desk{
+    display: flex;
+   
+    
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        padding-top: 22px;   
+        justify-content: center;
+    }
+    @media screen and (min-width: 1200px) {
+        padding-top: 30px;
+    }
+}
+
+.search_ipad{
+    font-size: 30px;
+    line-height: 30px;
+    color: #fff;
+    padding: 5px;
+    margin-right: 15px;
+    &:hover{
+        color: rgba(255,255,255, .6);
+    }
+
+    .fa-search{
+        font-weight: normal;
+    }
+}
+
+.fav_ipad{
+    .btn_name_ipad{
+        padding: 0px 8px;
+        font-family: Open Sans;
+        font-weight: bold;
+        text-align: center;
+        text-transform: uppercase;
+        box-sizing: border-box;
+    }
+    .btn-outline-white{
+        padding: 7px 8px;
+        font-size: 18px;
+        line-height: 24px;
+        box-sizing: border-box;
+    }
+    .btn:not(:last-child){
+        margin-right: 15px;
+    }
+}
+
+.user_and_logut_wrap_ipad_desk{
+    display: flex;
+    justify-content: flex-end;
+
+    @media screen and (min-width: 768px) and (max-width: 1199px) {
+        padding-top: 22px;   
+    }
+    @media screen and (min-width: 1200px) {
+        padding-top: 24px;
+    }
+    
+    .btn-outline-white{
+        
+        text-align: center;
+        margin-right: 15px;
+
+        @media screen and (min-width: 768px) and (max-width: 1199px) {
+            padding: 8px;
+            font-size: 18px;
+            line-height: 24px;
+            min-width: 41.62px;  
+        }
+        @media screen and (min-width: 1200px) {
+            box-sizing: border-box;
+            padding: 11px;
+            font-size: 24px;
+            line-height: 24px;
+             min-width: 48px;
+            // min-height: 48px;
+        }
+    }
+
+}
+
+/*******************
+ ***** Desktop css ***
+ ******************/
+
+.logo_wrap_desk{
+    padding-top: 21px;
+
+    .logo_desk{
+        width: 182px;
+        margin-left: 13px;
+    }
+}
+
+.has-search {
+    .form-control {
+        padding-right: 49px;
+        border-radius: 24.5px;
+        //border: 1px solid #fff;
+        background-clip:border-box;
+        height: 49px;
+        width: 100%;
+    }
+}
+
+.form-group {
+    &.has-search{
+        display: flex;
+        margin-top: -5px;
+        margin-right: 57px;
+        margin-bottom: 0;
+    }
+}
+
+.has-search .form-control-feedback {
+    margin-left: -38px;
+    z-index: 2;
+    display: block;
+    width: 38px;
+    height: 38px;
+    line-height: 49px;
+    text-align: center;
+    pointer-events: none;
+    color: #aaa;
+}
