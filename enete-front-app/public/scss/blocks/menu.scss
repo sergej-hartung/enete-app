@@ -12,6 +12,8 @@
 
   align-items: stretch;
   box-shadow: 1px 4px 16px rgba(151, 151, 151, 0.25);
+  padding-left: 0;
+  padding-right: 0;
 
   .sidebar_menu {
     .active, .active-child {
@@ -70,7 +72,8 @@
     border-bottom: 1px solid #EDF1F7;
 
     box-sizing: border-box;
-
+    text-decoration: none;
+    
     &:hover{
         text-decoration: none;
     }

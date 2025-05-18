@@ -1,1 +1,29 @@
-<p>second-navigation-mobil works!</p>
+<ng-container *ngIf="navs && navs.length > 0">
+  <div class="col-second-nav" *ngFor="let navM of navMain">
+    <!--<button class="btn btn_custom">
+      <i class="fas fa-home"></i>
+    </button>-->
+    <a class="btn btn_custom" routerLink="{{navM.src}}" [queryParams]="{id: navM.id}" routerLinkActive="active" [ngClass]="{'active-child': isActive(navM)}">
+      <i [ngClass]="navM.icon"></i>
+    </a>
+  </div>
+  <!--<div class="col">
+    <button class="btn btn_custom">
+      <i class="fas fa-ellipsis-h"></i>
+    </button>
+  </div>-->
+
+  <div class="col-second-nav text-right">
+    <div ngbDropdown placement="top-right" >
+      <button class="btn btn_custom" ngbDropdownToggle id="dropdownBasic2"><i class="fas fa-ellipsis-h"></i></button>
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+        <button ngbDropdownItem *ngFor="let navS of navSecond" class="btn" routerLink="{{navS.src}}" routerLinkActive="active" [queryParams]="{id: navS.id}" [ngClass]="{'active-child': isActive(navS)}">
+          <i [ngClass]="navS.icon"></i>
+          <span class="menu_title">{{navS.name}}</span>
+        </button>
+        <!--<button ngbDropdownItem>Another Action</button>
+        <button ngbDropdownItem>Something else is here</button>-->
+      </div>
+    </div>
+  </div>
+</ng-container>

@@ -1,1 +1,17 @@
-<p>navigation-main-child works!</p>
+<div class="row widget_row" *ngIf="navs && navs.length > 0">
+  <div class="col-xl-6 col-lg-12 widget_col" *ngFor="let nav of navs">
+    <a [routerLink]="[nav.src]" class="widget_wrapp active">
+      <div class="widget_icon_1_wrapp">
+        <i [ngClass]="nav.icon"></i>
+      </div>
+      <div class="widget_content">
+        <span class="widget_name">{{nav.name}}</span>
+        <span class="widget_desc d-none d-md-block">{{nav.descript}}</span>
+      </div>
+      <div class="widget_icon_2_wrapp">
+        <i class="fas fa-chevron-right"></i>
+      </div>
+    </a>
+
+  </div>
+</div>

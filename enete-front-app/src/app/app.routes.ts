@@ -8,30 +8,31 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./pages/start-page/start-page.component').then(m => m.StartPageComponent),
     },
-    // { 
-    //     path: 'dashboard', 
-    //     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    //     canActivate: [AuthGuard]
-    // },
-    // Hauptbereich für eingeloggte Benutzer
     {
         path: 'main',
         canActivate: [AuthGuard],
         loadComponent: () => import('./pages/main/main-layout/main-layout.component').then(m => m.MainLayoutComponent),
         children: [
-            {
-                path: '',
-                redirectTo: 'dashboard',
-                pathMatch: 'full',
-            },
+            // {
+            //     path: '',
+            //     redirectTo: 'dashboard',
+            //     pathMatch: 'full',
+            // },
             { 
                 path: 'dashboard', 
                 loadComponent: () => import('./pages/main/dashboard/dashboard.component').then(m => m.DashboardComponent),
             },
-            // {
-            //     path: 'profile',
-            //     loadComponent: () => import('./pages/backend/profile/profile.component').then(m => m.ProfileComponent),
-            // },
+            {
+                path: 'products',
+                loadComponent: () => import('./pages/main/products/products.component').then(m => m.ProductsComponent),
+                children: [
+                    { path: 'energy', loadComponent: () => import('./pages/main/products/energy/energy.component').then(m => m.EnergyComponent) },
+                    // { path: 'internet', loadComponent: () => import('./pages/main/products/internet/internet.component').then(m => m.InternetComponent) },
+                    // { path: 'cellular-tariffs', loadComponent: () => import('./pages/main/products/cellular-tariffs/cellular-tariffs.component').then(m => m.CellularTariffsComponent) },
+                    // { path: 'additional-products', loadComponent: () => import('./pages/main/products/additional-products/additional-products.component').then(m => m.AdditionalProductsComponent) },
+                ],
+            },
+            
         ],
     },
     {

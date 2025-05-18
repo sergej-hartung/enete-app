@@ -1,1 +1,21 @@
-<p>navigation-main works!</p>
+<nav class="sidebar_menu" *ngIf="navs && navs.length > 0">
+  <ul class="list-unstyled components">
+    <li 
+      *ngFor="let nav of navs" 
+      routerLinkActive="active" 
+      [ngClass]="{'active-child': isActive(nav)}"
+    >
+      <!-- <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Home</a> -->
+      <div class="menu_item_wrap">
+        <a 
+          class="menu_item" 
+          [routerLink]="[nav.src]" 
+          [queryParams]="{id: nav.id}"
+        >
+          <i class="menu_icon" [ngClass]="nav.icon"></i>
+          <span class="menu_title d-none d-xl-block">{{nav.name}}</span>
+        </a>
+      </div>
+    </li>   
+  </ul> 
+</nav> 

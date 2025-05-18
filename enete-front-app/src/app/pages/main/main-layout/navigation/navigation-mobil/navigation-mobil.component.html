@@ -1,1 +1,11 @@
-<p>navigation-mobil works!</p>
+<div [ngbCollapse]="isMenuCollapsed" class="collapse navbar-collapse custom-navbar-collapse">
+  <ul class="navbar-nav">
+    <li class="nav-item" *ngFor="let nav of navs" routerLinkActive="active" [ngClass]="{'active-child': isActive(nav)}">
+
+      <a class="nav-link" [routerLink]="[nav.src]" [queryParams]="{id: nav.id}" (click)="isMenuCollapsed = true">
+        <i class="menu_icon" [ngClass]="nav.icon"></i>
+        <span class="menu_title">{{nav.name}}</span>
+      </a>
+    </li>
+  </ul>
+</div>
