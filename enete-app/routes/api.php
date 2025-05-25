@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductDocument\ProductDocumentController;
+use App\Http\Controllers\Egon\EgonApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -212,6 +213,13 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
     $router->patch('/rename-folder', [ProductDocumentController::class, 'renameFolder']);
     $router->patch('/rename-file', [ProductDocumentController::class, 'renameFile']);
 
+});
+
+//Egon Api controllers
+Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($router) {
+    $router->group(['prefix' => 'energy'], function ($router) {
+        $router->get('/cities/{zip}', [EgonApiController::class, 'getCitiesByZip']);
+    });
 });
 
 Route::post('/email/verify/{hash}', 'App\Http\Controllers\User\VerificationController');

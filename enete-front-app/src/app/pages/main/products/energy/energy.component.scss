@@ -1,0 +1,21 @@
+.preloader {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  /* flex: 1; */
+  justify-content: center;
+  align-items: center;
+  /* vertical-align: middle; */
+  margin: top 200px;
+  /* margin-top: 200px; */
+  position: absolute;
+  top: 0;
+  left: 0px;
+  background: rgb(256,256, 256, 0.7);
+}
+
+
+
+app-energy-order-finish{
+  background-color: #fff;
+}
