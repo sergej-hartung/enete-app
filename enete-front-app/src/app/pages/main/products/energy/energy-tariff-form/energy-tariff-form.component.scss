@@ -1,0 +1,13 @@
+.btn-load {
+  &:disabled {
+    color: #7D1120;
+    background: #fff;
+  }
+}
+
+.calc_tariff {
+  &:disabled {
+    color: #fff;
+    background: #7D1120;
+  }
+}
