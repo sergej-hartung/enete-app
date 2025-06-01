@@ -76,16 +76,24 @@
       <div class="row energy_calc_form_row">
         <div class="col-sm-12 col-md-6 col-xl-4  block_one">
           <div class="energy_calc_form">
+            <app-location-selector
+              [formGroup]="tariffsQuery"
+              [citys]="citys"
+              [streets]="streets"
+              [netzProviders]="netzProviders"
+              [search]="search"
+              (blurStreet)="blur$.next($event)">
+            </app-location-selector>
             <!-- Form Group One -->
-            <form class="row gx-2" [formGroup]="tariffsQuery">
+            <!-- <form class="row gx-2" [formGroup]="tariffsQuery">
               <div class="col-12">
                 <div class="was-validated form-group">
                   <input type="text" class="form-control" placeholder="Kunden Suche" aria-label="Kunden Suche" disabled>
                   <div class="invalid-feedback">Check this checkbox to continue.</div>
                 </div>
-              </div>
+              </div> -->
               <!-- PLZ -->
-              <div class="col-4">
+              <!-- <div class="col-4">
                 <div class="form-group">
                   <input type="text" class="form-control" formControlName="zip" placeholder="PLZ" aria-label="PLZ"
                          [ngClass]="[
@@ -95,9 +103,9 @@
                     Dieses Feld darf nicht leer sein
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- City -->
-              <div class="col-8">
+              <!-- <div class="col-8">
                 <div class="form-group">
                   <select class="form-control" formControlName="city"
                           [ngClass]="[
@@ -107,25 +115,25 @@
                     </ng-container>
                     <ng-template #defaultCity>
                       <option [value]="null" [selected]="true" disabled>Bitte PLZ eingeben</option>
-                    </ng-template>
+                    </ng-template> -->
 
                     <!--<option value="" selected disabled>Ort</option>-->
 
-                  </select>
+                  <!-- </select>
                   <div *ngIf="tariffsQuery.get('city')!.invalid" class="invalid-feedback">
                     Dieses Feld darf nicht leer sein
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- Street -->
-              <div class="col-8">
+              <!-- <div class="col-8">
                 <div class="form-group">
                   <input type="text" class="form-control" formControlName="street" placeholder="Straße"
                          [ngbTypeahead]="search"
                          (blur)="blur$.next($any($event).target.value)"
                          [ngClass]="[
                          (tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched) ? 'is-invalid' : '',
-                         (!tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched) ? 'is-valid' : '']">
+                         (!tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched) ? 'is-valid' : '']"> -->
                   <!--<select class="form-control" formControlName="street"
                                [ngClass]="[(!tariffsQuery.get('street').invalid) ? 'is-valid' : '']"
                     >
@@ -137,14 +145,14 @@
                     </ng-template>
 
                   </select>-->
-                  <div *ngIf="tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched" class="invalid-feedback">
+                  <!-- <div *ngIf="tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched" class="invalid-feedback">
                     Dieses Feld darf nicht leer sein
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <!-- House Nr. -->
-              <div class="col-4">
+              <!-- <div class="col-4">
                 <div class="form-group">
                   <input type="text" class="form-control " formControlName="houseNumber" placeholder="Nr."
                          [ngClass]="[
@@ -154,10 +162,10 @@
                     Dieses Feld darf nicht leer sein
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <!-- Netz Provider -->
-              <div class="col-12">
+              <!-- <div class="col-12">
                 <div class="form-group">
                   <select class="form-control" formControlName="netzProv"
                           [ngClass]="[
@@ -167,17 +175,17 @@
                     </ng-container>
                     <ng-template #defaultNetzProv>
                       <option [value]="null" [selected]="true" disabled>Kein Netzbetreiber</option>
-                    </ng-template>
+                    </ng-template> -->
 
                     <!--<option value="" selected disabled>Ort</option>-->
 
-                  </select>
+                  <!-- </select>
                   <div *ngIf="tariffsQuery.get('city')!.invalid" class="invalid-feedback">
                     Dieses Feld darf nicht leer sein
                   </div>
                 </div>
               </div>
-            </form>
+            </form> -->
             <!--END Form Group One -->
           </div>
         </div>
@@ -185,7 +193,13 @@
         <!-- Form Group Two -->
         <div class="col-sm-12 col-md-6 col-xl-4 block_two">
           <div class="calc_data_attributs option-people">
-            <form [formGroup]="tariffsQueryTwo">
+            <app-consumption-form
+              [formGroup]="tariffsQueryTwo"
+              (peopleChange)="tariffsQueryTwo.get('people')!.setValue($event)"
+              (consumChange)="onConsumChange($event)"
+              (consumNtChange)="onConsumNtChange($event)">
+            </app-consumption-form>
+            <!-- <form [formGroup]="tariffsQueryTwo">
               <div class="radio_btn_group p-20-left p-20-right">
                 <span class="radio_btn_group_border">
                   <input type="radio" id="option-people-one_1" formControlName="people" value="one">
@@ -213,9 +227,9 @@
                 </span>
               </div>
               <div class="energy_calc_form">
-                <div class="row gx-2">
+                <div class="row gx-2"> -->
                   <!-- Consum -->
-                  <div class="col-6">
+                  <!-- <div class="col-6">
                     <div class="form-group">
                       <input type="text" class="form-control" formControlName="consum" placeholder="HT (kWh / Jahr)"
                              [ngClass]="[
@@ -225,9 +239,9 @@
                         Dieses Feld darf nicht leer sein
                       </div>
                     </div>
-                  </div>
+                  </div> -->
                   <!-- Consum NT -->
-                  <div class="col-6">
+                  <!-- <div class="col-6">
                     <div class="form-group">
                       <input type="text" class="form-control" formControlName="consumNt" placeholder="NT (kWh / Jahr)"
                              [ngClass]="[
@@ -269,7 +283,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <!-- <div class="checkbox_group">
                 <label class="checkbox_custom bounce">
                   <input type="checkbox">
@@ -287,7 +301,7 @@
                 </label>
               </div> -->
 
-            </form>
+            <!-- </form> -->
             <!--END Form Group Two -->
           </div>
         </div>
@@ -297,6 +311,16 @@
             <span class="tittle">Grundversorger Vergleich</span>
             <i class="fas fa-chevron-down"></i>
           </button>
+          <app-base-provider-form
+            [formGroup]="tariffsQueryThree"
+            [baseProviders]="baseProviders"
+            [baseRates]="baseRates"
+            [formReadyToLoad]="!(!isLoadedBaseProvider || !tariffsQuery.valid || !tariffsQueryTwo.valid || !branchs.valid || !typs.valid)"
+            (loadProvider)="loadBaseProvider()"
+            (resetProvider)="resetBaseProvider()"
+            (providerChanged)="tariffsQueryThree.get('providerName')!.setValue($event);"
+            (rateChanged)="setBasePrice($event)">
+          </app-base-provider-form>
           <form [formGroup]="tariffsQueryThree">
             <div class="collapse_custom" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
               <div class="row gx-2">
@@ -383,7 +407,7 @@
                 </div>
 
                 <div class="col-12">
-                  <div *ngIf="isLoadedBaseProvider" class="btn-group btn-group-b-prov" role="group" aria-label="Basic example">
+                  <div  class="btn-group btn-group-b-prov" role="group" aria-label="Basic example">
                     <button type="button" class="btn btn-load mb-0"
                             [disabled]="!isLoadedBaseProvider || !tariffsQuery.valid || !tariffsQueryTwo.valid || !branchs.valid || !typs.valid"
                             (click)="loadBaseProvider()">

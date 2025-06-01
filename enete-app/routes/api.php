@@ -219,6 +219,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
 Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($router) {
     $router->group(['prefix' => 'energy'], function ($router) {
         $router->get('/cities/{zip}', [EgonApiController::class, 'getCitiesByZip']);
+        $router->get('/streets/{zip}/{city}', [EgonApiController::class, 'getStreets']);
+        $router->get('/netzProvider', [EgonApiController::class, 'getNetzProvider']);
+        $router->get('/baseProvider', [EgonApiController::class, 'getBaseProvider']);
     });
 });
 

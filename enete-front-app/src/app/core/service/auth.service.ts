@@ -36,7 +36,7 @@ export class AuthService {
       catchError(error => {
         this.logout();
         this.router.navigate(['/login']);
-        return throwError(error);
+        return throwError(() => error);
       })
     );
   }

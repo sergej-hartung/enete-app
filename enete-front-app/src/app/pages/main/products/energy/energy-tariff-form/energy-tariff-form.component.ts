@@ -6,6 +6,9 @@ import { NgbCollapseModule, NgbModal, NgbTypeahead } from '@ng-bootstrap/ng-boot
 import { debounceTime, distinctUntilChanged, map, Observable, of, OperatorFunction, Subject, switchMap, takeUntil } from 'rxjs';
 import { EnergyService } from '../service/energy-service.service';
 import { HttpEnergyService } from '../service/http-energy.service';
+import { LocationSelectorComponent } from './location-selector/location-selector.component';
+import { ConsumptionFormComponent } from './consumption-form/consumption-form.component';
+import { BaseProviderFormComponent } from './base-provider-form/base-provider-form.component';
 
 
 interface City {
@@ -41,7 +44,10 @@ interface PeopleMap {
     CommonModule,
     ReactiveFormsModule,
     NgbCollapseModule,
-    NgbTypeahead
+    NgbTypeahead,
+    LocationSelectorComponent,
+    ConsumptionFormComponent,
+    BaseProviderFormComponent
   ],
   templateUrl: './energy-tariff-form.component.html',
   styleUrl: './energy-tariff-form.component.scss'
@@ -110,7 +116,7 @@ export class EnergyTariffFormComponent {
     city: new FormControl<City | null>(null, Validators.required),
     street: new FormControl('', Validators.required),
     houseNumber: new FormControl('', Validators.required),
-    netzProv: new FormControl('', Validators.required)
+    netzProv: new FormControl<NetzProvider | null>(null, Validators.required)
   })
 
   tariffsQueryTwo = new FormGroup({
@@ -136,14 +142,6 @@ export class EnergyTariffFormComponent {
   ) { }
 
   ngOnInit() {
-    // console.log(this.tariffsQuery)
-    // console.log(this.tariffsQueryTwo)
-    // console.log(this.tariffsQueryThree)
-    // console.log(this.branchs)
-    // console.log(this.typs)
-    // console.log(!this.tariffsQuery.invalid || !this.tariffsQueryTwo.valid || !this.branchs.valid || !this.typs.valid)
-
-    console.log(this.httpEnergieService.test())
     // Set Branch z.b Strom | Gas
     this.branchs.get('branch')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       val => {
@@ -173,22 +171,25 @@ export class EnergyTariffFormComponent {
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(
       query => {
-        //this.resetForm()
+        this.resetForm()
 
         if (query !== false && query.length == 5 && Number(query)) {
-          console.log(query)
-          //this.resetForm()
-          // this.tariffsQuery.get('city')?.disable()
-          console.log(this.httpEnergieService.test())
+          this.resetForm()
+          this.tariffsQuery.get('city')?.disable()
+          
           this.httpEnergieService.getCitiesByZip(query).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             result => {
-              //this.citys = result
-              console.log(this.citys)
-              // if (this.citys.length > 0 && 'city' in this.citys[0]) {
-              //   this.tariffsQuery.get('city').setValue(this.citys[0])
-              // }
+              if(result){
+                this.citys = result
+                console.log(result)
+                console.log(this.citys)
+                if (this.citys.length > 0 && 'city' in this.citys[0]) {
+                  this.tariffsQuery.get('city')?.setValue(this.citys[0])
+                }
 
-              // this.tariffsQuery.get('city').enable()
+                this.tariffsQuery.get('city')?.enable()
+              }
+              
             }
           )
         }
@@ -198,12 +199,13 @@ export class EnergyTariffFormComponent {
     this.tariffsQuery.get('city')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
       query => {
         if (query && 'city' in query && 'zip' in query) {
-          // this.httpEnergieService.getStreets(query.zip, query.city).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-          //   result => {
-          //     this.streets = result
-          //     //if (this.streets.length > 0 && 'street' in this.streets[0]) this.tariffsQuery.get('street').setValue(this.streets[0])
-          //   }
-          // )
+          const ZIP = query.zip ? query.zip : ''
+          this.httpEnergieService.getStreets(ZIP, query.city).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+            result => {
+              this.streets = result
+              //if (this.streets.length > 0 && 'street' in this.streets[0]) this.tariffsQuery.get('street').setValue(this.streets[0])
+            }
+          )
         }
 
       }
@@ -322,38 +324,35 @@ export class EnergyTariffFormComponent {
 
 
     if (zip && city && street && houseNumber && branch) {
-      // this.httpEnergieService.getNetzProvider({ zip: zip, city: city, street: street, houseNumber: houseNumber, branch: branch }).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-      //   result => {
-      //     this.netzProviders = result
-      //     if (this.netzProviders.length > 0 && 'netzName' in this.netzProviders[0]) this.tariffsQuery.get('netzProv').setValue(this.netzProviders[0])
-      //   }
-      // )
+      this.httpEnergieService.getNetzProvider({ zip: zip, city: city, street: street, houseNumber: houseNumber, branch: branch }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+        result => {
+          this.netzProviders = result
+          if (this.netzProviders.length > 0 && 'netzName' in this.netzProviders[0]){
+            this.tariffsQuery.get('netzProv')?.setValue(this.netzProviders[0])
+          } 
+        }
+      )
     }
   }
 
 
   loadBaseProvider() {
     this.resetThreeForm()
-    this.isLoadedBaseProvider = false
     this.tariffsQueryThree.disable()
     let data = this.getDataForBaseProviderLoad()
-    // this.httpEnergieService.getBaseProvider(data).pipe(takeUntil(this.ngUnsubscribe)).subscribe(
-    //   result => {
-    //     console.log(result)
-    //     this.baseProviders = result
+    this.httpEnergieService.getBaseProvider(data).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+      result => {
+        console.log(result)
+        this.baseProviders = result
         
-    //     if (this.baseProviders.length > 0) {
-    //       this.tariffsQueryThree.get('providerName').setValue(this.baseProviders[0])
-          
-    //       //if ('rates' in this.baseProviders[0] && this.baseProviders[0].rates.length > 0) {
-    //       //  this.baseRates = this.baseProviders[0].rates
-    //       //}
-    //     }
+        if (this.baseProviders.length > 0) {
+          this.tariffsQueryThree.get('providerName')?.setValue(this.baseProviders[0])
+        }
         
-    //     this.tariffsQueryThree.enable({emitEvent:false})
-    //     this.isLoadedBaseProvider = true
-    //   }
-    // )
+        this.tariffsQueryThree.enable({emitEvent:false})
+        this.isLoadedBaseProvider = true
+      }
+    )
   }
 
 
@@ -400,26 +399,23 @@ export class EnergyTariffFormComponent {
       }
       this.setNetzprovider()
       this.tariffsQueryTwo.get('people')?.reset()
-      //console.log('switch')
-      //console.log(this.selectBranchName)
-      //this.getSelectBranchName(this.selectBranchName)
     }
   }
 
   getDataForBaseProviderLoad() {
     let data: {
-      branch: string | null;
-      type: string | null;
-      zip: string | null;
-      city: string | null;
-      consum: string | null;
+      branch: string ;
+      type: string ;
+      zip: string ;
+      city: string ;
+      consum: string ;
       consumNt?: string;
     } = {
-      branch: null,
-      type: null,
-      zip: null,
-      city: null,
-      consum: null
+      branch: '',
+      type: '',
+      zip: '',
+      city: '',
+      consum: ''
     };
     const branchResult = this.getBranch();
     const typeResult = this.getTyp();
@@ -428,9 +424,9 @@ export class EnergyTariffFormComponent {
 
     data.branch = typeof branchResult === 'string' ? branchResult : branchResult.branch;
     data.type = typeof typeResult === 'string' ? typeResult : typeResult.type || '';
-    data.zip = this.tariffsQuery.get('zip')?.value || null;
+    data.zip = this.tariffsQuery.get('zip')?.value || '';
     data.city = city ? city : ''
-    data.consum = this.tariffsQueryTwo.get('consum')?.value || null;
+    data.consum = this.tariffsQueryTwo.get('consum')?.value || '';
 
     if (consumNt){
       data.consumNt = consumNt
@@ -534,6 +530,14 @@ export class EnergyTariffFormComponent {
     )
     return data
   }
+
+  onConsumChange(value: string) {
+    this.onQuery(value).subscribe(() => this.resetThreeForm());
+  }
+
+  onConsumNtChange(value: string) {
+    this.onQuery(value).subscribe(() => this.resetThreeForm());
+  }
   
 
   onQuery(query: string | null): Observable<any> {
@@ -556,7 +560,6 @@ export class EnergyTariffFormComponent {
     this.baseRates = []
     this.tariffsQueryThree.reset()
 
-    //this.energyService.resetDataRatesForm.emit()
     this.energyService.resetDataRatesForm$.next();
   }
 
@@ -565,7 +568,6 @@ export class EnergyTariffFormComponent {
     this.baseRates = []
     this.tariffsQueryThree.reset()
 
-    //this.energyService.resetDataRatesForm.emit()
     this.energyService.resetDataRatesForm$.next();
   }
 

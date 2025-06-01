@@ -1,0 +1,129 @@
+<form [formGroup]="formGroup">
+  <div class="collapse_custom">
+    <div class="row gx-2">
+
+      <!-- Provider Name -->
+      <div class="col-12">
+        <div class="form-group">
+          <ng-container *ngIf="baseProviders.length > 0; else inputProviderName">
+            <select class="form-control"
+                    formControlName="providerName"
+                    (change)="providerChanged.emit(formGroup.get('providerName')!.value)">
+              <option *ngFor="let provider of baseProviders" [ngValue]="provider">
+                {{provider.providerName}}
+              </option>
+            </select>
+          </ng-container>
+          <ng-template #inputProviderName>
+            <input type="text"
+                   class="form-control"
+                   formControlName="providerName"
+                   placeholder="Voranbieter"
+                   [ngClass]="[
+                     formGroup.get('providerName')!.invalid && formGroup.get('providerName')!.touched ? 'is-invalid' : '',
+                     formGroup.get('providerName')!.valid && formGroup.get('providerName')!.touched ? 'is-valid' : ''
+                   ]">
+          </ng-template>
+          <div *ngIf="formGroup.get('providerName')!.invalid && formGroup.get('providerName')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- Rate Name -->
+      <div class="col-12">
+        <div class="form-group">
+          <ng-container *ngIf="baseRates.length > 0; else inputRateName">
+            <select class="form-control"
+                    formControlName="rateName"
+                    (change)="rateChanged.emit(formGroup.get('rateName')!.value)">
+              <option *ngFor="let rate of baseRates" [ngValue]="rate">
+                {{rate.rateName}}
+              </option>
+            </select>
+          </ng-container>
+          <ng-template #inputRateName>
+            <input type="text"
+                   class="form-control"
+                   formControlName="rateName"
+                   placeholder="Tarif des Voranbieters"
+                   [ngClass]="[
+                     formGroup.get('rateName')!.invalid && formGroup.get('rateName')!.touched ? 'is-invalid' : '',
+                     formGroup.get('rateName')!.valid && formGroup.get('rateName')!.touched ? 'is-valid' : ''
+                   ]">
+          </ng-template>
+          <div *ngIf="formGroup.get('rateName')!.invalid && formGroup.get('rateName')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- Base Price Year -->
+      <div class="col-12">
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 formControlName="basePriceYear"
+                 placeholder="Grundpreis Euro / Jahr"
+                 [ngClass]="[
+                   formGroup.get('basePriceYear')!.invalid && formGroup.get('basePriceYear')!.touched ? 'is-invalid' : '',
+                   formGroup.get('basePriceYear')!.valid && formGroup.get('basePriceYear')!.touched ? 'is-valid' : ''
+                 ]">
+          <div *ngIf="formGroup.get('basePriceYear')!.invalid && formGroup.get('basePriceYear')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- HT -->
+      <div class="col-6">
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 formControlName="workPrice"
+                 placeholder="HT (ct / kWh)"
+                 [ngClass]="[
+                   formGroup.get('workPrice')!.invalid && formGroup.get('workPrice')!.touched ? 'is-invalid' : '',
+                   formGroup.get('workPrice')!.valid && formGroup.get('workPrice')!.touched ? 'is-valid' : ''
+                 ]">
+          <div *ngIf="formGroup.get('workPrice')!.invalid && formGroup.get('workPrice')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- NT -->
+      <div class="col-6">
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 formControlName="workPriceNt"
+                 placeholder="NT (ct / kWh)"
+                 [ngClass]="[
+                   formGroup.get('workPriceNt')!.invalid && formGroup.get('workPriceNt')!.touched ? 'is-invalid' : '',
+                   formGroup.get('workPriceNt')!.valid && formGroup.get('workPriceNt')!.touched ? 'is-valid' : ''
+                 ]">
+          <div *ngIf="formGroup.get('workPriceNt')!.invalid && formGroup.get('workPriceNt')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="col-12">
+        <div  class="btn-group btn-group-b-prov" role="group">
+          <button type="button"
+                  class="btn btn-load mb-0"
+                  [disabled]="!formReadyToLoad"
+                  (click)="loadProvider.emit()">
+            Grundversorger Laden
+          </button>
+          <button type="button" class="btn btn-reload mb-0" (click)="resetProvider.emit()">
+            <i class="fas fa-redo-alt"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>

@@ -1,0 +1,101 @@
+<form class="row gx-2" [formGroup]="formGroup">
+  <!-- Kunden Suche (Platzhalter) -->
+  <div class="col-12">
+    <div class="was-validated form-group">
+      <input type="text" class="form-control" placeholder="Kunden Suche" aria-label="Kunden Suche" disabled>
+      <div class="invalid-feedback">Check this checkbox to continue.</div>
+    </div>
+  </div>
+
+  <!-- PLZ -->
+  <div class="col-4">
+    <div class="form-group">
+      <input type="text"
+             class="form-control"
+             formControlName="zip"
+             placeholder="PLZ"
+             aria-label="PLZ"
+             [ngClass]="[
+                (formGroup.get('zip')?.invalid && formGroup.get('zip')?.touched) ? 'is-invalid' : '',
+                (!formGroup.get('zip')?.invalid && formGroup.get('zip')?.touched) ? 'is-valid' : ''
+              ]" />
+      <div *ngIf="formGroup.get('zip')?.invalid && formGroup.get('zip')?.touched" class="invalid-feedback">
+        Dieses Feld darf nicht leer sein
+      </div>
+    </div>
+  </div>
+
+  <!-- City -->
+  <div class="col-8">
+    <div class="form-group">
+      <select class="form-control"
+              formControlName="city"
+              [ngClass]="[(!formGroup.get('city')?.invalid) ? 'is-valid' : '']">
+        <ng-container *ngIf="citys && citys.length > 0; else defaultCity">
+          <option *ngFor="let city of citys" [ngValue]="city">{{ city.city }}</option>
+        </ng-container>
+        <ng-template #defaultCity>
+          <option [value]="null" selected disabled>Bitte PLZ eingeben</option>
+        </ng-template>
+      </select>
+      <div *ngIf="formGroup.get('city')?.invalid" class="invalid-feedback">
+        Dieses Feld darf nicht leer sein
+      </div>
+    </div>
+  </div>
+
+  <!-- Street -->
+  <div class="col-8">
+    <div class="form-group">
+      <input type="text"
+             class="form-control"
+             formControlName="street"
+             placeholder="Straße"
+             [ngbTypeahead]="search"
+             (blur)="onStreetBlur($event)"
+             [ngClass]="[
+               (formGroup.get('street')?.invalid && formGroup.get('street')?.touched) ? 'is-invalid' : '',
+               (!formGroup.get('street')?.invalid && formGroup.get('street')?.touched) ? 'is-valid' : ''
+             ]" />
+      <div *ngIf="formGroup.get('street')?.invalid && formGroup.get('street')?.touched" class="invalid-feedback">
+        Dieses Feld darf nicht leer sein
+      </div>
+    </div>
+  </div>
+
+  <!-- House Number -->
+  <div class="col-4">
+    <div class="form-group">
+      <input type="text"
+             class="form-control"
+             formControlName="houseNumber"
+             placeholder="Nr."
+             [ngClass]="[
+               (formGroup.get('houseNumber')?.invalid && formGroup.get('houseNumber')?.touched) ? 'is-invalid' : '',
+               (!formGroup.get('houseNumber')?.invalid && formGroup.get('houseNumber')?.touched) ? 'is-valid' : ''
+             ]" />
+      <div *ngIf="formGroup.get('houseNumber')?.invalid && formGroup.get('houseNumber')?.touched" class="invalid-feedback">
+        Dieses Feld darf nicht leer sein
+      </div>
+    </div>
+  </div>
+
+  <!-- Netz Provider -->
+  <div class="col-12">
+    <div class="form-group">
+      <select class="form-control"
+              formControlName="netzProv"
+              [ngClass]="[(!formGroup.get('netzProv')?.invalid) ? 'is-valid' : '']">
+        <ng-container *ngIf="netzProviders && netzProviders.length > 0; else defaultNetzProv">
+          <option *ngFor="let provider of netzProviders" [ngValue]="provider">{{ provider.netzName }}</option>
+        </ng-container>
+        <ng-template #defaultNetzProv>
+          <option [value]="null" selected disabled>Kein Netzbetreiber</option>
+        </ng-template>
+      </select>
+      <div *ngIf="formGroup.get('netzProv')?.invalid" class="invalid-feedback">
+        Dieses Feld darf nicht leer sein
+      </div>
+    </div>
+  </div>
+</form>

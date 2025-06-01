@@ -88,10 +88,15 @@ class EgonApiController extends Controller{
      */
     public function getCitiesByZip(Request $request): JsonResponse
     {
-        //var_dump($request->validate(['zip' => 'required|digits:5']));
-        $request->validate(['zip' => 'required|digits:5']);
-        $response = $this->makeApiRequest("cities/{$request->zip}");
-        return response()->json($response);
+        $request->merge(['zip' => $request->zip]);
+        try {
+            $request->validate(['zip' => 'required|digits:5']);
+
+            $response = $this->makeApiRequest("cities/{$request->zip}");
+            return response()->json($response);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     /**
@@ -147,15 +152,18 @@ class EgonApiController extends Controller{
      */
     public function getStreets(Request $request): JsonResponse
     {
-        $request->validate([
-            'zip' => 'required|digits:5',
-            'city' => 'required|string',
-        ]);
-
-        $uri = "streets/{$request->zip}/" . urlencode($request->city);
-        $response = $this->makeApiRequest($uri);
-
-        return response()->json($response);
+        $request->merge(['zip' => $request->zip, 'city' => $request->city]);
+        try {
+            $request->validate([
+                'zip' => 'required|digits:5',
+                'city' => 'required|string',
+            ]);
+            $uri = "streets/{$request->zip}/" . urlencode($request->city);
+            $response = $this->makeApiRequest($uri);
+            return response()->json($response);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     /**
@@ -166,12 +174,14 @@ class EgonApiController extends Controller{
      */
     public function getNetzProvider(Request $request): JsonResponse
     {
-        $params = $this->validateQueryParams($request, ['zip', 'city', 'street', 'houseNumber', 'branch']);
-        $uri = $this->createUri('netzProvider', $params);
-
-        $response = $this->makeApiRequest($uri);
-
-        return response()->json($response);
+        try {
+            $params = $this->validateQueryParams($request, ['zip', 'city', 'street', 'houseNumber', 'branch']);
+            $uri = $this->createUri('netzProvider/', $params);
+            $response = $this->makeApiRequest($uri);
+            return response()->json($response);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     /**
@@ -182,12 +192,15 @@ class EgonApiController extends Controller{
      */
     public function getBaseProvider(Request $request): JsonResponse
     {
-        $params = $this->validateQueryParams($request, ['branch', 'type', 'zip', 'city', 'consum'], ['consumNt', 'country']);
-        $uri = $this->createUri('baseProvider', $params);
+        try {
+            $params = $this->validateQueryParams($request, ['branch', 'type', 'zip', 'city', 'consum'], ['consumNt', 'country']);
+            $uri = $this->createUri('baseProvider/', $params);
+            $response = $this->makeApiRequest($uri);
 
-        $response = $this->makeApiRequest($uri);
-
-        return response()->json($response);
+            return response()->json($response);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     /**
@@ -290,8 +303,8 @@ class EgonApiController extends Controller{
     {
         try {
             $request = Http::withHeaders([
-                'Authorization' => $this->token,
-                'reseller-id' => $this->resellerId,
+                'Authorization' => 'Bearer '.$this->token,
+                //'reseller-id' => $this->resellerId,
             ]);
 
             if ($method === 'POST' || $method === 'PUT') {

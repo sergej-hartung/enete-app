@@ -1,0 +1,97 @@
+<form [formGroup]="formGroup">
+  <!-- Personenwahl -->
+  <div class="radio_btn_group p-20-left p-20-right">
+    <span class="radio_btn_group_border">
+      <input type="radio" id="option-people-one_1" formControlName="people" value="one">
+      <label class="option-people-one_1" for="option-people-one_1"><i class="fas fa-user"></i></label>
+
+      <input type="radio" id="option-people-two_1" formControlName="people" value="two">
+      <label class="option-people-two_1" for="option-people-two_1"><i class="fas fa-user"></i><i class="fas fa-user"></i></label>
+
+      <input type="radio" id="option-people-three_1" formControlName="people" value="three">
+      <label class="option-people-three_1" for="option-people-three_1"><i class="fas fa-user"></i><i class="fas fa-user"></i><i class="fas fa-user"></i></label>
+
+      <input type="radio" id="option-people-four_1" formControlName="people" value="four">
+      <label class="option-people-four_1" for="option-people-four_1"><i class="fas fa-user"></i><i class="fas fa-user"></i><i class="fas fa-user"></i><i class="fas fa-user"></i></label>
+    </span>
+  </div>
+
+  <!-- Form Fields -->
+  <div class="energy_calc_form">
+    <div class="row gx-2">
+
+      <!-- Verbrauch HT -->
+      <div class="col-6">
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 formControlName="consum"
+                 placeholder="HT (kWh / Jahr)"
+                 (input)="onConsumInput($event)"
+                 [ngClass]="[
+                   formGroup.get('consum')!.invalid && formGroup.get('consum')!.touched ? 'is-invalid' : '',
+                   formGroup.get('consum')!.valid && formGroup.get('consum')!.touched ? 'is-valid' : ''
+                 ]">
+          <div *ngIf="formGroup.get('consum')!.invalid && formGroup.get('consum')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- Verbrauch NT -->
+      <div class="col-6">
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 formControlName="consumNt"
+                 placeholder="NT (kWh / Jahr)"
+                 (input)="onConsumNtInput($event)"
+                 [ngClass]="[
+                   formGroup.get('consumNt')!.invalid && formGroup.get('consumNt')!.touched ? 'is-invalid' : '',
+                   formGroup.get('consumNt')!.valid && formGroup.get('consumNt')!.touched ? 'is-valid' : ''
+                 ]">
+          <div *ngIf="formGroup.get('consumNt')!.invalid && formGroup.get('consumNt')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarifart -->
+      <div class="col-12">
+        <div class="form-group">
+          <select class="form-control" formControlName="rateType"
+                  [ngClass]="[
+                    formGroup.get('rateType')!.invalid && formGroup.get('rateType')!.touched ? 'is-invalid' : '',
+                    formGroup.get('rateType')!.valid && formGroup.get('rateType')!.touched ? 'is-valid' : ''
+                  ]">
+            <option value="0">nur Normalstrom</option>
+            <option value="1">Wärmepumpe</option>
+            <option value="2">Wärmespeicher/Heizung</option>
+          </select>
+          <div *ngIf="formGroup.get('rateType')!.invalid && formGroup.get('rateType')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <!-- Zählertyp -->
+      <div class="col-12">
+        <div class="form-group">
+          <select class="form-control" formControlName="rateReadingType"
+                  [ngClass]="[
+                    formGroup.get('rateReadingType')!.invalid && formGroup.get('rateReadingType')!.touched ? 'is-invalid' : '',
+                    formGroup.get('rateReadingType')!.valid && formGroup.get('rateReadingType')!.touched ? 'is-valid' : ''
+                  ]">
+            <option value="0">normale Messung</option>
+            <option value="1">getrennte Messung</option>
+            <option value="2">gemeinsame Messung</option>
+          </select>
+          <div *ngIf="formGroup.get('rateReadingType')!.invalid && formGroup.get('rateReadingType')!.touched" class="invalid-feedback">
+            Dieses Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>

@@ -33,7 +33,7 @@ return [
 
     'egon' => [
         'url' => env('EGON_API_URL', 'https://api.egon.example.com/'),
-        'token' => 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ5SGNwTmN1ZmN6WVJyc3FNRSIsImFwcElkIjoibXdkV1d3RXhMRjZnd2o5cTUiLCJzZXJ2aWNlTmFtZSI6IlVzZXJTZXJ2aWNlIiwiZWdvbkFwaUtleSI6ImEwNjk2Zjk4MzZkMjllZDgzMWIyYjI2NDBmY2Y5ZjEyIiwiaWF0IjoxNjMzNjc3MzI0fQ.nE0yQRZbh0ooVOTprLf97veamfCYrM2Saqqsp_k8Pr4',
+        'token' => env('EGON_TOKEN'),
         'reseller_id' => env('EGON_RESELLER_ID'),
     ],
 

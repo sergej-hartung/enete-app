@@ -4,7 +4,9 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 //import { provideNgxCookieConsent } from 'ngx-cookieconsent';
-import { provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
+import { AuthService } from './core/service/auth.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -12,7 +14,14 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes), 
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptorsFromDi()), // Ermöglicht DI-basierte Interceptors
+    provideRouter([]), // Deine Routen hier
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+    AuthService, // Bereitstellung für DI
     // provideNgxCookieConsent({
     //   cookie: { domain: 'localhost' },
     //   palette: { popup: { background: '#7d1120' }, button: { background: '#fff' } },

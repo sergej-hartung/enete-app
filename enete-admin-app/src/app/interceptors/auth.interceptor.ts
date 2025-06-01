@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
-  private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
       if (error instanceof HttpErrorResponse && error.status === 401) {
         return this.handle401Error(request, next);
       }
-      return throwError(error);
+      return throwError(() => error);
     }));
   }
 
@@ -40,17 +40,17 @@ export class AuthInterceptor implements HttpInterceptor {
       this.refreshTokenSubject.next(null);
 
       return this.authService.refreshToken().pipe(
-        switchMap((token: any) => {
+        switchMap((token: { access_token: string }) => {
           this.isRefreshing = false;
-          this.refreshTokenSubject.next(token['access_token']);
-           (token['access_token'])
-          return next.handle(this.addToken(request, token['access_token']));
+          const newToken = token.access_token;
+          this.refreshTokenSubject.next(newToken);
+          return next.handle(this.addToken(request, newToken));
         }),
         catchError((error) => {
           this.isRefreshing = false;
           this.authService.logout();
           this.router.navigate(['/login']);
-          return throwError(error);
+          return throwError(() => error);
         })
       );
     } else {
