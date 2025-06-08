@@ -19,7 +19,7 @@
                 (formGroup.get('zip')?.invalid && formGroup.get('zip')?.touched) ? 'is-invalid' : '',
                 (!formGroup.get('zip')?.invalid && formGroup.get('zip')?.touched) ? 'is-valid' : ''
               ]" />
-      <div *ngIf="formGroup.get('zip')?.invalid && formGroup.get('zip')?.touched" class="invalid-feedback">
+      <div *ngIf="isInvalid('zip')" class="invalid-feedback">
         Dieses Feld darf nicht leer sein
       </div>
     </div>
@@ -57,7 +57,7 @@
                (formGroup.get('street')?.invalid && formGroup.get('street')?.touched) ? 'is-invalid' : '',
                (!formGroup.get('street')?.invalid && formGroup.get('street')?.touched) ? 'is-valid' : ''
              ]" />
-      <div *ngIf="formGroup.get('street')?.invalid && formGroup.get('street')?.touched" class="invalid-feedback">
+      <div *ngIf="isInvalid('street')" class="invalid-feedback">
         Dieses Feld darf nicht leer sein
       </div>
     </div>
@@ -74,7 +74,7 @@
                (formGroup.get('houseNumber')?.invalid && formGroup.get('houseNumber')?.touched) ? 'is-invalid' : '',
                (!formGroup.get('houseNumber')?.invalid && formGroup.get('houseNumber')?.touched) ? 'is-valid' : ''
              ]" />
-      <div *ngIf="formGroup.get('houseNumber')?.invalid && formGroup.get('houseNumber')?.touched" class="invalid-feedback">
+      <div *ngIf="isInvalid('houseNumber')" class="invalid-feedback">
         Dieses Feld darf nicht leer sein
       </div>
     </div>

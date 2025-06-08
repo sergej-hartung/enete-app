@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 
 interface BaseProvider {
   providerName: string;
@@ -16,11 +17,14 @@ interface BaseRate {
 
 @Component({
   selector: 'app-base-provider-form',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NgbCollapseModule,],
   templateUrl: './base-provider-form.component.html',
   styleUrl: './base-provider-form.component.scss'
 })
 export class BaseProviderFormComponent {
+
+  isCollapsed = true
+
   @Input() formGroup!: FormGroup;
   @Input() baseProviders: BaseProvider[] = [];
   @Input() baseRates: BaseRate[] = [];
@@ -30,4 +34,9 @@ export class BaseProviderFormComponent {
   @Output() resetProvider = new EventEmitter<void>();
   @Output() providerChanged = new EventEmitter<BaseProvider>();
   @Output() rateChanged = new EventEmitter<BaseRate>();
+
+  isInvalid(controlName: string): boolean {
+    const control = this.formGroup.get(controlName);
+    return !!control && control.invalid && (control.dirty || control.touched);
+  }
 }

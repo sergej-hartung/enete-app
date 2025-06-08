@@ -1,0 +1,15 @@
+<form [formGroup]="branchForm">
+  <div class="radio_btn_group">
+    <span class="radio_btn_group_border">
+      <input type="radio" id="option-one_1" formControlName="branch" value="electric">
+      <label for="option-one_1"><i class="fas fa-lightbulb"></i></label>
+      <input type="radio" id="option-two_1" formControlName="branch" value="gas">
+      <label for="option-two_1"><i class="fas fa-fire-alt"></i></label>
+      <input type="radio" id="option-three_1" formControlName="branch" value="warmth">
+      <label for="option-three_1"><i class="fas fa-sun"></i></label>
+    </span>
+  </div>
+  <div class="btn_title_wrapp">
+    <span class="btn_title">{{ selectBranchName }}</span>
+  </div>
+</form>

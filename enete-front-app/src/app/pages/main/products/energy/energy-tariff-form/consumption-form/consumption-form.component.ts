@@ -24,4 +24,9 @@ export class ConsumptionFormComponent {
     const value = (event.target as HTMLInputElement).value;
     this.consumNtChange.emit(value);
   }
+
+  isInvalid(controlName: string): boolean {
+    const control = this.formGroup.get(controlName);
+    return !!control && control.invalid && (control.dirty || control.touched);
+  }
 }

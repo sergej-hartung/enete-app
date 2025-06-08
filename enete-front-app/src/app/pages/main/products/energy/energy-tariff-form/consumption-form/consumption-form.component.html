@@ -32,7 +32,7 @@
                    formGroup.get('consum')!.invalid && formGroup.get('consum')!.touched ? 'is-invalid' : '',
                    formGroup.get('consum')!.valid && formGroup.get('consum')!.touched ? 'is-valid' : ''
                  ]">
-          <div *ngIf="formGroup.get('consum')!.invalid && formGroup.get('consum')!.touched" class="invalid-feedback">
+          <div *ngIf="isInvalid('consum')" class="invalid-feedback">
             Dieses Feld darf nicht leer sein
           </div>
         </div>
@@ -50,7 +50,7 @@
                    formGroup.get('consumNt')!.invalid && formGroup.get('consumNt')!.touched ? 'is-invalid' : '',
                    formGroup.get('consumNt')!.valid && formGroup.get('consumNt')!.touched ? 'is-valid' : ''
                  ]">
-          <div *ngIf="formGroup.get('consumNt')!.invalid && formGroup.get('consumNt')!.touched" class="invalid-feedback">
+          <div *ngIf="isInvalid('consumNt')" class="invalid-feedback">
             Dieses Feld darf nicht leer sein
           </div>
         </div>
@@ -68,7 +68,7 @@
             <option value="1">Wärmepumpe</option>
             <option value="2">Wärmespeicher/Heizung</option>
           </select>
-          <div *ngIf="formGroup.get('rateType')!.invalid && formGroup.get('rateType')!.touched" class="invalid-feedback">
+          <div *ngIf="isInvalid('rateType')" class="invalid-feedback">
             Dieses Feld darf nicht leer sein
           </div>
         </div>
@@ -86,7 +86,7 @@
             <option value="1">getrennte Messung</option>
             <option value="2">gemeinsame Messung</option>
           </select>
-          <div *ngIf="formGroup.get('rateReadingType')!.invalid && formGroup.get('rateReadingType')!.touched" class="invalid-feedback">
+          <div *ngIf="isInvalid('rateReadingType')" class="invalid-feedback">
             Dieses Feld darf nicht leer sein
           </div>
         </div>

@@ -41,4 +41,9 @@ export class LocationSelectorComponent {
     this.blurStreet.emit(target.value);
   }
 
+  isInvalid(controlName: string): boolean {
+    const control = this.formGroup.get(controlName);
+    return !!control && control.invalid && (control.dirty || control.touched);
+  }
+
 }

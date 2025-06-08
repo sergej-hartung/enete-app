@@ -1,0 +1,15 @@
+<form [formGroup]="typeForm">
+  <div class="radio_btn_group position_flex_end">
+    <span class="radio_btn_group_border">
+      <input type="radio" id="option-one_2" formControlName="type" value="private">
+      <label for="option-one_2"><i class="fas fa-home"></i></label>
+      <input type="radio" id="option-two_2" formControlName="type" value="company">
+      <label for="option-two_2"><i class="fas fa-suitcase"></i></label>
+      <input type="radio" id="option-three_2" formControlName="type" value="weg">
+      <label for="option-three_2"><i class="fas fa-user-friends"></i></label>
+    </span>
+  </div>
+  <div class="btn_title_wrapp btn_flex_end">
+    <span class="btn_title">{{ selectTypeName }}</span>
+  </div>
+</form>

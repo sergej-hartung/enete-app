@@ -12,40 +12,12 @@
           <div class="row">
             <div class="col-6">
               <div class="calc_data_attributs p-20-left">
-                <form [formGroup]="branchs">
-                  <div class="radio_btn_group">
-                    <span class="radio_btn_group_border">
-                      <input type="radio" id="option-one_1" formControlName="branch" value="electric">
-                      <label for="option-one_1"><i class="fas fa-lightbulb"></i></label>
-                      <input type="radio" id="option-two_1" formControlName="branch" value="gas">
-                      <label for="option-two_1"><i class="fas fa-fire-alt"></i></label>
-                      <input type="radio" id="option-three_1" formControlName="branch" value="warmth">
-                      <label for="option-three_1"><i class="fas fa-sun"></i></label>
-                    </span>
-                  </div>
-                  <div class="btn_title_wrapp">
-                    <span class="btn_title">{{selectBranchName}}</span>
-                  </div>
-                </form>
+                <app-branch-selector [branchForm]="tariffForm" [branchMap]="branchMap"></app-branch-selector>
               </div>
             </div>
             <div class="col-6">
               <div class="calc_data_attributs p-20-right">
-                <form [formGroup]="typs">
-                  <div class="radio_btn_group position_flex_end">
-                    <span class="radio_btn_group_border">
-                      <input type="radio" id="option-one_2" formControlName="type" value="private">
-                      <label for="option-one_2"><i class="fas fa-home"></i></label>
-                      <input type="radio" id="option-two_2" formControlName="type" value="company">
-                      <label for="option-two_2"><i class="fas fa-suitcase"></i></label>
-                      <input type="radio" id="option-three_2" formControlName="type" value="weg">
-                      <label for="option-three_2"><i class="fas fa-user-friends"></i></label>
-                    </span>
-                  </div>
-                  <div class="btn_title_wrapp btn_flex_end">
-                    <span class="btn_title">{{selectTypeName}}</span>
-                  </div>
-                </form>
+                <app-type-selector [typeForm]="tariffForm" [typeMap]="typeMap"></app-type-selector>
               </div>
             </div>
           </div>
@@ -77,115 +49,14 @@
         <div class="col-sm-12 col-md-6 col-xl-4  block_one">
           <div class="energy_calc_form">
             <app-location-selector
-              [formGroup]="tariffsQuery"
+              [formGroup]="TariffsQuery()"
               [citys]="citys"
               [streets]="streets"
               [netzProviders]="netzProviders"
               [search]="search"
               (blurStreet)="blur$.next($event)">
             </app-location-selector>
-            <!-- Form Group One -->
-            <!-- <form class="row gx-2" [formGroup]="tariffsQuery">
-              <div class="col-12">
-                <div class="was-validated form-group">
-                  <input type="text" class="form-control" placeholder="Kunden Suche" aria-label="Kunden Suche" disabled>
-                  <div class="invalid-feedback">Check this checkbox to continue.</div>
-                </div>
-              </div> -->
-              <!-- PLZ -->
-              <!-- <div class="col-4">
-                <div class="form-group">
-                  <input type="text" class="form-control" formControlName="zip" placeholder="PLZ" aria-label="PLZ"
-                         [ngClass]="[
-                         (tariffsQuery.get('zip')!.invalid && tariffsQuery.get('zip')!.touched) ? 'is-invalid' : '',
-                         (!tariffsQuery.get('zip')!.invalid && tariffsQuery.get('zip')!.touched) ? 'is-valid' : '']">
-                  <div *ngIf="tariffsQuery.get('zip')!.invalid && tariffsQuery.get('zip')!.touched" class="invalid-feedback">
-                    Dieses Feld darf nicht leer sein
-                  </div>
-                </div>
-              </div> -->
-              <!-- City -->
-              <!-- <div class="col-8">
-                <div class="form-group">
-                  <select class="form-control" formControlName="city"
-                          [ngClass]="[
-                         (!tariffsQuery.get('city')!.invalid) ? 'is-valid' : '']">
-                    <ng-container *ngIf="citys && citys.length > 0; else defaultCity">
-                      <option *ngFor="let city of citys; first as isFirst" [ngValue]="city">{{city.city}}</option>
-                    </ng-container>
-                    <ng-template #defaultCity>
-                      <option [value]="null" [selected]="true" disabled>Bitte PLZ eingeben</option>
-                    </ng-template> -->
-
-                    <!--<option value="" selected disabled>Ort</option>-->
-
-                  <!-- </select>
-                  <div *ngIf="tariffsQuery.get('city')!.invalid" class="invalid-feedback">
-                    Dieses Feld darf nicht leer sein
-                  </div>
-                </div>
-              </div> -->
-              <!-- Street -->
-              <!-- <div class="col-8">
-                <div class="form-group">
-                  <input type="text" class="form-control" formControlName="street" placeholder="Straße"
-                         [ngbTypeahead]="search"
-                         (blur)="blur$.next($any($event).target.value)"
-                         [ngClass]="[
-                         (tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched) ? 'is-invalid' : '',
-                         (!tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched) ? 'is-valid' : '']"> -->
-                  <!--<select class="form-control" formControlName="street"
-                               [ngClass]="[(!tariffsQuery.get('street').invalid) ? 'is-valid' : '']"
-                    >
-                    <ng-container *ngIf="streets && streets.length > 0; else defaultStreet">
-                      <option *ngFor="let street of streets; first as isFirst" [ngValue]="street" >{{street}}</option>
-                    </ng-container>
-                    <ng-template #defaultStreet>
-                      <option [value]="null" [selected]="true" disabled>Straße</option>
-                    </ng-template>
-
-                  </select>-->
-                  <!-- <div *ngIf="tariffsQuery.get('street')!.invalid && tariffsQuery.get('street')!.touched" class="invalid-feedback">
-                    Dieses Feld darf nicht leer sein
-                  </div>
-                </div>
-              </div> -->
-
-              <!-- House Nr. -->
-              <!-- <div class="col-4">
-                <div class="form-group">
-                  <input type="text" class="form-control " formControlName="houseNumber" placeholder="Nr."
-                         [ngClass]="[
-                         (tariffsQuery.get('houseNumber')!.invalid && tariffsQuery.get('houseNumber')!.touched) ? 'is-invalid' : '',
-                         (!tariffsQuery.get('houseNumber')!.invalid && tariffsQuery.get('houseNumber')!.touched) ? 'is-valid' : '']">
-                  <div *ngIf="tariffsQuery.get('houseNumber')!.invalid && tariffsQuery.get('houseNumber')!.touched" class="invalid-feedback">
-                    Dieses Feld darf nicht leer sein
-                  </div>
-                </div>
-              </div> -->
-
-              <!-- Netz Provider -->
-              <!-- <div class="col-12">
-                <div class="form-group">
-                  <select class="form-control" formControlName="netzProv"
-                          [ngClass]="[
-                         (!tariffsQuery.get('netzProv')!.invalid) ? 'is-valid' : '']">
-                    <ng-container *ngIf="netzProviders && netzProviders.length > 0; else defaultNetzProv">
-                      <option *ngFor="let provider of netzProviders; first as isFirst" [ngValue]="provider">{{provider.netzName}}</option>
-                    </ng-container>
-                    <ng-template #defaultNetzProv>
-                      <option [value]="null" [selected]="true" disabled>Kein Netzbetreiber</option>
-                    </ng-template> -->
-
-                    <!--<option value="" selected disabled>Ort</option>-->
-
-                  <!-- </select>
-                  <div *ngIf="tariffsQuery.get('city')!.invalid" class="invalid-feedback">
-                    Dieses Feld darf nicht leer sein
-                  </div>
-                </div>
-              </div>
-            </form> -->
+           
             <!--END Form Group One -->
           </div>
         </div>
@@ -194,241 +65,32 @@
         <div class="col-sm-12 col-md-6 col-xl-4 block_two">
           <div class="calc_data_attributs option-people">
             <app-consumption-form
-              [formGroup]="tariffsQueryTwo"
-              (peopleChange)="tariffsQueryTwo.get('people')!.setValue($event)"
-              (consumChange)="onConsumChange($event)"
-              (consumNtChange)="onConsumNtChange($event)">
+              [formGroup]="TariffsQueryTwo()"
+              (peopleChange)="tariffForm.get('tariffsQueryTwo.people')!.setValue($event)"
+              (consumChange)="onConsumptionChange($event)"
+              (consumNtChange)="onConsumptionChange($event)">
             </app-consumption-form>
-            <!-- <form [formGroup]="tariffsQueryTwo">
-              <div class="radio_btn_group p-20-left p-20-right">
-                <span class="radio_btn_group_border">
-                  <input type="radio" id="option-people-one_1" formControlName="people" value="one">
-                  <label class="option-people-one_1" for="option-people-one_1">
-                    <i class="fas fa-user"></i>
-                  </label>
-                  <input type="radio" id="option-people-two_1" formControlName="people" value="two">
-                  <label class="option-people-two_1" for="option-people-two_1">
-                    <i class="fas fa-user"></i>
-                    <i class="fas fa-user"></i>
-                  </label>
-                  <input type="radio" id="option-people-three_1" formControlName="people" value="three">
-                  <label class="option-people-three_1" for="option-people-three_1">
-                    <i class="fas fa-user"></i>
-                    <i class="fas fa-user"></i>
-                    <i class="fas fa-user"></i>
-                  </label>
-                  <input type="radio" id="option-people-four_1" formControlName="people" value="four">
-                  <label class="option-people-four_1" for="option-people-four_1">
-                    <i class="fas fa-user"></i>
-                    <i class="fas fa-user"></i>
-                    <i class="fas fa-user"></i>
-                    <i class="fas fa-user"></i>
-                  </label>
-                </span>
-              </div>
-              <div class="energy_calc_form">
-                <div class="row gx-2"> -->
-                  <!-- Consum -->
-                  <!-- <div class="col-6">
-                    <div class="form-group">
-                      <input type="text" class="form-control" formControlName="consum" placeholder="HT (kWh / Jahr)"
-                             [ngClass]="[
-                          (tariffsQueryTwo.get('consum')!.invalid && tariffsQueryTwo.get('consum')!.touched) ? 'is-invalid' : '',
-                          (!tariffsQueryTwo.get('consum')!.invalid && tariffsQueryTwo.get('consum')!.touched) ? 'is-valid' : '']">
-                      <div *ngIf="tariffsQueryTwo.get('consum')!.invalid && tariffsQueryTwo.get('consum')!.touched" class="invalid-feedback">
-                        Dieses Feld darf nicht leer sein
-                      </div>
-                    </div>
-                  </div> -->
-                  <!-- Consum NT -->
-                  <!-- <div class="col-6">
-                    <div class="form-group">
-                      <input type="text" class="form-control" formControlName="consumNt" placeholder="NT (kWh / Jahr)"
-                             [ngClass]="[
-                          (tariffsQueryTwo.get('consumNt')!.invalid && tariffsQueryTwo.get('consumNt')!.touched) ? 'is-invalid' : '',
-                          (!tariffsQueryTwo.get('consumNt')!.invalid && tariffsQueryTwo.get('consumNt')!.touched) ? 'is-valid' : '']">
-                      <div *ngIf="tariffsQueryTwo.get('consumNt')!.invalid && tariffsQueryTwo.get('consumNt')!.touched" class="invalid-feedback">
-                        Dieses Feld darf nicht leer sein
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="form-group">
-                      <select class="form-control" formControlName="rateType"
-                              [ngClass]="[
-                          (tariffsQueryTwo.get('rateType')!.invalid && tariffsQueryTwo.get('rateType')!.touched) ? 'is-invalid' : '',
-                          (!tariffsQueryTwo.get('rateType')!.invalid && tariffsQueryTwo.get('rateType')!.touched) ? 'is-valid' : '']">
-                        <option [value]="0">nur Normalstrom</option>
-                        <option [value]="1">Wärmepumpe</option>
-                        <option [value]="2">Wärmespeichr/Heizung</option>
-                      </select>
-                      <div *ngIf="tariffsQueryTwo.get('rateType')!.invalid && tariffsQueryTwo.get('rateType')!.touched" class="invalid-feedback">
-                        Dieses Feld darf nicht leer sein
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-12">
-                    <div class="form-group">
-                      <select class="form-control" formControlName="rateReadingType"
-                              [ngClass]="[
-                          (tariffsQueryTwo.get('rateReadingType')!.invalid && tariffsQueryTwo.get('rateReadingType')!.touched) ? 'is-invalid' : '',
-                          (!tariffsQueryTwo.get('rateReadingType')!.invalid && tariffsQueryTwo.get('rateReadingType')!.touched) ? 'is-valid' : '']">
-                        <option [value]="0">normale Messung</option>
-                        <option [value]="1">getrennte Messung</option>
-                        <option [value]="2">gemeinsame Messung</option>
-                      </select>
-                      <div *ngIf="tariffsQueryTwo.get('rateReadingType')!.invalid && tariffsQueryTwo.get('rateReadingType')!.touched" class="invalid-feedback">
-                        Dieses Feld darf nicht leer sein
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-              <!-- <div class="checkbox_group">
-                <label class="checkbox_custom bounce">
-                  <input type="checkbox">
-                  <svg viewBox="0 0 21 21">
-                      <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
-                  </svg>
-                  <span class="label_title">Jahrespreis mit Bonus</span>
-                </label>
-                <label class="checkbox_custom bounce">
-                  <input type="checkbox">
-                  <svg viewBox="0 0 21 21">
-                      <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
-                  </svg>
-                  <span class="label_title">Tarife nur mit digitaler Unterschrift</span>
-                </label>
-              </div> -->
-
-            <!-- </form> -->
             <!--END Form Group Two -->
           </div>
         </div>
 
         <div class="col-sm-12 col-md-12 col-xl-4 block_three">
-          <button class="btn btn-custom-collapse d-xl-none" type="button" (click)="collapse.toggle()">
-            <span class="tittle">Grundversorger Vergleich</span>
-            <i class="fas fa-chevron-down"></i>
-          </button>
           <app-base-provider-form
-            [formGroup]="tariffsQueryThree"
+            [formGroup]="TariffsQueryThree()"
             [baseProviders]="baseProviders"
             [baseRates]="baseRates"
-            [formReadyToLoad]="!(!isLoadedBaseProvider || !tariffsQuery.valid || !tariffsQueryTwo.valid || !branchs.valid || !typs.valid)"
+            [formReadyToLoad]="!(!isLoadedBaseProvider || !this.tariffForm.get('tariffsQuery')!.valid || !this.tariffForm.get('tariffsQueryTwo')!.valid || !this.tariffForm.get('branch')?.valid || !this.tariffForm.get('type')?.valid)"
             (loadProvider)="loadBaseProvider()"
             (resetProvider)="resetBaseProvider()"
-            (providerChanged)="tariffsQueryThree.get('providerName')!.setValue($event);"
+            (providerChanged)="tariffForm.get('tariffsQueryThree.providerName')!.setValue($event)"
             (rateChanged)="setBasePrice($event)">
           </app-base-provider-form>
-          <form [formGroup]="tariffsQueryThree">
-            <div class="collapse_custom" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-              <div class="row gx-2">
-                <div class="col-sm-12 col-md-6 col-xl-12">
-                  <div class="row gx-2">
-                    <div class="col-12">
-                      <div class="form-group">
-                        <ng-container *ngIf="baseProviders && baseProviders.length > 0; else baseProvidersTemp">
-                          <select class="form-control" formControlName="providerName">
-                            <option *ngFor="let provider of baseProviders" [ngValue]="provider">{{provider.providerName}}</option>
-                          </select>
-                        </ng-container>
-                        <ng-template #baseProvidersTemp>
-                          <input type="text" class="form-control" formControlName="providerName" placeholder="Voranbieter"
-                                 [ngClass]="[
-                              (tariffsQueryThree.get('providerName')!.invalid && tariffsQueryThree.get('providerName')!.touched) ? 'is-invalid' : '',
-                              (!tariffsQueryThree.get('providerName')!.invalid && tariffsQueryThree.get('providerName')!.touched) ? 'is-valid' : '']">
-                        </ng-template>
-
-                        <div *ngIf="tariffsQueryThree.get('providerName')!.invalid && tariffsQueryThree.get('providerName')!.touched" class="invalid-feedback">
-                          Dieses Feld darf nicht leer sein
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-12">
-                      <div class="form-group">
-                        <ng-container *ngIf="baseRates && baseRates.length > 0; else baseProvidersRate">
-                          <select class="form-control" formControlName="rateName">
-                            <option *ngFor="let rate of baseRates"
-                                    [ngValue]="rate">
-                              {{rate.rateName}}
-                            </option>
-                          </select>
-                        </ng-container>
-                        <ng-template #baseProvidersRate>
-                          <input type="text" class="form-control" formControlName="rateName" placeholder="Tarif des Voranbieters"
-                                 [ngClass]="[
-                            (tariffsQueryThree.get('rateName')!.invalid && tariffsQueryThree.get('rateName')!.touched) ? 'is-invalid' : '',
-                            (!tariffsQueryThree.get('rateName')!.invalid && tariffsQueryThree.get('rateName')!.touched) ? 'is-valid' : '']">
-                        </ng-template>
-                        <div *ngIf="tariffsQueryThree.get('rateName')!.invalid && tariffsQueryThree.get('rateName')!.touched" class="invalid-feedback">
-                          Dieses Feld darf nicht leer sein
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-12 col-md-6 col-xl-12">
-                  <div class="row gx-2">
-                    <div class="col-12">
-                      <div class="form-group">
-                        <input type="text" class="form-control" formControlName="basePriceYear" placeholder="Grundpreis Euro / Jahr"
-                               [ngClass]="[
-                            (tariffsQueryThree.get('basePriceYear')!.invalid && tariffsQueryThree.get('basePriceYear')!.touched) ? 'is-invalid' : '',
-                            (!tariffsQueryThree.get('basePriceYear')!.invalid && tariffsQueryThree.get('basePriceYear')!.touched) ? 'is-valid' : '']">
-                        <div *ngIf="tariffsQueryThree.get('basePriceYear')!.invalid && tariffsQueryThree.get('basePriceYear')!.touched" class="invalid-feedback">
-                          Dieses Feld darf nicht leer sein
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="form-group">
-                        <input type="text" class="form-control" formControlName="workPrice" placeholder="HT (ct / kWH)"
-                               [ngClass]="[
-                            (tariffsQueryThree.get('workPrice')!.invalid && tariffsQueryThree.get('workPrice')!.touched) ? 'is-invalid' : '',
-                            (!tariffsQueryThree.get('workPrice')!.invalid && tariffsQueryThree.get('workPrice')!.touched) ? 'is-valid' : '']">
-                        <div *ngIf="tariffsQueryThree.get('workPrice')!.invalid && tariffsQueryThree.get('workPrice')!.touched" class="invalid-feedback">
-                          Dieses Feld darf nicht leer sein
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-6">
-                      <div class="form-group">
-                        <input type="text" class="form-control" formControlName="workPriceNt" placeholder="NT (ct / kWH)"
-                               [ngClass]="[
-                            (tariffsQueryThree.get('workPriceNt')!.invalid && tariffsQueryThree.get('workPriceNt')!.touched) ? 'is-invalid' : '',
-                            (!tariffsQueryThree.get('workPriceNt')!.invalid && tariffsQueryThree.get('workPriceNt')!.touched) ? 'is-valid' : '']">
-                        <div *ngIf="tariffsQueryThree.get('workPriceNt')!.invalid && tariffsQueryThree.get('workPriceNt')!.touched" class="invalid-feedback">
-                          Dieses Feld darf nicht leer sein
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <div  class="btn-group btn-group-b-prov" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-load mb-0"
-                            [disabled]="!isLoadedBaseProvider || !tariffsQuery.valid || !tariffsQueryTwo.valid || !branchs.valid || !typs.valid"
-                            (click)="loadBaseProvider()">
-                      Grundversorger Laden
-                    </button>
-                    <button type="button" class="btn btn-reload mb-0" (click)="resetBaseProvider()"><i class="fas fa-redo-alt"></i></button>
-                  </div>
-                  <!-- <app-h-preloader *ngIf="!isLoadedBaseProvider"
-                                   [dot]="false"
-                                   [width]="12"
-                                   [color]="'#7D1120'"></app-h-preloader> -->
-                </div>
-              </div>
-            </div>
-          </form>
         </div>
 
         <div class="col-sm-12 col-md-12 col-xl-4 block_four">
           <div class="btn-grpup-calc-tariff">
             <button class="btn calc_tariff mb-0"
-                    [disabled]="!isLoadedBaseProvider || !tariffsQuery.valid || !tariffsQueryTwo.valid || !branchs.valid || !typs.valid"
+                    [disabled]="(!isLoadedBaseProvider || !this.tariffForm.get('tariffsQuery')!.valid || !this.tariffForm.get('tariffsQueryTwo')!.valid || !this.tariffForm.get('branch')?.valid || !this.tariffForm.get('type')?.valid)"
                     (click)="getTarifs()">
               Tarif berechnen
             </button>
