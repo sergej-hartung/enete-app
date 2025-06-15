@@ -88,7 +88,8 @@
     .menu_icon{
         display: block;
         line-height: 65px;
-        color: $icon_color_main_menu
+        color: $icon_color_main_menu;
+        min-width: 25px;
     }
 
     .btn{

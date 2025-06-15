@@ -26,7 +26,7 @@ export class BranchSelectorComponent implements OnInit{
   ngOnInit(): void {
     this.branchForm.get('branch')?.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(val => {
+    ).subscribe((val: 'electric' | 'gas' | 'warmth') => {
       if (val && this.isValidBranch(val)) {
         this.selectBranchName = this.branchMap[val];
         this.energyService.resetDataRatesForm$.next();

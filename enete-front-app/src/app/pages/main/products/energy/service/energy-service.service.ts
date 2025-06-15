@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 // --- Interfaces zur Typisierung ---
 export interface Rate {
@@ -55,7 +55,10 @@ export class EnergyService {
   public orderEntryTarif: OrderEntry = {};
   public orderFinishData: any[] = [];
   public orderParck = false;
-  public offers: Offer[] = [];
+
+  private _offers$ = new BehaviorSubject<Offer[]>([]);
+  public offers$ = this._offers$.asObservable(); // lesen nur über Observable
+
 
   // --- Zustände für Wechseltermin etc. ---
   public isChangeFastOption = false;
@@ -76,26 +79,28 @@ export class EnergyService {
   public minSignatureDate!: Date;
 
   // --- Angebote ---
-  setOffers(offer: Offer): Offer[] | false {
-    if (this.offers.length < 3) {
-      this.offers.push(offer);
-      return this.offers;
-    }
-    return false;
+  setOffers(offer: Offer): boolean {
+    const current = this._offers$.value;
+
+    if (current.find(o => o.rateId === offer.rateId)) return false; // doppelt verhindern
+    if (current.length >= 3) return false;
+
+    this._offers$.next([...current, offer]);
+    return true;
   }
 
   getOffers(): Offer[] {
-    return this.offers;
+    return this._offers$.value;
   }
 
   deleteOffer(offer: Offer): void {
-    this.deleteOffer$.next({ ...offer });
-    const index = this.offers.findIndex(o => o.rateId === offer.rateId);
-    if (index > -1) this.offers.splice(index, 1);
+    const updated = this._offers$.value.filter(o => o.rateId !== offer.rateId);
+    this._offers$.next(updated);
+    this.deleteOffer$.next({ ...offer }); // Event separat
   }
 
   resetOffers(): void {
-    this.offers = [];
+    this._offers$.next([]);
   }
 
   // --- Tarifauswahl ---

@@ -3,15 +3,8 @@ import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbTypeahead } from '@ng-bootstrap/ng-bootstrap';
 import { Observable, Subject } from 'rxjs';
+import { City, NetzProvider } from '../../types/types';
 
-interface City {
-  city: string;
-  zip?: string;
-}
-
-interface NetzProvider {
-  netzName: string;
-}
 
 @Component({
   selector: 'app-location-selector',

@@ -1,4 +1,127 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-@import url('https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp');
-@import url('https://pro.fontawesome.com/releases/v5.10.0/css/all.css');
+//@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+//@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+//@import url('https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp');
+//@import url('https://pro.fontawesome.com/releases/v5.10.0/css/all.css');
+
+@import "../fonts/google-fonts/open-sans-v34-latin/open-sans.scss";
+@import "../fonts/google-fonts/roboto-v30-latin/roboto.scss";
+@import "../fonts/google-fonts/poppins-v23-latin/poppins.scss";
+//@import "../fonts/google-fonts/material-icons-v143-latin/material-icons-v143-latin-regular.woff2";
+/* fallback */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/google-fonts/material-icons-v143-latin/material-icons-v143-latin-regular.woff2") format('woff2');
+  }
+  /* fallback */
+  @font-face {
+    font-family: 'Material Icons Outlined';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/google-fonts/material-icons-outlined-v109-latin/material-icons-outlined-v109-latin-regular.woff2") format('woff2');
+  }
+  /* fallback */
+  @font-face {
+    font-family: 'Material Icons Round';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/google-fonts/material-icons-round-v108-latin/material-icons-round-v108-latin-regular.woff2") format('woff2');
+  }
+  /* fallback */
+  @font-face {
+    font-family: 'Material Icons Sharp';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/google-fonts/material-icons-sharp-v109-latin/material-icons-sharp-v109-latin-regular.woff2") format('woff2');
+  }
+  /* fallback */
+  @font-face {
+    font-family: 'Material Icons Two Tone';
+    font-style: normal;
+    font-weight: 400;
+    src: url("/public/fonts/google-fonts/material-icons-two-tone-v112-latin/material-icons-two-tone-v112-latin-regular.woff2") format('woff2');
+  }
+  body {
+    --google-font-color-materialiconstwotone:none;
+  }
+  
+  .material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .material-icons-outlined {
+    font-family: 'Material Icons Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .material-icons-round {
+    font-family: 'Material Icons Round';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .material-icons-sharp {
+    font-family: 'Material Icons Sharp';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }
+  
+  .material-icons-two-tone {
+    font-family: 'Material Icons Two Tone';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+  }

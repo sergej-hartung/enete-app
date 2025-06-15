@@ -95,4 +95,45 @@ export class HttpEnergyService {
       }),
     )
   }
+
+  getEnergyRates(ratesData:any, filterData:any): Observable<any> {
+    let Filters:any = []
+
+    if (Object.keys(filterData).length > 0) {
+      Object.entries(filterData).forEach(
+        ([key, value]) => {
+          let obj:any = {}
+          obj[key] = value
+          Filters.push(obj)
+        }
+      )
+    }
+
+    let params = Object.assign({}, ratesData)
+    if (Filters.length > 0) {
+      params['filters'] = JSON.stringify(Filters)
+    }
+    console.log(params)
+
+    return this.http.get<any>(`${BASE_URL}/products/energy/rates`, { params: params }).pipe(
+      map(data => {
+        if (data && 'result' in data) {
+          return data.result
+        } else {
+          return []
+        }
+      }),
+    )
+  } 
+
+  getContractFileBlanko(rateId:string, rateFileId:string): Observable<any> {
+    //const httpOptions = {
+    //  responseType: 'blob' as 'json',
+    //  headers: new HttpHeaders({
+    //    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJ5SGNwTmN1ZmN6WVJyc3FNRSIsImFwcElkIjoibXdkV1d3RXhMRjZnd2o5cTUiLCJzZXJ2aWNlTmFtZSI6IlVzZXJTZXJ2aWNlIiwiZWdvbkFwaUtleSI6ImEwNjk2Zjk4MzZkMjllZDgzMWIyYjI2NDBmY2Y5ZjEyIiwiaWF0IjoxNjMzNjc3MzI0fQ.nE0yQRZbh0ooVOTprLf97veamfCYrM2Saqqsp_k8Pr4',
+    //    'reseller-id': '10000'
+    //  })
+    //};
+    return this.http.get(`${BASE_URL}/products/energy/contract-file-blank/${rateId}/${rateFileId}`)
+  }
 }

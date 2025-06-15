@@ -26,7 +26,7 @@ export class TypeSelectorComponent {
   ngOnInit(): void {
     this.typeForm.get('type')?.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(val => {
+    ).subscribe((val: 'private' | 'company' | 'weg') => {
       if (val && this.isValidType(val)) {
         this.selectTypeName = this.typeMap[val];
         this.energyService.resetDataRatesForm$.next();

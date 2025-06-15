@@ -2,18 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
+import { BaseProvider, BaseRate } from '../../types/types';
 
-interface BaseProvider {
-  providerName: string;
-  rates?: BaseRate[];
-}
-
-interface BaseRate {
-  rateName: string;
-  basePriceYear: number;
-  workPrice: number;
-  workPriceNt: number;
-}
 
 @Component({
   selector: 'app-base-provider-form',

@@ -4,7 +4,7 @@
         <ng-template carouselSlide>
           <div class="single_slide debug-slide" [style.backgroundImage]="'url(' + slide.image + ')'">
             <div class="slide_text">
-              <div class="table">
+              <div class="table-start-page">
                 <div class="table_cell">
                   <h2 [innerHTML]="slide.title"></h2>
                   <h3>{{ slide.subtitle }}</h3>
@@ -22,7 +22,7 @@
     <div *ngIf="!isBrowser" class="welcome_area_fallback">
       <div class="single_slide" [style.backgroundImage]="'url(' + slides[0].image + ')'">
         <div class="slide_text">
-          <div class="table">
+          <div class="table-start-page">
             <div class="table_cell">
               <h2 [innerHTML]="slides[0].title"></h2>
               <h3>{{ slides[0].subtitle }}</h3>

@@ -22,28 +22,28 @@ class EgonApiController extends Controller{
      * @var array<string, string>
      */
     protected array $rateFilters = [
-        'rateId' => 'integer',
+        'rateId' => 'string',
         'rateName' => 'string',
         'providerName' => 'string',
-        'basePriceYear' => 'numeric',
-        'basePriceMonth' => 'numeric',
-        'workPrice' => 'numeric',
-        'totalPrice' => 'numeric',
-        'totalPriceMonth' => 'numeric',
-        'rateFileId' => 'integer',
+        'basePriceYear' => 'string',
+        'basePriceMonth' => 'string',
+        'workPrice' => 'string',
+        'totalPrice' => 'string',
+        'totalPriceMonth' => 'string',
+        'rateFileId' => 'string',
         'selfPayment' => 'boolean',
         'requiredEmail' => 'boolean',
         'optEco' => 'boolean',
         'providerChangeFast' => 'boolean',
         'providerDigitalSigned' => 'boolean',
-        'providerId' => 'integer',
-        'cancel' => 'integer',
-        'cancelType' => 'integer',
-        'providerBirthdayMax' => 'integer',
-        'optBonus' => 'numeric',
-        'optBonusLoyalty' => 'numeric',
-        'optGuarantee' => 'integer',
-        'optTerm' => 'integer',
+        'providerId' => 'string',
+        'cancel' => 'string',
+        'cancelType' => 'string',
+        'providerBirthdayMax' => 'string',
+        'optBonus' => 'string',
+        'optBonusLoyalty' => 'string',
+        'optGuarantee' => 'string',
+        'optTerm' => 'string',
     ];
 
     /**
@@ -211,31 +211,37 @@ class EgonApiController extends Controller{
      */
     public function getRates(Request $request): JsonResponse
     {
-        $params = $this->validateQueryParams(
-            $request,
-            ['zip', 'city', 'street', 'houseNumber', 'consum', 'type', 'branch'],
-            [
-                'consumNt',
-                'country',
-                'netzProvider',
-                'priceDate',
-                'counterType',
-                'rateReadingType',
-                'rateType',
-                'basePriceYear',
-                'workPrice',
-                'workPriceNt',
-                'rateId',
-                'providerId',
-            ]
-        );
-
-        $filters = $this->getRateFilters($request);
-        $uri = $this->createUri('rates', $params, $filters);
-
-        $response = $this->makeApiRequest($uri);
-
-        return response()->json($response);
+        try {
+           // var_dump('test');
+            $params = $this->validateQueryParams(
+                $request,
+                ['zip', 'city', 'street', 'houseNumber', 'consum', 'type', 'branch'],
+                [
+                    'consumNt',
+                    'country',
+                    'netzProvider',
+                    'priceDate',
+                    'counterType',
+                    'rateReadingType',
+                    'rateType',
+                    'basePriceYear',
+                    'workPrice',
+                    'workPriceNt',
+                    'rateId',
+                    'providerId',
+                ]
+            );
+    
+            $filters = $this->getRateFilters($request);
+            $uri = $this->createUri('rates/', $params, $filters);
+            //var_dump($uri);
+            $response = $this->makeApiRequest($uri);
+    
+            return response()->json($response);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
+        
     }
 
     /**
@@ -246,15 +252,20 @@ class EgonApiController extends Controller{
      */
     public function getContractFileBlank(Request $request): JsonResponse
     {
-        $request->validate([
-            'rateId' => 'required|integer',
-            'rateFileId' => 'required|integer',
-        ]);
+        $request->merge(['rateId' => $request->rateId, 'rateFileId' => $request->rateFileId]);
+        try {
+            $request->validate([
+                'rateId' => 'required|string',
+                'rateFileId' => 'required|string',
+            ]);
 
-        $uri = "rateService/contractFile/{$request->rateId}/{$request->rateFileId}";
-        $response = $this->makeApiRequest($uri);
-
-        return response()->json($response);
+            $uri = "rateService/contractFile/{$request->rateId}/{$request->rateFileId}";
+            $response = $this->makeApiRequest($uri);
+            var_dump($response);
+            //return response()->json($response);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     /**

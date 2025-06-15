@@ -1,0 +1,475 @@
+
+<div class="col">
+    <div class="tarif-card "><!-- class "prio" für priorisirte darstellung -->
+      <div class="bg-tarif-card">
+        <!-- First Block -->
+        <div class="first-block-wrapp">
+          <div class="row">
+            <div class="col-6 col-md-4 col-xl-3 d-flex cunter_and_logo_wrap">
+              <div class="tarif_counter_wrapp">
+                <span class="tarif_counter">
+                  <span>{{count + 1}}</span>
+                </span>
+              </div>
+              <div class="logo_and_attributs_wrapp">
+                <div *ngIf="rate.providerSVG" class="provider_logo_wrapp" [innerHTML]="logoHtml()"></div>
+                <span *ngIf="rate.providerName" class="provider_name">{{rate.providerName}}</span>
+                <span *ngIf="rate.rateName" class="tarif_name">{{rate.rateName}}</span>
+                <div *ngIf="rate.rateId" class="tarif_id_wrapp"><span class="tarif_id">ID:{{rate.rateId}}</span></div>
+              </div>
+            </div>
+            <div class="col-6 col-md-12 col-xl-4 order-xl-1 order-2 tarif_info_wrapp">
+              <div class="tarif_info_icon_wrapp">
+                <div class="tarif_info_icons">
+                  <!-- Tooltip -->
+                  <span *ngIf="rate.providerDigitalSigned" class="tooltip_custom">
+                    <i class="fas fa-pen tarif_info_icon"></i>
+                    <span class="info_custom">
+                      <span class="text_custom">
+                        <div class="icon">
+                          <i class="fas fa-pen"></i>
+                        </div>
+                        <div class="text">
+                          Dieser Anbieter akzeptiert die digitale Unterschrift
+                        </div>
+                      </span>
+                    </span>
+                  </span>
+
+                  <!-- Tooltip -->
+                  <span *ngIf="rate.optEco" class="tooltip_custom">
+                    <i class="fas fa-leaf tarif_info_icon"></i>
+                    <span class="info_custom">
+                      <!-- <span class="pronounce_custom"></span> -->
+                      <span class="text_custom">
+                        <div class="icon">
+                          <i class="fas fa-leaf"></i>
+                        </div>
+                        <div class="text">
+                          Bei diesem Tarif handelt es sich um Ökoenergie
+                        </div>
+                      </span>
+                    </span>
+                  </span>
+
+                  <!-- Tooltip -->
+                  <span *ngIf="rate.optBonus != 0 || rate.optBonusInstant != 0 || rate.optBonusLoyalty != 0" class="tooltip_custom">
+                    <i class="fas fa-gift tarif_info_icon"></i>
+                    <span class="info_custom">
+                      <!-- <span class="pronounce_custom"></span> -->
+                      <span *ngIf="rate.optBonus != 0" class="text_custom">
+                        <div class="icon">
+                          <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="text">
+                          Treue-Bonus <span class="text_green">{{rate.optBonus}} €</span>
+                        </div>
+                      </span>
+                      <span *ngIf="rate.optBonusInstant != 0" class="text_custom">
+                        <div class="icon">
+                          <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="text">
+                          Willkommensbonus <span class="text_green">{{rate.optBonusInstant}} €</span>
+                        </div>
+                      </span>
+                      <span *ngIf="rate.optBonusLoyalty != 0" class="text_custom">
+                        <div class="icon">
+                          <i class="fas fa-gift"></i>
+                        </div>
+                        <div class="text">
+                          Bleibe-Bonus <span class="text_green">{{rate.optBonusLoyalty}} €</span>
+                        </div>
+                      </span>
+                    </span>
+                  </span>
+
+                  <!-- Tooltip -->
+                  <span *ngIf="rate.requiredEmail" class="tooltip_custom">
+                    <i class="far fa-envelope tarif_info_icon"></i>
+                    <span class="info_custom">
+                      <!-- <span class="pronounce_custom"></span> -->
+                      <span class="text_custom">
+                        <div class="icon">
+                          <i class="far fa-envelope"></i>
+                        </div>
+                        <div class="text">
+                          Bei diesem Tarif ist die Angabe der E-Mail-Adresse Pflicht
+                        </div>
+                      </span>
+                    </span>
+                  </span>
+
+                  <!-- Tooltip -->
+                  <span *ngIf="rate.selfPayment" class="tooltip_custom">
+                    <i class="far fa-credit-card tarif_info_icon"></i>
+                    <span class="info_custom">
+                      <!-- <span class="pronounce_custom"></span> -->
+                      <span class="text_custom">
+                        <div class="icon">
+                          <i class="far fa-credit-card"></i>
+                        </div>
+                        <div class="text">
+                          Kunde hat die Möglichkeit der Selbstzahlung
+                        </div>
+                      </span>
+                    </span>
+                  </span>
+                </div>
+                <div class="acq_commission_wrap_second">
+                  <span class="acq_commission_tittle_second">Abschlussprovision</span>
+                  <span class="follow_up_comm_tittle_second">Folgeprovision</span>
+                </div>
+              </div>
+              <div class="tarif_info_block">
+                <ul class="tarif_info">
+                  <!-- Treue Bonus -->
+                  <li *ngIf="rate.optBonus > 0" class="d-none d-md-block">
+                    <span class="material-icons-outlined">info</span>
+                    <ng-container *ngIf="IncludingBonus">inkl. </ng-container>{{rate.optBonus}} € Treue-Bonus
+                  </li>
+                  <!-- Willkommensonus -->
+                  <li *ngIf="rate.optBonusInstant > 0" class="d-none d-md-block">
+                    <span class="material-icons-outlined">info</span>
+                    <ng-container *ngIf="IncludingBonus">inkl. </ng-container>{{rate.optBonusInstant}} € Willkommensbonus
+                  </li>
+                  <!-- Bleibe Bonus -->
+                   <li *ngIf="rate.optBonusLoyalty > 0" class="d-none d-md-block">
+                    <span class="material-icons-outlined">info</span>{{rate.optBonusLoyalty}} € Bleibe-Bonus
+                  </li>
+                  <!-- Garantie -->
+                   <li><span class="material-icons-outlined">info</span>{{guarantee()}}</li>
+                  <!-- Laufzeit -->
+                   <li><span class="material-icons-outlined">info</span>{{term()}}</li>
+                  <!--<li  class="d-none d-md-block"><span class="material-icons-outlined">check_circle</span>Onlinetarif</li>-->
+                  <!--<li class="d-none d-md-block"><span class="material-icons-outlined">check_circle</span>Gültig seit 11.02.2021</li>-->
+                </ul>
+                <!-- Provision -->
+                <!--<div class="folow_up_wrap_second">
+                  <span class="acq_commission">
+                    <i class="fas fa-coins"></i>118,00 €
+                  </span>
+                  <span class="follow_up_comm">Ja</span>
+                </div>-->
+              </div>
+            </div>
+
+            <div class="col-6 col-md-8 col-xl-5 order-xl-2 order-1 tarif_block_3">
+              <div class="row flex-column flex-md-row tarif_block_3_1">
+                <div class="col tarif_block_3_1_costs">
+                  <div>
+                    <span class="d-none d-md-block text_uppercas">
+                      <span class="material-icons-outlined tarif_block_3_1_costs_icon">info</span>Kosten
+                    </span>
+                    <span class="tarif_block_3_1_costs_costs">
+                      <span class="material-icons-outlined d-md-none ">info</span>{{rate.totalPrice | number: '1.2-2'}} €
+                    </span>
+                    <span class="tarif_block_3_1_costs_term">im 1.Jahr</span>
+                  </div>
+                </div>
+                <div class="col tarif_block_3_1_savings">
+                  <div>
+                    <span class="d-none d-md-block text_uppercas">Ersparnis</span>
+                    <span class="tarif_block_3_1_savings_savings"
+                          [ngClass]="[!savingPerYearClass ? 'no-savings' : '']">{{savingPerYear()}}</span>
+                    <span class="tarif_block_3_1_savings_text">gespart</span>
+                  </div>
+                </div>
+
+                <div class="col d-md-none tarif_block_3_1_bonus">
+                  <div>
+                    <span class="tarif_block_3_1_bonus_bonus"><span class="material-icons-outlined">info</span>{{bonus()}} €</span>
+                    <span class="tarif_block_3_1_bonus_text">Bonus</span>
+                  </div>
+                </div>
+                <div class="col d-md-block d-none tarif_block_3_1_payment">
+                  <div>
+                    <span class="text_uppercas">Abschlag</span>
+                    <span><sub>ca.</sub> <span class="tarif_block_3_1_payment_payment">{{totalPriceMonth()}} €</span> <sub>/ mtl.</sub></span>
+                    <span *ngIf="rate.partialPayment" class="tarif_block_3_1_payment_coutn_payments">{{rate.partialPayment }} Abschläge</span>
+                  </div>
+                </div>
+              </div>
+              <div class="row d-none d-md-flex tarif_block_3_2 justify-content-end">
+                <div class="col-4 tarif_block_3_2_work_price">
+                  <div>
+                    <span>Arbeitspreis</span>
+                    <span>
+                      <span class="tarif_block_3_2_work_price_work_price">{{rate.workPrice | number: '1.2-2'}}</span> <sub>ct / kWh</sub>
+                    </span>
+                  </div>
+                </div>
+                <div class="col-4 tarif_block_3_2_base_price">
+                  <div>
+                    <span>Grundpreis / Jahr</span>
+                    <span>
+                      <span class="tarif_block_3_2_base_price_base_price">{{rate.basePriceYear | number: '1.2-2'}} €</span>
+                      <sub class="tarif_block_3_2_base_price_month">{{rate.basePriceMonth | number: '1.2-2'}} € / mtl.</sub>
+                    </span>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col d-md-none order-3 tarif_block_3_3">
+              <div class="tarif_block_3_3_price_wrap">
+                <div class="tarif_block_3_3_work">
+                  <span class="tarif_block_3_3_work_text">Arbeitspreis</span>
+                  <span class="tarif_block_3_3_work_price">
+                    <span class="tarif_block_3_3_work_price_price">{{rate.workPrice | number: '1.2-2'}}</span> <span class="tarif_block_3_3_work_price_unit">ct / kWh</span>
+                  </span>
+                </div>
+                <div class="tarif_block_3_3_base">
+                  <span class="tarif_block_3_3_base_text">Grundpreis / Jahr</span>
+                  <span class="tarif_block_3_3_base_price">
+                    <span class="tarif_block_3_3_base_price_price">{{rate.basePriceYear | number: '1.2-2'}} €</span>
+                    <span class="tarif_block_3_3_base_price_unit">{{rate.basePriceMonth | number: '1.2-2'}} € / mtl.</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Second Block -->
+        <div class="second-block-wrapp">
+          <div class="second-block">
+            <div class="row ">
+              <div class="col align-self-end second_bloc_1">
+                <div class="tab_accordion_btn">
+                  <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                      <button class="nav-link"  (click)="toggle('isCollapsedTarifDetails')" [attr.aria-expanded]="!isCollapsedTarifDetails">Tarifdetails</button>
+                    </li>
+                    <li class="nav-item">
+                      <button class="nav-link" (click)="toggle('isCollapsedCharacteristics')" [attr.aria-expanded]="!isCollapsedCharacteristics">Merkmale</button>
+                    </li>
+                    <li class="nav-item" >
+                      <button class="nav-link" (click)="toggle('isCollapsedTarifProvision')" [attr.aria-expanded]="!isCollapsedTarifProvision">Provision</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- <div class="col">
+                <button class="btn " type="button" data-toggle="collapse" data-target="#test1" aria-expanded="false" aria-controls="test1">Toggle second element</button>
+                <button class="btn " type="button" data-toggle="collapse" data-target="#test2" aria-expanded="false" aria-controls="test2">Toggle second element</button>
+                <button class="btn " type="button" data-toggle="collapse" data-target="#test3" aria-expanded="false" aria-controls="test3">Toggle both elements</button>
+              </div>                       -->
+              <div class="col second_bloc_2">
+                <div class="commission_wrap">
+                  <div class="acq_commission_wrap">
+                    <div>
+                      <div class="acq_commission_tittle">Abschlussprovision</div>
+                      <!--<div class="acq_commission">
+                        <i class="fas fa-coins"></i>118,00 €
+                      </div>-->
+                    </div>
+
+                  </div>
+                  <div class="follow_up_comm_wrap">
+                    <div class="follow_up_comm_tittle">Folgeprovision</div>
+                    <!--<div>
+                      <span class="follow_up_comm">Ja</span>
+                    </div>-->
+                  </div>
+                </div>
+
+              </div>
+              <div class="col second_bloc_3">
+                <div class="tariff_action">
+                  <button class="btn tariff_action_offer" 
+                          [ngClass]="[inTheOffer() ? 'in-the-offer' : '']"
+                          [disabled]="inTheOffer()"
+                          (click)="setOffers()"
+                   >
+                    <i class="fas fa-print"></i>
+                    <span *ngIf="!inTheOffer()">Zum Angebot</span>
+                    <span *ngIf="inTheOffer()">Im Angebot</span>
+                  </button>
+                  <button class="btn tariff_action_switch" (click)="orderEntry()">Wechseln <i class="fas fa-exchange-alt"></i></button>
+                  <!--<a [routerLink]="[path+'/order-entry']" class="btn tariff_action_switch">Wechseln <i class="fas fa-exchange-alt"></i></a>-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Accordion Block -->
+      <div>
+        <div class="row" id="accordion">
+          <div class="col-12">
+            <div #collapseTarifDetails="ngbCollapse" [(ngbCollapse)]="isCollapsedTarifDetails" >
+              <div class="accordion-tarifdetails-wrap">
+                <!-- Tarif Details -->
+                <table class="table tarif-details">
+                  <tbody>
+                    <tr>
+                      <td>Vertragslaufzeit</td>
+                      <td>{{term()}}</td>
+                    </tr>
+                    <tr>
+                      <td>Kündigungsfrist</td>
+                      <td>{{cancel()}}</td>
+                    </tr>
+                    <tr>
+                      <td>Preisgarantie</td>
+                      <td>{{guarantee()}}</td>
+                    </tr>
+                    <tr>
+                      <td>gewünschtes Lieferdatum Pflicht</td>
+                      <td *ngIf="rate.providerChangeFast">Nein, schnellstmöglich</td>
+                      <td *ngIf="!rate.providerChangeFast">Ja</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <!-- Tarif Hinweis -->
+                <div class="tarif-note">
+                  <div>Hinweis</div>
+                  <div *ngIf="ratesData.type && ratesData.type == 'private'">Achtung: Bitte beachten Sie das die Preise reine Brutto-Preis sind</div>
+                  <div *ngIf="ratesData.type && ratesData.type == 'company'">Achtung: Bitte beachten Sie das die Preise reine Netto-Preis sind</div>
+                </div>
+
+                <!-- Tarif Attribute -->
+                <div class="attr-and-documents">
+                  <ul class="tarif-attr">
+                    <li *ngIf="rate.providerDigitalSigned"><i class="fas fa-pen "></i>Dieser Anbieter akzeptiert die digitale Unterschrift</li>
+                    <li *ngIf="rate.optEco"><i class="fas fa-leaf"></i>Bei diesem Tarif handelt es sich um Ökoenergie</li>
+                    <!-- Treue Bonus -->
+                    <li *ngIf="rate.optBonus != 0">
+                      <i class="fas fa-gift"></i>Der Kunde erhält einen einmaligen Treue-Bonus von <span class="green">{{rate.optBonus}} €</span>
+                    </li>
+                    <!-- Willkommensbonus -->
+                    <li *ngIf="rate.optBonusInstant != 0">
+                      <i class="fas fa-gift"></i>Der Kunde erhält einen einmaligen Willkommensbonus von <span class="green">{{rate.optBonusInstant}} €</span>
+                    </li>
+                    <!-- Bleibe Bonus -->
+                    <li *ngIf="rate.optBonusLoyalty != 0">
+                      <i class="fas fa-gift"></i>Der Kunde erhält einen Bleibe-Bonus von <span class="green">{{rate.optBonusLoyalty}} €</span>
+                    </li>
+                    <li *ngIf="rate.requiredEmail"><i class="far fa-envelope"></i>Bei diesem Tarif ist die Angabe der E-Mail-Adresse Pflicht</li>
+                    <li *ngIf="rate.selfPayment"><i class="far fa-credit-card"></i>Kunde hat die Möglichkeit der Selbstzahlung</li>
+                  </ul>
+
+                  <div class="documents">
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn" (click)="downloadContractFileBlank()">
+                        <span class="desctop"><i class="fas fa-download"></i></span>
+                        <span class="mobil"><i class="fas fa-paperclip"></i><span class="icon-text">Formular Blanko</span></span>
+                      </button>
+                      <button type="button" class="btn" (click)="downloadPowerOfAttorney()">
+                        <span class="desctop"><i class="fas fa-user-check"></i></span>
+                        <span class="mobil"><i class="fas fa-paperclip"></i><span class="icon-text">Vollmacht</span></span>
+                      </button>
+                      <button type="button" class="btn" (click)="downloadDataProtection()">
+                        <span class="desctop"><i class="fas fa-lock "></i></span>
+                        <span class="mobil"><i class="fas fa-paperclip"></i><span class="icon-text">Datenschutzerklärung</span></span>
+                      </button>
+                    </div>
+                    <div class="cloud_bg"><i class="fas fa-cloud-download-alt"></i></div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="collapse" #collapseCharacteristics="ngbCollapse" [(ngbCollapse)]="isCollapsedCharacteristics" >
+              <div class="accordion-tarifcharacteristic-wrap">
+                <table class="table tarif-characteristic">
+                  <tbody>
+                    <tr>
+                      <td>Neueinzug rückwirkend</td>
+                      <td *ngIf="rate.termAfterNew > 0">
+                        {{rate.termAfterNew}}
+                        <ng-container *ngIf="rate.termAfterNewType == 'months'">Monat(e)</ng-container>
+                        <ng-container *ngIf="rate.termAfterNewType == 'weeks'">Woche(n)</ng-container>
+                        <ng-container *ngIf="rate.termAfterNewType == 'days'">Tag(e)</ng-container>
+                      </td>
+                      <td *ngIf="rate.termAfterNew == 0">keine Angabe</td>
+                    </tr>
+                    <tr>
+                      <td>Neueinzug im Voraus</td>
+                      <td *ngIf="rate.termBeforeNew > 0">
+                        {{rate.termBeforeNew}}
+                        <ng-container *ngIf="rate.termBeforeNewType == 'months'">Monat(e)</ng-container>
+                        <ng-container *ngIf="rate.termBeforeNewType == 'weeks'">Woche(n)</ng-container>
+                        <ng-container *ngIf="rate.termBeforeNewType == 'days'">Tag(e)</ng-container>
+                      </td>
+                      <td *ngIf="rate.termBeforeNew == 0">keine Angabe</td>
+                    </tr>
+                    <tr>
+                      <td>Wechsel im Voraus</td>
+                      <td *ngIf="rate.termBeforeChange > 0">
+                        {{rate.termBeforeChange}}
+                        <ng-container *ngIf="rate.termBeforeChangeType == 'months'">Monat(e)</ng-container>
+                        <ng-container *ngIf="rate.termBeforeChangeType == 'weeks'">Woche(n)</ng-container>
+                        <ng-container *ngIf="rate.termBeforeChangeType == 'days'">Tag(e)</ng-container>
+                      </td>
+                      <td *ngIf="rate.termBeforeChange == 0">keine Angabe</td>
+                    </tr>
+                    <tr>
+                      <td>Abschläge jährlich</td>
+                      <td *ngIf="rate.partialPayment > 0">{{rate.partialPayment}}</td>
+                      <td *ngIf="rate.partialPayment == 0 || rate.partialPayment == null">keine Angabe</td>
+                    </tr>
+                    <tr *ngIf="rate.providerBirthdayMax > 0">
+                      <td>Maximales Alter des Kunden</td>
+                      <td>{{rate.providerBirthdayMax}} Jahre</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="collapse" #collapseProvision="ngbCollapse" [(ngbCollapse)]="isCollapsedTarifProvision">
+              <div class="accordion-tarifprov-wrap">
+                <!--<table class="table tarif-prov">
+                  <tbody>
+                    <tr>
+                      <td>Abschlussprovision</td>
+                      <td>118 €</td>
+                    </tr>
+                    <tr>
+                      <td>Leaderbonus</td>
+                      <td>59 €</td>
+                    </tr>
+                    <tr>
+                      <td>On-Top </td>
+                      <td>3 €</td>
+                    </tr>
+                    <tr>
+                      <td>Zielvereinbarung</td>
+                      <td>2 € pro Vertag</td>
+                    </tr>
+                  </tbody>
+                </table>-->
+                <!--<div class="tarif-prov-summ">
+                  <div>Summe</div>
+                  <div>182 €</div>
+                </div>-->
+
+                <!--<table class="table tarif-prov">
+                  <tbody>
+                    <tr>
+                      <td>Folgeprovision jährlich</td>
+                      <td>15 €</td>
+                    </tr>
+                    <tr>
+                      <td>Folgeprovision einmalig</td>
+                      <td>35 €</td>
+                    </tr>
+                  </tbody>
+                </table>-->
+
+                <!--<div class="tarif-prov-summ">
+                  <div>Summe</div>
+                  <div>50 €</div>
+                </div>-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

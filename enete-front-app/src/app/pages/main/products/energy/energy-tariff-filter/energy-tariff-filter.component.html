@@ -1,0 +1,207 @@
+<div class="modal-header">
+  <h4 class="modal-title">Filter</h4>
+  <button type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
+</div>
+
+<!-- Modal body -->
+<div class="modal-body">
+  <form [formGroup]="tariffsEnergyFilter">
+    <div class="row">
+      <div class="col-12 contract-term-wrapp">
+        <div class="row radio-block-wrapp">
+          <div class="col-12">
+            <div class="tittle-filter-block">Vertragslaufzeit (Monate)</div>
+          </div>
+          <div class="col-3">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b1-1" class="btn-radio">
+                <input type="radio" id="rdo-b1-1" name="optTerm" formControlName="optTerm" value="12">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>12</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b1-2" class="btn-radio">
+                <input type="radio" id="rdo-b1-2" name="optTerm" formControlName="optTerm" value="24">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>24</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b1-3" class="btn-radio">
+                <input type="radio" id="rdo-b1-3" name="optTerm" formControlName="optTerm" value="36">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>36</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b1-4" class="btn-radio">
+                <input type="radio" id="rdo-b1-4" name="optTerm" formControlName="optTerm" value="false">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>egal</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-12 price-guarantee-wrapp">
+        <div class="row radio-block-wrapp">
+          <div class="col-12">
+            <div class="tittle-filter-block">E-Preis Garantie (Monate)</div>
+          </div>
+          <div class="col-3">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b2-1" class="btn-radio">
+                <input type="radio" id="rdo-b2-1" name="optGuarantee" formControlName="optGuarantee" value="12">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>12</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b2-2" class="btn-radio">
+                <input type="radio" id="rdo-b2-2" name="optGuarantee" formControlName="optGuarantee" value="24">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>24</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3 ">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b2-3" class="btn-radio">
+                <input type="radio" id="rdo-b2-3" name="optGuarantee" formControlName="optGuarantee" value="36">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>36</span>
+              </label>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="btn-radio-wrapp">
+              <label for="rdo-b2-4" class="btn-radio">
+                <input type="radio" id="rdo-b2-4" name="optGuarantee" formControlName="optGuarantee" value="false">
+                <svg width="20px" height="20px" viewBox="0 0 20 20">
+                  <circle cx="10" cy="10" r="9"></circle>
+                  <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
+                  <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
+                </svg>
+                <span>egal</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-12 filter-datapicker-wrapp">
+        <div class="row filter-datapicker">
+          <div class="col-6">
+            <div class="form-group">
+              <input class="form-control enete-form-control" formControlName="priceDate" placeholder="PREISDATUM" type="date" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="row filter-option-wrap">
+          <div class="col-12 filter-option-wrapp">
+            <div class="filter-option-title">Optionen</div>
+          </div>
+
+          <div class="col-sm-12 col-md-6 filter-option-check-wrapp option-group-1">
+            <label class="checkbox_custom bounce">
+              <input type="checkbox" formControlName="filterBonus">
+              <svg viewBox="0 0 21 21">
+                <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+              </svg>
+              <span class="label_title">Jahrespreis mit Bonus</span>
+            </label>
+
+
+            <label class="checkbox_custom bounce">
+              <input type="checkbox" formControlName="providerDigitalSigned">
+              <svg viewBox="0 0 21 21">
+                <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+              </svg>
+              <span class="label_title">Tarife nur mit digitaler Unterschrift</span>
+            </label>
+
+            <label class="checkbox_custom bounce">
+              <input type="checkbox" formControlName="requiredEmail">
+              <svg viewBox="0 0 21 21">
+                <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+              </svg>
+              <span class="label_title">E-Mail Pflicht</span>
+            </label>
+          </div>
+
+          <div class="col-sm-12 col-md-6 filter-option-check-wrapp option-group-2">
+
+            <label class="checkbox_custom bounce">
+              <input type="checkbox" formControlName="optEco">
+              <svg viewBox="0 0 21 21">
+                <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+              </svg>
+              <span class="label_title">nur Ökotarife</span>
+            </label>
+
+            <label class="checkbox_custom bounce">
+              <input type="checkbox" formControlName="selfPayment">
+              <svg viewBox="0 0 21 21">
+                <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+              </svg>
+              <span class="label_title">Selbstzahlung</span>
+            </label>
+
+            <label class="checkbox_custom bounce">
+              <input type="checkbox" formControlName="howOnlyFollowUpProvision">
+              <svg viewBox="0 0 21 21">
+                <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+              </svg>
+              <span class="label_title">Nur Tarife mit Folgeprovision</span>
+            </label>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </form>
+</div>

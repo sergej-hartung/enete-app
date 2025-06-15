@@ -65,7 +65,7 @@ img {
   max-width: 100%
 }
 
-.table {
+.table-start-page {
   display: table;
   z-index: 9;
   position: absolute;
@@ -87,7 +87,7 @@ img {
 }
 
 .section_padding_100 {
-  padding: 100px 0
+  padding: 100px 15px
 }
 
 .section_padding_100_0 {
@@ -355,7 +355,7 @@ header {
         margin: 50px auto 0;
       }
 
-    .single_slide .slide_text .table .table_cell {
+    .single_slide .slide_text .table-start-page .table_cell {
       padding-top: 5%
     }
 
@@ -695,7 +695,7 @@ header {
     letter-spacing: .5px
   }
 
-  .single_service_content .table .table_cell {
+  .single_service_content .table-start-page .table_cell {
     padding-bottom: 10px
   }
 
@@ -2317,7 +2317,7 @@ ol.breadcrumb {
   z-index: 1000000
 }
 
-.btn {
+.btn-start-page {
   background-color: transparent;
   border-radius: 5px;
   border: 1px solid;

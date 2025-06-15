@@ -12,34 +12,10 @@ import { BaseProviderFormComponent } from './base-provider-form/base-provider-fo
 import { EnergyTariffFormFactoryService } from '../service/energy-tariff-form-factory.service';
 import { BranchSelectorComponent } from './branch-selector/branch-selector.component';
 import { TypeSelectorComponent } from './type-selector/type-selector.component';
+import { BaseProvider, BaseRate, City, NetzProvider, PeopleMap } from '../types/types';
+import { EnergyTariffFilterComponent } from '../energy-tariff-filter/energy-tariff-filter.component';
 
 
-interface City {
-  city: string;
-  zip?: string;
-}
-
-interface NetzProvider {
-  netzName: string;
-}
-
-interface BaseRate {
-  rateName: string;
-  basePriceYear: number;
-  workPrice: number;
-  workPriceNt: number;
-}
-
-interface BaseProvider {
-  providerName: string;
-  //rates: BaseRate[];
-}
-
-interface PeopleMap {
-  [key: string]: { [key: string]: string };
-  electric: { one: string; two: string; three: string; four: string };
-  gas: { one: string; two: string; three: string; four: string };
-}
 
 @Component({
   selector: 'app-energy-tariff-form',
@@ -47,7 +23,7 @@ interface PeopleMap {
     CommonModule,
     ReactiveFormsModule,
     NgbCollapseModule,
-    NgbTypeahead,
+    //NgbTypeahead,
     LocationSelectorComponent,
     ConsumptionFormComponent,
     BaseProviderFormComponent,
@@ -59,7 +35,7 @@ interface PeopleMap {
 })
 export class EnergyTariffFormComponent {
   @Input() show = true;
-  @ViewChild('instance', { static: true }) instance!: NgbTypeahead;
+  //@ViewChild('instance', { static: true }) instance!: NgbTypeahead;
   focus$ = new Subject<string>();
   blur$ = new Subject<string>();
   click$ = new Subject<string>();
@@ -111,7 +87,7 @@ export class EnergyTariffFormComponent {
   private setupFormSubscriptions(): void {
     this.tariffForm.get('branch')!.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(branch => {
+    ).subscribe((branch: 'electric' | 'gas' | 'warmth') => {
       if (branch) {
         this.updateBranchSettings(branch);
       }
@@ -119,7 +95,7 @@ export class EnergyTariffFormComponent {
 
     this.tariffForm.get('type')!.valueChanges.pipe(
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(type => {
+    ).subscribe((type: 'private' | 'company' | 'weg') => {
       if (type) {
         this.updateTypeSettings(type);
       }
@@ -171,7 +147,7 @@ export class EnergyTariffFormComponent {
     this.tariffForm.get('tariffsQuery.houseNumber')!.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      filter(hn => !!hn),
+      filter((hn: string) => !!hn),
       tap(() => {
         this.tariffForm.get('tariffsQuery.netzProv')?.disable();
         this.loadNetzProvider()
@@ -180,9 +156,9 @@ export class EnergyTariffFormComponent {
     ).subscribe();
 
     this.blur$.pipe(
-      filter(val => !!val),
+      filter((val: string) => !!val),
       takeUntilDestroyed(this.destroyRef)
-    ).subscribe(res => {
+    ).subscribe((res: string) => {
       const found = this.streets.includes(res);
       if (!found) {
         this.tariffForm.get('tariffsQuery.street')?.setValue('');
@@ -201,9 +177,8 @@ export class EnergyTariffFormComponent {
     );
 
     this.tariffForm.get('tariffsQueryThree.providerName')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
-      res => {
-        if (res && 'rates' in res && res.rates.length > 0) {
-          console.log(res, 'providerName')
+      (res: BaseProvider | string) => {
+        if (res && typeof res === 'object' &&  'rates' in res && res.rates.length > 0) {
           this.baseRates = res.rates
           this.tariffForm.get('tariffsQueryThree.rateName')?.reset()
           this.tariffForm.get('tariffsQueryThree.rateName')?.setValue(res.rates[0])
@@ -213,8 +188,8 @@ export class EnergyTariffFormComponent {
     )
 
     this.tariffForm.get('tariffsQueryThree.rateName')?.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
-      res => {
-        if (res) {
+      (res: BaseRate | string) => {
+        if (res && typeof res === 'object') {
           this.setBasePrice(res)
         }
       }
@@ -231,8 +206,8 @@ export class EnergyTariffFormComponent {
       )
     ])
     .pipe(
-      filter(([ht, nt]) => !!ht || !!nt),
-      switchMap(([ht, nt]) => this.onQuery(ht || nt)),
+      filter(([ht, nt]: [string, string]) => !!ht || !!nt),
+      switchMap(([ht, nt]: [string, string]) => this.onQuery(ht || nt)),
       takeUntilDestroyed(this.destroyRef)
     )
     .subscribe(() => this.resetThreeForm());
@@ -248,11 +223,11 @@ export class EnergyTariffFormComponent {
     )
 
   private loadNetzProvider(): void {
-    const zip = this.tariffForm.get('tariffsQuery.zip')!.value;
-    const city = this.tariffForm.get('tariffsQuery.city')!.value?.city;
-    const street = this.tariffForm.get('tariffsQuery.street')!.value;
-    const houseNumber = this.tariffForm.get('tariffsQuery.houseNumber')!.value;
-    const branch = this.tariffForm.get('branch')!.value === 'warmth' ? 'electric' : this.tariffForm.get('branch')!.value;
+    const zip = this.tariffForm.get('tariffsQuery.zip')!.value as string;
+    const city = this.tariffForm.get('tariffsQuery.city')!.value?.city as string;
+    const street = this.tariffForm.get('tariffsQuery.street')!.value as string;
+    const houseNumber = this.tariffForm.get('tariffsQuery.houseNumber')!.value as string;
+    const branch = this.tariffForm.get('branch')!.value === 'warmth' ? 'electric' : this.tariffForm.get('branch')!.value as 'electric' | 'gas' | 'warmth';
 
     if (!zip || !city || !street || !houseNumber || !branch) return;
 
@@ -278,8 +253,7 @@ export class EnergyTariffFormComponent {
     let data = this.getDataForBaseProviderLoad()
     this.isLoadedBaseProvider = false
     this.httpEnergieService.getBaseProvider(data).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
-      result => {
-        console.log(result)
+      (result: BaseProvider[]) => {
         this.baseProviders = result
         
         if (this.baseProviders.length > 0) {
@@ -406,7 +380,7 @@ export class EnergyTariffFormComponent {
 
 
   toggleFilter(event: any) {
-    //this.modalService.open(EnergyCalcFilterComponent, { modalDialogClass: 'energie-rechner-filter-modal'})
+    this.modalService.open(EnergyTariffFilterComponent, { modalDialogClass: 'energie-rechner-filter-modal'})
   }
 
   getTarifs() {
@@ -418,6 +392,7 @@ export class EnergyTariffFormComponent {
       this.getTariffsQueryThree()
     )
     this.energyService.ratesData = ratesData;
+    console.log(this.energyService.ratesData)
   }
 
   getBranch(returnObj = false): string | { branch: string } {
@@ -457,7 +432,7 @@ export class EnergyTariffFormComponent {
   }
 
   getTariffsQueryThree() {
-    this.extractFormData(this.tariffForm.get('tariffsQueryThree') as FormGroup, ['rateName'])
+    return this.extractFormData(this.tariffForm.get('tariffsQueryThree') as FormGroup, ['rateName'])
   }
 
   TariffsQueryThree(){

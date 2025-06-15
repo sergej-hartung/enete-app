@@ -80,6 +80,7 @@ export class NavigationMainComponent {
   isActive(nav: Navigation): boolean {
     // Prüfe, ob der aktuelle Pfad exakt mit nav.src übereinstimmt
     if (this.currentPath === nav.src) {
+
       return true;
     }
     // Prüfe, ob der aktuelle Pfad ein Unterpfad von nav.src ist

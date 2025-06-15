@@ -14,7 +14,7 @@
 // }/* You can add global styles to this file, and also import other style files */
 
 /* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
+//@import 'bootstrap/scss/bootstrap';
 
 
 @import "../public/css/start-page/style.css";
@@ -136,10 +136,10 @@ $client-theme: mat.m2-define-light-theme((
 
 .content_rechner {
   display: block;
-  margin-left: -15px;
-  margin-right: -15px;
-  padding-left: 15px;
-  padding-right: 15px;
+  // margin-left: -15px;
+  // margin-right: -15px;
+  // padding-left: 15px;
+  // padding-right: 15px;
   min-height: 100%;
   padding-bottom: 100px
 }
@@ -164,10 +164,10 @@ $client-theme: mat.m2-define-light-theme((
   }
 }
 
-body {
-  height: 100%;
-  font-family: Open Sans;
-}
+// body {
+//   height: 100%;
+//   font-family: Open Sans;
+// }
 
 h6 {
   /* Text Font / H6 Headline */

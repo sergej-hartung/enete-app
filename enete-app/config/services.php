@@ -32,7 +32,7 @@ return [
     ],
 
     'egon' => [
-        'url' => env('EGON_API_URL', 'https://api.egon.example.com/'),
+        'url' => env('EGON_API_URL', 'https://gateway.eg-on.com/'),
         'token' => env('EGON_TOKEN'),
         'reseller_id' => env('EGON_RESELLER_ID'),
     ],
