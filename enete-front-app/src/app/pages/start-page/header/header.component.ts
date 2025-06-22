@@ -1,15 +1,15 @@
-import { Component, HostListener, signal, WritableSignal } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { NgbModal, NgbCollapse, NgbModalModule, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Component, HostListener, Inject, PLATFORM_ID, signal, WritableSignal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { NgbModal,NgbModalModule, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { LoginModalComponent } from '../login-modal/login-modal.component';
 import { AuthService } from '../../../core/service/auth.service';
+import { Router, RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, RouterLink, NgbCollapse, NgbModalModule, LoginModalComponent],
+  imports: [CommonModule, NgbModalModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
@@ -28,13 +28,20 @@ export class HeaderComponent {
     this.isSticky = window.scrollY > 50;
   }
 
-  constructor(private modalService: NgbModal, private authService: AuthService) {
+  constructor(
+    private modalService: NgbModal, 
+    private authService: AuthService, 
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {
     this.isLoggedIn = this.authService.isLoggedIn();
   }
 
   ngAfterViewInit(): void {
     //if (!this.isBrowser) return; // Nur im Browser ausführen
-    this.setupSectionObserver();
+    if (isPlatformBrowser(this.platformId)) {
+      this.setupSectionObserver();
+    }
   }
 
   private setupSectionObserver(): void {
@@ -70,16 +77,7 @@ export class HeaderComponent {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  // openLoginModal(): void {
-  //   this.modalService.open(LoginModalComponent).result.then(
-  //     (result) => {
-  //       if (result) {
-  //         this.isLoggedIn = true;
-  //       }
-  //     },
-  //     () => {}
-  //   );
-  // }
+
   openLoginModal(): void {
     this.modalService.open(LoginModalComponent, { ariaLabelledBy: 'modal-basic-title' }).result.then(
 			(result) => {
@@ -91,29 +89,7 @@ export class HeaderComponent {
 		);
   }
 
-  // openLoginModal(): void {
-  //   console.log('Öffne Modal mit NgbModal');
-  //   // Setze inert auf den Hauptinhalt
-  //   document.querySelector('app-root')?.setAttribute('inert', '');
-  //   const modalRef = this.modalService.open(LoginModalComponent, {
-  //     ariaLabelledBy: 'login-modal-title',
-  //     centered: true
-  //   });
   
-  //   modalRef.result.then(
-  //     (result) => {
-  //       console.log(`Modal geschlossen mit: ${result}`);
-  //       document.querySelector('app-root')?.removeAttribute('inert');
-  //       if (result) {
-  //         this.isLoggedIn = true;
-  //       }
-  //     },
-  //     (reason) => {
-  //       console.log(`Modal verworfen mit: ${reason}`);
-  //       document.querySelector('app-root')?.removeAttribute('inert');
-  //     }
-  //   );
-  // }
 
   private getDismissReason(reason: any): string {
 		switch (reason) {
@@ -126,8 +102,9 @@ export class HeaderComponent {
 		}
 	}
 
-  goToDashboard(): void {
-    // Navigiere zum Dashboard (Platzhalter)
-  }
+  // goToDashboard(): void {
+  //   this.router.navigate(['main/dashboard']);
+  //   // Navigiere zum Dashboard (Platzhalter)
+  // }
 
 }

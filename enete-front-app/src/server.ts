@@ -27,6 +27,15 @@ const angularApp = new AngularNodeAppEngine();
  */
 
 /**
+ * Statische Assets ausgeben – damit fonts, img usw. funktionieren
+ */
+app.use('/fonts', express.static(resolve(browserDistFolder, 'fonts')));
+app.use('/img', express.static(resolve(browserDistFolder, 'img')));
+app.use('/css', express.static(resolve(browserDistFolder, 'css')));
+app.use('/media', express.static(resolve(browserDistFolder, 'media')));
+app.use('/scss', express.static(resolve(browserDistFolder, 'scss')));
+
+/**
  * Serve static files from /browser
  */
 app.use(

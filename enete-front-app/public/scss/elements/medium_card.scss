@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .medium_card{
     background-color: #fff;
     border: 1px solid #EDF1F7;
@@ -130,7 +132,8 @@
 
             &:hover{
                 //background: darken(#7D1120, 15%); 
-                background: lighten(#7D1120, 10%);
+                background: color.adjust(#7D1120, $lightness: 10%);
+                
                 //background: rgba(125, 17, 32, 0.9); 
             }
             

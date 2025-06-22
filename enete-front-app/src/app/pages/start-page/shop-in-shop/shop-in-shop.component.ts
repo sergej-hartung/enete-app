@@ -15,7 +15,7 @@ interface ListItem {
 })
 export class ShopInShopComponent {
 
-  imageUrl = 'public/img/start-page-img/bg-pattern/shop-in-shop.jpg';
+  imageUrl = 'img/start-page-img/bg-pattern/shop-in-shop.jpg';
   partnerRequirements: ListItem[] = [
     { text: 'Kunden begeistern können' },
     { text: 'lieber beim Kunden als im Büro sitzen' },

@@ -1,11 +1,8 @@
-//@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
-//@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-//@import url('https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp');
-//@import url('https://pro.fontawesome.com/releases/v5.10.0/css/all.css');
 
-@import "../fonts/google-fonts/open-sans-v34-latin/open-sans.scss";
-@import "../fonts/google-fonts/roboto-v30-latin/roboto.scss";
-@import "../fonts/google-fonts/poppins-v23-latin/poppins.scss";
+
+@use "../fonts/google-fonts/open-sans-v34-latin/open-sans.scss";
+@use "../fonts/google-fonts/roboto-v30-latin/roboto.scss";
+@use "../fonts/google-fonts/poppins-v23-latin/poppins.scss";
 //@import "../fonts/google-fonts/material-icons-v143-latin/material-icons-v143-latin-regular.woff2";
 /* fallback */
 @font-face {

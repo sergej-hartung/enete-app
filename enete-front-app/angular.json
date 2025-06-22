@@ -30,15 +30,15 @@
               {
                 "glob": "**/*",
                 "input": "public",
-                "output": "public"
+                "output": ""
               }
             ],
             "styles": [
               
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.carousel.min.css",
-    "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css",
-    "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-owl-carousel-o/lib/styles/prebuilt-themes/owl.theme.default.min.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
               
             ],
@@ -47,7 +47,8 @@
             "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "allowedCommonJsDependencies": ["bootstrap"]
           },
           "configurations": {
             "production": {
@@ -101,7 +102,8 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": ""
               }
             ],
             "styles": [

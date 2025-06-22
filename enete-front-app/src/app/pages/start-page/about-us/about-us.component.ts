@@ -44,5 +44,5 @@ export class AboutUsComponent {
     },
   ];
 
-  imageUrl: string = 'public/img/start-page-img/bg-pattern/about-us.jpg';
+  imageUrl: string = 'img/start-page-img/bg-pattern/about-us.jpg';
 }

@@ -17,8 +17,40 @@
 //@import 'bootstrap/scss/bootstrap';
 
 
-@import "../public/css/start-page/style.css";
-@import "../public/css/start-page/responsive.css";
+@use "../public/css/start-page/style.css" as *;
+@use "../public/css/start-page/responsive.css" as *;
+
+@use  "../public/scss/normalize" as *;
+@use  "../public/scss/variables" as *;
+@use  "../public/scss/fonts" as *;
+@use  "../public/scss/mixins" as *;
+@use  "../public/scss/core" as *;
+
+@use  "../public/scss/blocks/header" as *;
+@use  "../public/scss/blocks/content" as *;
+@use  "../public/scss/blocks/menu" as *;
+@use  "../public/scss/blocks/mobile_menu" as *;
+@use  "../public/scss/blocks/second_mobile_menu" as *;
+@use  "../public/scss/blocks/breadcrumbs" as *;
+@use  "../public/scss/blocks/widgets" as *;
+@use  "../public/scss/blocks/energie_rechner" as *;
+@use  "../public/scss/blocks/energie_order_entry" as *;
+@use  "../public/scss/blocks/dsl_rechner" as *;
+@use  "../public/scss/blocks/mobilfunk-rechner" as *;
+@use  "../public/scss/blocks/incentive_team" as *;
+@use  "../public/scss/elements/checkbox_switsh" as *;
+@use  "../public/scss/elements/radio_btn_rechner" as *;
+@use  "../public/scss/elements/checkbox" as *;
+@use  "../public/scss/elements/radio" as *;
+@use  "../public/scss/elements/tooltips" as *;
+@use  "../public/scss/elements/tap_accordion" as *;
+@use  "../public/scss/elements/process-nav" as *;
+@use  "../public/scss/elements/medium_card" as *;
+@use  "../public/scss/elements/product_card" as *;
+@use  "../public/scss/elements/input" as *;
+@use  "../public/scss/elements/preloader" as *;
+@use  "../public/scss/elements/tariff_filter" as *;
+@use  "../public/scss/elements/deal_card" as *;
 
 // Custom Theming for Angular Material
 // For more information: https://material.angular.dev/guide/theming
@@ -59,37 +91,7 @@ $client-theme: mat.m2-define-light-theme((
 /* Importing Datepicker SCSS file. */
 //@import "node_modules/ngx-bootstrap/datepicker/bs-datepicker";
 
-@import "../public/scss/normalize";
-@import "../public/scss/variables";
-@import "../public/scss/fonts";
-@import "../public/scss/mixins";
-@import "../public/scss/core";
 
-@import "../public/scss/blocks/header";
-@import "../public/scss/blocks/content";
-@import "../public/scss/blocks/menu";
-@import "../public/scss/blocks/mobile_menu";
-@import "../public/scss/blocks/second_mobile_menu";
-@import "../public/scss/blocks/breadcrumbs";
-@import "../public/scss/blocks/widgets";
-@import "../public/scss/blocks/energie_rechner";
-@import "../public/scss/blocks/energie_order_entry";
-@import "../public/scss/blocks/dsl_rechner";
-@import "../public/scss/blocks/mobilfunk-rechner";
-@import "../public/scss/blocks/incentive_team";
-@import "../public/scss/elements/checkbox_switsh";
-@import "../public/scss/elements/radio_btn_rechner";
-@import "../public/scss/elements/checkbox";
-@import "../public/scss/elements/radio";
-@import "../public/scss/elements/tooltips";
-@import "../public/scss/elements/tap_accordion";
-@import "../public/scss/elements/process-nav";
-@import "../public/scss/elements/medium_card";
-@import "../public/scss/elements/product_card";
-@import "../public/scss/elements/input";
-@import "../public/scss/elements/preloader";
-@import "../public/scss/elements/tariff_filter";
-@import "../public/scss/elements/deal_card";
 
 //@import "./assets/css/start-page/owl.carousel.css";
 

@@ -1,4 +1,6 @@
 @charset "UTF-8";
+@use './variables' as *;
+@use './mixins' as *;
 
 /**
  * Основные стили

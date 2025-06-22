@@ -23,17 +23,17 @@ export class WelcomeSliderComponent {
 
   slides: Slide[] = [
     {
-      image: 'public/img/start-page-img/bg-pattern/bg-3.jpg',
+      image: 'img/start-page-img/bg-pattern/bg-3.jpg',
       title: '<span class="slider-title-span">WIR SIND</span> ENETE',
       subtitle: 'Vertrieb für Energie und Telekommunikation.',
     },
     {
-      image: 'public/img/start-page-img/bg-pattern/bg-4.jpg',
+      image: 'img/start-page-img/bg-pattern/bg-4.jpg',
       title: 'WIR LIEBEN <span class="slider-title-span">TEAMWORK</span>',
       subtitle: 'Unser modernes und faires Konzept bietet auch Ihnen die Möglichkeit in unser Vertriebssystem einzusteigen.',
     },
     {
-      image: 'public/img/start-page-img/bg-pattern/bg-5.jpg',
+      image: 'img/start-page-img/bg-pattern/bg-5.jpg',
       title: 'ENERGIELÖSUNGEN FÜR <span class="slider-title-span">UNTERNEHMEN</span>',
       subtitle: 'Profitieren Sie exklusiv von unseren Lösungen für Unternehmen. Informationen für Unternehmer auf www.enete-energie.de.',
       button: { text: 'Besuchen', link: 'https://enete-energie.de' },

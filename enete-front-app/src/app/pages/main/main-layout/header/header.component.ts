@@ -13,8 +13,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class HeaderComponent {
   private destroyRef = inject(DestroyRef);
   
-  logoSrc = 'public/img/logo.svg'
-  logoSmallSrc = 'public/img/logo_klein.svg'
+  logoSrc = 'img/logo.svg'
+  logoSmallSrc = 'img/logo_klein.svg'
   logoAlt = 'Logo'
 
   title = ''
