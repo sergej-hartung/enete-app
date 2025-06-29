@@ -18,7 +18,7 @@ import { saveAs } from 'file-saver';
 export class EnergyTariffsComponent {
   // Inputs
   @Input() rate:any = {}
-  @Input() IncludingBonus:any 
+  @Input() IncludingBonus: boolean =  false
   @Input() count:any
   @Input() ratesData:any
 
@@ -72,6 +72,14 @@ export class EnergyTariffsComponent {
     //       this.inTheOffer.set(false);
     //     }
     //   });
+    this.energyService.offers$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(offers => {
+        const rateId = this.rate?.rateId
+        const found = offers?.some(o => o?.rateId === rateId);
+        this.inTheOffer.set(found);
+      })
+
   }
 
   ngOnChanges() {
@@ -129,9 +137,10 @@ export class EnergyTariffsComponent {
   }
 
   setOffers() {
-    if (this.energyService.setOffers(this.rate)) {
-      this.inTheOffer.set(true);
-    }
+    this.energyService.setOffers(this.rate)
+    // if (this.energyService.setOffers(this.rate)) {
+    //   this.inTheOffer.set(true);
+    // }
   }
 
   orderEntry() {

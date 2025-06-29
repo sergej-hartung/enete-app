@@ -9,6 +9,8 @@ export interface Rate {
   termBeforeNewMaxDate?: string;
   providerChangeFast?: boolean;
   requiredEmail?: boolean;
+  providerSVG?: string
+  totalPrice?: string
 }
 
 export interface OrderEntry {
@@ -45,7 +47,6 @@ export class EnergyService {
   public getRates$ = new Subject<any>(); // event emitter für neue Daten
 
   public resetDataRatesForm$ = new Subject<void>();
-  public deleteOffer$ = new Subject<Offer>();
   public toggleOrderEntry$ = new Subject<OrderEntry>();
   public orderFinished$ = new Subject<void>();
 
@@ -96,7 +97,6 @@ export class EnergyService {
   deleteOffer(offer: Offer): void {
     const updated = this._offers$.value.filter(o => o.rateId !== offer.rateId);
     this._offers$.next(updated);
-    this.deleteOffer$.next({ ...offer }); // Event separat
   }
 
   resetOffers(): void {

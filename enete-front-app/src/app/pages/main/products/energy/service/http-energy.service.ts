@@ -136,4 +136,9 @@ export class HttpEnergyService {
     //};
     return this.http.get(`${BASE_URL}/products/energy/contract-file-blank/${rateId}/${rateFileId}`)
   }
+
+  getPdfOffer(params: any): Observable<any>  {
+    console.log(params)
+    return this.http.post(`${BASE_URL}/api/tariff-offer-energy`, params, { responseType: 'blob' })
+  }
 }

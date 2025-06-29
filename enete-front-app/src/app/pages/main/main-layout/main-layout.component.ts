@@ -36,6 +36,6 @@ import { RouterOutlet } from '@angular/router';
 export class MainLayoutComponent {
 
   onContentScroll(test: any){
-    console.log(test)
+    //console.log(test)
   }
 }

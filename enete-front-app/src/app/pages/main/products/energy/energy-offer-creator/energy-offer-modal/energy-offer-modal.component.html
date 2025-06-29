@@ -1,0 +1,440 @@
+<div class="modal-header">
+  <h4 class="modal-title">neues Angebot erstellen</h4>
+  <button type="button" class="close" (click)="close()">&times;</button>
+</div>
+
+<!-- Modal body -->
+<div class="modal-body">
+  <div class="row ">
+    <div class="col-lg-6 col-12">
+      <div class="medium_card">
+        <div class="card_header">
+          <h3 class="card_title">Kontaktdaten</h3>
+          <!--<h6 class="card_sub_title">Lieferanschrift & Vertragspartner</h6>-->
+        </div>
+        <div class="card_content">
+          <form [formGroup]="clientContactDetails">
+            <div class="form-row">
+              <div class="col-12">
+                <div class="form-group">
+                    <input type="text" class="form-control custom_input" name="company" formControlName="company" placeholder="Firma" autocomplete="new-company"
+                       [ngClass]="[
+                         (clientContactDetails.get('company')?.invalid && clientContactDetails.get('company')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('company')?.invalid && clientContactDetails.get('company')?.touched) ? 'is-valid' : '']">
+                </div>           
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="form-group">
+                  <select class="form-control custom_input" name="salutation" formControlName="salutation"
+                        [ngClass]="[
+                         (clientContactDetails.get('salutation')?.invalid && clientContactDetails.get('salutation')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('salutation')?.invalid && clientContactDetails.get('salutation')?.touched) ? 'is-valid' : '']">
+                    <option selected disabled>Anrede</option>
+                    <option>Herr</option>
+                    <option>Frau</option>
+                  </select>  
+                </div>     
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <input type="text"
+                       name="firstName"
+                       formControlName="firstName"
+                       class="form-control custom_input"
+                       placeholder="Vorname"
+                       autocomplete="new-firstName"
+                       [ngClass]="[
+                         (clientContactDetails.get('firstName')?.invalid && clientContactDetails.get('firstName')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('firstName')?.invalid && clientContactDetails.get('firstName')?.touched) ? 'is-valid' : '']"> 
+                </div>          
+              </div>
+              <div class="col-md-6 col-12">
+                <div class="form-group">
+                  <input type="text"
+                       name="lastName"
+                       formControlName="lastName"
+                       class="form-control custom_input"
+                       placeholder="Nachname"
+                       autocomplete="new-lastName"
+                       [ngClass]="[
+                         (clientContactDetails.get('lastName')?.invalid && clientContactDetails.get('lastName')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('lastName')?.invalid && clientContactDetails.get('lastName')?.touched) ? 'is-valid' : '']"> 
+                </div>        
+              </div>
+            </div>
+
+            <!--<div class="form-row">
+              <div class="col-12">
+                <select disabled class="form-control custom_input">
+                  <option selected>Deutschland</option>
+                  <option>...</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please choose a username.
+                </div>
+              </div>
+            </div>-->
+
+            <div class="row gx-2">
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text"
+                       name="plz"
+                       formControlName="plz"
+                       class="form-control custom_input"
+                       placeholder="PLZ"
+                       [ngClass]="[
+                         (clientContactDetails.get('plz')?.invalid && clientContactDetails.get('plz')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('plz')?.invalid && clientContactDetails.get('plz')?.touched) ? 'is-valid' : '']">
+                </div>
+                
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text"
+                       name="city"
+                       formControlName="city"
+                       class="form-control custom_input"
+                       placeholder="Stadt"
+                       [ngClass]="[
+                         (clientContactDetails.get('city')?.invalid && clientContactDetails.get('city')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('city')?.invalid && clientContactDetails.get('city')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-8">
+                <div class="form-group">
+                  <input type="text"
+                       name="street"
+                       formControlName="street"
+                       class="form-control custom_input"
+                       placeholder="Strasse"
+                       [ngClass]="[
+                         (clientContactDetails.get('street')?.invalid && clientContactDetails.get('street')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('street')?.invalid && clientContactDetails.get('street')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text"
+                       name="HouseNumber"
+                       formControlName="HouseNumber"
+                       class="form-control custom_input"
+                       placeholder="Nr."
+                       [ngClass]="[
+                         (clientContactDetails.get('HouseNumber')?.invalid && clientContactDetails.get('HouseNumber')?.touched) ? 'is-invalid' : '',
+                         (!clientContactDetails.get('HouseNumber')?.invalid && clientContactDetails.get('HouseNumber')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col">
+                <label class="checkbox_custom bounce">
+                  <input type="checkbox" class="" name="providerName" formControlName="providerName">
+                  <svg viewBox="0 0 21 21">
+                    <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+                  </svg>
+                  <span class="label_title">Versorgernamen ausblenden</span>
+                </label>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6 col-12">
+      <form [formGroup]="contactPersonDetails" autocomplete="off">
+        <div class="medium_card">
+          <div class="card_header">
+            <h3 class="card_title">Ansprechpartner</h3>
+            <!--<h6 class="card_sub_title">Lieferanschrift & Vertragspartner</h6>-->
+          </div>
+          <div class="card_content">
+
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="form-group">
+                  <input type="text"
+                       name="company"
+                       formControlName="company"
+                       class="form-control custom_input"
+                       placeholder="Firma"
+                       autocomplete="new-company"
+                       [ngClass]="[
+                         (contactPersonDetails.get('company')?.invalid && contactPersonDetails.get('company')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('company')?.invalid && contactPersonDetails.get('company')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-12">
+                <div class="form-group">
+                  <select class="form-control custom_input"
+                          name="salutation"
+                          formControlName="salutation"
+                          [ngClass]="[
+                          (contactPersonDetails.get('salutation')?.invalid && contactPersonDetails.get('salutation')?.touched) ? 'is-invalid' : '',
+                          (!contactPersonDetails.get('salutation')?.invalid && contactPersonDetails.get('salutation')?.touched) ? 'is-valid' : '']">
+                    <option selected disabled>Anrede</option>
+                    <option>Herr</option>
+                    <option>Frau</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-6">
+                <div class="form-group">
+                  <input type="text"
+                       name="firstName"
+                       formControlName="firstName"
+                       class="form-control custom_input"
+                       placeholder="Vorname"
+                       autocomplete="new-firstName"
+                       [ngClass]="[
+                         (contactPersonDetails.get('firstName')?.invalid && contactPersonDetails.get('firstName')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('firstName')?.invalid && contactPersonDetails.get('firstName')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-group">
+                  <input type="text"
+                       name="lastName"
+                       formControlName="lastName"
+                       class="form-control custom_input"
+                       placeholder="Nachname"
+                       autocomplete="new-lastName"
+                       [ngClass]="[
+                         (contactPersonDetails.get('lastName')?.invalid && contactPersonDetails.get('lastName')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('lastName')?.invalid && contactPersonDetails.get('lastName')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+            </div>
+
+            <!--<div class="form-row">
+              <div class="col-12">
+                <select disabled class="form-control custom_input">
+                  <option selected>Deutschland</option>
+                  <option>...</option>
+                </select>
+                <div class="invalid-feedback">
+                  Please choose a username.
+                </div>
+              </div>
+            </div>-->
+
+            <div class="row gx-2">
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text"
+                       name="plz"
+                       formControlName="plz"
+                       class="form-control custom_input"
+                       placeholder="PLZ"
+                       autocomplete="new-plz"
+                       [ngClass]="[
+                         (contactPersonDetails.get('plz')?.invalid && contactPersonDetails.get('plz')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('plz')?.invalid && contactPersonDetails.get('plz')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+              <div class="col-8">
+                <div class="form-group">
+                  <!--<input type="text" name="city" formControlName="city" class="form-control custom_input" placeholder="Stadt">-->
+                  <select class="form-control custom_input" name="city" formControlName="city">
+                    <ng-container *ngIf="citys && citys.length > 0; else defaultCity">
+                      <option *ngFor="let city of citys; first as isFirst" [ngValue]="city">{{city.city}}</option>
+                    </ng-container>
+                    <ng-template #defaultCity>
+                      <option [value]="null" [selected]="true" disabled>Bitte PLZ eingeben</option>
+                    </ng-template>
+
+                    <!--<option value="" selected disabled>Ort</option>-->
+
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-8">
+                <div class="form-group">
+                  <!--<input type="text" name="street" formControlName="street" class="form-control custom_input" placeholder="Strasse">-->
+                  <input type="text"
+                        class="form-control custom_input"
+                        formControlName="street"
+                        name="street"
+                        placeholder="Straße"
+                        [ngbTypeahead]="search"
+                        (blur)="blur$.next($any($event).target.value)"
+                        autocomplete="new-street"
+                        [ngClass]="[
+                          (contactPersonDetails.get('street')?.invalid && contactPersonDetails.get('street')?.touched) ? 'is-invalid' : '',
+                          (!contactPersonDetails.get('street')?.invalid && contactPersonDetails.get('street')?.touched) ? 'is-valid' : '']"/>
+                </div>
+                
+              </div>
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text"
+                       name="HouseNumber"
+                       formControlName="HouseNumber"
+                       class="form-control custom_input"
+                       placeholder="Nr."
+                       autocomplete="new-HouseNumber"
+                       [ngClass]="[
+                         (contactPersonDetails.get('HouseNumber')?.invalid && contactPersonDetails.get('HouseNumber')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('HouseNumber')?.invalid && contactPersonDetails.get('HouseNumber')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="medium_card">
+          <div class="card_header">
+            <h3 class="card_title">Kontakt</h3>
+          </div>
+          <div class="card_content">
+            <div class="row gx-2">
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text"
+                       name="phonePrefix"
+                       formControlName="phonePrefix"
+                       class="form-control custom_input"
+                       placeholder="Vorwahl"
+                       autocomplete="new-phonePrefix"
+                       [ngClass]="[
+                         (contactPersonDetails.get('phonePrefix')?.invalid && contactPersonDetails.get('phonePrefix')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('phonePrefix')?.invalid && contactPersonDetails.get('phonePrefix')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+              <div class="col-8 input-icon">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text"
+                        name="phone"
+                        formControlName="phone"
+                        class="form-control custom_input"
+                        placeholder="Telefonnummer"
+                        autocomplete="new-phone"
+                        [ngClass]="[
+                          (contactPersonDetails.get('phone')?.invalid && contactPersonDetails.get('phone')?.touched) ? 'is-invalid' : '',
+                          (!contactPersonDetails.get('phone')?.invalid && contactPersonDetails.get('phone')?.touched) ? 'is-valid' : '']">
+                    <span class="input-group-text"><i class="fas fa-phone-alt"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text"
+                       name="faxPrefix"
+                       formControlName="faxPrefix"
+                       class="form-control custom_input"
+                       placeholder="Vorwahl"
+                       autocomplete="new-faxPrefix"
+                       [ngClass]="[
+                         (contactPersonDetails.get('faxPrefix')?.invalid && contactPersonDetails.get('faxPrefix')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('faxPrefix')?.invalid && contactPersonDetails.get('faxPrefix')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+              <div class="col-8 input-icon">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text"
+                       name="fax"
+                       formControlName="fax"
+                       class="form-control custom_input"
+                       placeholder="Telefonnummer"
+                       autocomplete="new-fax"
+                       [ngClass]="[
+                         (contactPersonDetails.get('fax')?.invalid && contactPersonDetails.get('fax')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('fax')?.invalid && contactPersonDetails.get('fax')?.touched) ? 'is-valid' : '']">
+                    <span class="input-group-text"><i class="fas fa-print"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-4">
+                <div class="form-group">
+                  <input type="text"
+                       name="mobilePrefix"
+                       formControlName="mobilePrefix"
+                       class="form-control custom_input"
+                       placeholder="Vorwahl"
+                       autocomplete="new-mobilePrefix"
+                       [ngClass]="[
+                         (contactPersonDetails.get('mobilePrefix')?.invalid && contactPersonDetails.get('mobilePrefix')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('mobilePrefix')?.invalid && contactPersonDetails.get('mobilePrefix')?.touched) ? 'is-valid' : '']">
+                </div>
+              </div>
+              <div class="col-8 input-icon">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="text"
+                       name="mobile"
+                       formControlName="mobile"
+                       class="form-control custom_input"
+                       placeholder="Mobilfunknummer"
+                       autocomplete="new-mobile"
+                       [ngClass]="[
+                         (contactPersonDetails.get('mobile')?.invalid && contactPersonDetails.get('mobile')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('mobile')?.invalid && contactPersonDetails.get('mobile')?.touched) ? 'is-valid' : '']">
+                    <span class="input-group-text"><i class="fas fa-mobile-alt"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-2">
+              <div class="col-12 input-icon">
+                <div class="form-group">
+                  <div class="input-group">
+                    <input type="email"
+                       name="email"
+                       formControlName="email"
+                       class="form-control custom_input"
+                       placeholder="E-Mail."
+                       autocomplete="new-email"
+                       [ngClass]="[
+                         (contactPersonDetails.get('email')?.invalid && contactPersonDetails.get('email')?.touched) ? 'is-invalid' : '',
+                         (!contactPersonDetails.get('email')?.invalid && contactPersonDetails.get('email')?.touched) ? 'is-valid' : '']">
+                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+
+  <button class="btn btn_custom_primary " (click)="downloadPdf()">
+    Angebot als PDF downloaden
+  </button>
+
+</div>

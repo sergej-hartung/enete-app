@@ -1,1 +1,38 @@
-<p>energy-offer-creator works!</p>
+<div class="offer_block_footer">
+  <div class="offer_block_row">
+    <div *ngFor="let offer of offers;" class="offer_block_col">
+      <div class="offer_wrap">
+        <div class="offer">
+          <div class="offer_logo" >
+            <div [innerHTML]="getLogo(offer)"></div>
+          </div>
+          <button class="btn offer_close" (click)="deleteOffer(offer)"><i class="fas fa-times"></i></button>
+          <div class="offer_price">ca. <span>{{offer.totalPrice | number: '1.2-2'}}</span> / mtl.</div>
+        </div>
+      </div>
+    </div>
+    <!--<div class="offer_block_col">
+      <div class="offer_wrap">
+        <div class="offer">
+          <div class="offer_logo"><img src="img/Vattenfall_logo.svg"></div>
+          <button class="btn offer_close"><i class="fas fa-times"></i></button>
+          <div class="offer_price">ca. <span>705,25 €</span> / mtl.</div>
+        </div>
+      </div>
+    </div>-->
+    <div *ngIf="offers.length < 2" class="offer_block_col">
+      <div class="offer_wrap">
+
+      </div>
+    </div>
+    <div *ngIf="offers.length < 3" class="offer_block_col">
+      <div class="offer_wrap">
+
+      </div>
+    </div>
+    <div class="offer_block_button">
+      <span>Maximal 3 Tarife im Vergleich</span>
+      <button class="btn offer_action" (click)="openOfferModal()">Zum Angebot</button>
+    </div>
+  </div>
+</div>
