@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductDocument\ProductDocumentController;
 use App\Http\Controllers\Egon\EgonApiController;
 
+use App\Http\Controllers\PdfTestController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -228,3 +230,22 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
 });
 
 Route::post('/email/verify/{hash}', 'App\Http\Controllers\User\VerificationController');
+
+Route::post('/pdf-test', [PdfTestController::class, 'test']);
+
+// Route::get('/pdf/test', function () {
+//     $data = new \App\Services\Pdf\OfferData(
+//         client: [ 'firstName' => 'Max', 'lastName' => 'Mustermann' ],
+//         seller: [ ... ],
+//         company: [ ... ],
+//         offers: [ ... ],
+//         ratesData: [ ... ]
+//     );
+
+//     $service = new \App\Services\Pdf\OfferPdfService();
+//     $pdfContent = $service->generate($data);
+
+//     return response($pdfContent)
+//         ->header('Content-Type', 'application/pdf')
+//         ->header('Content-Disposition', 'inline; filename=angebot.pdf');
+// });
