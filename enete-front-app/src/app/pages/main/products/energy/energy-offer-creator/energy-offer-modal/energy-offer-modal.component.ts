@@ -126,7 +126,7 @@ export class EnergyOfferModalComponent {
     group.city = new FormControl({ value: 'city' in this.ratesData ? this.ratesData.city : '', disabled: true })
     group.street = new FormControl({ value: 'street' in this.ratesData ? this.ratesData.street : '', disabled: true })
     group.HouseNumber = new FormControl({ value: 'houseNumber' in this.ratesData ? this.ratesData.houseNumber :'', disabled: true })
-    group.providerName = new FormControl(false)
+    group.providerNameHiden = new FormControl(false)
 
     return new FormGroup(group)
   }
@@ -177,17 +177,19 @@ export class EnergyOfferModalComponent {
         PdfData.ratesData = this.energyService.ratesData
         PdfData.filterData = this.energyService.filterData
       }
-      
-      console.log(PdfData)
-      // this.httpEnergyService.getPdfOffer(PdfData).subscribe(
+      console.log(this.energyService.ratesData)
+       
 
-      //   (data: Blob) => {
-      //     var file = new Blob([data], { type: 'application/pdf' })
-      //     var fileURL = URL.createObjectURL(file)
-      //     saveAs(fileURL, 'Angebot.pdf')
+      //console.log(JSON.stringify({offerData:PdfData}))
+      this.httpEnergyService.getPdfOffer({offerData:PdfData}).subscribe(
 
-      //   }
-      // )
+        (data: Blob) => {
+          var file = new Blob([data], { type: 'application/pdf' })
+          var fileURL = URL.createObjectURL(file)
+          saveAs(fileURL, 'Angebot.pdf')
+
+        }
+      )
     } else {
       console.log(this.clientContactDetails)
     } 

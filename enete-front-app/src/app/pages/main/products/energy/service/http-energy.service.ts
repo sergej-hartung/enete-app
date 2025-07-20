@@ -139,6 +139,7 @@ export class HttpEnergyService {
 
   getPdfOffer(params: any): Observable<any>  {
     console.log(params)
-    return this.http.post(`${BASE_URL}/api/tariff-offer-energy`, params, { responseType: 'blob' })
+    //return this.http.post(`${BASE_URL}/api/tariff-offer-energy`, params, { responseType: 'blob' })
+    return this.http.post(`${BASE_URL}/pdf-test`, params, { responseType: 'blob' })
   }
 }

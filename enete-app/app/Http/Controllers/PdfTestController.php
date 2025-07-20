@@ -10,7 +10,8 @@ class PdfTestController extends Controller
     public function test(Request $request, PdfRenderService $pdfService)
     {
         $offerData = $request->input('offerData');
-
+        // var_dump($offerData);
+        // exit;
         try {
             $path = $pdfService->render($offerData);
             return response()->download($path);

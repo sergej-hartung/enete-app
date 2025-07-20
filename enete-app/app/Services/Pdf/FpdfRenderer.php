@@ -28,6 +28,22 @@ class FpdfRenderer implements PdfRendererInterface
             'company'=> $this->template->getCompany()
         ];
 
+        $this->params['disclaimer'] = $this->template->getEnergyOfferTextTariff();
+        $this->params['lastPage'] = [
+            'title' => 'Wie geht es weiter?',
+            'items' => [
+                'Sie erhalten ein nach den Angebotsangaben ausgefülltes Auftragsformular zur Unterschrift.',
+                'Mit Ihrer Unterschrift erteilen Sie uns den Auftrag.',
+                'Wir kümmern uns ab sofort um alle Formalitäten und leiten den Wechsel ein.',
+                'Der neue Anbieter kündigt Ihren bestehenden Vertrag und meldet Sie beim Netzbetreiber um.',
+                'Der Wechselprozess dauert nur wenige Wochen. Für den gesamten Wechselprozess sollten Sie in der Regel vier bis sechs Wochen einkalkulieren.',
+                'Sobald alle Bestätigungen vorliegen, erhalten Sie ein Begrüßungsschreiben. Darin teilt Ihnen der neue Versorger mit, ab wann Sie beliefert werden.',
+                'Fotografieren Sie am besten Ihren Zählerstand am Tag der Umstellung.',
+                'Unser Service ist 100 % kostenfrei für Sie! Wir möchten Sie auch bei Ihrem nächsten Wechsel betreuen.'
+            ]
+            ];
+        $this->params['checkmark'] = $this->template->getCheckmarkPath();
+
         $branch = $data['ratesData']['branch'] ?? 'electric';
         $angebot = $branch === 'electric' ? 'Stromangebot' : 'Gasangebot';
 
@@ -92,6 +108,7 @@ class FpdfRenderer implements PdfRendererInterface
             );
         }
         /* ---- weitere Seiten folgen Schritt 2 / 3 ---- */
+        $pdf->addLastPage();  
 
         $path = storage_path('app/pdfs/fpdf_deckblatt.pdf');
         $pdf->Output('F',$path);

@@ -52,7 +52,7 @@ class OfferPdf extends Fpdi
             $this->SetFont('Raleway','',10);
 
             /* ========== Ansprechpartner rechts ========== */
-            $this->SetY(41);
+            $this->SetY(30);
             $this->SetX(-67);
             $this->Cell(71,3,'Ihr Ansprechpartner:',0,0,'L');
             $this->Ln(9);
@@ -96,8 +96,8 @@ class OfferPdf extends Fpdi
             $this->Cell(
                 71,4,
                 iconv('UTF-8','CP1252//TRANSLIT',
-                      ($this->params['seller']['zip'] ?? '').' '.
-                      ($this->params['seller']['city'] ?? '')),
+                      ($this->params['seller']['plz'] ?? '').' '.
+                      ($this->params['seller']['city']['city'] ?? '')),
                 0,0,'L'
             );
             $this->Ln(8);
@@ -257,6 +257,12 @@ class OfferPdf extends Fpdi
     {
         $this->AddPage();                       // Header läuft (Seitenzahl wird 2+)
 
+        $providerNameHiden = isset($this->params['client']['providerNameHiden']) && $this->params['client']['providerNameHiden'] ? $this->params['client']['providerNameHiden'] : false;
+ 
+        $this->drawOfferDataBlock($this->params['client'], $ratesData);
+
+        $this->drawInformationBlock($offer, $ratesData, $filterData);
+
         /* Überschrift */
         $this->SetFont('Raleway','',17.5);
         $this->SetTextColor(125,22,33);
@@ -270,7 +276,9 @@ class OfferPdf extends Fpdi
         /* Rahmen + Blöcke zeichnen */
         $this->drawComparisonFrame();
         $this->drawCurrentProviderBlock($cur);
-        $this->drawSwitchProviderBlock($sw,$filterData);
+        $this->drawSwitchProviderBlock($sw,$filterData, $providerNameHiden);
+
+        $this->drawTariffDisclaimer();
     }
 
     /* ------------------ Datenaufbereitung ------------------ */
@@ -282,13 +290,20 @@ class OfferPdf extends Fpdi
         $baseYear     = floatval($r['basePriceYear'] ?? 0);
         $consum       = intval($r['consum']          ?? 0);
         $consumNt     = intval($r['consumNt']        ?? 0);
+        $providerName = '';
+
+        if(isset($r['providerName']['providerName'])){
+            $providerName = $r['providerName']['providerName'];
+        }else if(isset($r['providerName'] ) && is_string($r['providerName'])){
+            $providerName = $r['providerName'];
+        }
 
         $total = ($work * $consum)/100 + $baseYear;
         if ($workNt && $consumNt) {
             $total += ($workNt * $consumNt)/100;
         }
         return [
-            'providerName' => $r['providerName']['providerName'] ?? '',
+            'providerName' => $providerName,
             'basePriceYear'=> $baseYear,
             'workPrice'    => $work,
             'workPriceNt'  => $workNt,
@@ -347,23 +362,32 @@ class OfferPdf extends Fpdi
         $this->Ln(12);
 
         /* Providername */
-        $this->SetFont('Raleway','B',17.5);
-        $this->SetX(25);
-        $this->MultiCell(
-            69,8,
-            iconv('UTF-8','CP1252//TRANSLIT',$c['providerName'] ?: ' '),
-            0,'L'
-        );
-        $this->Ln(8);
+        if($c['providerName']){
+            $this->SetFont('Raleway','B',17.5);
+            $this->SetY(108);
+            $this->SetX(25);
+            $this->MultiCell(
+                69,8,
+                iconv('UTF-8','CP1252//TRANSLIT',$c['providerName'] ?: ' '),
+                0,'L'
+            );
+            $this->Ln(8);
+        }
+        
 
         $this->SetFont('Arial','',10);
         $this->SetTextColor(0,0,0);
 
         /* Grundpreis Monat */
-        $baseMonth = $c['basePriceYear'] ? number_format($c['basePriceYear']/12,2,'.','') : '0.00';
-        $this->SetX(25); $this->Cell(40,5,'Grundpreis Monat:',0,0,'L');
-        $this->SetFont('Arial','B',12);
-        $this->Cell(15,5,$baseMonth.' '.$this->euro,0,0,'L'); $this->Ln(8);
+        if($c['basePriceYear']){
+            $baseMonth = $c['basePriceYear'] ? number_format($c['basePriceYear']/12,2,'.','') : '0.00';
+            $this->SetY(130);
+            $this->SetX(25); 
+            $this->Cell(40,5,'Grundpreis Monat:',0,0,'L');
+            $this->SetFont('Arial','B',12);
+            $this->Cell(15,5,$baseMonth.' '.$this->euro,0,0,'L'); $this->Ln(8);
+        }
+        
 
         /* Arbeitspreis */
         if ($c['workPrice']) {
@@ -382,9 +406,15 @@ class OfferPdf extends Fpdi
         }
 
         /* graue Linie */
-        $this->currentY = $this->GetY();
+         $this->currentY = $this->GetY();
+        // $this->SetX(25);
+        // $this->Cell(69,0.5,'',0,1,'L',true); 
+        // $this->Ln(5);
+        $this->SetFillColor(255,255,255);
+        //$this->SetY($this->currentY + 2);
         $this->SetX(25);
-        $this->Cell(69,0.5,'',0,1,'L',true); $this->Ln(5);
+        $this->Cell(69,0.5,"",0,1,'L',true);
+        $this->Ln(5);
 
         /* Gesamtkosten */
         $this->SetX(25);
@@ -392,20 +422,29 @@ class OfferPdf extends Fpdi
         $this->Cell(69,5,'Gesamtkosten pro Jahr:',0,0,'C');
         $this->Ln(8);
 
-        $this->SetX(25);
-        $this->SetFont('Arial','B',24);
-        $this->Cell(69,8,number_format($c['totalPrice'],2,'.','').' '.$this->euro,0,0,'C');
-        $this->Ln(11);
+        if($c['totalPrice']){
+            $this->SetX(25);
+            $this->SetFont('Arial','B',24);
+            $this->Cell(69,8,number_format($c['totalPrice'],2,'.','').' '.$this->euro,0,0,'C');
+            $this->Ln(11);
+        }
+        
 
-        /* untere Linie */
+        // /* untere Linie */
         $this->SetY($this->currentY + 38);
+        // $this->SetX(25);
+        // $this->Cell(69,0.5,'',0,1,'L',true);
+        // $this->Ln(5);
+
+        //$this->SetY($this->currentY + 38);
+        $this->SetFillColor(255,255,255);
         $this->SetX(25);
-        $this->Cell(69,0.5,'',0,1,'L',true);
+        $this->Cell(69,0.5,"",0,1,'L',true);
         $this->Ln(5);
     }
 
     /* ------------------ Block rechts ------------------ */
-    private function drawSwitchProviderBlock(array $s,array $filterData): void
+    private function drawSwitchProviderBlock(array $s,array $filterData, $providerNameHiden): void
     {
         $this->SetY(96); $this->SetX(-95);
         $this->SetFont('Raleway','',14);
@@ -413,12 +452,22 @@ class OfferPdf extends Fpdi
         $this->Cell(69,5,'Unser Angebot:',0,0,'L');
         $this->Ln(12);
 
-        if (!empty($s['providerName'])) {
+        if (!empty($s['providerName']) && !$providerNameHiden) {
             $this->SetFont('Raleway','B',17.5);
+            $this->SetY(108);
             $this->SetX(-95);
             $this->MultiCell(
                 69,8,
                 iconv('UTF-8','CP1252//TRANSLIT',$s['providerName']),
+                0,'L'
+            );
+            $this->Ln(8);
+        }else{
+            $this->SetFont('Raleway','B',17.5);
+            $this->SetX(-95);
+            $this->MultiCell(
+                69,8,
+                iconv('UTF-8','CP1252//TRANSLIT',''),
                 0,'L'
             );
             $this->Ln(8);
@@ -429,7 +478,9 @@ class OfferPdf extends Fpdi
 
         /* Grundpreis Monat */
         $baseMonth = number_format($s['basePriceYear']/12,2,'.','');
-        $this->SetX(-95); $this->Cell(40,5,'Grundpreis Monat:',0,0,'L');
+        $this->SetY(130);
+        $this->SetX(-95); 
+        $this->Cell(40,5,'Grundpreis Monat:',0,0,'L');
         $this->SetFont('Arial','B',12);
         $this->Cell(15,5,$baseMonth.' '.$this->euro,0,0,'L'); $this->Ln(8);
 
@@ -472,7 +523,7 @@ class OfferPdf extends Fpdi
         $this->SetX(-95);
         $this->SetFont('Arial','B',24);
         
-        $this->Cell(69,8,number_format($s['totalPrice'],2,'.','').' '.$this->euro,0,0,'C');
+        $this->Cell(69,8,number_format($s['totalPriceWithoutBonus'],2,'.','').' '.$this->euro,0,0,'C');
         $this->Ln(11);
 
         /* Monatsabschlag */
@@ -504,16 +555,218 @@ class OfferPdf extends Fpdi
         $this->Cell(15,5,$s['optTerm'].' Monate',0,0,'L'); $this->Ln(8);
 
         /* Jahresersparnis */
-        $this->SetY(236); $this->SetX(-95);
+        $this->SetY(236); 
+        $this->SetX(-95);
         $this->SetFont('Arial','B',11);
         $this->Cell(69,5,'Jahresersparnis ca.',0,0,'C');
         $this->Ln(8);
 
-        $ersparnis = number_format($s['totalPriceCurenProv']-$s['totalPrice'],2,'.','');
-        $this->SetX(-95);
-        $this->SetFont('Arial','B',24);
-        $this->Cell(69,8,$ersparnis.' '.$this->euro,0,0,'C');
+        if($s['totalPriceCurenProv'] && $s['totalPrice']){
+            $ersparnis = number_format($s['totalPriceCurenProv']-$s['totalPriceWithoutBonus'],2,'.','');
+            $this->SetX(-95);
+            $this->SetFont('Arial','B',24);
+            $this->Cell(69,8,$ersparnis.' '.$this->euro,0,0,'C');
+            $this->Ln(8);
+        }
+        
+    }
+
+    private function drawOfferDataBlock(array $client, array $rates): void
+    {
+        /* Überschrift */
+        $this->AddFont('Raleway','','Raleway-Regular.php');
+        $this->AddFont('Raleway','B','Raleway-Bold.php');
+        $this->SetFont('Raleway','',17.5);
+        $this->SetTextColor(125,22,33);
+
+        $this->SetY(30);
+        $this->Cell(0,13,'Ihre Angebotsdaten',0,0,'L');
+        $this->Ln(14);
+
+        /* Kunde */
+        $this->SetFont('Raleway','',11.5);
+        $this->SetTextColor(123,123,123);
+        $this->Cell(30,5,'Kunde:',0,0,'L');
+
+        $this->SetFont('Arial','B',11);
+        $kunde = trim(
+            ($client['salutation'] ?? '').' '.
+            ($client['firstName']  ?? '').' '.
+            ($client['lastName']   ?? '')
+        );
+        $this->MultiCell(0,5,iconv('UTF-8','CP1252//TRANSLIT',$kunde),0,'L');
+        $this->Ln(1);
+
+        /* Verbrauch HT */
+        $this->SetFont('Raleway','',11.5);
+        $this->SetTextColor(123,123,123);
+        $this->Cell(30,10,'Verbrauch:',0,0,'L');
+
+        $this->SetFont('Arial','B',11);
+        $this->Cell(
+            0,10,
+            ($rates['consum'] ?? '').' kWh',
+            0,0,'L'
+        );
+        $this->Ln(8);
+
+        /* Optional: Verbrauch NT */
+        if (!empty($rates['consumNt'])) {
+            $this->SetFont('Raleway','',11.5);
+            $this->SetTextColor(123,123,123);
+            $this->Cell(30,10,'Verbrauch NT:',0,0,'L');
+
+            $this->SetFont('Arial','B',11);
+            $this->Cell(
+                0,10,
+                $rates['consumNt'].' kWh',
+                0,0,'L'
+            );
+            $this->Ln(8);
+        }
+    }
+
+    /* ---------------------------------------------------
+   Infobox rechts:  Zur Information
+    --------------------------------------------------- */
+    private function drawInformationBlock(
+        array $offer,       // derselbe Datensatz wie $s
+        array $rates,       // $ratesData (braucht nur 'type')
+        array $filterData   // filterBonus-Flag
+    ): void
+    {
+        // Koordinaten: rechts neben Kundenblock
+        $this->SetY(30);
+        $this->SetX(-103);
+
+        /* Rahmen-Kopf */
+        $this->AddFont('Raleway','','Raleway-Regular.php');
+        $this->SetFont('Raleway','',17.5);
+        $this->SetTextColor(125,22,33);
+        $this->cMargin = 3;
+        $this->SetDrawColor(217,217,217);        // hellgraue Linie
+        $this->Cell(85,13,'Zur Information','LTR',0,'L');
+        $this->Ln(13);
+
+        /* ---------------- Textzeilen ---------------- */
+        $this->SetFont('Raleway','',10);
+
+        // 1) Bonusabzug
+        $bonusSum =
+            floatval($offer['optBonus'] ?? 0) +
+            floatval($offer['optBonusInstant'] ?? 0) +
+            floatval($offer['optBonusLoyalty'] ?? 0);
+
+        // if (($filterData['filterBonus'] ?? true) && $bonusSum > 0) {
+        //     $this->SetTextColor(191,143,0);       // gold
+        //     $this->SetX(-103);
+        //     $this->MultiCell(
+        //         85,7,
+        //         iconv('UTF-8','CP1252//TRANSLIT',
+        //             'Von den Gesamtkosten pro Jahr wurde der einmalige Bonus abgezogen.'),
+        //         'LR','L'
+        //     );
+        //     $this->Ln(0);                         // 0 → keine zusätzliche Leerzeile
+        // }
+
+        // 2) Bruttopreis/Netto
+        $this->SetTextColor(123,123,123);         // grau
+        $this->SetX(-103);
+        $suffix = ($rates['type'] ?? 'private') === 'company' ? 'netto.' : 'brutto.';
+        $this->MultiCell(
+            85,7,
+            iconv('UTF-8','CP1252//TRANSLIT','Die angegebenen Preise sind '.$suffix),
+            'LBR','L'
+        );
+    }
+
+    private function drawTariffDisclaimer(): void
+    {
+       if ($this->PageNo() == 1) return;   // nur Vergleichsseiten
+
+
+        $raw = $this->params['disclaimer'] ?? '';
+        $clean = preg_replace('/\s+/', ' ', trim($raw));
+
+        /* ---------- Positionieren ---------- */
+        $this->SetY(261);                  // Höhe
+        $this->SetX(14);
+
+        $this->SetFont('Arial','',8);
+        $this->SetTextColor(0,0,0);
+
+        /* Breite = ganze Zeile */
+        $width = $this->GetPageWidth() - 14 - $this->rMargin;
+
+        $this->MultiCell(
+            $width,                       
+            3,                            
+            iconv('UTF-8','CP1252',''.$clean),
+            0,
+            'L'
+        );
+    }
+
+
+    /* ================================================================
+   Schlussseite – "Wie geht es weiter?"
+================================================================ */
+public function addLastPage(): void
+{
+    $t  = $this->params['lastPage']['title']  ?? 'Wie geht es weiter?';
+    $it = $this->params['lastPage']['items']  ?? [];
+    $ck = $this->params['checkmark'];
+
+    $this->AddPage();
+
+    /* ── Kopf: roter Balken ───────────────────────────── */
+    $this->SetFillColor(125,22,33);
+    $this->SetY(47);
+    $this->SetX($this->lMargin - 10);        // 7 mm Innenrand + 10 mm = 17 mm
+    $this->Cell(155,24,'',0,0,'',true);
+
+    /* Titel in Weiß */
+    $this->SetY(55);
+    $this->SetX(29);                         // leichte Einrückung
+    $this->AddFont('Raleway','','Raleway-Regular.php');
+    $this->SetFont('Raleway','',30);
+    $this->SetTextColor(255,255,255);
+    $this->Cell(0,5,iconv('UTF-8','CP1252//TRANSLIT',$t),0,0,'L');
+
+    /* ── Check‑Liste links (items 0‑4) ─────────────────── */
+    $this->SetY(104);
+    $this->SetLeftMargin($this->lMargin);
+    $this->AddFont('Raleway','','Raleway-Regular.php');
+    $this->SetFont('Raleway','',14);
+    $this->SetTextColor(0,0,0);
+
+    foreach (array_slice($it,0,5) as $txt) {
+        $y = $this->GetY();
+        $this->Image($ck, 18, $y+1, 3);      // kleines Häkchen
+        $this->SetX(18+7);
+        $this->MultiCell(
+            72,7,
+            iconv('UTF-8','CP1252//TRANSLIT',$txt),
+            0,'L'
+        );
         $this->Ln(8);
     }
 
+    /* ── Check‑Liste rechts (items 5‑n) ────────────────── */
+    $this->SetY(104);
+    foreach (array_slice($it,5) as $txt) {
+        $y = $this->GetY();
+        $this->Image($ck, 113, $y+1, 3);     // rechte Spalte
+        $this->SetXY(120, $y);
+        $this->MultiCell(
+            72,7,
+            iconv('UTF-8','CP1252//TRANSLIT',$txt),
+            0,'L'
+        );
+        $this->Ln(8);
+    }
+
+    /* Linke Margin zurück­setzen */
+    $this->SetLeftMargin($this->lMargin);
+}
 }

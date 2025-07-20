@@ -8,12 +8,16 @@ export function getGuarantee(rate: any) {
           return `Gesamtpreisgarantie bis ${rate.optGuarantee}`
         } else if (rate.optGuaranteeType == "energyPrice") {
           return `Energiepreisgarantie bis ${rate.optGuarantee}`
+        }else if (rate.optGuaranteeType == 'limitedEnergyPrice'){
+          return `Eingeschränkte Preisgarantie bis ${rate.optGuarantee}`
         }
       } else {
         if (rate.optGuaranteeType == 'total') {
           return `${rate.optGuarantee} Monate Gesamtpreisgarantie`
         } else if (rate.optGuaranteeType == "energyPrice") {
           return `${rate.optGuarantee} Monate Energiepreisgarantie`
+        } else if (rate.optGuaranteeType == 'limitedEnergyPrice'){
+          return `${rate.optGuarantee} Monate Eingeschränkte Preisgarantie`
         }
       }
     }

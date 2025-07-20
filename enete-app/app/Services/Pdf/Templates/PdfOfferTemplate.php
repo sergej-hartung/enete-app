@@ -53,36 +53,47 @@ Mit den besten Grüßen
 enete GmbH
 EOT;
 
-    public string $energyTariffNotice = 'Die Preise beziehen sich auf das erste Jahr und berücksichtigen einmalige Freieinheiten und Rabatte. [...]';
+    public string $energyTariffNotice = 'Die Preise beziehen sich auf das erste Jahr und berücksichtigen einmalige
+                                        Freieinheiten und Rabatte. Weitere Angaben entnehmen Sie bitte den jeweiligen
+                                        Anbieter- und Tarifseiten. Alle Daten © 2025 ENETE GmbH. Die Preise dürfen nur
+                                        von registrierten Vertriebspartnern genutzt werden. Es handelt sich teilweise um
+                                        Preise, die nur dem Direktvertrieb zur Verfügung stehen und nur über den
+                                        Direktvertrieb vermarktet werden dürfen. Die ENETE GmbH übernimmt für die
+                                        Richtigkeit der dargestellten Tarife und für durch falsch dargestellte Preise
+                                        entstehende Schäden, gleich welcher Art, keinerlei Haftung.';
     public string $companyDescription = 'Ihr Partner für Energie und Telekommunikation';
 
-    protected array $lastPageText = [
-        'title' => 'Wie geht es weiter?',
-        'text_1' => 'Sie erhalten ein nach den Angebotsangaben ausgefülltes Auftragsformular zur Unterschrift.',
-        'text_2' => 'Mit Ihrer Unterschrift erteilen Sie uns den Auftrag.',
-        'text_3' => 'Wir kümmern uns ab sofort um alle Formalitäten und leiten den Wechsel ein.',
-        'text_4' => 'Der neue Anbieter kündigt ihren bestehenden Vertrag und meldet Sie bei Netzbetreiber um.',
-        'text_5' => 'Der Wechselprozess dauert nur wenige Wochen. Für den gesamten Wechselprozess sollten Sie ',
-        'text_6' => 'in der Regel vier bis sechs Wochen einkalkulieren.',
-        'text_7' => 'Sobald alle Bestätigungen vorliegen, erhalten Sie ein Begrüßungsschreiben. [...]',
-        'text_8' => 'Fotografieren Sie am besten Ihren Zählerstand am Tag der Umstellung.',
-        'text_9' => 'Unser Service ist 100% kostenfrei für Sie! Wir möchten Sie auch bei Ihrem nächsten Wechsel betreuen',
-    ];
+    // protected array $lastPageText = [
+    //     'title' => 'Wie geht es weiter?',
+    //     'text_1' => 'Sie erhalten ein nach den Angebotsangaben ausgefülltes Auftragsformular zur Unterschrift.',
+    //     'text_2' => 'Mit Ihrer Unterschrift erteilen Sie uns den Auftrag.',
+    //     'text_3' => 'Wir kümmern uns ab sofort um alle Formalitäten und leiten den Wechsel ein.',
+    //     'text_4' => 'Der neue Anbieter kündigt ihren bestehenden Vertrag und meldet Sie bei Netzbetreiber um.',
+    //     'text_5' => 'Der Wechselprozess dauert nur wenige Wochen. Für den gesamten Wechselprozess sollten Sie ',
+    //     'text_6' => 'in der Regel vier bis sechs Wochen einkalkulieren.',
+    //     'text_7' => 'Sobald alle Bestätigungen vorliegen, erhalten Sie ein Begrüßungsschreiben. [...]',
+    //     'text_8' => 'Fotografieren Sie am besten Ihren Zählerstand am Tag der Umstellung.',
+    //     'text_9' => 'Unser Service ist 100% kostenfrei für Sie! Wir möchten Sie auch bei Ihrem nächsten Wechsel betreuen',
+    // ];
 
     public function __construct(array $params = [])
     {
         $this->params = $params;
     }
 
-    public function getLogo(): string
-    {
-        return $this->params['img'] . '/logo-mitel.png';
+    public function getEnergyOfferTextTariff(){
+        return $this->energyTariffNotice;
     }
 
-    public function getCheckmark(): string
-    {
-        return $this->params['img'] . '/checkmark.png';
-    }
+    // public function getLogo(): string
+    // {
+    //     return $this->params['img'] . '/logo-mitel.png';
+    // }
+
+    // public function getCheckmark(): string
+    // {
+    //     return $this->params['img'] . '/checkmark.png';
+    // }
 
     public function getCompany(): array
     {
@@ -135,6 +146,11 @@ EOT;
     public function getLogoPath(): string
     {
         return public_path('images/pdf/logo-mitel.png');   // ← PNG hast du hochgeladen
+    }
+
+    public function getCheckmarkPath(): string 
+    {
+        return public_path('images/pdf/checkmark.png');
     }
 
     public function greetingText(array $client, string $branch): string
