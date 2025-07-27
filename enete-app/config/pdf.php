@@ -1,5 +1,9 @@
 <?php
 
+// return [
+//     'engine' => env('PDF_ENGINE', 'fpdf'), // 'mpdf' oder 'fpdf'
+// ];
+
 return [
-    'engine' => env('PDF_ENGINE', 'fpdf'), // 'mpdf' oder 'fpdf'
+    'engine' => 'fpdf',   // Grund­einstellung
 ];

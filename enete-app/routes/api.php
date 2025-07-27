@@ -215,6 +215,9 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
     $router->patch('/rename-folder', [ProductDocumentController::class, 'renameFolder']);
     $router->patch('/rename-file', [ProductDocumentController::class, 'renameFile']);
 
+    //$router->post('/pdf/offer', OfferPdfController::class);
+    $router->post('/pdf/offer', 'App\Http\Controllers\Tariff\OfferPdf\OfferPdfController')->name('offer.create');
+
 });
 
 //Egon Api controllers
@@ -232,6 +235,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
 Route::post('/email/verify/{hash}', 'App\Http\Controllers\User\VerificationController');
 
 Route::post('/pdf-test', [PdfTestController::class, 'test']);
+
 
 // Route::get('/pdf/test', function () {
 //     $data = new \App\Services\Pdf\OfferData(
