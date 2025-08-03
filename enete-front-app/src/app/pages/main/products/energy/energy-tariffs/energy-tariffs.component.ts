@@ -143,11 +143,20 @@ export class EnergyTariffsComponent {
     // }
   }
 
+  // orderEntry() {
+  //   this.energyService.setOrderEntryTarif({
+  //     sortCount: this.count + 1,
+  //     rate: this.rate
+  //   });
+  // }
+
   orderEntry() {
-    this.energyService.setOrderEntryTarif({
+    let order = {
       sortCount: this.count + 1,
       rate: this.rate
-    });
+    }
+    this.energyService.setOrderEntryTarif(order)
+    console.log(order)
   }
 
   private calculateBonus(): number {

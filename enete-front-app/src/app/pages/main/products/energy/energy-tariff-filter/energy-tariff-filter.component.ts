@@ -14,16 +14,17 @@ import { CommonModule } from '@angular/common';
   styleUrl: './energy-tariff-filter.component.scss'
 })
 export class EnergyTariffFilterComponent {
+  
   tariffsEnergyFilter = new FormGroup({
     optTerm: new FormControl("false"),
     optGuarantee: new FormControl("false"),
-      priceDate: new FormControl(''),
-      filterBonus: new FormControl(false),
+    priceDate: new FormControl(''),
+    filterBonus: new FormControl(false),
     providerDigitalSigned: new FormControl(false),
     requiredEmail: new FormControl(false),
     optEco: new FormControl(false),
     selfPayment: new FormControl(false),
-      howOnlyFollowUpProvision: new FormControl({ value: false, disabled: true })
+    howOnlyFollowUpProvision: new FormControl({ value: false, disabled: true })
   })
 
 

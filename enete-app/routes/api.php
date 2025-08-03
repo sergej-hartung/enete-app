@@ -227,6 +227,8 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
         $router->get('/streets/{zip}/{city}', [EgonApiController::class, 'getStreets']);
         $router->get('/netzProvider', [EgonApiController::class, 'getNetzProvider']);
         $router->get('/baseProvider', [EgonApiController::class, 'getBaseProvider']);
+        $router->get('/beforeProvider/{rateId}', [EgonApiController::class, 'getBeforeProvider']);
+        $router->get('/legalForm/{rateId}', [EgonApiController::class, 'getLegalForm']);
         $router->get('/rates', [EgonApiController::class, 'getRates']);
         $router->get('/contract-file-blank/{rateId}/{rateFileId}', [EgonApiController::class, 'getContractFileBlank']);
     });

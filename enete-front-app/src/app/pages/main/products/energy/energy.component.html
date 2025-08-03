@@ -1,5 +1,5 @@
 <app-breadcrumbs [text]="'Tarifrechner Energie'" class="row d-none d-xl-flex"></app-breadcrumbs>
-<app-energy-tariff-form class="row rechner_form_wrapp"></app-energy-tariff-form>
+<app-energy-tariff-form [show]="show" class="row rechner_form_wrapp"></app-energy-tariff-form>
 <ng-container *ngIf="isLoadedRates && show">
     <app-energy-tariffs *ngFor="let rate of rates; let i = index" class="row tarif-card-wrapp"
                         [rate]="rate"
@@ -17,3 +17,7 @@
 </app-linear-loader>
 
 <app-energy-offer-creator *ngIf="offers.length > 0" [offers]="offers"></app-energy-offer-creator>
+
+<ng-container *ngIf="!show && !isOrderFinish">
+  <app-energy-order-entry></app-energy-order-entry>
+</ng-container>

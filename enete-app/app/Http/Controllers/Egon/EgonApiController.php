@@ -122,6 +122,8 @@ class EgonApiController extends Controller{
      */
     public function getBeforeProvider(Request $request): JsonResponse
     {
+        $request->merge(['rateId' => $request->rateId]);
+
         $request->validate(['rateId' => 'required|integer']);
 
         $response = $this->makeApiRequest("beforeProvider/{$request->rateId}");
@@ -137,6 +139,7 @@ class EgonApiController extends Controller{
      */
     public function getLegalForm(Request $request): JsonResponse
     {
+        $request->merge(['rateId' => $request->rateId]);
         $request->validate(['rateId' => 'required|integer']);
 
         $response = $this->makeApiRequest("legalForm/{$request->rateId}");

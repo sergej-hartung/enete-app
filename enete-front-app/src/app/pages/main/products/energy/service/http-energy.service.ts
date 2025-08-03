@@ -96,6 +96,30 @@ export class HttpEnergyService {
     )
   }
 
+  getBeforeProvider(rateId: number | string): Observable<any> {
+    return this.http.get<any>(`${BASE_URL}/products/energy/beforeProvider/${rateId}`).pipe(
+      map(data => {
+        if (data && 'result' in data) {
+          return data.result
+        } else {
+          return []
+        }
+      })
+    )
+  }
+
+  getLegalForm(rateId: number | string): Observable<any> {
+    return this.http.get<any>(`${BASE_URL}/products/energy/legalForm/${rateId}`).pipe(
+      map(data => {
+        if (data && 'result' in data) {
+          return data.result
+        } else {
+          return []
+        }
+      })
+    )
+  }
+
   getEnergyRates(ratesData:any, filterData:any): Observable<any> {
     let Filters:any = []
 

@@ -384,6 +384,7 @@ export class EnergyTariffFormComponent {
   }
 
   getTarifs() {
+    this.energyService.resetOffers()
     let ratesData = Object.assign({}, 
       this.getBranch(true), 
       this.getTyp(true), 

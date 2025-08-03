@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import { LinearLoaderComponent } from '../../../../core/shared/helpers/linear-loader/linear-loader.component';
 import { EnergyOfferCreatorComponent } from './energy-offer-creator/energy-offer-creator.component';
+import { EnergyOrderEntryComponent } from './energy-order/energy-order-entry.component';
 
 @Component({
   selector: 'app-energy',
@@ -17,7 +18,8 @@ import { EnergyOfferCreatorComponent } from './energy-offer-creator/energy-offer
     EnergyTariffFormComponent, 
     EnergyTariffsComponent,
     LinearLoaderComponent,
-    EnergyOfferCreatorComponent
+    EnergyOfferCreatorComponent,
+    EnergyOrderEntryComponent
   ],
   templateUrl: './energy.component.html',
   styleUrl: './energy.component.scss',
@@ -77,6 +79,7 @@ export class EnergyComponent {
 
     this.energyService.toggleOrderEntry$.subscribe(
       event => {
+        console.log(event)
         if (Object.keys(event).length > 0) {
           this.show = false
           this.energyRechnerClass = this.show
@@ -86,6 +89,10 @@ export class EnergyComponent {
           this.energyRechnerClass = this.show
           this.energyOrderClass = !this.show
         }
+
+        console.log(this.show)
+        console.log(this.energyRechnerClass)
+        console.log(this.energyOrderClass)
       }
     )
 

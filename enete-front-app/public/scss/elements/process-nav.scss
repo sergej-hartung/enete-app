@@ -25,6 +25,11 @@
         display: flex;
         justify-content: center;
         
+        .btn{
+            vertical-align: top;
+            display: flex;
+            flex-direction: column;
+        }
     }
     .col{
         &:not(:first-child){
@@ -90,11 +95,18 @@
 
     }
 
+
+
     .btn{
         padding: 0;
+        border: none;
+
+        &:active{
+            border: none;
+        }
     }
 
-    .success{
+    .success_step{
         .step-icon{
             color: #54BC2B;
         }
@@ -103,7 +115,7 @@
         }
     }
 
-    .error{
+    .error_step{
         .step-icon{
             color: #BA2110;
         }
@@ -113,6 +125,7 @@
     }
 
     .active{
+        border: none;
         .circle-step{
             color: #7D1120;
             border-color: #7D1120;
