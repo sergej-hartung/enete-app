@@ -229,6 +229,7 @@ Route::group(['middleware' => ['jwt.auth'], 'prefix' => 'products'], function ($
         $router->get('/baseProvider', [EgonApiController::class, 'getBaseProvider']);
         $router->get('/beforeProvider/{rateId}', [EgonApiController::class, 'getBeforeProvider']);
         $router->get('/legalForm/{rateId}', [EgonApiController::class, 'getLegalForm']);
+        $router->get('/checkIban/{iban}', [EgonApiController::class, 'checkIban']);
         $router->get('/rates', [EgonApiController::class, 'getRates']);
         $router->get('/contract-file-blank/{rateId}/{rateFileId}', [EgonApiController::class, 'getContractFileBlank']);
     });

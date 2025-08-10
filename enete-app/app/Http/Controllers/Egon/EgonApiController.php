@@ -107,11 +107,16 @@ class EgonApiController extends Controller{
      */
     public function checkIban(Request $request): JsonResponse
     {
-        $request->validate(['iban' => 'required|size:22']);
+        $request->merge(['iban' => $request->iban]);
+        try {
+           $request->validate(['iban' => 'required|size:22']);
 
-        $response = $this->makeApiRequest("checkIban/{$request->iban}");
+            $response = $this->makeApiRequest("checkIban/{$request->iban}");
 
-        return response()->json($response);
+            return response()->json($response);
+        } catch (ValidationException $e) {
+            return response()->json(['error' => $e->errors()], 422);
+        }
     }
 
     /**
@@ -305,35 +310,59 @@ class EgonApiController extends Controller{
         return response()->json($response);
     }
 
-    /**
-     * Führt eine API-Anfrage an die Egon-API aus.
-     *
-     * @param string $uri
-     * @param string $method
-     * @param array|null $data
-     * @return array|null
-     */
-    protected function makeApiRequest(string $uri, string $method = 'GET', ?array $data = null): ?array
+    // /**
+    //  * Führt eine API-Anfrage an die Egon-API aus.
+    //  *
+    //  * @param string $uri
+    //  * @param string $method
+    //  * @param array|null $data
+    //  * @return array|null
+    //  */
+    // protected function makeApiRequest(string $uri, string $method = 'GET', ?array $data = null): ?array
+    // {
+    //     try {
+    //         $request = Http::withHeaders([
+    //             'Authorization' => 'Bearer '.$this->token,
+    //             //'reseller-id' => $this->resellerId,
+    //         ]);
+
+    //         if ($method === 'POST' || $method === 'PUT') {
+    //             $response = $request->$method($this->baseUrl . $uri, $data);
+    //         } else {
+    //             $response = $request->get($this->baseUrl . $uri);
+    //         }
+
+    //         $response->throw();
+
+    //         return $response->json();
+    //     } catch (\Exception $e) {
+    //         Log::error("Fehler bei Egon-API-Anfrage ($uri): " . $e->getMessage());
+    //         return null;
+    //     }
+    // }
+
+    protected function makeApiRequest(string $uri, string $method = 'GET', ?array $data = null): array
     {
-        try {
-            $request = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->token,
-                //'reseller-id' => $this->resellerId,
-            ]);
+        $base = rtrim($this->baseUrl, '/').'/';
 
-            if ($method === 'POST' || $method === 'PUT') {
-                $response = $request->$method($this->baseUrl . $uri, $data);
-            } else {
-                $response = $request->get($this->baseUrl . $uri);
-            }
+        $client = Http::withHeaders([
+            'Authorization' => 'Bearer '.$this->token,
+            // 'reseller-id' => $this->resellerId,
+        ])->acceptJson()->timeout(15);
 
-            $response->throw();
+        $response = match (strtoupper($method)) {
+            'POST' => $client->post($base.$uri, $data ?? []),
+            'PUT'  => $client->put($base.$uri, $data ?? []),
+            default => $client->get($base.$uri),
+        };
 
-            return $response->json();
-        } catch (\Exception $e) {
-            Log::error("Fehler bei Egon-API-Anfrage ($uri): " . $e->getMessage());
-            return null;
-        }
+        // Wichtig: NICHT throw(), damit wir Body und Status auch bei 4xx/5xx sehen.
+        return [
+            'ok'     => $response->successful(),
+            'status' => $response->status(),
+            'body'   => $response->json() ?? [],
+            'raw'    => $response->body(),
+        ];
     }
 
     /**

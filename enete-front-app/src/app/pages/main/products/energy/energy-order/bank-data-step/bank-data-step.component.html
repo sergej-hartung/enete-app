@@ -1,0 +1,464 @@
+<div class="medium_card">
+  <div class="card_header">
+    <h3 class="card_title">Bankdaten & Rechnungsanschrift</h3>
+    <!-- <h6 class="card_sub_title">Lieferanschrift & Vertragspartner</h6> -->
+  </div>
+  <div class="card_content">
+    <form [formGroup]="BankDataForm">
+      <div *ngIf="BankDataForm.get('SelfPayment')" class="row gx-2">
+        <div class="col">
+          <label class="checkbox_custom bounce mb-2">
+            <input formControlName="SelfPayment" name="SelfPayment" type="checkbox" class="">
+            <svg viewBox="0 0 21 21">
+              <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+            </svg>
+            <span class="label_title">Selbszahlung</span>
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="!selfPayment" class="row gx-2">
+        <div class="col-md-6 col-12">
+          <button [disabled]="selfPayment" (click)="setBaseData()" class="btn action_btn green w-100 mb-2">
+            <span>Stammdaten übernehmen</span>
+          </button>
+        </div>
+        <div class="col-md-6 col-12 mb-2">
+          <select formControlName="salutation"
+                  class="form-control custom_input"
+                  [ngClass]="[
+                         (BankDataForm.get('salutation')?.invalid && BankDataForm.get('salutation')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('salutation')?.invalid && BankDataForm.get('salutation')?.touched) ? 'is-valid' : '']">
+            <option disabled>Anrede</option>
+            <option>Herr</option>
+            <option>Frau</option>
+          </select>
+        </div>
+      </div>
+
+      <div *ngIf="!selfPayment" class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="firstName"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Vorname"
+                 name="firstNameBank"
+                 autocomplete="new-firstNameBank"
+                 [ngClass]="[
+                         (BankDataForm.get('firstName')?.invalid && BankDataForm.get('firstName')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('firstName')?.invalid && BankDataForm.get('firstName')?.touched) ? 'is-valid' : '']">
+            <!-- Error Pattern -->
+            <div *ngIf="BankDataForm.get('firstName')?.hasError('pattern')" class="invalid-feedback">
+                Das Format im Feld Vorname entspricht nicht der Vorgabe
+            </div>
+            <!-- Error Required-->
+            <div *ngIf="BankDataForm.get('firstName')?.hasError('required')" class="invalid-feedback">
+                Feld darf nicht leer sein
+            </div>
+        </div>
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="lastName"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Nachname"
+                 name="lastNameBank"
+                 autocomplete="new-lastNameBank"
+                 [ngClass]="[
+                         (BankDataForm.get('lastName')?.invalid && BankDataForm.get('lastName')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('lastName')?.invalid && BankDataForm.get('lastName')?.touched) ? 'is-valid' : '']">
+            <!-- Error Pattern -->
+            <div *ngIf="BankDataForm.get('lastName')?.hasError('pattern')" class="invalid-feedback">
+                Das Format im Feld Nachname entspricht nicht der Vorgabe
+            </div>
+            <!-- Error Required-->
+            <div *ngIf="BankDataForm.get('lastName')?.hasError('required')" class="invalid-feedback">
+                Feld darf nicht leer sein
+            </div>
+        </div>
+      </div>
+
+      <div *ngIf="!selfPayment" class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="plz"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="PLZ"
+                 name="plzBank"
+                 autocomplete="new-plzBank"
+                 [ngClass]="[
+                         (BankDataForm.get('plz')?.invalid && BankDataForm.get('plz')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('plz')?.invalid && BankDataForm.get('plz')?.touched) ? 'is-valid' : '']">
+            <!-- Error Pattern -->
+            <div *ngIf="BankDataForm.get('plz')?.hasError('pattern')" class="invalid-feedback">
+                Das Format im Feld PLZ entspricht nicht der Vorgabe
+            </div>
+            <!-- Error Required-->
+            <div *ngIf="BankDataForm.get('plz')?.hasError('required')" class="invalid-feedback">
+                Feld darf nicht leer sein
+            </div>
+        </div>
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="city"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Stadt"
+                 name="cityBank"
+                 autocomplete="new-cityBank"
+                 [ngClass]="[
+                         (BankDataForm.get('city')?.invalid && BankDataForm.get('city')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('city')?.invalid && BankDataForm.get('city')?.touched) ? 'is-valid' : '']">
+            <!-- Error Pattern -->
+            <div *ngIf="BankDataForm.get('city')?.hasError('pattern')" class="invalid-feedback">
+                Das Format im Feld Stadt entspricht nicht der Vorgabe
+            </div>
+            <!-- Error Required-->
+            <div *ngIf="BankDataForm.get('city')?.hasError('required')" class="invalid-feedback">
+                Feld darf nicht leer sein
+            </div>
+        </div>
+      </div>
+
+      <div *ngIf="!selfPayment" class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="street"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Strasse"
+                 name="streetBank"
+                 autocomplete="new-streetBank"
+                 [ngClass]="[
+                         (BankDataForm.get('street')?.invalid && BankDataForm.get('street')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('street')?.invalid && BankDataForm.get('street')?.touched) ? 'is-valid' : '']">
+
+          <!-- Error Pattern -->
+          <div *ngIf="BankDataForm.get('street')?.hasError('pattern')" class="invalid-feedback">
+            Das Format im Feld Strasse entspricht nicht der Vorgabe
+          </div>
+          <!-- Error Required-->
+          <div *ngIf="BankDataForm.get('street')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="HouseNumber"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Nr."
+                 name="HouseNumberBank"
+                 autocomplete="new-HouseNumberBank"
+                 [ngClass]="[
+                         (BankDataForm.get('HouseNumber')?.invalid && BankDataForm.get('HouseNumber')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('HouseNumber')?.invalid && BankDataForm.get('HouseNumber')?.touched) ? 'is-valid' : '']">
+          <!-- Error Required-->
+          <div *ngIf="BankDataForm.get('HouseNumber')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <hr *ngIf="!selfPayment" class="dividing_line mb-3 mt-2">
+
+      <div *ngIf="!selfPayment" class="row gx-2">
+        <div class="col-md-6 col-12 ">
+          <div class="mb-2">
+            <input formControlName="BankAccountNumber"
+                   type="text"
+                   class="form-control custom_input"
+                   placeholder="Kontonummer"
+                   name="BankAccountNumber"
+                   autocomplete="new-BankAccountNumber">
+            <!--<div class="invalid-feedback">
+              Please choose a username.
+            </div>-->
+          </div>
+          <div class="mb-2">
+            <input formControlName="blz"
+                   type="text"
+                   class="form-control custom_input"
+                   placeholder="Bankleitzahl"
+                   name="blz"
+                   autocomplete="new-blz">
+            <!--<div class="invalid-feedback">
+              Please choose a username.
+            </div>-->
+
+          </div>
+          <!--<div class="d-flex">
+            <button class="btn action_btn dev ">
+              <span>Berechnen</span>
+            </button>
+          </div>-->
+
+        </div>
+        <div class="col-md-6 col-12 mb-2">
+          <div class="mb-2">
+            <input formControlName="iban"
+                   type="text"
+                   class="form-control custom_input"
+                   name="iban"
+                   autocomplete="new-iban"
+                   placeholder="IBAN"
+                   [ngClass]="[
+                         (BankDataForm.get('iban')?.invalid && BankDataForm.get('iban')?.touched) ? 'is-invalid' : '',
+                         (!BankDataForm.get('iban')?.invalid && BankDataForm.get('iban')?.touched) ? 'is-valid' : '']">
+            <!-- Error Pattern -->
+            <div *ngIf="BankDataForm.get('iban')?.hasError('pattern')" class="invalid-feedback">
+              Das Format im Feld IBAN entspricht nicht der Vorgabe
+            </div>
+             <!-- Error-->
+            <div *ngIf="BankDataForm.get('iban')?.hasError('checkError')" class="invalid-feedback">
+              Die IBAN-Nummer ist nicht korrekt
+            </div>
+            <!-- Error Required-->
+            <div *ngIf="BankDataForm.get('iban')?.hasError('required')" class="invalid-feedback">
+              Feld darf nicht leer sein
+            </div>
+          </div>
+          <div class="mb-2">
+            <input formControlName="bic"
+                   type="text"
+                   class="form-control custom_input"
+                   placeholder="BIC"
+                   name="bic"
+                   autocomplete="new-bic">
+            <!--<div class="invalid-feedback">
+              Please choose a username.
+            </div>-->
+          </div>
+          
+        </div>
+      </div>
+      <div *ngIf="!selfPayment" class="row gx-2">
+        <div class="col">
+          <div class="invalid-feedback-custom" *ngIf="BankDataForm.get('iban')?.valid && !isCheckIban">IBAN wurde noch nicht Geprüft</div>
+          <div class="d-flex justify-content-end">
+            <button (click)="checkIban()" [disabled]="BankDataForm.get('iban')?.invalid" class="btn action_btn green ">
+              <span>Prüfen</span>
+              <i class="fas fa-credit-card"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <form [formGroup]="DifferentAdressForm">
+      <hr class="dividing_line">
+
+      <div class="row gx-2">
+        <div class="col-md-6 col-12">
+          <label class="checkbox_custom bounce">
+            <input formControlName="isAdressDifferent" name="isAdressDifferent" type="checkbox" class="">
+            <svg viewBox="0 0 21 21">
+              <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+            </svg>
+            <span class="label_title">Rechnungsadresse ist abweichend</span>
+          </label>
+        </div>
+        <div class="col-md-6 col-12" *ngIf="differentAddress">
+          <label class="checkbox_custom bounce">
+            <input formControlName="isCompany" name="isCompany" type="checkbox" class="">
+            <svg viewBox="0 0 21 21">
+              <polyline points="5 10.75 8.5 14.25 16 6"></polyline>
+            </svg>
+            <span class="label_title">Firmenkunde</span> 
+          </label>
+        </div>
+      </div>
+
+      <div *ngIf="differentAddress && isCompany" class="row gx-2">
+        <div class="col-12 input-icon mb-2">
+          <input formControlName="company"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Firma"
+                 autocomplete="new-company"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('company')?.invalid && DifferentAdressForm.get('company')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('company')?.invalid && DifferentAdressForm.get('company')?.touched) ? 'is-valid' : '']">
+
+          <div *ngIf="DifferentAdressForm.get('company')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="differentAddress" class="row gx-2">
+        <div class="col-12 mb-2">
+          <select formControlName="salutation"
+                  class="form-control custom_input"
+                  [ngClass]="[
+                         (DifferentAdressForm.get('salutation')?.invalid && DifferentAdressForm.get('salutation')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('salutation')?.invalid && DifferentAdressForm.get('salutation')?.touched) ? 'is-valid' : '']">
+            <option disabled>Anrede</option>
+            <option>Herr</option>
+            <option>Frau</option>
+          </select>
+          <!--<div class="invalid-feedback">
+            Please choose a username.
+          </div>-->
+        </div>
+      </div>
+
+      <div *ngIf="differentAddress" class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="firstName"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Vorname"
+                 name="diffAdrFirstName"
+                 autocomplete="new-diffAdrFirstName"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('firstName')?.invalid && DifferentAdressForm.get('firstName')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('firstName')?.invalid && DifferentAdressForm.get('firstName')?.touched) ? 'is-valid' : '']">
+
+          <!-- Error Pattern -->
+          <div *ngIf="DifferentAdressForm.get('firstName')?.hasError('pattern')" class="invalid-feedback">
+            Das Format im Feld Vorname entspricht nicht der Vorgabe
+          </div>
+          <!-- Error Required-->
+          <div *ngIf="DifferentAdressForm.get('firstName')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <input formControlName="lastName"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Nachname"
+                 name="diffAdrLastName"
+                 autocomplete="new-diffAdrLastName"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('lastName')?.invalid && DifferentAdressForm.get('lastName')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('lastName')?.invalid && DifferentAdressForm.get('lastName')?.touched) ? 'is-valid' : '']">
+
+          <!-- Error Pattern -->
+          <div *ngIf="DifferentAdressForm.get('lastName')?.hasError('pattern')" class="invalid-feedback">
+            Das Format im Feld Nachname entspricht nicht der Vorgabe
+          </div>
+          <!-- Error Required-->
+          <div *ngIf="DifferentAdressForm.get('lastName')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="differentAddress" class="row gx-2">
+        <div class="col-12 mb-2">
+          <input formControlName="country"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Land"
+                 name="diffAdrCountry"
+                 autocomplete="new-diffAdrCountry"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('country')?.invalid && DifferentAdressForm.get('country')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('country')?.invalid && DifferentAdressForm.get('country')?.touched) ? 'is-valid' : '']">
+          <!--<div class="invalid-feedback">
+            Please choose a username.
+          </div>-->
+        </div>
+      </div>
+
+      <div *ngIf="differentAddress" class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="plz"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="PLZ"
+                 name="diffAdrPlz"
+                 autocomplete="new-diffAdrPlz"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('plz')?.invalid && DifferentAdressForm.get('plz')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('plz')?.invalid && DifferentAdressForm.get('plz')?.touched) ? 'is-valid' : '']">
+
+          <!-- Error Pattern -->
+          <div *ngIf="DifferentAdressForm.get('plz')?.hasError('pattern')" class="invalid-feedback">
+            Das Format im Feld PLZ entspricht nicht der Vorgabe
+          </div>
+          <!-- Error Required-->
+          <div *ngIf="DifferentAdressForm.get('plz')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <input formControlName="city"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Stadt"
+                 name="diffAdrCity"
+                 autocomplete="new-diffAdrCity"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('city')?.invalid && DifferentAdressForm.get('city')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('city')?.invalid && DifferentAdressForm.get('city')?.touched) ? 'is-valid' : '']">
+          <!-- Error Pattern -->
+          <div *ngIf="DifferentAdressForm.get('city')?.hasError('pattern')" class="invalid-feedback">
+            Das Format im Feld Stadt entspricht nicht der Vorgabe
+          </div>
+          <!-- Error Required-->
+          <div *ngIf="DifferentAdressForm.get('city')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="differentAddress" class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
+          <input formControlName="street"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Strasse"
+                 name="diffAdrStreet"
+                 autocomplete="new-diffAdrStreet"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('street')?.invalid && DifferentAdressForm.get('street')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('street')?.invalid && DifferentAdressForm.get('street')?.touched) ? 'is-valid' : '']">
+          <!-- Error Pattern -->
+          <div *ngIf="DifferentAdressForm.get('street')?.hasError('pattern')" class="invalid-feedback">
+            Das Format im Feld Strasse entspricht nicht der Vorgabe
+          </div>
+          <!-- Error Required-->
+          <div *ngIf="DifferentAdressForm.get('street')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <input formControlName="HouseNumber"
+                 type="text"
+                 class="form-control custom_input"
+                 placeholder="Nr."
+                 name="diffAdrHouseNumber"
+                 autocomplete="new-diffAdrHouseNumber"
+                 [ngClass]="[
+                         (DifferentAdressForm.get('HouseNumber')?.invalid && DifferentAdressForm.get('HouseNumber')?.touched) ? 'is-invalid' : '',
+                         (!DifferentAdressForm.get('HouseNumber')?.invalid && DifferentAdressForm.get('HouseNumber')?.touched) ? 'is-valid' : '']">
+
+          <!-- Error Required-->
+          <div *ngIf="DifferentAdressForm.get('HouseNumber')?.hasError('required')" class="invalid-feedback">
+            Feld darf nicht leer sein
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col d-flex">
+          <button [disabled]="!backStepStatus"
+                  class="btn action_btn dev "
+                  (click)="backStep()">
+            <i class="fas fa-chevron-left"></i>
+            <span class="d-none d-md-inline-block">Schritt zurück</span>
+            <span class="d-block d-md-none">zurück</span>
+          </button>
+        </div>
+        <div class="col d-flex justify-content-end">
+          <button [disabled]="!nextStepStatus"
+                  class="btn action_btn red "
+                  (click)="nextStep()">
+            <span class="d-none d-md-inline-block">Nächster schritt</span>
+            <span class="d-block d-md-none">Weiter</span>
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

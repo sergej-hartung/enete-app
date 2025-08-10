@@ -8,6 +8,7 @@ import { OrderValidatorsService } from './service/order-validators.service';
 import { CommonModule } from '@angular/common';
 import { LinearLoaderComponent } from '../../../../../core/shared/helpers/linear-loader/linear-loader.component';
 import { PersonalDataStepComponent } from './personal-data-step/personal-data-step.component';
+import { RateOverviewComponent } from './rate-overview/rate-overview.component';
 
 import {
   LegalFormItem,
@@ -16,8 +17,7 @@ import {
   StepState,
   RatesData
 } from './energy-order.models';
-
-
+import { BankDataStepComponent } from './bank-data-step/bank-data-step.component';
 
 
 @Component({
@@ -25,7 +25,9 @@ import {
   imports: [
     CommonModule,
     LinearLoaderComponent,
-    PersonalDataStepComponent
+    RateOverviewComponent,
+    PersonalDataStepComponent,
+    BankDataStepComponent
   ],
   templateUrl: './energy-order-entry.component.html',
   styleUrls: ['./energy-order-entry.component.scss']
@@ -102,6 +104,8 @@ export class EnergyOrderEntryComponent implements OnInit, OnDestroy {
     const isCompany = this.type === 'company';
 
     this.validators.setValidators(requiredEmail, isCompany);
+
+    console.log(this.orderEntryRate)
   }
 
   // ---- Setup / helpers ------------------------------------------------------

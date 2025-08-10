@@ -1,4 +1,5 @@
-<!-- <app-rate-overview [orderEntryRate]="orderEntryRate"></app-rate-overview> -->
+
+<app-rate-overview [orderEntryRate]="orderEntryRate"></app-rate-overview>
 
 <div class="row tarif-process-nav-wrap d-none d-lg-flex">
   <div class="tarif-process-nav">
@@ -76,7 +77,7 @@
 </div>
 
 <div *ngIf="isBeforeProvidersLoaded && isLegalFormsLoaded" class="row">
-  <div class="tarif_forms_wrap">
+  <div class="tarif_forms_wrap mb-3">
     <div class="col-12 col-lg-7 order-12 order-lg-1">
       <app-personal-data-step *ngIf="activeStep.id == 2"
                               [form]="personalDataForm"
@@ -86,15 +87,15 @@
                               [backStepStatus]="backStepEnabled"
                               (next)="getNextStep()"
                               (back)="getBackStep()"></app-personal-data-step>
-      <!-- <app-bank-data-step *ngIf="activStep.id == 3"
-                          [BankDataForm]="banckDataForm"
+      <app-bank-data-step *ngIf="activeStep.id == 3"
+                          [BankDataForm]="bankDataForm"
                           [PersonalDataForm]="personalDataForm"
-                          [DifferentAdressForm]="differentAdressForm"
-                          [nextStepStatus]="nextStep"
-                          [backStepStatus]="backStep"
+                          [DifferentAdressForm]="differentAddressForm"
+                          [nextStepStatus]="nextStepEnabled"
+                          [backStepStatus]="backStepEnabled"
                           (next)="getNextStep()"
                           (back)="getBackStep()"></app-bank-data-step>
-      <app-pre-supplier-data-step *ngIf="activStep.id == 4"
+        <!-- <app-pre-supplier-data-step *ngIf="activStep.id == 4"
                                   [PreSupplierDataForm]="preSupplierData"
                                   [BeforeProvider]="beforeProvider"
                                   [CompanyName]="companyName"

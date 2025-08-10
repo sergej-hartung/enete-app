@@ -1,0 +1,22 @@
+.tarif-card{
+    flex: 1 0 0;
+}
+
+.tarif_counter_wrapp{
+    //margin-left: calc(var(--bs-gutter-x) * -0.5);
+    margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+
+
+
+@media screen and (min-width: 992px) {
+    .content_energie_order_entry .tarif-card {
+        margin: 0 1.3rem;
+    }
+}
+
+@media screen and (min-width: 1386px) {
+    .tarif-card {
+         margin: 0 1.3rem;
+    }
+}

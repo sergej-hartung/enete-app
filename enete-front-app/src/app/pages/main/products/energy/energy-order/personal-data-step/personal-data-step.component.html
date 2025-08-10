@@ -5,53 +5,52 @@
   </div>
   <div class="card_content">
     <form [formGroup]="form">
-      <div *ngIf="type == 'company'" class="form-row">
-        <div class="col-md-6 col-12">
+      <div *ngIf="type == 'company'" class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
+
           <input formControlName="company"
-                 type="text"
-                 class="form-control custom_input"
-                 placeholder="Firma"
-                 [ngClass]="[
-                         (form.get('company')?.invalid && form.get('company')?.touched) ? 'is-invalid' : '',
-                         (!form.get('company')?.invalid && form.get('company')?.touched) ? 'is-valid' : '']">
+                type="text"
+                class="form-control custom_input"
+                placeholder="Firma"
+                [ngClass]="[
+                        (form.get('company')?.invalid && form.get('company')?.touched) ? 'is-invalid' : '',
+                        (!form.get('company')?.invalid && form.get('company')?.touched) ? 'is-valid' : '']">
           <!-- Error Required-->
-          <div *ngIf="form.get('company')?.errors?.required" class="invalid-feedback">
+          <div *ngIf="form.get('legalFormConpany')?.hasError('required')" class="invalid-feedback">
             Feld darf nicht leer sein
           </div>
         </div>
-        <div class="col-md-6 col-12">
+        <div class="col-md-6 col-12 mb-2">
           <select formControlName="legalFormConpany"
-                  class="form-control custom_input"
-                  [ngClass]="[
-                         (form.get('legalFormConpany')?.invalid && form.get('legalFormConpany')?.touched) ? 'is-invalid' : '',
-                         (!form.get('legalFormConpany')?.invalid && form.get('legalFormConpany')?.touched) ? 'is-valid' : '']">
+                class="form-control custom_input"
+                [ngClass]="[
+                        (form.get('legalFormConpany')?.invalid && form.get('legalFormConpany')?.touched) ? 'is-invalid' : '',
+                        (!form.get('legalFormConpany')?.invalid && form.get('legalFormConpany')?.touched) ? 'is-valid' : '']">
             <option selected disabled>keine gewählt</option>
             <ng-container *ngIf="legalForm && legalForm.length > 0">
               <option *ngFor="let form of legalForm; first as isFirst" [ngValue]="form">{{form.legalFormText}}</option>
             </ng-container>
           </select>
-          <div *ngIf="form.get('legalFormConpany').errors?.required" class="invalid-feedback">
+          <div *ngIf="form.get('legalFormConpany')?.hasError('required')" class="invalid-feedback">
             Feld darf nicht leer sein
           </div>
+          
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col">
+      <div class="row gx-2 ">
+        <div class="col mb-2">
           <select formControlName="salutation"
-                  class="form-control custom_input"
-                  [ngClass]="[
-                         (form.get('salutation').invalid && form.get('salutation').touched) ? 'is-invalid' : '',
-                         (!form.get('salutation').invalid && form.get('salutation').touched) ? 'is-valid' : '']">
+                class="form-control custom_input"
+                [ngClass]="[
+                        (form.get('salutation')?.invalid && form.get('salutation')?.touched) ? 'is-invalid' : '',
+                        (!form.get('salutation')?.invalid && form.get('salutation')?.touched) ? 'is-valid' : '']">
             <option disabled>Anrede</option>
             <option>Herr</option>
             <option>Frau</option>
           </select>
-          <!--<div class="invalid-feedback">
-            Please choose a username.
-          </div>-->
         </div>
-        <div class="col">
+        <div class="col mb-2">
           <select formControlName="title" class="form-control custom_input">
             <option>kein Titel</option>
             <option>Dr.</option>
@@ -60,14 +59,15 @@
             <option>Dr.Dr.</option>
 
           </select>
-          <div class="invalid-feedback">
+          <!-- <div class="invalid-feedback">
             Please choose a username.
-          </div>
+          </div> -->
         </div>
+          
       </div>
 
-      <div class="form-row">
-        <div class="col-md-6 col-12">
+      <div class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="firstName"
                  type="text"
                  class="form-control custom_input"
@@ -75,18 +75,18 @@
                  name="firstName"
                  autocomplete="new-firstName"
                  [ngClass]="[
-                         (form.get('firstName').invalid && form.get('firstName').touched) ? 'is-invalid' : '',
-                         (!form.get('firstName').invalid && form.get('firstName').touched) ? 'is-valid' : '']">
+                         (form.get('firstName')?.invalid && form.get('firstName')?.touched) ? 'is-invalid' : '',
+                         (!form.get('firstName')?.invalid && form.get('firstName')?.touched) ? 'is-valid' : '']">
           <!-- Error Pattern -->
-          <div *ngIf="form.get('firstName').errors?.pattern" class="invalid-feedback">
+          <div *ngIf="form.get('firstName')?.hasError('pattern')" class="invalid-feedback">
             Das Format im Feld Vorname entspricht nicht der Vorgabe
           </div>
           <!-- Error Required-->
-          <div *ngIf="form.get('firstName').errors?.required" class="invalid-feedback">
+          <div *ngIf="form.get('firstName')?.hasError('required')" class="invalid-feedback">
             Feld darf nicht leer sein
           </div>
         </div>
-        <div class="col-md-6 col-12">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="lastName"
                  type="text"
                  class="form-control custom_input"
@@ -94,45 +94,52 @@
                  name="lastName"
                  autocomplete="new-lastName"
                  [ngClass]="[
-                         (form.get('lastName').invalid && form.get('lastName').touched) ? 'is-invalid' : '',
-                         (!form.get('lastName').invalid && form.get('lastName').touched) ? 'is-valid' : '']">
+                         (form.get('lastName')?.invalid && form.get('lastName')?.touched) ? 'is-invalid' : '',
+                         (!form.get('lastName')?.invalid && form.get('lastName')?.touched) ? 'is-valid' : '']">
           <!-- Error Pattern -->
-          <div *ngIf="form.get('lastName').errors?.pattern" class="invalid-feedback">
+          <div *ngIf="form.get('lastName')?.hasError('pattern')" class="invalid-feedback">
             Das Format im Feld Nachname entspricht nicht der Vorgabe
           </div>
           <!-- Error Required-->
-          <div *ngIf="form.get('lastName').errors?.required" class="invalid-feedback">
+          <div *ngIf="form.get('lastName')?.hasError('required')" class="invalid-feedback">
             Feld darf nicht leer sein
           </div>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col-md-6 col-12 input-icon">
-          <input formControlName="birthDate"
+      <div class="row gx-2">
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <div class="input-group has-validation">
+            <input formControlName="birthDate"
                  type="text"
                  class="form-control custom_input"
                  placeholder="Geburtstag TT.MM.JJJJ"
                  name="birthDate"
                  autocomplete="new-birthDate"
                  [ngClass]="[
-                         (form.get('birthDate').invalid && form.get('birthDate').touched) ? 'is-invalid' : '',
-                         (!form.get('birthDate').invalid && form.get('birthDate').touched) ? 'is-valid' : '']">
-          <i class="fa fa-calendar"></i>
-          <!-- Error min Age -->
-          <div *ngIf="form.get('birthDate').errors?.invaidMinAge" class="invalid-feedback">
+                         (form.get('birthDate')?.invalid && form.get('birthDate')?.touched) ? 'is-invalid' : '',
+                         (!form.get('birthDate')?.invalid && form.get('birthDate')?.touched) ? 'is-valid' : '']">
+            <span class="input-group-text">
+              <i class="fa fa-calendar"></i>
+            </span>
+          
+            <!-- Error min Age -->
+          <div *ngIf="form.get('birthDate')?.hasError('invaidMinAge')" class="invalid-feedback">
             Kunde ist nicht mindestens 18 Jahre alt.
           </div>
           <!-- Error Date Format -->
-          <div *ngIf="form.get('birthDate').errors?.invalidDate" class="invalid-feedback">
+          <div *ngIf="form.get('birthDate')?.hasError('invalidDate')" class="invalid-feedback">
             Das Format im Feld Geburtstag (Lieferanschrift) entspricht nicht der Vorgabe TT.MM.JJJJ
           </div>
           <!-- Error Required-->
-          <div *ngIf="form.get('birthDate').errors?.required" class="invalid-feedback">
+          <div *ngIf="form.get('birthDate')?.hasError('required')" class="invalid-feedback">
             Feld darf nicht leer sein
           </div>
+          </div>
+          
+          
         </div>
-        <div class="col-md-6 col-12">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="country" type="text" class="form-control custom_input" placeholder="Land">
           <!--<div class="invalid-feedback">
             Please choose a username.
@@ -140,8 +147,8 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col-md-6 col-12">
+      <div class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="plz" type="text" class="form-control custom_input" placeholder="PLZ" >
           <!--<div class="invalid-feedback">
             Please choose a username.
@@ -150,7 +157,7 @@
             Please choose a username.
           </div>-->
         </div>
-        <div class="col-md-6 col-12">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="city" type="text" class="form-control custom_input" placeholder="Stadt" >
           <!--<div class="invalid-feedback">
             Please choose a username.
@@ -158,8 +165,8 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col-md-6 col-12">
+      <div class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="street" type="text" class="form-control custom_input" placeholder="Strasse">
 
           <!--<div class="invalid-feedback">
@@ -169,7 +176,7 @@
             Please choose a username.
           </div>-->
         </div>
-        <div class="col-md-6 col-12">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="HouseNumber" type="text" class="form-control custom_input" placeholder="Nr.">
           <!--<div class="invalid-feedback">
             Please choose a username.
@@ -177,49 +184,55 @@
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col-md-6 col-12 input-icon">
-          <input formControlName="email"
+      <div class="row gx-2">
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <div class="input-group has-validation">
+            <input formControlName="email"
                  type="email"
                  class="form-control custom_input"
                  placeholder="E-Mail."
                  name="email"
                  autocomplete="new-email"
                  [ngClass]="[
-                         (form.get('email').invalid && form.get('email').touched) ? 'is-invalid' : '',
-                         (!form.get('email').invalid && form.get('email').touched) ? 'is-valid' : '']">
-          <i class="fas fa-envelope"></i>
-
-          <!-- Error Pattern -->
-          <div *ngIf="form.get('email').errors?.email" class="invalid-feedback">
-            Das Format im Feld Email entspricht nicht der Vorgabe
-          </div>
-          <!-- Error Required-->
-          <div *ngIf="form.get('email').errors?.required" class="invalid-feedback">
-            Feld darf nicht leer sein
+                         (form.get('email')?.invalid && form.get('email')?.touched) ? 'is-invalid' : '',
+                         (!form.get('email')?.invalid && form.get('email')?.touched) ? 'is-valid' : '']">
+            <span class="input-group-text">
+              <i class="fas fa-envelope"></i>
+            </span>
+            <!-- Error Pattern -->
+            <div *ngIf="form.get('email')?.hasError('email')" class="invalid-feedback">
+              Das Format im Feld Email entspricht nicht der Vorgabe
+            </div>
+            <!-- Error Required-->
+            <div *ngIf="form.get('email')?.hasError('required')" class="invalid-feedback">
+              Feld darf nicht leer sein
+            </div>
           </div>
         </div>
-        <div class="col-md-6 col-12 input-icon">
-          <input formControlName="emailConfirm"
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <div class="input-group has-validation">
+            <input formControlName="emailConfirm"
                  type="email"
                  class="form-control custom_input"
                  placeholder="E-Mail wiederholen"
                  name="emailConfirm"
                  autocomplete="new-emailConfirm"
                  [ngClass]="[
-                         (form.get('emailConfirm').invalid && form.get('emailConfirm').touched) ? 'is-invalid' : '',
-                         (!form.get('emailConfirm').invalid && form.get('emailConfirm').touched) ? 'is-valid' : '']">
-          <i class="fas fa-envelope"></i>
-
-          <!-- Error Compare -->
-          <div *ngIf="form.get('emailConfirm').errors?.invalidCompare" class="invalid-feedback">
-            Die angegebenen E-Mail Adressen stimmen nicht überein!
+                         (form.get('emailConfirm')?.invalid && form.get('emailConfirm')?.touched) ? 'is-invalid' : '',
+                         (!form.get('emailConfirm')?.invalid && form.get('emailConfirm')?.touched) ? 'is-valid' : '']">
+            <span class="input-group-text">
+              <i class="fas fa-envelope"></i>
+            </span>
+            <!-- Error Compare -->
+            <div *ngIf="form.get('emailConfirm')?.hasError('invalidCompare')" class="invalid-feedback">
+              Die angegebenen E-Mail Adressen stimmen nicht überein!
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col-md-6 col-12">
+      <div class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="phonePrefix"
                  type="text"
                  class="form-control custom_input"
@@ -227,47 +240,51 @@
                  name="phonePrefix"
                  autocomplete="new-phonePrefix"
                  [ngClass]="[
-                         (form.get('phonePrefix').invalid && form.get('phonePrefix').touched) ? 'is-invalid' : '',
-                         (!form.get('phonePrefix').invalid && form.get('phonePrefix').touched) ? 'is-valid' : '']">
+                         (form.get('phonePrefix')?.invalid && form.get('phonePrefix')?.touched) ? 'is-invalid' : '',
+                         (!form.get('phonePrefix')?.invalid && form.get('phonePrefix')?.touched) ? 'is-valid' : '']">
 
           <!-- Error Pattern -->
-          <div *ngIf="form.get('phonePrefix').errors?.pattern" class="invalid-feedback">
+          <div *ngIf="form.get('phonePrefix')?.hasError('pattern')" class="invalid-feedback">
             in diesem Feld dürfen nur Zahlen verwendet werden!
           </div>
           <!-- Error Max Length -->
-          <div *ngIf="form.get('phonePrefix').errors?.maxlength" class="invalid-feedback">
+          <div *ngIf="form.get('phonePrefix')?.hasError('maxlength')" class="invalid-feedback">
             maximal 5 zeichen
           </div>
           <!-- Error Required-->
-          <div *ngIf="form.get('phonePrefix').errors?.required" class="invalid-feedback">
+          <div *ngIf="form.get('phonePrefix')?.hasError('required')" class="invalid-feedback">
             Feld darf nicht leer sein
           </div>
         </div>
-        <div class="col-md-6 col-12 input-icon">
-          <input formControlName="phoneNumber"
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <div class="input-group has-validation">
+            <input formControlName="phoneNumber"
                  type="text"
                  class="form-control custom_input"
                  placeholder="Telefonnummer"
                  name="phoneNumber"
                  autocomplete="new-phoneNumber"
                  [ngClass]="[
-                         (form.get('phoneNumber').invalid && form.get('phoneNumber').touched) ? 'is-invalid' : '',
-                         (!form.get('phoneNumber').invalid && form.get('phoneNumber').touched) ? 'is-valid' : '']">
-          <i class="fas fa-phone-alt"></i>
-
-          <!-- Error Pattern -->
-          <div *ngIf="form.get('phoneNumber').errors?.pattern" class="invalid-feedback">
-            in diesem Feld dürfen nur Zahlen verwendet werden!
-          </div>
-          <!-- Error Required-->
-          <div *ngIf="form.get('phoneNumber').errors?.required" class="invalid-feedback">
-            Feld darf nicht leer sein
+                         (form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched) ? 'is-invalid' : '',
+                         (!form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched) ? 'is-valid' : '']">
+            <span class="input-group-text">
+              <i class="fas fa-phone-alt"></i>
+            </span>
+          
+            <!-- Error Pattern -->
+            <div *ngIf="form.get('phoneNumber')?.hasError('pattern')" class="invalid-feedback">
+              in diesem Feld dürfen nur Zahlen verwendet werden!
+            </div>
+            <!-- Error Required-->
+            <div *ngIf="form.get('phoneNumber')?.hasError('required')" class="invalid-feedback">
+              Feld darf nicht leer sein
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="form-row">
-        <div class="col-md-6 col-12">
+      <div class="row gx-2">
+        <div class="col-md-6 col-12 mb-2">
           <input formControlName="mobilPrefix"
                  type="text"
                  class="form-control custom_input"
@@ -275,39 +292,42 @@
                  name="mobilPrefix"
                  autocomplete="new-mobilPrefix"
                  [ngClass]="[
-                         (form.get('mobilPrefix').invalid && form.get('mobilPrefix').touched) ? 'is-invalid' : '',
-                         (!form.get('mobilPrefix').invalid && form.get('mobilPrefix').touched) ? 'is-valid' : '']">
+                         (form.get('mobilPrefix')?.invalid && form.get('mobilPrefix')?.touched) ? 'is-invalid' : '',
+                         (!form?.get('mobilPrefix')?.invalid && form.get('mobilPrefix')?.touched) ? 'is-valid' : '']">
 
           <!-- Error Pattern -->
-          <div *ngIf="form.get('mobilPrefix').errors?.pattern" class="invalid-feedback">
+          <div *ngIf="form.get('mobilPrefix')?.hasError('pattern')" class="invalid-feedback">
             in diesem Feld dürfen nur Zahlen verwendet werden!
           </div>
           <!-- Error Max Length -->
-          <div *ngIf="form.get('mobilPrefix').errors?.maxlength" class="invalid-feedback">
+          <div *ngIf="form.get('mobilPrefix')?.hasError('maxlength')" class="invalid-feedback">
             maximal 5 zeichen
           </div>
 
         </div>
-        <div class="col-md-6 col-12 input-icon">
-          <input formControlName="mobilNumber"
+        <div class="col-md-6 col-12 mb-2 input-icon">
+          <div class="input-group has-validation">
+            <input formControlName="mobilNumber"
                  type="text"
                  class="form-control custom_input"
                  placeholder="Mobilfunknummer"
                  name="mobilNumber"
                  autocomplete="new-mobilNumber"
                  [ngClass]="[
-                         (form.get('mobilNumber').invalid && form.get('mobilNumber').touched) ? 'is-invalid' : '',
-                         (!form.get('mobilNumber').invalid && form.get('mobilNumber').touched) ? 'is-valid' : '']">
-          <i class="fas fa-mobile-alt"></i>
-
-          <!-- Error Pattern -->
-          <div *ngIf="form.get('mobilNumber').errors?.pattern" class="invalid-feedback">
-            in diesem Feld dürfen nur Zahlen verwendet werden!
+                         (form.get('mobilNumber')?.invalid && form.get('mobilNumber')?.touched) ? 'is-invalid' : '',
+                         (!form.get('mobilNumber')?.invalid && form.get('mobilNumber')?.touched) ? 'is-valid' : '']">
+            <span class="input-group-text">
+              <i class="fas fa-mobile-alt"></i>
+            </span>
+            
+            <!-- Error Pattern -->
+            <div *ngIf="form.get('mobilNumber')?.hasError('pattern')" class="invalid-feedback">
+              in diesem Feld dürfen nur Zahlen verwendet werden!
+            </div>
           </div>
-          
         </div>
       </div>
-      <div class="form-row">
+      <div class="row">
         <div class="col d-flex">
           <button [disabled]="!backStepStatus"
                   class="btn action_btn dev "
